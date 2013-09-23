@@ -1,3 +1,16 @@
+# ignore Notepad++ backup files
+*.bak
+
+#ignore temp files
+*~
+
+# ignore Node Modules
+node_modules/
+
+# ignore jQuery and JS map files
+jquery*.js
+*.map
+
 lib-cov
 *.seed
 *.log

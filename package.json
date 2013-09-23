@@ -1,0 +1,26 @@
+{
+	"name": "dcm",
+	"description": "a DSA Character Manager",
+	"version": "0.0.1",
+	"author": "Bertold von Dormilich <Dormilich@netscape.net>",
+	"maintainers": [
+		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }
+	],
+	"contributors": [
+		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }
+	],
+	"dependencies": {
+		"express"    : "3.x.x",
+		"jade"       : "0.x.x",
+		"mongoose"   : "3.x.x",
+		"sprintf.js" : "0.1.x"
+	},
+	"engines": [
+		"node",
+		"npm"
+	],
+	"keywords": [
+		"DSA",
+		"MongoDB"
+	]
+}

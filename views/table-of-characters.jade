@@ -1,0 +1,36 @@
+doctype 5
+html(lang="de")
+	head
+		title Charakter-Übersicht
+		style.
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: sans-serif;
+			}
+			h1 {
+				text-align: center;
+				font-size: 3em;
+				color: black;
+				background-color: #eee;
+				padding: 0.25em;
+				margin: 0;
+			}
+			ul {
+				padding-left: 10em;
+			}
+			li {
+				font-size: 1.5em;
+				padding: 0.5em;
+				list-style-type: circle;
+			}
+			li a {
+				color: black;
+				text-decoration: none;
+			}
+	body
+		h1 Liste der Charaktere
+		ul
+			each val in Liste
+				li
+					a(href="/char/" + val._id)= val.Person.Name

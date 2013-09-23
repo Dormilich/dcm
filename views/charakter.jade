@@ -1,0 +1,114 @@
+!!! 5
+html(lang="de")
+	head
+		title= Person.Name
+		link(rel="stylesheet", type="text/css", href="show.css")
+	body
+		section
+			h1.mitte= Person.Name
+			
+			table.data-section.links.eigenschaften
+				caption Beschreibung
+				colgroup
+					col(style="width: 15%")
+					col(style="width: 35%")
+					col(style="width: 15%")
+					col(style="width: 35%")
+				tr
+					th Geschlecht
+					td= Person.Geschlecht
+					th Sozialstatus
+					td= Person.SO
+				tr
+					th Größe
+					td #{Person.Größe} HF
+					th Gewicht
+					td #{Person.Gewicht} Stein
+				tr
+					th Haarfarbe
+					td= Person.Haarfarbe
+					th Augenfarbe
+					td= Person.Augenfarbe
+				tr
+					th Aussehen
+					td(colspan="3")
+						each line in Person.Aussehen.split('\n')
+							p= line
+				tr
+					th Hintergrund
+					td(colspan="3")
+						each line in Person.Hintergrund.split('\n')
+							p= line
+			
+			table.data-section.mitte.eigenschaften
+				caption Abenteuerpunkte
+				colgroup
+					col(style="width: 15%")
+					col(style="width: 35%")
+					col(style="width: 15%")
+					col(style="width: 35%")
+				tr
+					th gesamt:
+					td.links= AP.alle
+					th verfügbar:
+					td.links= AP.frei
+		
+			table.data-section.links.eigenschaften
+				caption Generierung
+				colgroup
+					col(style="width: 15%")
+					col(style="width: 35%")
+					col(style="width: 15%")
+					col(style="width: 35%")
+				each val, key in Generierung
+					tr
+						th #{key}:
+						td= val.name
+						th Modifikationen:
+						td= val.modifikation
+			
+			table.data-section.mitte.eigenschaften
+				caption Attribute
+				colgroup
+					col(span="10", style="width: 10%;")
+				thead
+					tr
+						each val, key in Attribute
+							th= key
+						th
+						th GS
+				tbody
+					tr
+						each val in Attribute
+							td= val.wert
+						td
+						td= Basiswerte.GS
+			
+			table.data-section.mitte.eigenschaften
+				caption Basiswerte
+				colgroup
+					col(span="10", style="width: 10%;")
+				thead
+					tr
+						th LeP
+						th AuP
+						th AsP
+						th KaP
+						th MR
+						th INI
+						th AT
+						th PA
+						th FK
+						th WS
+				tbody
+					tr
+						td= Basiswerte.LeP
+						td= Basiswerte.AuP
+						td= Basiswerte.AsP
+						td= Basiswerte.KaP
+						td= Basiswerte.MR
+						td= Kampfwerte.INI
+						td= Kampfwerte.AT
+						td= Kampfwerte.PA
+						td= Kampfwerte.FK
+						td= Kampfwerte.WS

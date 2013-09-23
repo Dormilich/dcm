@@ -1,0 +1,237 @@
+extends template-mod-char
+
+block beschreibung
+	fieldset
+		legend Beschreibung
+		ul.floatLabel
+			li
+				label(for="char_name") Name:
+				input(name="Person[Name]", id="char_name" type="text", placeholder="Name").halfSize
+			li
+				label(for="char_gender") Geschlecht:
+				select(name="Person[Geschlecht]", id="char_gender")
+					option(selected) männlich
+					option weiblich
+			li
+				label(for="char_so") Sozialstatus:
+				input(name="Person[SO]", id="char_so", type="number", min="0", max="20", step="1", value="5", placeholder="Sozialstatus")
+			li
+				label(for="char_height") Größe:
+				input(name="Person[Größe]", id="char_height", type="number", min="25", max="250", step="1", value="175") 
+				| &nbsp; Halbfinger
+			li
+				label(for="char_weight") Gewicht:
+				input(name="Person[Gewicht]", id="char_weight", type="number", min="20", max="300", step="1", value="75") 
+				| &nbsp; Stein
+			li
+				label(for="char_alter") Alter:
+				input(name="Person[Alter]", id="char_alter", type="number", min="10", step="1", value="17")
+			li
+				label Tsatag:
+				select(name="Person[Tsatag][tag]", size="1")
+					- for (var day = 1; day < 31; day++)
+						option(value=day)= day
+				select(name="Person[Tsatag][monat]", size="1")
+					each month, index in ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH"]
+						option(value=index)= month
+				input(name="Person[Tsatag][jahr]", type="number", step="1", value="1010")
+				| &nbsp; BF
+			li
+				label(for="char_hair") Haarfarbe:
+				input(name="Person[Haarfarbe]", id="char_hair" type="text", placeholder="Haarfarbe")
+			li
+				label(for="char_eyes") Augenfarbe:
+				input(name="Person[Augenfarbe]", id="char_eyes" type="text", placeholder="Augenfarbe")
+			li
+				label(for="char_looks") Aussehen:
+				textarea(name="Person[Aussehen]", id="char_looks", rows="5", placeholder="Aussehen").halfSize
+			li
+				label(for="char_story") Hintergrund:
+				textarea(name="Person[Hintergrund]", id="char_story", rows="5", placeholder="Hintergrund").halfSize
+block generierung
+	fieldset
+		legend Generierung
+		ul.floatLabel
+			li
+				label(for="rkp_race") Rasse:
+				input(name="Generierung[Rasse][name]", id="rkp_race", type="text", placeholder="Rasse").size15
+				input(name="Generierung[Rasse][modifikation]", id="rkp_race_mod", type="text", placeholder="Rasse-Modifikaton(en)").size30
+			li
+				label(for="rkp_cult") Kultur:
+				input(name="Generierung[Kultur][name]", id="rkp_cult", type="text", placeholder="Kultur").size15
+				input(name="Generierung[Kultur][modifikation]", id="rkp_cult_mod", type="text", placeholder="Kultur-Modifikation(en)").size30
+			li
+				label(for="rkp_job") Profession:
+				input(name="Generierung[Profession][name]", id="rkp_job", type="text", placeholder="Profession").size15
+				input(name="Generierung[Profession][modifikation]", id="rkp_job_mod", type="text", placeholder="Professions-Modifikation(en)").size30
+			li
+				label(for="rkp_bgb") BgB:
+				input(name="Generierung[BgB][name]", id="rkp_bgb", type="text", placeholder="BgB-Profession").size15
+				input(name="Generierung[BgB][modifikation]", id="rkp_job_mod", type="text", placeholder="BgB-Professions-Modifikation(en)").size30
+
+block attribute
+	fieldset
+		legend Attribute
+		table
+			colgroup
+				col(style="width: 40%")
+				col(span="3" style="width: 20%")
+			thead
+				tr
+					th Eigenschaft
+					th Modifikator
+					th Startwert
+					th aktueller Wert
+			tbody
+				tr
+					td Mut
+					td 
+						input(name="Attribute[MU][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[MU][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[MU][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Klugheit
+					td 
+						input(name="Attribute[KL][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[KL][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[KL][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Intuition
+					td 
+						input(name="Attribute[IN][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[IN][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[IN][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Charisma
+					td 
+						input(name="Attribute[CH][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[CH][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[CH][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Fingerfertigkeit
+					td 
+						input(name="Attribute[FF][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[FF][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[FF][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Gewandheit
+					td 
+						input(name="Attribute[GE][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[GE][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[GE][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Konstitution
+					td 
+						input(name="Attribute[KO][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[KO][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[KO][wert]",  type="number", min="0", step="1", value="8")
+				tr
+					td Körperkraft
+					td 
+						input(name="Attribute[KK][mod]",   type="number", min="-10", max="10", step="1", value="0")
+					td 
+						input(name="Attribute[KK][start]", type="number", min="0", step="1", value="8")
+					td 
+						input(name="Attribute[KK][wert]",  type="number", min="0", step="1", value="8")
+
+block basiswerte
+			fieldset
+				legend Basiswerte
+				table
+					colgroup
+						col(style="width: 40%")
+						col(span="3" style="width: 20%")
+					thead
+						tr
+							th Eigenschaft
+							th Modifikator
+							th gekauft
+							th maximal
+					tbody
+						tr
+							td Lebensenergie
+							td 
+								input(name="modifikatoren[LeP][start]", type="number", min="0", step="1", value="10")
+							td
+								input(name="modifikatoren[LeP][add]",   type="number", min="0", step="1", value="0")
+							td
+								input(name="modifikatoren[LeP][max]",   type="number", min="0", step="1")
+						tr
+							td Ausdauer
+							td 
+								input(name="modifikatoren[AuP][start]", type="number", min="0", step="1", value="10")
+							td
+								input(name="modifikatoren[AuP][add]",   type="number", min="0", step="1", value="0")
+							td
+								input(name="modifikatoren[AuP][max]",   type="number", min="0", step="1")
+						tr
+							td Astralenergie
+							td 
+								input(name="modifikatoren[AsP][start]", type="number", min="0", step="1", title="leer lassen für Nicht-Magier")
+							td
+								input(name="modifikatoren[AsP][add]",   type="number", min="0", step="1")
+							td
+								input(name="modifikatoren[AsP][max]",   type="number", min="0", step="1")
+						tr
+							td Karmaenergie
+							td 
+								input(name="modifikatoren[KaP][start]", type="number", min="0", step="12", title="leer lassen für Nicht-Geweihte")
+							td
+								input(name="modifikatoren[KaP][add]",   type="number", min="0", step="4")
+							td
+						tr
+							td Magieresistenz
+							td 
+								input(name="modifikatoren[MR][start]", type="number", min="-10", max="10", step="1", value="-4")
+							td
+								input(name="modifikatoren[MR][add]",   type="number", min="0", step="1", value="0")
+							td
+								input(name="modifikatoren[MR][max]",   type="number", min="0", step="1")
+						tr
+							td Initiative
+							td(colspan="3").links
+								input(name="modifikatoren[INI]", id="INI_KR" type="checkbox", value="4")
+								label(for="INI_KR") Kampfreflexe
+								br
+								input(name="modifikatoren[INI]", id="INI_KG" type="checkbox", value="2")
+								label(for="INI_KG") Kampfgespür
+						tr
+							td Wundschwelle
+							td(colspan="3").links
+								input(name="modifikatoren[WS]", id="eisern", type="checkbox", value="2")
+								label(for="eisern") Eisern
+								br
+								input(name="modifikatoren[WS]", id="glasknochen", type="checkbox", value="-2")
+								label(for="glasknochen") Glasknochen
+								br
+								input(name="modifikatoren[WS]", id="WS_other", type="number", step="1", value="0", title="andere WS-Modifikatoren")
+						tr
+							td Geschwindigkeit
+							td(colspan="3").links
+								input(name="modifikatoren[GS]", id="GS_flink", type="checkbox", value="1")
+								label(for="GS_flink") Flink
+								br
+								input(name="modifikatoren[GS]", id="GS_klein", type="checkbox", value="-1")
+								label(for="GS_klein") Kleinwüchsig
+								br
+								input(name="modifikatoren[GS]", id="GS_zwerg", type="checkbox", value="-2")
+								label(for="GS_zwerg") Zwergenwuchs
+								br
+								input(name="modifikatoren[GS]", id="GS_lahm", type="checkbox", value="2")
+								label(for="GS_lahm") Lahm
+								br
+								input(name="modifikatoren[GS]", id="GS_other", type="number", step="1", value="0", title="andere GS-Modifikatoren")

@@ -1,0 +1,107 @@
+.data-section{
+	padding: 1em 2em;
+	border: 2px solid silver;
+	border-radius: 0 0 1em 1em;
+	width: 100%;
+}
+.data-section td,
+.data-section th {
+	padding: 0.2em 1em;
+}
+.data-section th {
+	vertical-align: top;
+}
+.data-section caption {
+	border: inherit; 
+	border-radius: 1em 1em 0 0; 
+	background-color: silver;
+	color: white;
+	font-size: 1.5em;
+	font-weight: bold;
+	padding: 0.2em;
+}
+.talente tbody tr:nth-child(odd) {
+	background-color: #eee;
+}
+.talente tbody td {
+	text-align: center;
+}
+.talente tbody td:first-child {
+	text-align: left;
+}
+.nobg {
+	background-color: white;
+	padding-right: 3em;
+}
+/*
+.talente td:nth-child(4n-3) {
+	text-align: left;
+}
+*/
+.rechts {
+	text-align: right;
+}
+.mitte {
+	text-align: center;
+}
+.links {
+	text-align: left;
+}
+.fl-links  { 
+	float: left; 
+}
+.fl-rechts  { 
+	float: right; 
+}
+.fl-clear {
+	clear: both;
+}
+body {
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+}
+table {
+	margin-top: 2em;
+}
+section {
+	padding: 0 3em;
+}
+nav {
+	background-color: #eee;
+	width: 100%;
+	text-align: center;
+}
+nav a {
+	display: inline-block;
+	width: 20em;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	padding: 1em;
+}
+nav a:hover {
+	color: #eee;
+	background-color: black;
+}
+h1 {
+	font-size: 3em;
+}
+.eigenschaften th {
+	background-color: #eee;
+}
+.eigenschaften td {
+	border: 1px solid #eee;
+}
+.vor-nach {
+	width: 49%;
+	list-style-type: none;
+	padding: 0;
+}
+.vor-nach li {
+	padding: 0.5em 1em;
+}
+.vor-nach li:nth-child(even) {
+	background-color: #eee;
+}
