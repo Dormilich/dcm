@@ -47,7 +47,7 @@ var heldDataSchema = new Schema({
 		allgemein: [String],
 		magisch:   [String],
 		geweiht:   [String]
-	}
+	},
 	AP: {
 		alle: { type: Number, min: 0, required: true },
 		frei: { type: Number, required: true }

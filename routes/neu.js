@@ -1,5 +1,6 @@
 var path   = require('path')
   , Person = require('../models/person')
+  , Heldendaten = require('../models/chardata')
   ;
 module.exports = {
 	index: function (req, res, next) {
@@ -24,18 +25,20 @@ module.exports = {
 			}
 		}
 		// save
-		new Person(req.body)
-			.save(function(error, doc, affectedRows) {
+		Person.create(req.body, function(error, person) {
 				if (error) return next(error);
-				/*
-				new Heldendaten({ held: doc._id })
-					.save(function(error, doc, affectedRows) {
-						if (error) return next(error);
-					})
-				;
-				//*/
-				res.redirect('/char/' + doc._id);
+				
+				Heldendaten.create({ 
+					held: person._id,
+					AP: {
+						frei: 0,
+						alle: ((+person.Attribute.KL.wert) + (+person.Attribute.IN.wert)) * 20
+					}
+				}, function(error, doc) {
+					if (error) return next(error);
+					res.redirect('/char/' + doc.held);
+				});
 			})
 		;
 	}
-}
+};
