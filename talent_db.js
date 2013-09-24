@@ -12,10 +12,10 @@ var express  = require('express')
  *  Configure Express Application  *
  ***********************************/
 
-app.set('port', process.env.PORT || 80);  // ENV values from the Windows ENV
+app.set('port', process.env.PORT || 8080);  // ENV values from the Windows ENV
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.favicon(__dirname + '/public/Favicon_Chromatrix.png'));
+app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.compress());              // gzip/deflate
 app.use(express.bodyParser());            // parse POST data into req.body
@@ -46,16 +46,10 @@ app.locals.pretty = true;
  *  Connect to and Watch MongoDB  *
  **********************************/
 
-mongoose.connect('localhost', 'dc1'); 
+mongoose.connect('localhost', 'dsa'); 
 // watch DB events
 mongoose.connection.on('error', function _error(err) {
 	console.log('Mongoose error: ' + err);
-});
-mongoose.connection.on('connected', function _connected() {
-	console.log('Mongoose connected to DB ' + this.host + ':' + this.port+ '/' + this.name);
-});
-mongoose.connection.on('disconnected', function _disconnected() {
-	console.log('Mongoose connection closed');
 });
 // kill connection on application end
 process.on('SIGINT', function() {
@@ -69,26 +63,21 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var Person = require('./models/person')
-  , routes = {}
-  ;
-// set up routes
-["neu", "char", "edit"].forEach(function(file) {
-	routes[file] = require('./routes/'+file);
-});
+var Talent = require('./models/talent');
+
 // pre-route request modification
 app.param('mongo', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
+		return next(new Error("Keine gÃ¼ltige MongoDB ID."));
 	}
-	Person
+	Talent
 		.findById(id)
-		.exec(function(error, person) {
+		.exec(function(error, doc) {
 			if (error) {
 				next(error);
 			}
-			else if (person) {
-				req.person = person;
+			else if (doc) {
+				req.talent = doc;
 				next();
 			}
 			else {
@@ -100,33 +89,44 @@ app.param('mongo', function (req, res, next, id) {
 function verifyMongoID(identifyer) {
 	return function (req, res, next) {
 		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
-			return next(new Error("Keine gültige MongoDB ID."));
+			return next(new Error("Keine gÃ¼ltige MongoDB ID."));
 		}
 		req.id = req.params[identifyer];
 		next();
 	}
 }
 
-// demo
-app.get('/', function (req, res) {
-	res.redirect('/chars');
+app.get('/', function(req, res, next) {
+	Talent
+		.find()
+		.sort('typ name')
+		.lean()
+		.exec(function(err, docs) {
+			if (err) return next(err);
+			res.render('table-of-talents', { Liste: docs });
+		})
+	;
 });
 
-// create and save a character
-app.get( '/neu', routes.neu.index);
-app.post('/neu', routes.neu.save);
-// display character(s)
-app.get('/chars', routes.char.list);
-app.get('/char/:mongo', routes.char.show);
-// unset character
-app.delete('/char/:id', verifyMongoID('id'), routes.char.remove);
-// edit character
-app.get('/edit/:mongo', routes.edit.show);
-app.put('/edit/:id', verifyMongoID('id'), routes.edit.save);
-// add AP to char
-app.get('/ap/char/:id', verifyMongoID('id'), function(req, res, next) {
-
+app.get('/talent/:mongo', function(req, res, next) {
+	Talent
+		.find()
+		.lean()
+		.distinct('typ', function(err, docs) {
+			if (err) return next(err);
+			req.talent.kategorie = docs;
+			res.render('edit-talent', req.talent);
+		})
+	;
 });
+
+app.post('/talent/:id', verifyMongoID('id'), function(req, res, next) {
+	Talent.findByIdAndUpdate(req.id, req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/');
+	});
+});
+
 
 /******************
  *  Start Server  *

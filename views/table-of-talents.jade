@@ -1,0 +1,56 @@
+doctype 5
+html
+	head
+		title Talent-Übersicht
+		style.
+			body {
+				font-family: sans-serif;
+			}
+			h1 {
+				text-align: center;
+			}
+			section {
+				padding: 0 5em;
+			}
+			table {
+				min-width: 75%;
+			}
+			caption {
+				font-size: 2em;
+				font-weight: bold;
+				font-family: serif;
+				font-style: italic;
+				padding: 0.5em;
+			}
+			td {
+				padding: 0.2em 1em;
+				border: 1px solid black;
+			}
+			td:nth-child(3), td:nth-child(4) {
+				text-align: center;
+			}
+			.mitte {
+				text-align: center;
+			}
+	body
+		section
+			table
+				caption Liste der Talente
+				thead
+					tr
+						th Talent
+						th Kategorie
+						th Probe
+						th Basis
+						th Spezialisierungen
+				tbody
+					each val in Liste
+						tr
+							td
+								a(href="/talent/"+val._id)= val.name
+							td= val.typ
+							td= val.probe.join(' / ')
+							td
+								if (val.standard === true)
+									| X
+							td= val.spezialisierungen.join(', ')

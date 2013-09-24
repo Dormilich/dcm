@@ -1,13 +1,16 @@
 {
 	"name": "dcm",
 	"description": "a DSA Character Manager",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Bertold von Dormilich <Dormilich@netscape.net>",
 	"maintainers": [
 		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }
 	],
 	"contributors": [
 		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }
+	],
+	"repositories": [
+		{ "type": "git", "url": "http://github.com/Dormilich/dcm" }
 	],
 	"dependencies": {
 		"express"    : "3.x.x",

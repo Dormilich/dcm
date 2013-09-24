@@ -1,0 +1,28 @@
+doctype 5
+html(lang="de")
+	head
+		title AP vergeben
+		link(rel="stylesheet", type="text/css", href="/show.css")
+	body
+		// nav
+		form(action="/ap/char/"+_id, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+			fieldset
+				legend AP
+				table.data-section.mitte.eigenschaften
+					caption Abenteuerpunkte
+					colgroup
+						col(style="width: 15%")
+						col(style="width: 35%")
+						col(style="width: 15%")
+						col(style="width: 35%")
+					tbody
+						tr
+							th 
+								label(for="alle") gesamt:
+							td 
+								input#alle(type="number", name="alle", min="0", value=AP.alle)
+							th 
+								label(for="frei") frei:
+							td 
+								input#frei(type="number", name="frei", min="0", value=AP.frei)

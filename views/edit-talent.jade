@@ -1,0 +1,50 @@
+mixin Probe3()
+	- var Attr = ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+	- for (var i=3; i--;)
+		select.probe(size="1", name="probe")
+			each val in Attr
+				option= val
+
+doctype 5
+html
+	head
+		title Talent bearbeiten
+		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+		style.
+			body {
+				font-family: sans-serif;
+			}
+			label {
+				float: left;
+				width: 10em;
+			}
+			form {
+				padding-left: 5em;
+			}
+	body
+		h1 Talent [#{name}] bearbeiten:
+		form(action="/talent/"+_id, method="post", accept-charset="utf-8")
+			div
+				label(for="t_name") Name
+				input#t_name(type="text", name="name", placeholder="Talent-Name", value=name)
+			div
+				label Talentgruppe
+				select#typ(size="1", name="typ")
+					each val in kategorie
+						option= val
+			div
+				label Probe
+				+Probe3()
+				each val, key in probe
+					script $('.probe').eq(#{key}).val('#{val}');
+			div
+				label Spezialisierungen
+				button#add(type="button") +
+			button(type="submit") speichern
+		script.
+			$('#add').on("click", function() {
+				$('<input type="text" name="spezialisierungen">').insertBefore(this);
+			});
+			$('#typ').val('#{typ}');
+		h1
+			a(href="/") Talentliste

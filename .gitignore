@@ -1,16 +1,20 @@
-# ignore Notepad++ backup files
+# developer help reminders
+comments.js
+
+# Notepad++ backup files
 *.bak
 
-#ignore temp files
+# temp files
 *~
 
-# ignore Node Modules
+# Node Modules
 node_modules/
 
-# ignore jQuery and JS map files
+# jQuery and JS map files
 jquery*.js
 *.map
 
+# GitHub default .gitignore for Node projects
 lib-cov
 *.seed
 *.log

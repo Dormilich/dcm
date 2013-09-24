@@ -26,9 +26,14 @@ module.exports = {
 		// save
 		new Person(req.body)
 			.save(function(error, doc, affectedRows) {
-				if (error) {
-					return next(error);
-				}
+				if (error) return next(error);
+				/*
+				new Heldendaten({ held: doc._id })
+					.save(function(error, doc, affectedRows) {
+						if (error) return next(error);
+					})
+				;
+				//*/
 				res.redirect('/char/' + doc._id);
 			})
 		;
