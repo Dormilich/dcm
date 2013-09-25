@@ -50,7 +50,7 @@ var heldDataSchema = new Schema({
 	},
 	AP: {
 		alle: { type: Number, min: 0, required: true },
-		frei: { type: Number, required: true }
+		frei: { type: Number, default: 0 }
 	},
 	Talente: {
 		Nahkampf:     [heldKampftalentSchema],

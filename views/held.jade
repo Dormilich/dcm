@@ -1,20 +1,55 @@
 !!! 5
 html(lang="de")
 	head
-		title= Person.Name
+		title= held.Person.Name
 		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 	body
-		nav.main-menu
-			a(href="/chars") [ Charakterliste ]
-			a(href="/neu") [ Neuer Charakter ]
-			if _id
-				a(href="/edit/" + _id) [ #{Person.Name.split(' ')[0]} bearbeiten ]
-			
+		a#top
+		nav
+			ul#main-menu
+				li
+					a.mitte(href="/chars") [ Charakterliste ]
+				li
+					a.mitte(href="/neu") [ Neuer Charakter ]
+				li 
+					a.mitte #{held.Person.Name.split(' ')[0]} bearbeiten
+					ul
+						li
+							a(href="/ap/") AP hinzufügen
+						li
+							a(href="/edit/") Eigenschaften
+						li
+							a(href="/talent/") Talente
+						li
+							a(href="/sf/") Sonderfertigkeiten
+						li
+							a(href="/zauber/") Zauber
+						li
+							a(href="/liturgie/") Liturgien
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#bes") Beschreibung
+						li
+							a(href="#gen") Generierung
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
+						li
+							a(href="#vnt") Vor- & Nachteile
+						li
+							a(href="#ap") AP
+
 		section
-			h1.mitte= Person.Name
+			h1.mitte= held.Person.Name
 			
+			a#bes
 			table.data-section.links.eigenschaften
 				caption Beschreibung
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")
@@ -22,38 +57,40 @@ html(lang="de")
 					col(style="width: 35%")
 				tr
 					th Geschlecht
-					td= Person.Geschlecht
+					td= held.Person.Geschlecht
 					th Sozialstatus
-					td= Person.SO
+					td= held.Person.SO
 				tr
 					th Größe
-					td #{Person.Größe} HF
+					td #{held.Person.Größe} HF
 					th Titel
-					td= Person.Titel
+					td= held.Person.Titel
 				tr
 					th Gewicht
-					td #{Person.Gewicht} Stein
+					td #{held.Person.Gewicht} Stein
 					th Haarfarbe
-					td= Person.Haarfarbe
+					td= held.Person.Haarfarbe
 				tr
 					th Tsatag
 					- var monate = ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH", "(NLT)"]
-					td= Person.Tsatag.tag+". "+monate[Person.Tsatag.monat]+" "+Person.Tsatag.jahr+" BF"
+					td= held.Person.Tsatag.tag+". "+monate[held.Person.Tsatag.monat]+" "+held.Person.Tsatag.jahr+" BF"
 					th Augenfarbe
-					td= Person.Augenfarbe
+					td= held.Person.Augenfarbe
 				tr
 					th Aussehen
 					td(colspan="3")
-						each line in Person.Aussehen.split('\n')
+						each line in held.Person.Aussehen.split('\n')
 							p= line
 				tr
 					th Hintergrund
 					td(colspan="3")
-						each line in Person.Hintergrund.split('\n')
+						each line in held.Person.Hintergrund.split('\n')
 							p= line
 			
+			a#gen
 			table.data-section.links.eigenschaften
 				caption Generierung
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")
@@ -62,18 +99,19 @@ html(lang="de")
 				each val in ["Rasse", "Kultur", "Profession"]
 					tr
 						th #{val}:
-						td= Generierung[val].name
+						td= held.Generierung[val].name
 						th Modifikationen:
-						td= Generierung[val].modifikation
-				if Generierung.BgB.name
+						td= held.Generierung[val].modifikation
+				if held.Generierung.BgB.name
 					tr
 						th BgB:
-						td= Generierung.BgB.name
+						td= held.Generierung.BgB.name
 						th Modifikationen:
-						td= Generierung.BgB.modifikation
-			
+						td= held.Generierung.BgB.modifikation
+			a#att
 			table.data-section.mitte.eigenschaften
 				caption Attribute
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(span="10", style="width: 10%;")
 				thead
@@ -85,12 +123,13 @@ html(lang="de")
 				tbody
 					tr
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							td= Attribute[val].wert
+							td= held.Attribute[val].wert
 						td
-						td= Basiswerte.GS
-			
+						td= held.Basiswerte.GS
+			a#bas
 			table.data-section.mitte.eigenschaften
 				caption Basiswerte
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(span="10", style="width: 10%;")
 				thead
@@ -100,27 +139,30 @@ html(lang="de")
 				tbody
 					tr
 						each val in ["LeP", "AuP", "AsP", "KaP", "MR"]
-							td= Basiswerte[val] || '—'
+							td= held.Basiswerte[val] || '—'
 						each val in ["INI", "AT", "PA", "FK", "WS"]
-							td= Kampfwerte[val]
-			
+							td= held.Kampfwerte[val]
+			a#vnt
 			table.data-section
 				caption Vor- und Nachteile
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				tr
 					td
 						ul.vor-nach.fl-links
 							li.mitte
 								strong Vorteile
-							each val in Vorteile
+							each val in held.Vorteile
 								li= val
 						ul.vor-nach.fl-rechts
 							li.mitte
-								strong Nachteile
-							each val in Nachteile
+								strong held.Nachteile
+							each val in held.Nachteile
 								li= val
+		a#ap
 		section
 			table.data-section.mitte.eigenschaften
 				caption Abenteuerpunkte
+					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")

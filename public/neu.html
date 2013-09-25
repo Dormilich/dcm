@@ -111,26 +111,37 @@
         <legend>Generierung</legend>
         <ul class="floatLabel">
           <li>
-            <label for="rkp_race">Rasse:</label>
-            <input name="Generierung[Rasse][name]" id="rkp_race" type="text" placeholder="Rasse" class="size15">
-            <input name="Generierung[Rasse][modifikation]" id="rkp_race_mod" type="text" placeholder="Rasse-Modifikaton(en)" class="size30">
+            <label for="rkp0" id="rkp0lab">Rasse:</label>
+            <input name="Generierung[Rasse][name]" id="rkp0" type="text" placeholder="Rasse" class="size15">
+            <input name="Generierung[Rasse][modifikation]" id="rkp0mod" type="text" placeholder="Rasse-Modifikaton(en)" class="size30">
           </li>
           <li>
-            <label for="rkp_cult">Kultur:</label>
-            <input name="Generierung[Kultur][name]" id="rkp_cult" type="text" placeholder="Kultur" class="size15">
-            <input name="Generierung[Kultur][modifikation]" id="rkp_cult_mod" type="text" placeholder="Kultur-Modifikation(en)" class="size30">
+            <label for="rkp1" id="rkp1lab">Kultur:</label>
+            <input name="Generierung[Kultur][name]" id="rkp1" type="text" placeholder="Kultur" class="size15">
+            <input name="Generierung[Kultur][modifikation]" id="rkp1mod" type="text" placeholder="Kultur-Modifikaton(en)" class="size30">
           </li>
           <li>
-            <label for="rkp_job">Profession:</label>
-            <input name="Generierung[Profession][name]" id="rkp_job" type="text" placeholder="Profession" class="size15">
-            <input name="Generierung[Profession][modifikation]" id="rkp_job_mod" type="text" placeholder="Professions-Modifikation(en)" class="size30">
+            <label for="rkp2" id="rkp2lab">Profession:</label>
+            <input name="Generierung[Profession][name]" id="rkp2" type="text" placeholder="Profession" class="size15">
+            <input name="Generierung[Profession][modifikation]" id="rkp2mod" type="text" placeholder="Profession-Modifikaton(en)" class="size30">
           </li>
           <li>
-            <label for="rkp_bgb">BgB:</label>
-            <input name="Generierung[BgB][name]" id="rkp_bgb" type="text" placeholder="BgB-Profession" class="size15">
-            <input name="Generierung[BgB][modifikation]" id="rkp_job_mod" type="text" placeholder="BgB-Professions-Modifikation(en)" class="size30">
+            <label for="rkp3" id="rkp3lab">BgB:</label>
+            <input name="Generierung[BgB][name]" id="rkp3" type="text" placeholder="BgB" class="size15">
+            <input name="Generierung[BgB][modifikation]" id="rkp3mod" type="text" placeholder="BgB-Modifikaton(en)" class="size30">
           </li>
         </ul>
+        <script>
+          (function() {
+           var $inputs = $('#rkp3, #rkp3mod');
+           $inputs.prop('disabled', true);
+           $('#rkp3lab')
+            .attr('title', 'Zum (De-)Aktivieren klicken')
+            .on("click", function() { 
+             $inputs.prop('disabled', !$inputs.prop('disabled') );
+            });
+          })();
+        </script>
       </fieldset>
       <fieldset>
         <legend>Attribute</legend>
@@ -288,9 +299,9 @@
               </td>
             </tr>
             <tr>
-              <td>Astralenergie</td>
+              <td id="asp" title="Zum (De-)Aktivieren klicken">Astralenergie</td>
               <td> 
-                <input name="modifikatoren[AsP][start]" type="number" min="0" step="1" title="leer lassen für Nicht-Magier">
+                <input name="modifikatoren[AsP][start]" type="number" min="0" step="1">
               </td>
               <td>
                 <input name="modifikatoren[AsP][add]" type="number" min="0" step="1">
@@ -300,9 +311,9 @@
               </td>
             </tr>
             <tr>
-              <td>Karmaenergie</td>
+              <td id="kap" title="Zum (De-)Aktivieren klicken">Karmaenergie</td>
               <td> 
-                <input name="modifikatoren[KaP][start]" type="number" min="0" step="12" title="leer lassen für Nicht-Geweihte">
+                <input name="modifikatoren[KaP][start]" type="number" min="0" step="12">
               </td>
               <td>
                 <input name="modifikatoren[KaP][add]" type="number" min="0" step="4">
@@ -323,43 +334,67 @@
             </tr>
             <tr>
               <td>Initiative</td>
-              <td colspan="3" class="links">
+              <td class="links">
                 <input name="modifikatoren[INI]" id="INI_KR" type="checkbox" value="4">
-                <label for="INI_KR">Kampfreflexe</label><br>
+                <label for="INI_KR">Kampfreflexe</label>
+              </td>
+              <td class="links">
                 <input name="modifikatoren[INI]" id="INI_KG" type="checkbox" value="2">
                 <label for="INI_KG">Kampfgespür</label>
               </td>
+              <td></td>
             </tr>
             <tr>
               <td>Wundschwelle</td>
-              <td colspan="3" class="links">
+              <td class="links">
                 <input name="modifikatoren[WS]" id="eisern" type="checkbox" value="2">
-                <label for="eisern">Eisern</label><br>
+                <label for="eisern">Eisern</label>
+              </td>
+              <td class="links">
                 <input name="modifikatoren[WS]" id="glasknochen" type="checkbox" value="-2">
-                <label for="glasknochen">Glasknochen</label><br>
+                <label for="glasknochen">Glasknochen</label>
+              </td>
+              <td>
                 <input name="modifikatoren[WS]" id="WS_other" type="number" step="1" value="0" title="andere WS-Modifikatoren">
               </td>
             </tr>
             <tr>
               <td>Geschwindigkeit</td>
-              <td colspan="3" class="links">
+              <td class="links">
                 <input name="modifikatoren[GS]" id="GS_flink" type="checkbox" value="1">
                 <label for="GS_flink">Flink</label><br>
+                <input name="modifikatoren[GS]" id="GS_lahm" type="checkbox" value="2">
+                <label for="GS_lahm">Lahm</label>
+              </td>
+              <td class="links">
                 <input name="modifikatoren[GS]" id="GS_klein" type="checkbox" value="-1">
                 <label for="GS_klein">Kleinwüchsig</label><br>
                 <input name="modifikatoren[GS]" id="GS_zwerg" type="checkbox" value="-2">
-                <label for="GS_zwerg">Zwergenwuchs</label><br>
-                <input name="modifikatoren[GS]" id="GS_lahm" type="checkbox" value="2">
-                <label for="GS_lahm">Lahm</label><br>
+                <label for="GS_zwerg">Zwergenwuchs</label>
+              </td>
+              <td>
                 <input name="modifikatoren[GS]" id="GS_other" type="number" step="1" value="0" title="andere GS-Modifikatoren">
               </td>
             </tr>
           </tbody>
         </table>
+        <script>
+          (function() {
+           $('#asp, #kap')
+            .on("click", function() {
+             var $inputs = $(this).closest('tr').find('input');
+             $inputs.prop('disabled', !$inputs.prop('disabled'));
+            })
+            .closest('tr')
+            .find('input')
+            .prop('disabled', true);
+          })();
+        </script>
       </fieldset>
-      <fieldset class="vor_nach fl_links">
-        <legend>Vorteile</legend>
-        <ul>
+      <fieldset>
+        <legend>Vor- & Nachteile</legend>
+        <ul class="vor_nach fl_links">
+          <li class="mitte"><strong>Vorteile</strong></li>
           <li>
             <input name="Vorteile" type="checkbox" value="Adlige Abstammung" id="vorteil_1">
             <label for="vorteil_1">Adlige Abstammung</label>
@@ -429,8 +464,8 @@
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Begabung (Merkmal)" id="vorteil_13" class="auswahl_liste">
-            <label for="vorteil_13">Begabung für Merkmal</label><br>
-            <select size="5" multiple>
+            <label for="vorteil_13">Begabung für Merkmal</label>
+            <select size="5" multiple class="fl_rechts">
               <option>Antimagie</option>
               <option>Beschwörung</option>
               <optgroup label="Dämonisch">
@@ -476,34 +511,44 @@
               <option>Umwelt</option>
               <option>Verständigung</option>
             </select>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Begabung (Ritual)" id="vorteil_14" class="auswahl_text">
-            <label for="vorteil_14">Begabung für Ritual</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="vorteil_14">Begabung für Ritual</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Begabung (Zauber)" id="vorteil_15" class="auswahl_text">
-            <label for="vorteil_15">Begabung für Zauber</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="vorteil_15">Begabung für Zauber</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Begabung (Talent)" id="vorteil_16" class="auswahl_text">
-            <label for="vorteil_16">Begabung für Talent</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="vorteil_16">Begabung für Talent</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Begabung (Talentgruppe)" id="vorteil_17" class="auswahl_liste">
-            <label for="vorteil_17">Begabung für Talentgruppe</label><br>
-            <select size="5" multiple>
+            <label for="vorteil_17">Begabung für Talentgruppe</label>
+            <select size="5" multiple class="fl_rechts">
               <optgroup label="Kampftalente">
                 <option value="Kampf">gesamt</option>
                 <option>Nahkampf</option>
@@ -516,6 +561,7 @@
               <option>Handwerk</option>
               <option>Sprachen und Schriften</option>
             </select>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Beidhändig" id="vorteil_18">
@@ -866,12 +912,15 @@
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Meisterhandwerk" id="vorteil_63" class="auswahl_text">
-            <label for="vorteil_63">Meisterhandwerk</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="vorteil_63">Meisterhandwerk</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Nachtsicht" id="vorteil_64">
@@ -945,7 +994,7 @@
               </li>
               <li>
                 <input type="radio" name="temp[v][68]" value="" id="vorteil_68_2" class="auswahl_liste">
-                <label for="vorteil_68_2">Giftgruppe:</label><br>
+                <label for="vorteil_68_2">Giftgruppe:</label>
                 <select size="5" multiple>
                   <option>tierische Gifte</option>
                   <option>mineralische Gifte</option>
@@ -1017,12 +1066,15 @@
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Übernatürliche Begabung" id="vorteil_78" class="auswahl_text">
-            <label for="vorteil_78">Übernatürliche Begabung</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="vorteil_78">Übernatürliche Begabung</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Vorteile" type="checkbox" value="Unbeschwertes Zaubern" id="vorteil_79">
@@ -1118,10 +1170,8 @@
             <label for="vorteil_93">Zwergennase</label>
           </li>
         </ul>
-      </fieldset>
-      <fieldset class="vor_nach fl_rechts">
-        <legend>Nachteile</legend>
-        <ul>
+        <ul class="vor_nach fl_rechts">
+          <li class="mitte"><strong>Nachteile</strong></li>
           <li>
             <input name="Nachteile" type="checkbox" value="Aberglaube" id="nachteil_1" class="stufe">
             <label for="nachteil_1">Aberglaube</label>
@@ -1579,20 +1629,17 @@
           </li>
           <li> 
             <input name="Nachteile" type="checkbox" id="nachteil_85" class="zusatz stufe">
-            <label for="nachteil_85">Schlechte Eigenschaft:</label>
-            <input type="text">
+            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
             <input type="number" min="1" max="20" step="1">
           </li>
           <li> 
             <input name="Nachteile" type="checkbox" id="nachteil_86" class="zusatz stufe">
-            <label for="nachteil_86">Schlechte Eigenschaft:</label>
-            <input type="text">
+            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
             <input type="number" min="1" max="20" step="1">
           </li>
           <li> 
             <input name="Nachteile" type="checkbox" id="nachteil_87" class="zusatz stufe">
-            <label for="nachteil_87">Schlechte Eigenschaft:</label>
-            <input type="text">
+            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
             <input type="number" min="1" max="20" step="1">
           </li>
           <li>
@@ -1616,7 +1663,7 @@
           <li>
             <input name="Nachteile" type="checkbox" value="Schulden" id="nachteil_92" class="stufe">
             <label for="nachteil_92">Schulden</label>
-            <input type="number" min="500" max="2000" step="100">Dukaten
+            <input type="number" min="500" max="2000" step="100"><span class="fl_rechts">Dukaten</span>
           </li>
           <li>
             <input name="Nachteile" type="checkbox" value="Schwache Ausstrahlung" id="nachteil_93" class="stufe">
@@ -1692,12 +1739,15 @@
           </li>
           <li>
             <input name="Nachteile" type="checkbox" value="Thesisgebunden" id="nachteil_109" class="auswahl_text">
-            <label for="nachteil_109">Thesisgebunden</label><br>
-            <input type="text" title="Zauber"><br>
-            <input type="text" title="Zauber"><br>
-            <input type="text" title="Zauber"><br>
-            <input type="text" title="Zauber"><br>
-            <input type="text" title="Zauber">
+            <label for="nachteil_109">Thesisgebunden</label>
+            <div class="fl_rechts">
+              <input type="text" title="Zauber"><br>
+              <input type="text" title="Zauber"><br>
+              <input type="text" title="Zauber"><br>
+              <input type="text" title="Zauber"><br>
+              <input type="text" title="Zauber">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Nachteile" type="checkbox" value="Tollpatsch" id="nachteil_110">
@@ -1723,7 +1773,7 @@
           <li>
             <input name="Nachteile" type="checkbox" value="Unfähigkeit (Merkmal)" id="nachteil_115" class="auswahl_liste">
             <label for="nachteil_115">Unfähigkeit für Merkmal</label><br>
-            <select size="5" multiple>
+            <select size="5" multiple class="fl_rechts">
               <option>Antimagie</option>
               <option>Beschwörung</option>
               <optgroup label="Dämonisch">
@@ -1772,17 +1822,20 @@
           </li>
           <li>
             <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talent)" id="nachteil_116" class="auswahl_text">
-            <label for="nachteil_116">Unfähigkeit für Talent</label><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text"><br>
-            <input type="text">
+            <label for="nachteil_116">Unfähigkeit für Talent</label>
+            <div class="fl_rechts">
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text"><br>
+              <input type="text">
+            </div>
+            <div class="clearfix"></div>
           </li>
           <li>
             <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talentgruppe)" id="nachteil_117" class="auswahl_liste">
             <label for="nachteil_117">Unfähigkeit für Talentgruppe</label><br>
-            <select size="5" id="nachteil__l" multiple>
+            <select size="5" id="nachteil__l" multiple class="fl_rechts">
               <optgroup label="Kampftalente">
                 <option value="Kampf">gesamt</option>
                 <option>Nahkampf</option>
@@ -1887,7 +1940,7 @@
           </li>
         </ul>
       </fieldset>
-      <fieldset style="clear: both;" class="mitte">
+      <fieldset class="mitte">
         <button type="submit" disabled>speichern</button>
         <button type="reset"> reset</button>
       </fieldset>

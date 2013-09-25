@@ -64,6 +64,7 @@ table {
 section {
 	padding: 0 3em;
 }
+/*
 nav {
 	background-color: #eee;
 	width: 100%;
@@ -82,6 +83,7 @@ nav a:hover {
 	color: #eee;
 	background-color: black;
 }
+*/
 h1 {
 	font-size: 3em;
 }
@@ -101,4 +103,11 @@ h1 {
 }
 .vor-nach li:nth-child(even) {
 	background-color: #eee;
+}
+.top-link {
+	float: right;
+	padding-right: 1em;
+	font-weight: bold;
+	color: white;
+	text-decoration: none;
 }

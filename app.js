@@ -46,7 +46,7 @@ app.locals.pretty = true;
  *  Connect to and Watch MongoDB  *
  **********************************/
 
-mongoose.connect('localhost', 'dc1'); 
+mongoose.connect('localhost', 'dsa'); 
 // watch DB events
 mongoose.connection.on('error', function _error(err) {
 	console.log('Mongoose error: ' + err);
@@ -69,35 +69,30 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var Person = require('./models/person')
-  , routes = {}
+var routes = {}
+  , Person = require('./models/person')
+  , Held   = require('./models/chardata')
   ;
 // set up routes
 ["neu", "char", "edit"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
-// pre-route request modification
-app.param('mongo', function (req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
+function execCB(success) {
+	return function(error, doc) {
+		if (error) {
+			next(error);
+		}
+		else if (doc) {
+			success(doc);
+			next();
+		}
+		else {
+			res.statusCode = 404;
+			next(new Error("Kein Datensatz gefunden."));
+		}
 	}
-	Person
-		.findById(id)
-		.exec(function(error, person) {
-			if (error) {
-				next(error);
-			}
-			else if (person) {
-				req.person = person;
-				next();
-			}
-			else {
-				res.statusCode = 404;
-				next(new Error("Kein Datensatz gefunden."));
-			}
-		});
-});
-function verifyMongoID(identifyer) {
+}
+function mongoID(identifyer) {
 	return function (req, res, next) {
 		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
 			return next(new Error("Keine gültige MongoDB ID."));
@@ -106,6 +101,38 @@ function verifyMongoID(identifyer) {
 		next();
 	}
 }
+// pre-route request modification
+app.param('person', function (req, res, next, id) {
+	if (!/^[0-9a-fA-F]+$/.test(id)) {
+		return next(new Error("Keine gültige MongoDB ID."));
+	}
+	Person
+		.findById(id)
+		.exec(execCB(function(doc) {
+			req.person = doc;
+		}))
+	;
+});
+app.param('held', function (req, res, next, id) {
+	if (!/^[0-9a-fA-F]+$/.test(id)) {
+		return next(new Error("Keine gültige MongoDB ID."));
+	}
+	Held
+		.findOne({ held: id })
+		.exec(execCB(function(doc) {
+			req.held = doc;
+		}))
+	;
+
+});
+app.param('mongoid', function (req, res, next, id) {
+	if (!/^[0-9a-fA-F]+$/.test(id)) {
+		return next('route');
+	}
+	req.id = id;
+	next();
+});
+
 
 // demo
 app.get('/', function (req, res) {
@@ -117,15 +144,34 @@ app.get( '/neu', routes.neu.index);
 app.post('/neu', routes.neu.save);
 // display character(s)
 app.get('/chars', routes.char.list);
-app.get('/char/:mongo', routes.char.show);
+app.get('/char/:person', routes.char.show);
 // unset character
-app.delete('/char/:id', verifyMongoID('id'), routes.char.remove);
+app.delete('/char/:mongoid', routes.char.remove);
 // edit character
-app.get('/edit/:mongo', routes.edit.show);
-app.put('/edit/:id', verifyMongoID('id'), routes.edit.save);
+app.get('/edit/:person', routes.edit.show);
+app.put('/edit/:mongoid', routes.edit.save);
 // add AP to char
-app.get('/ap/char/:id', verifyMongoID('id'), function(req, res, next) {
-
+app.get('/ap/:mongoid', function(req, res, next) {
+	Person
+		.findById(req.id)
+		.select('Person.Name')
+		.lean()
+		.exec(function(err, doc) {
+			if (err) next(err);
+			
+		})
+	;
+});
+// dixplay extended character
+app.get('/held/:mongoid', function(req, res, next) {
+	Held
+		.findOne({ held: req.id })
+		.populate('held')
+		.exec(function(err, doc) {
+			if (err) return next(err);
+			res.render('held', doc);
+		})
+	;
 });
 
 /******************

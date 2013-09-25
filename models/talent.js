@@ -9,7 +9,6 @@ function talentProbeValidator(val) {
 }
 
 var talentSchema = new Schema({
-	_id:   Number,
 	name:  { type: String, required: true, unique: true },
 	typ:   { type: String, default: 'Metatalente' },
 	probe: [{ type: String, validator: talentProbeValidator }],

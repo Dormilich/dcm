@@ -1,6 +1,8 @@
-var path   = require('path')
-  , Person = require('../models/person')
-  , Heldendaten = require('../models/chardata')
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , Person  = require( path.join(appRoot, 'models/person') )
+  , Talent  = require( path.join(appRoot, 'models/talent') )
+  , Held    = require( path.join(appRoot, 'models/chardata') )
   ;
 module.exports = {
 	index: function (req, res, next) {
@@ -8,7 +10,6 @@ module.exports = {
 			res.render('new_char');
 		}
 		else {
-			var appRoot = path.dirname(require.main.filename);
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
 		}
 	},
@@ -17,6 +18,7 @@ module.exports = {
 		  , mod = req.body.modifikatoren
 		  ;
 		// array => value
+		/* faster by factor 2-3 against Object.keys().filter().forEach() */
 		for (key in mod) {
 			if (Array.isArray(mod[key])) {
 				mod[key] = mod[key].reduce(function (prev, curr) {
@@ -26,19 +28,18 @@ module.exports = {
 		}
 		// save
 		Person.create(req.body, function(error, person) {
+			if (error) return next(error);
+			
+			Held.create({ 
+				held: person._id,
+				AP: {
+					frei: 0,
+					alle: ((+person.Attribute.KL.wert) + (+person.Attribute.IN.wert)) * 20
+				}
+			}, function(error, doc) {
 				if (error) return next(error);
-				
-				Heldendaten.create({ 
-					held: person._id,
-					AP: {
-						frei: 0,
-						alle: ((+person.Attribute.KL.wert) + (+person.Attribute.IN.wert)) * 20
-					}
-				}, function(error, doc) {
-					if (error) return next(error);
-					res.redirect('/char/' + doc.held);
-				});
-			})
-		;
+				res.redirect('/char/' + doc.held);
+			});
+		});
 	}
 };
