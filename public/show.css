@@ -64,26 +64,11 @@ table {
 section {
 	padding: 0 3em;
 }
-/*
-nav {
-	background-color: #eee;
-	width: 100%;
-	text-align: center;
+button { 
+	width: 20em; 
+	height: 2em; 
+	margin-top: 2em;
 }
-nav a {
-	display: inline-block;
-	width: 20em;
-	text-align: center;
-	text-decoration: none;
-	color: black;
-	font-weight: bold;
-	padding: 1em;
-}
-nav a:hover {
-	color: #eee;
-	background-color: black;
-}
-*/
 h1 {
 	font-size: 3em;
 }

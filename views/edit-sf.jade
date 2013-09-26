@@ -1,0 +1,25 @@
+doctype 5
+html(lang="de")
+	head
+		title Sonderfertigkeiten hinzufügen
+		link(rel="stylesheet", type="text/css", href="/show.css")
+	body
+		// nav
+		section
+			h1.mitte= held.Person.Name
+			form(action="/sf/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				
+				table.data-section
+					caption allgemeine Sonderfertigkeiten
+					tr
+						td
+							ul
+								li
+									input#all_1(type="checkbox", name="SF[allgemein]", value="")
+									label(for="all_1") Kulturkunde
+						td
+				
+				// put SF into JS
+				.mitte
+					button(type="submit", disabled) speichern

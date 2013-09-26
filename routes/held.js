@@ -27,5 +27,23 @@ module.exports = {
 			if (error) return next(error);
 			res.redirect('/helden');
 		});
+	},
+	edit: function(req, res, next) {
+		Held
+			.findById(req.id)
+			.populate('held')
+			.lean()
+			.exec(function(err, doc) {
+				if (err) next(err);
+				res.render('edit-' + req.section);
+			})
+		;
+	},
+	save: function (req, res, next) {
+		req.body.modified = Date.now();
+		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/held/' + req.id);
+		});
 	}
 };

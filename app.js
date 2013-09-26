@@ -74,7 +74,7 @@ var routes = {}
   , Held   = require('./models/chardata')
   ;
 // set up routes
-["neu", "held", "char", "ap"].forEach(function(file) {
+["neu", "held", "char"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
@@ -110,6 +110,10 @@ function fetchDoc(model, param_name) {
 		;
 	};
 }
+function mapMatch(req, res, next) {
+	req.section = req.params[0];
+	req.id      = req.params[1];
+}
 // pre-route request modification
 app.param('person', fetchDoc(Person, 'person'));
 app.param('held',   fetchDoc(Held,   'held'));
@@ -142,21 +146,9 @@ app.delete('/held/:mongoid', routes.held.disable);
 app.get('/char/:person',  routes.char.show);
 app.put('/char/:mongoid', routes.char.save);
 
-// add AP to char
-app.get('/ap/:held',    routes.ap.show);
-app.put('/ap/:mongoid', routes.ap.save);
-
-/*/ add SF to char
-app.get('/sf/:mongoid', routes.sf.show);
-app.put('/sf/:mongoid', routes.sf.save);
-
-// modify abilities
-app.get('/talent/:mongoid', routes.talent.show);
-app.put('/talent/:mongoid', routes.talent.save);
-
-// add spells to char
-app.get('/zauber/:mongoid', routes.zauber.show);
-app.put('/zauber/:mongoid', routes.zauber.save);
+// edit character sheet sections
+app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch, routes.held.edit);
+app.put(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch, routes.held.save);
 
 //*/
 
