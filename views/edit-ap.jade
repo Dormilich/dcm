@@ -3,14 +3,20 @@ html(lang="de")
 	head
 		title AP vergeben
 		link(rel="stylesheet", type="text/css", href="/show.css")
+		style.
+			button { 
+				width: 20em; 
+				height: 2em; 
+				margin-top: 2em;
+			}
 	body
 		// nav
 		section
 			h1.mitte Abenteuerpunkte vergeben
-			form(action="/cdata/"+_id, method="post", accept-charset="utf-8")
+			form(action="/ap/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				table.data-section.mitte.eigenschaften
-					caption= Person.Name
+					caption= held.Person.Name
 					colgroup
 						col(style="width: 15%")
 						col(style="width: 35%")
@@ -26,3 +32,5 @@ html(lang="de")
 								label(for="frei") frei:
 							td 
 								input#frei.mitte(type="number", name="AP[frei]", min="0", value=AP.frei)
+				.mitte
+					button(type="submit") speichern

@@ -74,7 +74,7 @@ var routes = {}
   , Held   = require('./models/chardata')
   ;
 // set up routes
-["neu", "held", "char"].forEach(function(file) {
+["neu", "held", "char", "ap"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
@@ -142,11 +142,11 @@ app.delete('/held/:mongoid', routes.held.disable);
 app.get('/char/:person',  routes.char.show);
 app.put('/char/:mongoid', routes.char.save);
 
-/*/ add AP to char
-app.get('/ap/:mongoid', routes.ap.show);
+// add AP to char
+app.get('/ap/:held',    routes.ap.show);
 app.put('/ap/:mongoid', routes.ap.save);
 
-// add SF to char
+/*/ add SF to char
 app.get('/sf/:mongoid', routes.sf.show);
 app.put('/sf/:mongoid', routes.sf.save);
 
