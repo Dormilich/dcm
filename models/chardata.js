@@ -40,7 +40,9 @@ var talentSchema = new Schema({
 });
 //*/
 var heldDataSchema = new Schema({
-	held: { type: IDREF, ref: 'Person' },
+	held:     { type: IDREF,   ref: 'Person' },
+	disabled: { type: Boolean, default: false },
+	modified: { type: Date,    default: new Date() },
 	SF: {
 		Kampf:     [String],
 		Manöver:   [String],

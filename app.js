@@ -74,24 +74,10 @@ var routes = {}
   , Held   = require('./models/chardata')
   ;
 // set up routes
-["neu", "char", "edit"].forEach(function(file) {
+["neu", "held", "char"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
-function execCB(success) {
-	return function(error, doc) {
-		if (error) {
-			next(error);
-		}
-		else if (doc) {
-			success(doc);
-			next();
-		}
-		else {
-			res.statusCode = 404;
-			next(new Error("Kein Datensatz gefunden."));
-		}
-	}
-}
+
 function mongoID(identifyer) {
 	return function (req, res, next) {
 		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
@@ -101,30 +87,33 @@ function mongoID(identifyer) {
 		next();
 	}
 }
+function fetchDoc(model, param_name) {
+	return function (req, res, next, id) {
+		if (!/^[0-9a-fA-F]+$/.test(id)) {
+			return next(new Error("Keine gültige MongoDB ID."));
+		}
+		model
+			.findById(id)
+			.exec(function(error, doc) {
+				if (error) {
+					next(error);
+				}
+				else if (doc) {
+					req[param_name] = doc;
+					next();
+				}
+				else {
+					res.statusCode = 404;
+					next(new Error("Kein Datensatz gefunden."));
+				}
+			})
+		;
+	};
+}
 // pre-route request modification
-app.param('person', function (req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
-	}
-	Person
-		.findById(id)
-		.exec(execCB(function(doc) {
-			req.person = doc;
-		}))
-	;
-});
-app.param('held', function (req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
-	}
-	Held
-		.findOne({ held: id })
-		.exec(execCB(function(doc) {
-			req.held = doc;
-		}))
-	;
+app.param('person', fetchDoc(Person, 'person'));
+app.param('held',   fetchDoc(Held,   'held'));
 
-});
 app.param('mongoid', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
 		return next('route');
@@ -136,43 +125,40 @@ app.param('mongoid', function (req, res, next, id) {
 
 // demo
 app.get('/', function (req, res) {
-	res.redirect('/chars');
+	res.redirect('/helden');
 });
 
 // create and save a character
 app.get( '/neu', routes.neu.index);
-app.post('/neu', routes.neu.save);
-// display character(s)
-app.get('/chars', routes.char.list);
-app.get('/char/:person', routes.char.show);
-// unset character
-app.delete('/char/:mongoid', routes.char.remove);
-// edit character
-app.get('/edit/:person', routes.edit.show);
-app.put('/edit/:mongoid', routes.edit.save);
-// add AP to char
-app.get('/ap/:mongoid', function(req, res, next) {
-	Person
-		.findById(req.id)
-		.select('Person.Name')
-		.lean()
-		.exec(function(err, doc) {
-			if (err) next(err);
-			
-		})
-	;
-});
-// dixplay extended character
-app.get('/held/:mongoid', function(req, res, next) {
-	Held
-		.findOne({ held: req.id })
-		.populate('held')
-		.exec(function(err, doc) {
-			if (err) return next(err);
-			res.render('held', doc);
-		})
-	;
-});
+app.post('/neu', routes.neu.create);
+
+// list all characters
+app.get('/helden', routes.held.list);
+// display character sheet
+app.get('/held/:held', routes.held.show);
+app.delete('/held/:mongoid', routes.held.disable);
+
+// edit character's personal data
+app.get('/char/:person',  routes.char.show);
+app.put('/char/:mongoid', routes.char.save);
+
+/*/ add AP to char
+app.get('/ap/:mongoid', routes.ap.show);
+app.put('/ap/:mongoid', routes.ap.save);
+
+// add SF to char
+app.get('/sf/:mongoid', routes.sf.show);
+app.put('/sf/:mongoid', routes.sf.save);
+
+// modify abilities
+app.get('/talent/:mongoid', routes.talent.show);
+app.put('/talent/:mongoid', routes.talent.save);
+
+// add spells to char
+app.get('/zauber/:mongoid', routes.zauber.show);
+app.put('/zauber/:mongoid', routes.zauber.save);
+
+//*/
 
 /******************
  *  Start Server  *

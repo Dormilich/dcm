@@ -1,28 +1,32 @@
-var Person = require('../models/person');
-
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , Person  = require( path.join(appRoot, 'models/person') )
+  , Held    = require( path.join(appRoot, 'models/chardata') )
+  ;
 module.exports = {
-	list: function(req, res, next) {
+	show: function (req, res, next) {
+		res.render('edit_char', req.person);
+	},
+	save: function (req, res, next) {
+		req.body.modified = new Date();
 		Person
-			.find({ disabled: !!req.query.deleted })
-			.select('Person')
-			.lean()
-			.exec(function(error, results) {
-				if (error) {
-					return next(error);
-				}
-				res.render('table-of-characters', { Liste: results });
+			.findByIdAndUpdate(req.id, req.body)
+			.select('_id')
+			.exec()
+			.then(function(doc) {
+				return Held
+					.findOne({ held: doc._id })
+					.select('_id')
+					.exec()
+				;
+			}, function(error) {
+				next(error);
+			})
+			.then(function(ID) {
+				res.redirect('/held/' + ID._id);
+			}, function(error) {
+				next(error);
 			})
 		;
-	},
-	show: function (req, res, next) { // using :mongoid
-		res.render('charakter-db', req.person);
-	},
-	remove: function (req, res, next) { // using :id
-		Person.findByIdAndUpdate(req.id, { disabled: true }, function (error, doc) {
-			if (error) {
-				return next(error);
-			}
-			res.redirect('/chars');
-		});
 	}
 };

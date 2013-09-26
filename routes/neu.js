@@ -1,7 +1,7 @@
 var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
   , Person  = require( path.join(appRoot, 'models/person') )
-  , Talent  = require( path.join(appRoot, 'models/talent') )
+//  , Talent  = require( path.join(appRoot, 'models/talent') )
   , Held    = require( path.join(appRoot, 'models/chardata') )
   ;
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
 		}
 	},
-	save: function(req, res, next) {
+	create: function(req, res, next) {
 		var key
 		  , mod = req.body.modifikatoren
 		  ;
@@ -26,7 +26,6 @@ module.exports = {
 				}, 0);
 			}
 		}
-		// save
 		Person.create(req.body, function(error, person) {
 			if (error) return next(error);
 			
@@ -38,7 +37,7 @@ module.exports = {
 				}
 			}, function(error, doc) {
 				if (error) return next(error);
-				res.redirect('/char/' + doc.held);
+				res.redirect('/held/' + doc._id);
 			});
 		});
 	}

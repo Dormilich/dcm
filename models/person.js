@@ -114,8 +114,7 @@ var personSchema = new Schema({
 	},
 	Vorteile:  [String],
 	Nachteile: [String],
-	modified:  { type: Date, default: Date.now },
-	disabled:  { type: Boolean, default: false }
+	modified:  { type: Date, default: new Date() }
 });
 personSchema.virtual('Basiswerte.LeP').get(function() {
 	var KO  = this.Attribute.KO.wert
