@@ -44,11 +44,12 @@ var heldDataSchema = new Schema({
 	disabled: { type: Boolean, default: false },
 	modified: { type: Date,    default: new Date() },
 	SF: {
-		Kampf:     [String],
-		Manöver:   [String],
-		allgemein: [String],
-		magisch:   [String],
-		geweiht:   [String]
+		Kampf:       [String],
+		Manöver:     [String],
+		allgemein:   [String],
+		magisch:     [String],
+		geweiht:     [String],
+		Kulturkunde: [String]
 	},
 	AP: {
 		alle: { type: Number, min: 0, required: true },

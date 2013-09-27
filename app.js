@@ -71,35 +71,33 @@ process.on('SIGINT', function() {
 
 var routes = {}
   , Person = require('./models/person')
-  , Held   = require('./models/chardata')
   ;
 // set up routes
 ["neu", "held", "char"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
-function mongoID(identifyer) {
-	return function (req, res, next) {
-		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
-			return next(new Error("Keine gültige MongoDB ID."));
+function mapMatch() {
+	var args = arguments.length;
+	return function(req, res, next) {
+		for (var i=0, l=args.length; i < l; i++) {
+			req[args[i]] = req.params[i];
 		}
-		req.id = req.params[identifyer];
-		next();
 	}
 }
-function fetchDoc(model, param_name) {
-	return function (req, res, next, id) {
+// pre-route request modification
+app.param('person', function (req, res, next, id) {
 		if (!/^[0-9a-fA-F]+$/.test(id)) {
 			return next(new Error("Keine gültige MongoDB ID."));
 		}
-		model
+		Person
 			.findById(id)
 			.exec(function(error, doc) {
 				if (error) {
 					next(error);
 				}
 				else if (doc) {
-					req[param_name] = doc;
+					req.person = doc;
 					next();
 				}
 				else {
@@ -108,15 +106,8 @@ function fetchDoc(model, param_name) {
 				}
 			})
 		;
-	};
-}
-function mapMatch(req, res, next) {
-	req.section = req.params[0];
-	req.id      = req.params[1];
-}
-// pre-route request modification
-app.param('person', fetchDoc(Person, 'person'));
-app.param('held',   fetchDoc(Held,   'held'));
+	}
+);
 
 app.param('mongoid', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
@@ -139,7 +130,7 @@ app.post('/neu', routes.neu.create);
 // list all characters
 app.get('/helden', routes.held.list);
 // display character sheet
-app.get('/held/:held', routes.held.show);
+app.get(   '/held/:mongoid', routes.held.show);
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character's personal data
@@ -147,8 +138,8 @@ app.get('/char/:person',  routes.char.show);
 app.put('/char/:mongoid', routes.char.save);
 
 // edit character sheet sections
-app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch, routes.held.edit);
-app.put(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch, routes.held.save);
+app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
+app.put(/^\/(?:ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('id'), routes.held.save);
 
 //*/
 

@@ -1,6 +1,7 @@
 var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
   , Held    = require( path.join(appRoot, 'models/chardata') )
+  , data    = require( path.join(appRoot, 'data/dsa') )
   ;
 module.exports = {
 	list: function(req, res, next) {
@@ -9,22 +10,26 @@ module.exports = {
 			.populate('held')
 			.select('held AP')
 			.lean()
-			.exec(function(error, results) {
-				if (error) return next(error);
-				res.render('list-helden', { Liste: results });
+			.exec(function(err, arr) {
+				if (err) return next(err);
+				res.render('list-helden', { Liste: arr });
 			})
 		;
 	},
 	show: function (req, res, next) {
-		req.held.populate('held', function(err, doc) {
-			if (err) return next(err);
-			doc._charID = doc.populated('held');
-			res.render('held', doc);
-		});
+		Held
+			.findById(req.id)
+			.populate('held')
+			.exec(function(err, doc) {
+				if (err) return next(err);
+				doc._charID = doc.populated('held');
+				res.render('held', doc);
+			})
+		;
 	},
 	disable: function (req, res, next) {
-		Held.findByIdAndUpdate(req.id, { disabled: true }, function (error, doc) {
-			if (error) return next(error);
+		Held.findByIdAndUpdate(req.id, { disabled: true }, function (err, doc) {
+			if (err) return next(err);
 			res.redirect('/helden');
 		});
 	},
@@ -33,14 +38,15 @@ module.exports = {
 			.findById(req.id)
 			.populate('held')
 			.lean()
-			.exec(function(err, doc) {
+			.exec(function(err, obj) {
 				if (err) next(err);
-				res.render('edit-' + req.section);
+				obj._data = data[req.section];
+				res.render('edit-' + req.section, obj);
 			})
 		;
 	},
 	save: function (req, res, next) {
-		req.body.modified = Date.now();
+		req.body.modified = new Date();
 		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/held/' + req.id);

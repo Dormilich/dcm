@@ -1,16 +1,19 @@
-var Person = require('../models/person');
-
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , Held    = require( path.join(appRoot, 'models/chardata') )
+  ;
 module.exports = {
-	show: function (req, res, next) {
-		res.render('edit_char', req.person);
+	ap: function(req, res, next) {
+		req.held.populate('held', function(err, doc) {
+			if (err) next(err);
+			res.render('edit-ap');
+		});
 	},
-	save: function (req, res, next) {
-		req.body.modified = Date.now();
-		Person.findByIdAndUpdate(req.id, req.body, function(error, doc) {
-			if (error) {
-				return next(error);
-			}
-			res.render('charakter-db', doc);
+	sf: function(req, res, next) {
+		req.held.populate('held', function(err, doc) {
+			if (err) next(err);
+			
+			res.render('edit-sf');
 		});
 	}
 };
