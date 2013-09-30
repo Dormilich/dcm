@@ -64,7 +64,8 @@ table {
 section {
 	padding: 0 3em;
 }
-button { 
+button[type='submit'],
+button[type='reset'] { 
 	width: 20em; 
 	height: 2em; 
 	margin-top: 2em;
@@ -86,7 +87,7 @@ h1 {
 .vor-nach li {
 	padding: 0.5em 1em;
 }
-.vor-nach li:nth-child(even) {
+.vor-nach li:nth-child(odd) {
 	background-color: #eee;
 }
 .top-link {

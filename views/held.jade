@@ -43,7 +43,9 @@ html(lang="de")
 						li
 							a(href="#vnt") Vor- & Nachteile
 						li
-							a(href="#ap") AP
+							a(href="#ap") Abenteuerpunkte
+						li
+							a(href="#sf") Sonderfertigkeiten
 
 		section(style="clear: both;")
 			h1.mitte= held.Person.Name
@@ -176,3 +178,70 @@ html(lang="de")
 						td= AP.alle
 						th frei
 						td= AP.frei
+
+		a#sf
+		section
+			table.data-section.mitte.eigenschaften
+				caption Sonderfertigkeiten
+					a.top-link(href="#top", title="nach oben springen") &#8679;
+				if SF.allgemein.length
+					tbody
+						tr
+							th allgemeine Sonderfertigkeiten
+						tr
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
+										li= SF.allgemein[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.allgemein.length; y<l; y++)
+										li= SF.allgemein[y]
+				if SF.Kampf.length
+					tbody
+						tr
+							th Kampf-Sonderfertigkeiten
+						tr
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.Kampf.length/2); x<l; x++)
+										li= SF.Kampf[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.Kampf.length; y<l; y++)
+										li= SF.Kampf[y]
+				if SF.Manöver.length
+					tbody
+						tr
+							th Waffenlose Manöver
+						tr
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.Manöver.length/2); x<l; x++)
+										li= SF.Manöver[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.Manöver.length; y<l; y++)
+										li= SF.Manöver[y]
+				if SF.geweiht.length
+					tbody
+						tr
+							th Karmale Sonderfertigkeiten
+						tr
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.geweiht.length/2); x<l; x++)
+										li= SF.geweiht[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.geweiht.length; y<l; y++)
+										li= SF.geweiht[y]
+				if SF.magisch.length
+					tbody
+						tr
+							th Magische Sonderfertigkeiten
+						tr
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.magisch.length/2); x<l; x++)
+										li= SF.magisch[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.magisch.length; y<l; y++)
+										li= SF.magisch[y]
+						

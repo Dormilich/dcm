@@ -78,11 +78,12 @@ var routes = {}
 });
 
 function mapMatch() {
-	var args = arguments.length;
+	var args = arguments;
 	return function(req, res, next) {
 		for (var i=0, l=args.length; i < l; i++) {
 			req[args[i]] = req.params[i];
 		}
+		next();
 	}
 }
 // pre-route request modification
@@ -139,7 +140,8 @@ app.put('/char/:mongoid', routes.char.save);
 
 // edit character sheet sections
 app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
-app.put(/^\/(?:ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('id'), routes.held.save);
+app.put('/ap/:mongoid', routes.held.save);
+app.put('/sf/:mongoid', routes.held.save);
 
 //*/
 

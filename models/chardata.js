@@ -48,8 +48,7 @@ var heldDataSchema = new Schema({
 		Manöver:     [String],
 		allgemein:   [String],
 		magisch:     [String],
-		geweiht:     [String],
-		Kulturkunde: [String]
+		geweiht:     [String]
 	},
 	AP: {
 		alle: { type: Number, min: 0, required: true },

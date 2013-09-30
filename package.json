@@ -9,8 +9,8 @@
 	"contributors": [
 		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }
 	],
-	"repositories": [
-		{ "type": "git", "url": "http://github.com/Dormilich/dcm" }
+	"repository": [
+		{ "type": "git", "url": "https://github.com/Dormilich/dcm" }
 	],
 	"dependencies": {
 		"express"    : "3.x.x",
