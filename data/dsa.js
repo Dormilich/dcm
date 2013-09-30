@@ -8,5 +8,11 @@ module.exports = {
 		geweiht: ["Akoluth", "Aura der Heiligkeit", "Karmalqueste", "Kontakt zum Großen Geist"],
 		Kulturkunde: ["Mittelreich", "Almada", "Andergast/Nostria", "Bornland", "Svellttal", "Nordlande", "Horasreich", "Zyklopeninseln", "Amazonen", "Aranien", "Tulamidenlande", "Novadi", "Ferkina", "Zahori", "Thorwal", "Gjalskerländer", "Fjarninger", "Waldmenschen", "Tocamuyac", "Maraskan", "Südaventurien", "Bukanier", "Nivesen", "Norbarden", "Trollzacker", "Schwarze Lande", "Amboßzwerge", "Brillantzwerge", "Erzzwerge", "Hügelzwerge", "Brobim", "Auelfen", "Waldelfen", "Firnelfen", "Steppenelfen", "Orks", "Goblins", "Archaische Achaz", "Stammes-Achaz", "Trolle", "Grolme"],
 		Götter: ["Praios", "Rondra", "Efferd", "Travia", "Boron", "Hesinde", "Firun", "Tsa", "Phex", "Peraine", "Ingerimm", "Rahja", "Aves", "Ifirn", "Kor", "Nandus", "Swafnir", "Angrosch", "H’Szint", "Zsahh", "Gravesh", "Der Namenlose"]
+	},
+	talente: {
+		Nahkampf:  ["Anderthalbhänder", "Dolche", "Fechtwaffen", "Hiebwaffen", "Infanteriewaffen", "Kettenstäbe", "Kettenwaffen", "Raufen", "Ringen", "Säbel", "Schwerter", "Speere", "Stäbe", "Zweihandflegel", "Zweihandhiebwaffen", "Zweihandschwerter/-säbel"],
+		Fernkampf: ["Lanzenreiten", "Peitsche", "Armbrust", "Belagerungswaffen", "Blasrohr", "Bogen", "Diskus", "Schleuder", "Wurfbeile", "Wurfmesser", "Wurfspeere"],
+		Sprachen:  ["Garethi", "Bosparano", "Zyklopäisch", "Tulamidya", "Ur-Tulamidya", "Zelemja", "Alaani", "Zhulchammaqra", "Ferkina", "Ruuz", "Altes Kemi", "Rabensprache", "Nujuka", "Mohisch", "Thorwalsch", "Hjaldingsch", "Isdira", "Asdharia", "Rogolan", "Angram", "Oloarkh", "Ologhaijan", "Goblinisch", "Trollisch", "Mahrisch", "Rissoal", "Molochisch", "Neckergesang", "Grolmisch", "Z’Lit", "Drachisch", "Koboldisch", "Zhayad", "Atak", "Füchsisch"],
+		Schriften: ["Altes Alaani", "Altes Kemi", "Amulashtra", "Angram", "Arkanil", "Chrmk", "Chuchas", "Drakhard-Zinken", "Drakned-Glyphen", "Geheiligte Glyphen von Unau", "Gimaril", "Gjalskisch", "Hjaldingsche Runen", "Imperiale Zeichen", "Isdira", "Asdharia", "Kusliker Zeichen", "Mahrische Glyphen", "Nanduria", "Rogolan", "Trollische Raumbilderschrift", "Tulamidya", "Ur-Tulamidya", "Zhayad"]
 	}
 };
