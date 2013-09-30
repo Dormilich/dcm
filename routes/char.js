@@ -5,7 +5,21 @@ var path    = require('path')
   ;
 module.exports = {
 	show: function (req, res, next) {
-		res.render('edit_char', req.person);
+		Person
+			.findById(req.id)
+			.exec(function(error, doc) {
+				if (error) {
+					return next(error);
+				}
+				else if (doc) {
+					res.render('edit_char', doc);
+				}
+				else {
+					res.statusCode = 404;
+					return next(new Error("Kein Datensatz gefunden."));
+				}
+			})
+		;
 	},
 	save: function (req, res, next) {
 		req.body.modified = new Date();

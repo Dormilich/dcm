@@ -1,0 +1,22 @@
+doctype 5
+html(lang="de")
+	head
+		title Sonderfertigkeiten hinzufügen
+		link(rel="stylesheet", type="text/css", href="/show.css")
+		script(src="/jquery-2.0.3.min.js")
+	body
+		section
+			h1.mitte= held.Person.Name
+			form(action="/talente/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+			
+			each talents, category in Liste
+				table.data-section
+					caption= category
+					tr
+						td
+							ul
+								each val, key in talents
+									li
+										input(type="checkbox", name="...", id="sf1_"+key, value=val)
+										label(for="tal1_"+key)= val

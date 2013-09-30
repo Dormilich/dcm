@@ -1,3 +1,11 @@
+mixin extendedItem(name, category)
+	li
+		input.spezifisch(type="checkbox", name="SF["+category+"]", value=name)
+		label= name
+		button.add.fl-rechts(type="button") +
+		input.fl-rechts(type="text")
+
+
 doctype 5
 html(lang="de")
 	head
@@ -33,22 +41,14 @@ html(lang="de")
 									li
 										input(type="checkbox", name="SF[allgemein]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
 										label(for="sf1_"+key)= val
-								li
-									input.spezifisch(type="checkbox", name="SF[allgemein]", value="Berufsgeheimnis")
-									label Berufsgeheimnis
-									button.add.fl-rechts(type="button") +
-									input.fl-rechts(type="text")
-								li
-									input.spezifisch(type="checkbox", name="SF[allgemein]", value="Ortskenntnis")
-									label Ortskenntnis
-									button.add.fl-rechts(type="button") +
-									input.fl-rechts(type="text")
+								+extendedItem('Berufsgeheimnis', 'allgemein')
+								+extendedItem('Ortskenntnis', 'allgemein')
 							ul.vor-nach.fl-rechts
 								li
 									strong Kulturkunde:
 								each val, key in _data.Kulturkunde
 									li
-										input(type="checkbox", name="SF[allgemein]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde ("+val+")") !== -1)
+										input(type="checkbox", name="SF[allgemein]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde (#{val})") !== -1)
 										label(for="sf2_"+key) Kulturkunde (#{val})
 				
 				table.data-section
@@ -65,11 +65,7 @@ html(lang="de")
 									li
 										input(type="checkbox", name="SF[Kampf]", id="sf4_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(val) !== -1)
 										label(for="sf4_"+y)= _data.Kampf[y]
-								li
-									input.spezifisch(type="checkbox", name="SF[Kampf]", value="Waffenmeister")
-									label Waffenmeister
-									button.add.fl-rechts(type="button") +
-									input.fl-rechts(type="text")
+								+extendedItem('Waffenmeister', 'Kampf')
 
 				table.data-section
 					caption Waffenlose Manöver

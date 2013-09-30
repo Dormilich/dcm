@@ -187,8 +187,8 @@ html(lang="de")
 				if SF.allgemein.length
 					tbody
 						tr
-							th allgemeine Sonderfertigkeiten
-						tr
+							th Allgemeine Sonderfertigkeiten
+						tr.links
 							td
 								ul.vor-nach.fl-links
 									- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
@@ -200,7 +200,7 @@ html(lang="de")
 					tbody
 						tr
 							th Kampf-Sonderfertigkeiten
-						tr
+						tr.links
 							td
 								ul.vor-nach.fl-links
 									- for (var x=0, l=Math.ceil(SF.Kampf.length/2); x<l; x++)
@@ -212,7 +212,7 @@ html(lang="de")
 					tbody
 						tr
 							th Waffenlose Manöver
-						tr
+						tr.links
 							td
 								ul.vor-nach.fl-links
 									- for (var x=0, l=Math.ceil(SF.Manöver.length/2); x<l; x++)
@@ -224,7 +224,7 @@ html(lang="de")
 					tbody
 						tr
 							th Karmale Sonderfertigkeiten
-						tr
+						tr.links
 							td
 								ul.vor-nach.fl-links
 									- for (var x=0, l=Math.ceil(SF.geweiht.length/2); x<l; x++)
@@ -236,7 +236,7 @@ html(lang="de")
 					tbody
 						tr
 							th Magische Sonderfertigkeiten
-						tr
+						tr.links
 							td
 								ul.vor-nach.fl-links
 									- for (var x=0, l=Math.ceil(SF.magisch.length/2); x<l; x++)

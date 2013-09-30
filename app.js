@@ -87,29 +87,6 @@ function mapMatch() {
 	}
 }
 // pre-route request modification
-app.param('person', function (req, res, next, id) {
-		if (!/^[0-9a-fA-F]+$/.test(id)) {
-			return next(new Error("Keine gültige MongoDB ID."));
-		}
-		Person
-			.findById(id)
-			.exec(function(error, doc) {
-				if (error) {
-					next(error);
-				}
-				else if (doc) {
-					req.person = doc;
-					next();
-				}
-				else {
-					res.statusCode = 404;
-					next(new Error("Kein Datensatz gefunden."));
-				}
-			})
-		;
-	}
-);
-
 app.param('mongoid', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
 		return next('route');
@@ -135,7 +112,7 @@ app.get(   '/held/:mongoid', routes.held.show);
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character's personal data
-app.get('/char/:person',  routes.char.show);
+app.get('/char/:mongoid', routes.char.show);
 app.put('/char/:mongoid', routes.char.save);
 
 // edit character sheet sections
