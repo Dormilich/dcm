@@ -11,6 +11,7 @@ function lernstufeValidator(val) {
 
 var heldTalentSchema = new Schema({
 	_talent:   { type: IDREF,  ref: 'Talent' },
+	name:      { type: String, required: true },
 	wert:      { type: Number, required: true, min: -3, max: 35 },
 	Lernstufe: { type: String, validator: lernstufeValidator },
 	Spezialisierungen: [String]

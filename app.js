@@ -69,11 +69,9 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var routes = {}
-  , Person = require('./models/person')
-  ;
+var routes = {};
 // set up routes
-["neu", "held", "char"].forEach(function(file) {
+["neu", "held", "char", "edit"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
@@ -120,6 +118,7 @@ app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.ed
 app.put('/ap/:mongoid', routes.held.save);
 app.put('/sf/:mongoid', routes.held.save);
 
+app.get('/taw/:mongoid', routes.edit.talente);
 //*/
 
 /******************

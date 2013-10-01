@@ -22,6 +22,7 @@ module.exports = {
 			.populate('held')
 			.exec(function(err, doc) {
 				if (err) return next(err);
+				if (!doc) return next();
 				doc._charID = doc.populated('held');
 				res.render('held', doc);
 			})

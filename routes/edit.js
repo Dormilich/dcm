@@ -24,6 +24,7 @@ module.exports = {
 			körperlich: function(cb) {
 				Talent
 					.find({ typ: "Körperliche Talente" })
+					.sort('name')
 					.lean()
 					.exec(function(err, objs) {
 						if (err) { 
@@ -37,8 +38,8 @@ module.exports = {
 			},
 			Gesellschaft: function(cb) {
 				Talent
-					.find({ typ: "Gesellschaftstalente" })
-					.select('name default')
+					.find({ typ: "Gesellschaftliche Talente" })
+					.sort('name')
 					.lean()
 					.exec(function(err, objs) {
 						if (err) { 
@@ -53,7 +54,7 @@ module.exports = {
 			Natur: function(cb) {
 				Talent
 					.find({ typ: "Naturtalente" })
-					.select('name default')
+					.sort('name')
 					.lean()
 					.exec(function(err, objs) {
 						if (err) { 
@@ -68,7 +69,7 @@ module.exports = {
 			Wissen: function(cb) {
 				Talent
 					.find({ typ: "Wissenstalente" })
-					.select('name default')
+					.sort('name')
 					.lean()
 					.exec(function(err, objs) {
 						if (err) { 
@@ -83,7 +84,7 @@ module.exports = {
 			Handwerk: function(cb) {
 				Talent
 					.find({ typ: "Handwerkstalente" })
-					.select('name default')
+					.sort('name')
 					.lean()
 					.exec(function(err, objs) {
 						if (err) { 
@@ -98,8 +99,8 @@ module.exports = {
 		},
 		function(err, obj) {
 			if (err) return next(err);
-			merge(obj, data.talents);
-			res.render('list-talents', obj);
+			merge(obj, data.talente);
+			res.render('list-talente', obj);
 		});
 	}
 };

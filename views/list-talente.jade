@@ -1,22 +1,195 @@
+mixin talenttable(_titel_, _data_, _name_)
+	table.data-section.eigenschaften
+		caption= _titel_
+		colgroup
+			col(style="width: 1em;")
+			col(style="width: 25%;")
+			col
+			col(style="width: 7em;")
+			col(style="width: 7em;")
+		thead
+			tr
+				th
+				th Talent
+				th Spezialisierung
+				th Lern
+				th TaW
+		tbody
+			each val, key in _data_
+				tr
+					td.mitte(style="padding: 0.2em;")
+						input.unlock(type="hidden", name="Talente[#{_name_}][_talent]", value=_id, disabled=!val.standard)
+						unless val.standard
+							input.isactive(type="checkbox", name="Talente[#{_name_}][name]", id=_name_+key)
+					td
+						label(for=_name_+key)= val.name
+					td
+						button.view(type="button")= "\u270E"
+						if val.Spezialisierung
+							each spez in val.Spezialisierung
+								input.spez(type="text", name="Talente[#{_name_}][Spezialisierung]", value=spez)
+						else
+							input.spez(type="text", name="Talente[#{_name_}][Spezialisierung]", disabled)
+						button.add(type="button") +
+					td.mitte
+						select.unlock(size="1", name="Talente[#{_name_}][Lernstufe]", disabled=!val.standard)
+							option(value="A+") A*
+							option A
+							option(selected) B
+							option C
+							option D
+							option E
+							option F
+							option G
+							option H
+					td.mitte
+						input.unlock(type="number", name="Talente[#{_name_}][wert]", min="-3", max="35", step="1", value="0", disabled=!val.standard)
+
+
 doctype 5
 html(lang="de")
 	head
-		title Sonderfertigkeiten hinzufügen
+		title Talentwerte bearbeiten
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		script(src="/jquery-2.0.3.min.js")
+		style.
+			.view {
+				width: 2em;
+			}
 	body
 		section
-			h1.mitte= held.Person.Name
+			//	h1.mitte= held.Person.Name
 			form(action="/talente/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
-			each talents, category in Liste
-				table.data-section
-					caption= category
+			table.data-section.eigenschaften
+				caption Nahkampf
+				colgroup
+					col(style="width: 1em;")
+					col(style="width: 25%;")
+					col
+					col(style="width: 7em;")
+					col(style="width: 7em;")
+					col(style="width: 7em;")
+					col(style="width: 7em;")
+				thead
 					tr
-						td
-							ul
-								each val, key in talents
-									li
-										input(type="checkbox", name="...", id="sf1_"+key, value=val)
-										label(for="tal1_"+key)= val
+						th
+						th Talent
+						th Spezialisierung
+						th Lern
+						th AT-Mod.
+						th PA-Mod.
+						th Wert
+				tbody
+					each val, key in Nahkampf
+						tr
+							td.mitte(style="padding: 0.2em;")
+								input.unlock(type="hidden", name="Talente[Nahkampf][_talent]", value=_id, disabled=!val.standard)
+								unless val.standard
+									input.isactive(type="checkbox", name="Talente[Nahkampf][name]", id="nk"+key)
+							td
+								label(for="nk"+key)= val.name
+							td
+								button.view(type="button")= "\u270E"
+								if val.Spezialisierung
+									each spez in val.Spezialisierung
+										input.spez(type="text", name="Talente[Nahkampf][Spezialisierung]", value=spez)
+								else
+									input.spez(type="text", name="Talente[Nahkampf][Spezialisierung]", disabled)
+								button.add(type="button") +
+							td.mitte
+								select.unlock(size="1", name="Talente[Nahkampf][Lernstufe]", disabled=!val.standard)
+									option(value="A+") A*
+									option A
+									option B
+									option C
+									option(selected) D
+									option E
+									option F
+									option G
+									option H
+							td.mitte
+								input.taw-in.unlock(type="number", name="Talente[Nahkampf][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+							td.mitte
+								input.taw-in.unlock(type="number", name="Talente[Nahkampf][PA]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+							td.mitte
+								input.taw-out(type="text", size="3", readonly)
+
+			table.data-section.eigenschaften
+				caption Fernkampf
+				colgroup
+					col(style="width: 1em;")
+					col(style="width: 25%;")
+					col
+					col(style="width: 7em;")
+					col(style="width: 7em;")
+					col(style="width: 7em;")
+				thead
+					tr
+						th
+						th Talent
+						th Spezialisierung
+						th Lern
+						th FK-Mod.
+						th Wert
+				tbody
+					each val, key in Fernkampf
+						tr
+							td.mitte(style="padding: 0.2em;")
+								input.unlock(type="hidden", name="Talente[Fernkampf][_talent]", value=_id, disabled=!val.standard)
+								unless val.standard
+									input.isactive(type="checkbox", name="Talente[Fernkampf][name]", id="kör"+key)
+							td
+								label(for="fk"+key)= val.name
+							td
+								button.view(type="button")= "\u270E"
+								if val.Spezialisierung
+									each spez in val.Spezialisierung
+										input.spez(type="text", name="Talente[Fernkampf][Spezialisierung]", value=spez)
+								else
+									input.spez(type="text", name="Talente[Fernkampf][Spezialisierung]", disabled)
+								button.add(type="button") +
+							td.mitte
+								select.unlock(size="1", name="Talente[Fernkampf][Lernstufe]", disabled=!val.standard)
+									option(value="A+") A*
+									option A
+									option B
+									option C
+									option(selected) D
+									option E
+									option F
+									option G
+									option H
+							td.mitte
+								input.taw-in.unlock(type="number", name="Talente[Fernkampf][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+							td.mitte
+								input.taw-out.unlock(type="text", size="3", readonly)
+			
+			+talenttable('Körperliche Talente', körperlich, 'körperlich')
+			+talenttable('Gesellschaftliche Talente', Gesellschaft, 'Gesellschaft')
+			+talenttable('Naturtalente', Natur, 'Natur')
+			+talenttable('Wissenstalente', Wissen, 'Wissen')
+			+talenttable('Handwerkstalente', Handwerk, 'Handwerk')
+
+			script.
+				$('.add').on('click', function() {
+					$(this).prev().clone().insertBefore(this);
+				});
+				$('.view').on('click', function() {
+					var $text  = $(this).closest('td').find('input');
+					var $check = $(this).closest('tr').find('.isactive');
+					var check_state = $check.length ? $check.prop('checked') : true;
+					var text_state  = !(check_state && $text.prop('disabled'));
+					$text.prop('disabled', text_state);
+					this.textContent = (text_state) ? "\u270E" : "\u2717";
+				});
+				$('label').on('click', function() {
+					// click is faster than label => checkbox
+					var $tr    = $(this).closest('tr');
+					var $check = $tr.find('.isactive');
+					if ($check.length) {
+						$tr.find('.unlock').prop('disabled', $check.prop('checked'));
+						$tr.find('.spez').prop('disabled', true);
+					}
+				});
