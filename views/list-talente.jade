@@ -1,4 +1,13 @@
-mixin talenttable(_titel_, _data_, _name_)
+- function getTalent(list, value) {
+-   var name, l = list.length;
+-   while (l--) {
+-     name = list[l].name;
+-     if (name === value) return list[l].wert;
+-   }
+-   return 0;
+- }
+
+mixin talenttable(_titel_, _data_, _name_, _held_)
 	table.data-section.eigenschaften
 		caption= _titel_
 		colgroup
@@ -43,7 +52,7 @@ mixin talenttable(_titel_, _data_, _name_)
 							option G
 							option H
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][wert]", min="-3", max="35", step="1", value="0", disabled=!val.standard)
+						input.unlock(type="number", name="Talente[#{_name_}][wert]", min="-3", max="35", step="1", value=getTalent(_held_, val), disabled=!val.standard)
 
 
 doctype 5

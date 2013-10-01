@@ -22,10 +22,7 @@ app.use(express.bodyParser());            // parse POST data into req.body
 app.use(express.methodOverride());        // use PUT/DELETE
 app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
-/* Handle 404
-	 this is middleware, not an error handler. 
-	 if all previous routes/files failed, this is the response being sent.
- */
+// Handle 404
 app.use(function(req, res) {
 	res.status(404).render('error-message', {
 		title: '404: File Not Found', 
@@ -54,7 +51,7 @@ mongoose.connection.on('error', function _error(err) {
 // kill connection on application end
 process.on('SIGINT', function() {
 	mongoose.connection.close(function () {
-		console.log('Mongoose connection disconnected through app termination');
+		console.log('Mongoose connection terminated');
 		process.exit(0);
 	});
 });
@@ -66,7 +63,7 @@ process.on('SIGINT', function() {
 var Talent = require('./models/talent');
 
 // pre-route request modification
-app.param('mongo', function (req, res, next, id) {
+app.param('talent', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
 		return next(new Error("Keine gültige MongoDB ID."));
 	}
@@ -86,6 +83,15 @@ app.param('mongo', function (req, res, next, id) {
 			}
 		});
 });
+
+app.param('mongoid', function(req, res, next, id) {
+	if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
+		return next(new Error("Keine gültige MongoDB ID."));
+	}
+	req.id = id;
+	next();
+});
+
 function verifyMongoID(identifyer) {
 	return function (req, res, next) {
 		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
@@ -93,9 +99,10 @@ function verifyMongoID(identifyer) {
 		}
 		req.id = req.params[identifyer];
 		next();
-	}
+	};
 }
 
+// request routes
 app.get('/', function(req, res, next) {
 	Talent
 		.find()
@@ -108,7 +115,7 @@ app.get('/', function(req, res, next) {
 	;
 });
 
-app.get('/talent/:mongo', function(req, res, next) {
+app.get('/talent/:talent', function(req, res, next) {
 	Talent
 		.find()
 		.lean()
@@ -120,13 +127,32 @@ app.get('/talent/:mongo', function(req, res, next) {
 	;
 });
 
-app.post('/talent/:id', verifyMongoID('id'), function(req, res, next) {
+app.post('/talent/:mongoid', function(req, res, next) {
 	Talent.findByIdAndUpdate(req.id, req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/');
 	});
 });
 
+app.get('/talent/neu', function(req, res, next) {
+	res.render('new-talent', { 
+		kategorie: [
+			"Körperliche Talente", 
+			"Gesellschaftliche Talente", 
+			"Naturtalente", 
+			"Wissenstalente", 
+			"Handwerkstalente", 
+			"Metatalente"
+		] 
+	});
+});
+
+app.post('/talent/neu', function(req, res, next) {
+	Talent.create(req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/');
+	});
+});
 
 /******************
  *  Start Server  *
