@@ -82,7 +82,7 @@ function mapMatch() {
 			req[args[i]] = req.params[i];
 		}
 		next();
-	}
+	};
 }
 // pre-route request modification
 app.param('mongoid', function (req, res, next, id) {
@@ -117,6 +117,10 @@ app.put('/char/:mongoid', routes.char.save);
 app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
 app.put('/ap/:mongoid', routes.held.save);
 app.put('/sf/:mongoid', routes.held.save);
+app.put('/taw/:mongoid', function(req, res){
+	console.log(require('util').inspect(req.body, false, null));
+	res.redirect('/helden');
+});
 
 app.get('/taw/:mongoid', routes.edit.talente);
 //*/

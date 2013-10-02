@@ -1,10 +1,10 @@
-- function getTalent(list, value) {
--   var name, l = list.length;
--   while (l--) {
--     name = list[l].name;
--     if (name === value) return list[l].wert;
--   }
--   return 0;
+- function getTalent(list, value) { 
+- 	var name, l = list.length; 
+- 	while (l--) { 
+- 		name = list[l].name; 
+- 		if (name === value) return list[l].wert; 
+- 	} 
+- 	return 0; 
 - }
 
 mixin talenttable(_titel_, _data_, _name_, _held_)
@@ -27,21 +27,23 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 			each val, key in _data_
 				tr
 					td.mitte(style="padding: 0.2em;")
-						input.unlock(type="hidden", name="Talente[#{_name_}][_talent]", value=_id, disabled=!val.standard)
-						unless val.standard
-							input.isactive(type="checkbox", name="Talente[#{_name_}][name]", id=_name_+key)
+						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=val._id, disabled=!val.standard)
+						if val.standard
+							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=val.name)
+						else
+							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=val.name, id=_name_+key)
 					td
 						label(for=_name_+key)= val.name
 					td
 						button.view(type="button")= "\u270E"
 						if val.Spezialisierung
 							each spez in val.Spezialisierung
-								input.spez(type="text", name="Talente[#{_name_}][Spezialisierung]", value=spez)
+								input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
 						else
-							input.spez(type="text", name="Talente[#{_name_}][Spezialisierung]", disabled)
+							input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", disabled)
 						button.add(type="button") +
 					td.mitte
-						select.unlock(size="1", name="Talente[#{_name_}][Lernstufe]", disabled=!val.standard)
+						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!val.standard)
 							option(value="A+") A*
 							option A
 							option(selected) B
@@ -52,8 +54,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 							option G
 							option H
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][wert]", min="-3", max="35", step="1", value=getTalent(_held_, val), disabled=!val.standard)
-
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=getTalent(_held_, val), disabled=!val.standard)
 
 doctype 5
 html(lang="de")
@@ -65,140 +66,148 @@ html(lang="de")
 			.view {
 				width: 2em;
 			}
+			input[type="number"], .nk-taw {
+				text-align: center;
+			}
 	body
 		section
-			//	h1.mitte= held.Person.Name
-			form(action="/talente/"+_id, method="post", accept-charset="utf-8")
+			h1.mitte= _chardata.held.Person.Name
+			form(action="/taw/"+_chardata._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
-			table.data-section.eigenschaften
-				caption Nahkampf
-				colgroup
-					col(style="width: 1em;")
-					col(style="width: 25%;")
-					col
-					col(style="width: 7em;")
-					col(style="width: 7em;")
-					col(style="width: 7em;")
-					col(style="width: 7em;")
-				thead
-					tr
-						th
-						th Talent
-						th Spezialisierung
-						th Lern
-						th AT-Mod.
-						th PA-Mod.
-						th Wert
-				tbody
-					each val, key in Nahkampf
+				table.data-section.eigenschaften
+					caption Nahkampf
+					colgroup
+						col(style="width: 1em;")
+						col(style="width: 25%;")
+						col
+						col(style="width: 7em;")
+						col(style="width: 7em;")
+						col(style="width: 7em;")
+						col(style="width: 7em;")
+					thead
 						tr
-							td.mitte(style="padding: 0.2em;")
-								input.unlock(type="hidden", name="Talente[Nahkampf][_talent]", value=_id, disabled=!val.standard)
-								unless val.standard
-									input.isactive(type="checkbox", name="Talente[Nahkampf][name]", id="nk"+key)
-							td
-								label(for="nk"+key)= val.name
-							td
-								button.view(type="button")= "\u270E"
-								if val.Spezialisierung
-									each spez in val.Spezialisierung
-										input.spez(type="text", name="Talente[Nahkampf][Spezialisierung]", value=spez)
-								else
-									input.spez(type="text", name="Talente[Nahkampf][Spezialisierung]", disabled)
-								button.add(type="button") +
-							td.mitte
-								select.unlock(size="1", name="Talente[Nahkampf][Lernstufe]", disabled=!val.standard)
-									option(value="A+") A*
-									option A
-									option B
-									option C
-									option(selected) D
-									option E
-									option F
-									option G
-									option H
-							td.mitte
-								input.taw-in.unlock(type="number", name="Talente[Nahkampf][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
-							td.mitte
-								input.taw-in.unlock(type="number", name="Talente[Nahkampf][PA]", min="0", max="20", step="1", value="0", disabled=!val.standard)
-							td.mitte
-								input.taw-out(type="text", size="3", readonly)
+							th
+							th Talent
+							th Spezialisierung
+							th Lern
+							th AT-Mod.
+							th PA-Mod.
+							th TaW
+					tbody#nahkampf
+						each val, key in Nahkampf
+							tr
+								td.mitte(style="padding: 0.2em;")
+									if val.standard
+										input(type="hidden", name="Talente[Nahkampf][#{key}][name]", value=val.name)
+									else
+										input.isactive(type="checkbox", name="Talente[Nahkampf][#{key}][name]", value=val.name, id="nk"+key)
+								td
+									label(for="nk"+key)= val.name
+								td
+									button.view(type="button")= "\u270E"
+									if val.Spezialisierung
+										each spez in val.Spezialisierung
+											input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", value=spez)
+									else
+										input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", disabled)
+									button.add(type="button") +
+								td.mitte
+									select.unlock(size="1", name="Talente[Nahkampf][#{key}][Lernstufe]", disabled=!val.standard)
+										option(value="A+") A*
+										option A
+										option B
+										option C
+										option(selected) D
+										option E
+										option F
+										option G
+										option H
+								td.mitte
+									input.nk-at.unlock(type="number", name="Talente[Nahkampf][#{key}][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+								td.mitte
+									input.nk-pa.unlock(type="number", name="Talente[Nahkampf][#{key}][PA]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+								td.mitte
+									input.nk-taw(type="text", size="3", readonly)
 
-			table.data-section.eigenschaften
-				caption Fernkampf
-				colgroup
-					col(style="width: 1em;")
-					col(style="width: 25%;")
-					col
-					col(style="width: 7em;")
-					col(style="width: 7em;")
-					col(style="width: 7em;")
-				thead
-					tr
-						th
-						th Talent
-						th Spezialisierung
-						th Lern
-						th FK-Mod.
-						th Wert
-				tbody
-					each val, key in Fernkampf
+				table.data-section.eigenschaften
+					caption Fernkampf
+					colgroup
+						col(style="width: 1em;")
+						col(style="width: 25%;")
+						col
+						col(style="width: 7em;")
+						col(style="width: 7em;")
+					thead
 						tr
-							td.mitte(style="padding: 0.2em;")
-								input.unlock(type="hidden", name="Talente[Fernkampf][_talent]", value=_id, disabled=!val.standard)
-								unless val.standard
-									input.isactive(type="checkbox", name="Talente[Fernkampf][name]", id="kör"+key)
-							td
-								label(for="fk"+key)= val.name
-							td
-								button.view(type="button")= "\u270E"
-								if val.Spezialisierung
-									each spez in val.Spezialisierung
-										input.spez(type="text", name="Talente[Fernkampf][Spezialisierung]", value=spez)
-								else
-									input.spez(type="text", name="Talente[Fernkampf][Spezialisierung]", disabled)
-								button.add(type="button") +
-							td.mitte
-								select.unlock(size="1", name="Talente[Fernkampf][Lernstufe]", disabled=!val.standard)
-									option(value="A+") A*
-									option A
-									option B
-									option C
-									option(selected) D
-									option E
-									option F
-									option G
-									option H
-							td.mitte
-								input.taw-in.unlock(type="number", name="Talente[Fernkampf][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
-							td.mitte
-								input.taw-out.unlock(type="text", size="3", readonly)
-			
-			+talenttable('Körperliche Talente', körperlich, 'körperlich')
-			+talenttable('Gesellschaftliche Talente', Gesellschaft, 'Gesellschaft')
-			+talenttable('Naturtalente', Natur, 'Natur')
-			+talenttable('Wissenstalente', Wissen, 'Wissen')
-			+talenttable('Handwerkstalente', Handwerk, 'Handwerk')
+							th
+							th Talent
+							th Spezialisierung
+							th Lern
+							th TaW
+					tbody
+						each val, key in Fernkampf
+							tr
+								td.mitte(style="padding: 0.2em;")
+									if val.standard
+										input(type="hidden", name="Talente[Fernkampf][#{key}][name]", value=val.name)
+									else
+										input.isactive(type="checkbox", name="Talente[Fernkampf][#{key}][name]", value=val.name, id="fk"+key)
+								td
+									label(for="fk"+key)= val.name
+								td
+									button.view(type="button")= "\u270E"
+									if val.Spezialisierung
+										each spez in val.Spezialisierung
+											input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", value=spez)
+									else
+										input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", disabled)
+									button.add(type="button") +
+								td.mitte
+									select.unlock(size="1", name="Talente[Fernkampf][#{key}][Lernstufe]", disabled=!val.standard)
+										option(value="A+") A*
+										option A
+										option B
+										option C
+										option(selected) D
+										option E
+										option F
+										option G
+										option H
+								td.mitte
+									input.unlock(type="number", name="Talente[Fernkampf][#{key}][AT]", min="0", max="20", step="1", value="0", disabled=!val.standard)
+				
+				+talenttable('Körperliche Talente', körperlich, 'körperlich', _chardata.Talente.körperlich)
+				+talenttable('Gesellschaftliche Talente', Gesellschaft, 'Gesellschaft', _chardata.Talente.Gesellschaft)
+				+talenttable('Naturtalente', Natur, 'Natur', _chardata.Talente.Natur)
+				+talenttable('Wissenstalente', Wissen, 'Wissen', _chardata.Talente.Wissen)
+				+talenttable('Handwerkstalente', Handwerk, 'Handwerk', _chardata.Talente.Handwerk)
+				
+				.mitte
+					button(type="submit") speichern
 
-			script.
-				$('.add').on('click', function() {
-					$(this).prev().clone().insertBefore(this);
-				});
-				$('.view').on('click', function() {
-					var $text  = $(this).closest('td').find('input');
-					var $check = $(this).closest('tr').find('.isactive');
-					var check_state = $check.length ? $check.prop('checked') : true;
-					var text_state  = !(check_state && $text.prop('disabled'));
-					$text.prop('disabled', text_state);
-					this.textContent = (text_state) ? "\u270E" : "\u2717";
-				});
-				$('label').on('click', function() {
-					// click is faster than label => checkbox
-					var $tr    = $(this).closest('tr');
-					var $check = $tr.find('.isactive');
-					if ($check.length) {
-						$tr.find('.unlock').prop('disabled', $check.prop('checked'));
-						$tr.find('.spez').prop('disabled', true);
-					}
-				});
+		script.
+			$('.add').on('click', function() {
+				$(this).prev().clone().insertBefore(this);
+			});
+			$('.view').on('click', function() {
+				var $text  = $(this).closest('td').find('input');
+				var $check = $(this).closest('tr').find('.isactive');
+				var check_state = $check.length ? $check.prop('checked') : true;
+				var text_state  = !(check_state && $text.prop('disabled'));
+				$text.prop('disabled', text_state);
+				this.textContent = (text_state) ? "\u270E" : "\u2717";
+			});
+			$('label').on('click', function() {
+				// click is faster than label => checkbox
+				var $tr    = $(this).closest('tr');
+				var $check = $tr.find('.isactive');
+				if ($check.length) {
+					$tr.find('.unlock').prop('disabled', $check.prop('checked'));
+					$tr.find('.spez').prop('disabled', true);
+				}
+			});
+			$('#nahkampf').on('change', 'tr', function() {
+				var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
+				$(this).find('.nk-taw').val(taw);
+			});

@@ -95,6 +95,20 @@ module.exports = {
 						}
 					})
 				;
+			},
+			_chardata: function(cb) {
+				Held
+					.findById(req.id)
+					.populate('held')
+					.exec(function(err, doc) {
+						if (err) {
+							cb(err);
+						}
+						else {
+							cb(null, doc);
+						}
+					})
+				;
 			}
 		},
 		function(err, obj) {
