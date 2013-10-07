@@ -66,6 +66,7 @@ var Talent = require('./models/talent');
 app.param('talent', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
 		return next(new Error("Keine gültige MongoDB ID."));
+		//next('route');
 	}
 	Talent
 		.findById(id)
@@ -134,7 +135,7 @@ app.post('/talent/:mongoid', function(req, res, next) {
 	});
 });
 
-app.get('/talent/neu', function(req, res, next) {
+app.get('/neu', function(req, res, next) {
 	res.render('new-talent', { 
 		kategorie: [
 			"Körperliche Talente", 
@@ -147,7 +148,7 @@ app.get('/talent/neu', function(req, res, next) {
 	});
 });
 
-app.post('/talent/neu', function(req, res, next) {
+app.post('/neu', function(req, res, next) {
 	Talent.create(req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/');

@@ -39,7 +39,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 			col(style="width: 7em;")
 		thead
 			tr
-				th
+				td
 				th Talent
 				th Spezialisierung
 				th Lern
@@ -70,6 +70,42 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 					td.mitte
 						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=getTalent(_held_, val).wert, disabled=!isAvailable(_held_, val))
 
+mixin languagetable(_titel_, _data_, _name_, _held_)
+	table.data-section.eigenschaften
+		caption= _titel_
+		colgroup
+			col(style="width: 1em;")
+			col
+			col(style="width: 7em;")
+			col(style="width: 7em;")
+			col(style="width: 7em;")
+		thead
+			tr
+				td
+				th Talent
+				th Kompl.
+				th Lern.
+				th TaW
+		tbody
+			each val, key in _data_
+				tr
+					td.mitte(style="padding: 0.2em;")
+						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][Komplexität]", value=val.komplex, disabled=!isAvailable(_held_, val))
+						if val.standard
+							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=val.name)
+						else
+							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=val.name, id=_name_+key, checked=isAvailable(_held_, val))
+					td
+						label(for=_name_+key)= val.name
+					td.mitte= val.komplex
+					td.mitte
+						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!isAvailable(_held_, val))
+							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+								option(selected=isLernstufe(_held_, val, kat, "B"))= kat
+					td.mitte
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=val.komplex, step="1", value=getTalent(_held_, val).wert, disabled=!isAvailable(_held_, val))
+
+
 doctype 5
 html(lang="de")
 	head
@@ -83,12 +119,50 @@ html(lang="de")
 			input[type="number"], .nk-taw {
 				text-align: center;
 			}
+			nav {
+				position: fixed;
+				top: 0;
+				background-color: #eee;
+				width: 100%;
+			}
+			nav a {
+				display: inline-block;
+				width: 6em;
+				text-decoration: none;
+				color: black;
+				text-align: center;
+				background-color: #eee;
+				padding: 0.3em 0.5em;
+				font-weight: bold;
+			}
+			nav a:hover {
+				color: #eee;
+				background-color: black;
+			}
+			h1 a {
+				text-decoration: none;
+				color: inherit;
+			}
 	body
+		nav
+			a(href="#jNK") Nahkampf
+			a(href="#jFK") Fernkampf
+			a(href="#jKOR") Körper
+			a(href="#jGES") Gesellschaft
+			a(href="#jNAT") Natur
+			a(href="#jWIS") Wissen
+			a(href="#jHWK") Handwerk
+			a(href="#jSPR") Sprachen
+			a(href="#jSCR") Schriften
+			a(href="#jGAB") Gaben
+			a(href="#save") [speichern]
 		section
-			h1.mitte= _chardata.held.Person.Name
+			h1.mitte
+				a(href="/held/"+_chardata._id)= _chardata.held.Person.Name
 			form(action="/taw/"+_chardata._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
+				a#jNK
 				table.data-section.eigenschaften
 					caption Nahkampf
 					colgroup
@@ -101,7 +175,7 @@ html(lang="de")
 						col(style="width: 7em;")
 					thead
 						tr
-							th
+							td
 							th Talent
 							th Spezialisierung
 							th Lern
@@ -138,6 +212,7 @@ html(lang="de")
 								td.mitte
 									input.nk-taw(type="text", size="3", readonly)
 
+				a#jFK
 				table.data-section.eigenschaften
 					caption Fernkampf
 					colgroup
@@ -148,7 +223,7 @@ html(lang="de")
 						col(style="width: 7em;")
 					thead
 						tr
-							th
+							td
 							th Talent
 							th Spezialisierung
 							th Lern
@@ -178,14 +253,22 @@ html(lang="de")
 											option(selected=isLernstufe(_chardata.Talente.Fernkampf, val, kat, "D"))= kat
 								td.mitte
 									input.unlock(type="number", name="Talente[Fernkampf][#{key}][AT]", min="0", max="20", step="1", value=getTalent(_chardata.Talente.Fernkampf, val).AT, disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
-				
+				a#jKOR
 				+talenttable('Körperliche Talente', körperlich, 'körperlich', _chardata.Talente.körperlich)
+				a#jGES
 				+talenttable('Gesellschaftliche Talente', Gesellschaft, 'Gesellschaft', _chardata.Talente.Gesellschaft)
+				a#jNAT
 				+talenttable('Naturtalente', Natur, 'Natur', _chardata.Talente.Natur)
+				a#jWIS
 				+talenttable('Wissenstalente', Wissen, 'Wissen', _chardata.Talente.Wissen)
+				a#jHWK
 				+talenttable('Handwerkstalente', Handwerk, 'Handwerk', _chardata.Talente.Handwerk)
+				a#jSPR
+				+languagetable('Sprachen', Sprachen, 'Sprachen', _chardata.Talente.Sprachen)
+				a#jSCR
+				+languagetable('Schriften', Schriften, 'Schriften', _chardata.Talente.Schriften)
 				
-				.mitte
+				.mitte#save
 					button(type="submit") speichern
 
 		script.
@@ -212,4 +295,10 @@ html(lang="de")
 			$('#nahkampf').on('change', 'tr', function() {
 				var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 				$(this).find('.nk-taw').val(taw);
+			});
+			$(function() {
+				$('#nahkampf tr').each(function() {
+					var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
+					$(this).find('.nk-taw').val(taw);
+				});
 			});

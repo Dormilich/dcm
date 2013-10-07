@@ -100,6 +100,7 @@ module.exports = {
 				Held
 					.findById(req.id)
 					.populate('held')
+					.populate('_talent')
 					.exec(function(err, doc) {
 						if (err) {
 							cb(err);

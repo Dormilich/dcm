@@ -1,19 +1,90 @@
-mixin talentTable(liste)
-	table.data-section.mitte.eigenschaften
-		caption ###
-			a.top-link(href="#top", title="nach oben springen") &#8679;
+mixin SFTableSection(__liste, __name)
+	if __liste.length
 		tbody
 			tr
-				th Allgemeine Sonderfertigkeiten
+				th= __name
 			tr.links
 				td
 					ul.vor-nach.fl-links
-						- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
-							li= SF.allgemein[x]
+						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
+							li= __liste[x]
 					ul.vor-nach.fl-rechts
-						- for (var y=x, l=SF.allgemein.length; y<l; y++)
-							li= SF.allgemein[y]
+						- for (var y=x, l=__liste.length; y<l; y++)
+							li= __liste[y]
 
+
+mixin TalentData(talent)
+	if talent
+		td.links= talent.name
+		td
+		td.mitte= talent.Lernstufe
+		td.mitte= talent.wert.toString().replace('-', '–')
+		
+mixin TalentTable(__liste, __name)
+	table.data-section.mitte.eigenschaften
+		caption= __name
+		colgroup
+			col
+			col(style="width: 8em")
+			col(style="width: 2em")
+			col(style="width: 5em;")
+			col
+			col(style="width: 8em")
+			col(style="width: 2em")
+			col(style="width: 5em")
+		thead
+			tr
+				th Talent
+				th Probe
+				th(title="Lernschwierigkeit")
+				th TaW
+				th Talent
+				th Probe
+				th(title="Lernschwierigkeit")
+				th TaW
+		tbody
+			- var __half = Math.ceil(__liste.length/2);
+			- for (var x=0; x<__half; x++)
+				tr
+					+TalentData(__liste[x])
+					+TalentData(__liste[x+__half])
+
+mixin LanguageTable(__liste, __name)
+	table.data-section.mitte.eigenschaften
+		caption= __name
+		colgroup
+			col
+			col(style="width: 5em")
+			col(style="width: 2em")
+			col(style="width: 5em;")
+			col
+			col(style="width: 5em")
+			col(style="width: 2em")
+			col(style="width: 5em")
+		thead
+			tr
+				th Talent
+				th Kompl.
+				th(title="Lernschwierigkeit")
+				th TaW
+				th Talent
+				th Kompl.
+				th(title="Lernschwierigkeit")
+				th TaW
+		tbody
+			- var __half = Math.ceil(__liste.length/2);
+			- for (var x=0; x<__half; x++)
+				tr
+					td.links=__liste[x].name
+					td=__liste[x].Komplexität
+					td=__liste[x].Lernstufe
+					td=__liste[x].wert
+					if __liste[x+__half]
+						td.links=__liste[x+__half].name
+						td=__liste[x+__half].Komplexität
+						td=__liste[x+__half].Lernstufe
+						td=__liste[x+__half].wert
+					
 !!! 5
 html(lang="de")
 	head
@@ -71,7 +142,6 @@ html(lang="de")
 			a#bes
 			table.data-section.links.eigenschaften
 				caption Beschreibung
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")
@@ -112,7 +182,6 @@ html(lang="de")
 			a#gen
 			table.data-section.links.eigenschaften
 				caption Generierung
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")
@@ -133,7 +202,6 @@ html(lang="de")
 			a#att
 			table.data-section.mitte.eigenschaften
 				caption Attribute
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(span="10", style="width: 10%;")
 				thead
@@ -151,7 +219,6 @@ html(lang="de")
 			a#bas
 			table.data-section.mitte.eigenschaften
 				caption Basiswerte
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(span="10", style="width: 10%;")
 				thead
@@ -167,7 +234,6 @@ html(lang="de")
 			a#vnt
 			table.data-section
 				caption Vor- und Nachteile
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				tr
 					td
 						ul.vor-nach.fl-links
@@ -184,7 +250,6 @@ html(lang="de")
 		section
 			table.data-section.mitte.eigenschaften
 				caption Abenteuerpunkte
-					a.top-link(href="#top", title="nach oben springen") &#8679;
 				colgroup
 					col(style="width: 15%")
 					col(style="width: 35%")
@@ -196,87 +261,22 @@ html(lang="de")
 						td= AP.alle
 						th frei
 						td= AP.frei
-
 		a#sf
 		section
 			table.data-section.mitte.eigenschaften
 				caption Sonderfertigkeiten
-					a.top-link(href="#top", title="nach oben springen") &#8679;
-				if SF.allgemein.length
-					tbody
-						tr
-							th Allgemeine Sonderfertigkeiten
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
-										li= SF.allgemein[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.allgemein.length; y<l; y++)
-										li= SF.allgemein[y]
-				if SF.Kampf.length
-					tbody
-						tr
-							th Kampf-Sonderfertigkeiten
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.Kampf.length/2); x<l; x++)
-										li= SF.Kampf[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.Kampf.length; y<l; y++)
-										li= SF.Kampf[y]
-				if SF.Manöver.length
-					tbody
-						tr
-							th Waffenlose Manöver
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.Manöver.length/2); x<l; x++)
-										li= SF.Manöver[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.Manöver.length; y<l; y++)
-										li= SF.Manöver[y]
-				if SF.geweiht.length
-					tbody
-						tr
-							th Karmale Sonderfertigkeiten
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.geweiht.length/2); x<l; x++)
-										li= SF.geweiht[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.geweiht.length; y<l; y++)
-										li= SF.geweiht[y]
-				if SF.magisch.length
-					tbody
-						tr
-							th Magische Sonderfertigkeiten
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.magisch.length/2); x<l; x++)
-										li= SF.magisch[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.magisch.length; y<l; y++)
-										li= SF.magisch[y]
+				+SFTableSection(SF.allgemein, 'Allgemeine Sonderfertigkeiten')
+				+SFTableSection(SF.Kampf, 'Kampf-Sonderfertigkeiten')
+				+SFTableSection(SF.Manöver, 'Waffenlose Manöver')
+				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
+				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		a#taw				
 		section
-			table.data-section.mitte.eigenschaften
-				caption Sonderfertigkeiten
-					a.top-link(href="#top", title="nach oben springen") &#8679;
-				if SF.allgemein.length
-					tbody
-						tr
-							th Allgemeine Sonderfertigkeiten
-						tr.links
-							td
-								ul.vor-nach.fl-links
-									- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
-										li= SF.allgemein[x]
-								ul.vor-nach.fl-rechts
-									- for (var y=x, l=SF.allgemein.length; y<l; y++)
-										li= SF.allgemein[y]
-			
+			+TalentTable(Talente.körperlich, 'Körperliche Talente')
+			+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente')
+			+TalentTable(Talente.Natur, 'Natur-Talente')
+			+TalentTable(Talente.Wissen, 'Wissenstalente')
+			+TalentTable(Talente.Handwerk, 'Handwerkstalente')
+			+LanguageTable(Talente.Sprachen, 'Sprachen')
+			+LanguageTable(Talente.Schriften, 'Schriften')
+		

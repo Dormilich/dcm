@@ -14,7 +14,7 @@ var heldTalentSchema = new Schema({
 	name:      { type: String, required: true },
 	wert:      { type: Number, required: true, min: -3, max: 35 },
 	Lernstufe: { type: String, validator: lernstufeValidator },
-	Spezialisierungen: [String]
+	Spezialisierung: [String]
 });
 
 var heldKampftalentSchema = new Schema({
