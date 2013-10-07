@@ -117,10 +117,7 @@ app.put('/char/:mongoid', routes.char.save);
 app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
 app.put('/ap/:mongoid', routes.held.save);
 app.put('/sf/:mongoid', routes.held.save);
-app.put('/taw/:mongoid', function(req, res){
-	console.log(require('util').inspect(req.body, false, null));
-	res.redirect('/helden');
-});
+app.put('/taw/:mongoid', routes.held.save);
 
 app.get('/taw/:mongoid', routes.edit.talente);
 //*/

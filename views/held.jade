@@ -1,3 +1,19 @@
+mixin talentTable(liste)
+	table.data-section.mitte.eigenschaften
+		caption ###
+			a.top-link(href="#top", title="nach oben springen") &#8679;
+		tbody
+			tr
+				th Allgemeine Sonderfertigkeiten
+			tr.links
+				td
+					ul.vor-nach.fl-links
+						- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
+							li= SF.allgemein[x]
+					ul.vor-nach.fl-rechts
+						- for (var y=x, l=SF.allgemein.length; y<l; y++)
+							li= SF.allgemein[y]
+
 !!! 5
 html(lang="de")
 	head
@@ -46,6 +62,8 @@ html(lang="de")
 							a(href="#ap") Abenteuerpunkte
 						li
 							a(href="#sf") Sonderfertigkeiten
+						li
+							a(href="#taw") Talentwerte
 
 		section(style="clear: both;")
 			h1.mitte= held.Person.Name
@@ -244,4 +262,21 @@ html(lang="de")
 								ul.vor-nach.fl-rechts
 									- for (var y=x, l=SF.magisch.length; y<l; y++)
 										li= SF.magisch[y]
-						
+		a#taw				
+		section
+			table.data-section.mitte.eigenschaften
+				caption Sonderfertigkeiten
+					a.top-link(href="#top", title="nach oben springen") &#8679;
+				if SF.allgemein.length
+					tbody
+						tr
+							th Allgemeine Sonderfertigkeiten
+						tr.links
+							td
+								ul.vor-nach.fl-links
+									- for (var x=0, l=Math.ceil(SF.allgemein.length/2); x<l; x++)
+										li= SF.allgemein[x]
+								ul.vor-nach.fl-rechts
+									- for (var y=x, l=SF.allgemein.length; y<l; y++)
+										li= SF.allgemein[y]
+			
