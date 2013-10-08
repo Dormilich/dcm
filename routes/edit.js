@@ -2,9 +2,9 @@ var path    = require('path')
   , async   = require('async')
   , appRoot = path.dirname(require.main.filename)
   , data    = require( path.join(appRoot, 'data/dsa') )
-  , Held    = require( path.join(appRoot, 'models/chardata') )
-  , Talent  = require( path.join(appRoot, 'models/talent') )
+  , Held    = require( path.join(appRoot, 'models/person') )
   ;
+
 function merge(target, source) {
 	Object.keys(source).forEach(function(key) {
 		if (!(key in target)) {
@@ -18,92 +18,42 @@ function merge(target, source) {
 	return target;
 }
 
+function getTalentType(tname) {
+	return function(cb) {
+		Talent
+			.find({ typ: tname })
+			.sort('name')
+			.lean()
+			.exec(function(err, objs) {
+				if (err) { 
+					cb(err);
+				}
+				else {
+					cb(null, objs);
+				}
+			})
+		;
+	}
+}
+
 module.exports = {
 	talente : function(req, res, next) {
 		async.parallel({
-			körperlich: function(cb) {
-				Talent
-					.find({ typ: "Körperliche Talente" })
-					.sort('name')
-					.lean()
-					.exec(function(err, objs) {
-						if (err) { 
-							cb(err);
-						}
-						else {
-							cb(null, objs);
-						}
-					})
-				;
-			},
-			Gesellschaft: function(cb) {
-				Talent
-					.find({ typ: "Gesellschaftliche Talente" })
-					.sort('name')
-					.lean()
-					.exec(function(err, objs) {
-						if (err) { 
-							cb(err);
-						}
-						else {
-							cb(null, objs);
-						}
-					})
-				;
-			},
-			Natur: function(cb) {
-				Talent
-					.find({ typ: "Naturtalente" })
-					.sort('name')
-					.lean()
-					.exec(function(err, objs) {
-						if (err) { 
-							cb(err);
-						}
-						else {
-							cb(null, objs);
-						}
-					})
-				;
-			},
-			Wissen: function(cb) {
-				Talent
-					.find({ typ: "Wissenstalente" })
-					.sort('name')
-					.lean()
-					.exec(function(err, objs) {
-						if (err) { 
-							cb(err);
-						}
-						else {
-							cb(null, objs);
-						}
-					})
-				;
-			},
-			Handwerk: function(cb) {
-				Talent
-					.find({ typ: "Handwerkstalente" })
-					.sort('name')
-					.lean()
-					.exec(function(err, objs) {
-						if (err) { 
-							cb(err);
-						}
-						else {
-							cb(null, objs);
-						}
-					})
-				;
-			},
+			körperlich:   getTalentType("Körperliche Talente"),
+			Gesellschaft: getTalentType("Gesellschaftliche Talente"),
+			Natur:        getTalentType("Naturtalente"),
+			Wissen:       getTalentType("Wissenstalente"),
+			Handwerk:     getTalentType("Handwerkstalente"),
 			_chardata: function(cb) {
 				Held
 					.findById(req.id)
 					.populate('held')
-					.populate('_talent')
 					.exec(function(err, doc) {
 						if (err) {
 							cb(err);
+						}
+						else if (!doc) {
+							cb(new Error("Kein Datensatz gefunden."));
 						}
 						else {
 							cb(null, doc);

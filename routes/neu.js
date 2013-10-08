@@ -1,13 +1,11 @@
 var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
-  , Person  = require( path.join(appRoot, 'models/person') )
-//  , Talent  = require( path.join(appRoot, 'models/talent') )
-  , Held    = require( path.join(appRoot, 'models/chardata') )
+  , Held    = require( path.join(appRoot, 'models/person') )
   ;
 module.exports = {
 	index: function (req, res, next) {
 		if (req.query.force === "jade") {
-			res.render('new_char');
+			res.render('new-char');
 		}
 		else {
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
@@ -26,19 +24,13 @@ module.exports = {
 				}, 0);
 			}
 		}
-		Person.create(req.body, function(error, person) {
+		req.body.AP = {
+			frei: 0,
+			alle: ((+req.body.Attribute.KL.wert) + (+req.body.Attribute.IN.wert)) * 20
+		};
+		Held.create(req.body, function(error, doc) {
 			if (error) return next(error);
-			
-			Held.create({ 
-				held: person._id,
-				AP: {
-					frei: 0,
-					alle: ((+person.Attribute.KL.wert) + (+person.Attribute.IN.wert)) * 20
-				}
-			}, function(error, doc) {
-				if (error) return next(error);
-				res.redirect('/held/' + doc._id);
-			});
+			res.redirect('/held/' + doc._id);
 		});
 	}
 };

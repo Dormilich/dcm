@@ -109,17 +109,11 @@ app.get('/helden', routes.held.list);
 app.get(   '/held/:mongoid', routes.held.show);
 app.delete('/held/:mongoid', routes.held.disable);
 
-// edit character's personal data
-app.get('/char/:mongoid', routes.char.show);
-app.put('/char/:mongoid', routes.char.save);
-
 // edit character sheet sections
-app.get(/^\/(ap|sf)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
-app.put('/ap/:mongoid', routes.held.save);
-app.put('/sf/:mongoid', routes.held.save);
-
+app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
+app.put(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.save);
+// edit CharSheet Talent section (needs to load data from system table)
 app.get('/taw/:mongoid', routes.edit.talente);
-app.put('/taw/:mongoid', routes.held.save);
 
 /******************
  *  Start Server  *

@@ -1,9 +1,27 @@
 // DCM character mongo schema
 var mongoose = require("mongoose")
-  , Schema = mongoose.Schema
+  , Schema   = mongoose.Schema
+  , IDREF    = Schema.Types.ObjectId
   ;
 
-var personSchema = new Schema({
+function lernstufeValidator(val) {
+	return (["A+", "A", "B", "C", "D", "E", "F", "G", "H"].indexOf(val) > -1);
+}
+
+var heldTalentSchema = new Schema({
+	_talent: { type: IDREF,  ref: 'Talent' },
+	name:  String,
+	TaW: { type: Number, min: -3, max: 35 },
+	AT:  { type: Number, min: 0 }, // = FK
+	PA:  { type: Number, min: 0 },
+	Lernstufe:   { type: String, validator: lernstufeValidator },
+	Komplexität: { type: Number, min: 5, max: 30 },
+	Spezialisierung: [String]
+});
+
+var heldSchema = new Schema({
+	disabled: { type: Boolean, default: false },
+	modified: { type: Date,    default: new Date() },
 	Person: {
 		Name:        String,
 		Geschlecht:  String,
@@ -24,15 +42,15 @@ var personSchema = new Schema({
 	},
 	Generierung: {
 		Rasse: {
-			name:         String,
+			name: { type: String, required: true },
 			modifikation: String
 		},
 		Kultur: {
-			name:         String,
+			name: { type: String, required: true },
 			modifikation: String
 		},
 		Profession: {
-			name:         String,
+			name: { type: String, required: true },
 			modifikation: String
 		},
 		BgB: {
@@ -114,7 +132,28 @@ var personSchema = new Schema({
 	},
 	Vorteile:  [String],
 	Nachteile: [String],
-	modified:  { type: Date, default: new Date() }
+	SF: {
+		Kampf:       [String],
+		Manöver:     [String],
+		allgemein:   [String],
+		magisch:     [String],
+		geweiht:     [String]
+	},
+	AP: {
+		alle: { type: Number, min: 0, required: true },
+		frei: { type: Number, default: 0 }
+	},
+	Talente: {
+		Nahkampf:     [heldTalentSchema],
+		Fernkampf:    [heldTalentSchema],
+		körperlich:   [heldTalentSchema],
+		Gesellschaft: [heldTalentSchema],
+		Natur:        [heldTalentSchema],
+		Wissen:       [heldTalentSchema],
+		Handwerk:     [heldTalentSchema],
+		Sprachen:     [heldTalentSchema],
+		Schriften:    [heldTalentSchema]
+	}
 });
 personSchema.virtual('Basiswerte.LeP').get(function() {
 	var KO  = this.Attribute.KO.wert
@@ -212,4 +251,4 @@ personSchema.post('save', function (doc) {
   console.log('%s has been saved', doc._id);
 });
 
-module.exports = mongoose.model('Person', personSchema);
+module.exports = mongoose.model('Held', heldSchema);
