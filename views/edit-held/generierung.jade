@@ -1,0 +1,35 @@
+!!! 5
+html(lang="de")
+	head
+		title #{Person.Name.split(' ')[0]} bearbeiten
+		link(rel="stylesheet", type="text/css", href="/neu.css")
+		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+	
+	body
+		h1.mitte #{Person.Name.split(' ')[0]} bearbeiten
+		
+		form(action=url, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+		
+			fieldset
+				legend Generierung
+				ul.floatLabel
+					each val, key in ["Rasse", "Kultur", "Profession", "BgB"]
+						li
+							label(for="rkp"+key, id="rkp"+key+"lab") #{val}:
+							input(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=Generierung[val].name).size15
+							input(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=Generierung[val].modifikation).size30
+				script.
+					(function() {
+						var $inputs = $('#rkp3, #rkp3mod');
+						$inputs.prop('disabled', true);
+						$('#rkp3lab')
+							.attr('title', 'Zum (De-)Aktivieren klicken')
+							.on("click", function() { 
+								$inputs.prop('disabled', !$inputs.prop('disabled') );
+							});
+					})();
+			
+			fieldset.mitte
+				button(type="submit", disabled) speichern
+				button(type="reset")  reset

@@ -8,8 +8,7 @@ module.exports = {
 	list: function(req, res, next) {
 		Held
 			.find({ disabled: !!req.query.deleted })
-			.populate('held')
-			.select('held AP')
+			.select('Person AP')
 			.lean()
 			.exec(function(err, arr) {
 				if (err) return next(err);

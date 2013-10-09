@@ -11,20 +11,31 @@ function lernstufeValidator(val) {
 var heldTalentSchema = new Schema({
 	_talent: { type: IDREF,  ref: 'Talent' },
 	name:  String,
-	TaW: { type: Number, min: -3, max: 35 },
-	AT:  { type: Number, min: 0 }, // = FK
-	PA:  { type: Number, min: 0 },
+	wert: { type: Number, min: -3, max: 35 },
+	AT:   { type: Number, min: 0 }, // = FK
+	PA:   { type: Number, min: 0 },
 	Lernstufe:   { type: String, validator: lernstufeValidator },
 	Komplexität: { type: Number, min: 5, max: 30 },
 	Spezialisierung: [String]
+});
+heldSchema.virtual('TaW').get(function() {
+	if (typeof this.wert === "number") {
+		return this.wert;
+	}
+	else if (typeof this.AT === "number" && typeof this.PA === "number") {
+		return (+this.AT) + (+this.PA);
+	}
+	else if (typeof this.AT === "number" && typeof this.PA !== "number") {
+		return (+this.AT);
+	}
 });
 
 var heldSchema = new Schema({
 	disabled: { type: Boolean, default: false },
 	modified: { type: Date,    default: new Date() },
 	Person: {
-		Name:        String,
-		Geschlecht:  String,
+		Name: { type: String, required: true },
+		Geschlecht:   String,
 		Größe:     { type: Number, min: 25, max: 250 },
 		Gewicht:   { type: Number, min: 20, max: 300 },
 		Tsatag:  {
@@ -155,14 +166,14 @@ var heldSchema = new Schema({
 		Schriften:    [heldTalentSchema]
 	}
 });
-personSchema.virtual('Basiswerte.LeP').get(function() {
+heldSchema.virtual('Basiswerte.LeP').get(function() {
 	var KO  = this.Attribute.KO.wert
 	  , KK  = this.Attribute.KK.wert
 	  , mod = this.modifikatoren.LeP
 	  ;
 	return Math.round( (KO + KO + KK)/2 + mod.start + mod.add );
 });
-personSchema.virtual('Basiswerte.AuP').get(function() {
+heldSchema.virtual('Basiswerte.AuP').get(function() {
 	var MU  = this.Attribute.MU.wert
 	  , KO  = this.Attribute.KO.wert
 	  , GE  = this.Attribute.GE.wert
@@ -170,7 +181,7 @@ personSchema.virtual('Basiswerte.AuP').get(function() {
 	  ;
 	return Math.round( (MU + KO + GE)/2 + mod.start + mod.add );
 });
-personSchema.virtual('Basiswerte.AsP').get(function() {
+heldSchema.virtual('Basiswerte.AsP').get(function() {
 	var MU  = this.Attribute.MU.wert
 	  , IN  = this.Attribute.IN.wert
 	  , CH  = this.Attribute.CH.wert
@@ -184,14 +195,14 @@ personSchema.virtual('Basiswerte.AsP').get(function() {
 	}
 	return Math.round( (MU + IN + CH)/2 + mod.start + mod.add );
 });
-personSchema.virtual('Basiswerte.KaP').get(function() {
+heldSchema.virtual('Basiswerte.KaP').get(function() {
 	var mod = this.modifikatoren.KaP;
 	if (!mod || mod.start === -1) {
 		return null;
 	}
 	return Math.round( mod.start + mod.add );
 });
-personSchema.virtual('Basiswerte.MR').get(function() {
+heldSchema.virtual('Basiswerte.MR').get(function() {
 	var MU  = this.Attribute.MU.wert
 	  , KL  = this.Attribute.KL.wert
 	  , KO  = this.Attribute.KO.wert
@@ -199,13 +210,13 @@ personSchema.virtual('Basiswerte.MR').get(function() {
 	  ;
 	return Math.round( (MU + KL + KO)/5 + mod.start + mod.add );
 });
-personSchema.virtual('Basiswerte.GS').get(function() {
+heldSchema.virtual('Basiswerte.GS').get(function() {
 	var GE  = this.Attribute.GE.wert
 	  , mod = this.modifikatoren.GS
 	  ;
 	return Math.floor( (GE >>> 3) + 7 + mod );
 });
-personSchema.virtual('Kampfwerte.INI').get(function() {
+heldSchema.virtual('Kampfwerte.INI').get(function() {
 	var MU = this.Attribute.MU.wert
 	  , IN = this.Attribute.IN.wert
 	  , GE = this.Attribute.GE.wert
@@ -213,41 +224,41 @@ personSchema.virtual('Kampfwerte.INI').get(function() {
 	  ;
 	return Math.round( (MU + MU + IN + GE)/5 + mod );
 });
-personSchema.virtual('Kampfwerte.AT').get(function() {
+heldSchema.virtual('Kampfwerte.AT').get(function() {
 	var MU = this.Attribute.MU.wert
 	  , GE = this.Attribute.GE.wert
 	  , KK = this.Attribute.KK.wert
 	  ;
 	return Math.round( (MU + GE + KK)/5 );
 });
-personSchema.virtual('Kampfwerte.PA').get(function() {
+heldSchema.virtual('Kampfwerte.PA').get(function() {
 	var IN = this.Attribute.IN.wert
 	  , GE = this.Attribute.GE.wert
 	  , KK = this.Attribute.KK.wert
 	  ;
 	return Math.round( (IN + GE + KK)/5 );
 });
-personSchema.virtual('Kampfwerte.FK').get(function() {
+heldSchema.virtual('Kampfwerte.FK').get(function() {
 	var IN = this.Attribute.IN.wert
 	  , FF = this.Attribute.FF.wert
 	  , KK = this.Attribute.KK.wert
 	  ;
 	return Math.round( (IN + FF + KK)/5 );
 });
-personSchema.virtual('Kampfwerte.WS').get(function() {
+heldSchema.virtual('Kampfwerte.WS').get(function() {
 	var KO  = this.Attribute.KO.wert
 	  , mod = this.modifikatoren.WS
 	  ;
 	return Math.round( KO/2 + mod );
 });
 
-personSchema.post('init', function (doc) {
+heldSchema.post('init', function (doc) {
   console.log('%s has been initialized from the db', doc._id);
 });
-personSchema.post('validate', function (doc) {
+heldSchema.post('validate', function (doc) {
   console.log('%s has been validated (but not saved yet)', doc._id);
 });
-personSchema.post('save', function (doc) {
+heldSchema.post('save', function (doc) {
   console.log('%s has been saved', doc._id);
 });
 

@@ -5,7 +5,6 @@ mixin extendedItem(name, category)
 		button.add.fl-rechts(type="button") +
 		input.fl-rechts(type="text")
 
-
 doctype 5
 html(lang="de")
 	head
@@ -28,7 +27,7 @@ html(lang="de")
 			- SF.geweiht = []
 		
 		section
-			h1.mitte= held.Person.Name
+			h1.mitte= Person.Name
 			form(action="/sf/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				

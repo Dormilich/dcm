@@ -71,7 +71,7 @@ process.on('SIGINT', function() {
 
 var routes = {};
 // set up routes
-["neu", "held", "char", "edit"].forEach(function(file) {
+["neu", "held", "edit"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 

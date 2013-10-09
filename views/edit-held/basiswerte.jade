@@ -1,0 +1,96 @@
+!!! 5
+html(lang="de")
+	head
+		title #{Person.Name.split(' ')[0]} bearbeiten
+		link(rel="stylesheet", type="text/css", href="/neu.css")
+		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+	
+	body
+		h1.mitte #{Person.Name.split(' ')[0]} bearbeiten
+		
+		form(action=url, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+
+			fieldset
+				legend Basiswerte
+				table
+					colgroup
+						col(style="width: 40%")
+						col(span="3" style="width: 20%")
+					thead
+						tr
+							th Eigenschaft
+							th Modifikator
+							th gekauft
+							th maximal
+					tbody
+						tr
+							td Lebensenergie
+							td 
+								input(name="modifikatoren[LeP][start]", type="number", min="0", step="1", value=modifikatoren.LeP.start)
+							td
+								input(name="modifikatoren[LeP][add]",   type="number", min="0", step="1", value=modifikatoren.LeP.add)
+							td
+								input(name="modifikatoren[LeP][max]",   type="number", min="0", step="1", value=modifikatoren.LeP.max)
+						tr
+							td Ausdauer
+							td 
+								input(name="modifikatoren[AuP][start]", type="number", min="0", step="1", value=modifikatoren.AuP.start)
+							td
+								input(name="modifikatoren[AuP][add]",   type="number", min="0", step="1", value=modifikatoren.AuP.add)
+							td
+								input(name="modifikatoren[AuP][max]",   type="number", min="0", step="1", value=modifikatoren.AuP.max)
+						tr
+							td#asp(title="Zum (De-)Aktivieren klicken") Astralenergie
+							td 
+								input(name="modifikatoren[AsP][start]", type="number", min="0", step="1", value=modifikatoren.AsP.start)
+							td
+								input(name="modifikatoren[AsP][add]",   type="number", min="0", step="1", value=modifikatoren.AsP.add)
+							td
+								input(name="modifikatoren[AsP][max]",   type="number", min="0", step="1", value=modifikatoren.AsP.max)
+						tr
+							td#kap(title="Zum (De-)Aktivieren klicken") Karmaenergie
+							td 
+								input(name="modifikatoren[KaP][start]", type="number", min="0", step="12", value=modifikatoren.KaP.start)
+							td
+								input(name="modifikatoren[KaP][add]",   type="number", min="0", step="1", value=modifikatoren.KaP.add)
+							td
+						tr
+							td Magieresistenz
+							td 
+								input(name="modifikatoren[MR][start]", type="number", min="-10", max="10", step="1", value=modifikatoren.MR.start)
+							td
+								input(name="modifikatoren[MR][add]",   type="number", min="0", step="1", value=modifikatoren.MR.add)
+							td
+								input(name="modifikatoren[MR][max]",   type="number", min="0", step="1", value=modifikatoren.MR.max)
+						tr
+							td Initiative
+							td
+								input(name="modifikatoren[INI]", type="number", step="1", value=modifikatoren.INI)
+							td(colspan="2")
+						tr
+							td Wundschwelle
+							td
+								input(name="modifikatoren[WS]", type="number", step="1", value=modifikatoren.WS)
+							td(colspan="2")
+						tr
+							td Geschwindigkeit
+							td
+								input(name="modifikatoren[GS]", type="number", step="1", value=modifikatoren.GS)
+							td(colspan="2")
+				script.
+					(function() {
+						$('#asp, #kap')
+							.on("click", function() {
+								var $inputs = $(this).closest('tr').find('input');
+								$inputs.prop('disabled', !$inputs.prop('disabled'));
+							})
+							.closest('tr')
+							.find('input')
+							.prop('disabled', true);
+						
+					})();
+
+			fieldset.mitte
+				button(type="submit", disabled) speichern
+				button(type="reset")  reset

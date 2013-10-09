@@ -1,0 +1,39 @@
+!!! 5
+html(lang="de")
+	head
+		title #{Person.Name.split(' ')[0]} bearbeiten
+		link(rel="stylesheet", type="text/css", href="/neu.css")
+		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+	
+	body
+		h1.mitte #{Person.Name.split(' ')[0]} bearbeiten
+		
+		form(action=url, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+		
+			fieldset
+				legend Attribute
+				table
+					colgroup
+						col(style="width: 40%")
+						col(span="3" style="width: 20%")
+					thead
+						tr
+							th Eigenschaft
+							th Modifikator
+							th Startwert
+							th aktueller Wert
+					tbody
+						each val, key in {Mut:"MU", Klugheit:"KL", Intuition:"IN", Charisma:"CH", Fingerfertigkeit:"FF", Gewandheit:"GE", Konstitution:"KO", Körperkraft:"KK"}
+							tr
+								td= key
+								td 
+									input(name="Attribute["+val+"][mod]", type="number", min="-10", max="10", step="1", value=Attribute[val].mod)
+								td 
+									input(name="Attribute["+val+"][start]", type="number", min="0", step="1", value=Attribute[val].start)
+								td 
+									input(name="Attribute["+val+"][wert]", type="number", min="0", step="1", value=Attribute[val].wert)
+							
+			fieldset.mitte
+				button(type="submit", disabled) speichern
+				button(type="reset")  reset

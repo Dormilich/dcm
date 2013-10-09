@@ -3,6 +3,7 @@ var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
   , data    = require( path.join(appRoot, 'data/dsa') )
   , Held    = require( path.join(appRoot, 'models/person') )
+  , Talent  = require( path.join(appRoot, 'models/talent') )
   ;
 
 function merge(target, source) {
