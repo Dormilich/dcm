@@ -16,6 +16,8 @@ mixin SFTableSection(__liste, __name)
 mixin TalentData(talent)
 	if talent
 		td.links= talent.name
+			if talent.Spezialisierung.length
+				|  (#{talent.Spezialisierung.join(', ')})
 		td
 		td.mitte= talent.Lernstufe
 		td.mitte= talent.wert.toString().replace('-', '–')
@@ -25,13 +27,13 @@ mixin TalentTable(__liste, __name)
 		caption= __name
 		colgroup
 			col
-			col(style="width: 8em")
-			col(style="width: 2em")
+			col(style="width: 8em;")
+			col(style="width: 2em;")
 			col(style="width: 5em;")
 			col
-			col(style="width: 8em")
-			col(style="width: 2em")
-			col(style="width: 5em")
+			col(style="width: 8em;")
+			col(style="width: 2em;")
+			col(style="width: 5em;")
 		thead
 			tr
 				th Talent
@@ -84,7 +86,54 @@ mixin LanguageTable(__liste, __name)
 						td=__liste[x+__half].Komplexität
 						td=__liste[x+__half].Lernstufe
 						td=__liste[x+__half].wert
-					
+
+mixin KampfData(__talent)
+	if __talent
+		td.links= __talent.name
+			if __talent.Spezialisierung.length
+				|  (#{__talent.Spezialisierung.join(', ')})
+		td= __talent.Lernstufe
+		if typeof __talent.AT === 'number' && typeof __talent.PA === 'number'
+			td= __talent.AT + Kampfwerte.AT
+			td= __talent.PA + Kampfwerte.PA
+		else
+			td= __talent.AT + Kampfwerte.FK
+			td
+		td= __talent.TaW
+		
+mixin KampfTable(__liste, __name)
+	table.data-section.mitte.eigenschaften
+		caption= __name
+		colgroup
+			col
+			col(style="width: 2em;")
+			col(style="width: 5em;")
+			col(style="width: 5em;")
+			col(style="width: 5em;")
+			col
+			col(style="width: 2em;")
+			col(style="width: 5em;")
+			col(style="width: 5em;")
+			col(style="width: 5em;")
+		thead
+			tr
+				th Talent
+				th
+				th AT
+				th PA
+				th TaW
+				th Talent
+				th
+				th AT
+				th PA
+				th TaW
+		tbody
+			- var __half = Math.ceil(__liste.length/2);
+			- for (var x=0; x<__half; x++)
+				tr
+					+KampfData(__liste[x])
+					+KampfData(__liste[x+__half])
+
 !!! 5
 html(lang="de")
 	head
@@ -272,6 +321,8 @@ html(lang="de")
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		a#taw				
 		section
+			+KampfTable(Talente.Nahkampf, 'Nahkampf')
+			+KampfTable(Talente.Fernkampf, 'Fernkampf')
 			+TalentTable(Talente.körperlich, 'Körperliche Talente')
 			+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente')
 			+TalentTable(Talente.Natur, 'Natur-Talente')

@@ -46,6 +46,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 				th TaW
 		tbody
 			each val, key in _data_
+				- var _heldentalent = getTalent(_held_, val)
 				tr
 					td.mitte(style="padding: 0.2em;")
 						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=val._id, disabled=!isAvailable(_held_, val))
@@ -57,8 +58,8 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 						label(for=_name_+key)= val.name
 					td
 						button.view(type="button")= "\u270E"
-						if val.Spezialisierung
-							each spez in val.Spezialisierung
+						if _heldentalent.Spezialisierung && _heldentalent.Spezialisierung.length
+							each spez in _heldentalent.Spezialisierung
 								input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
 						else
 							input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", disabled)
@@ -68,7 +69,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option(selected=isLernstufe(_held_, val, kat, "B"))= kat
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=getTalent(_held_, val).wert, disabled=!isAvailable(_held_, val))
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=_heldentalent.wert, disabled=!isAvailable(_held_, val))
 
 mixin languagetable(_titel_, _data_, _name_, _held_)
 	table.data-section.eigenschaften
