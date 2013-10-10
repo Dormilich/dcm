@@ -66,7 +66,7 @@ module.exports = {
 		function(err, obj) {
 			if (err) return next(err);
 			merge(obj, data.talente);
-			res.render('list-talente', obj);
+			res.render('edit-held/taw', obj);
 		});
 	}
 };

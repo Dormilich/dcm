@@ -18,7 +18,7 @@ var heldTalentSchema = new Schema({
 	Komplexität: { type: Number, min: 5, max: 30 },
 	Spezialisierung: [String]
 });
-heldSchema.virtual('TaW').get(function() {
+heldTalentSchema.virtual('TaW').get(function() {
 	if (typeof this.wert === "number") {
 		return this.wert;
 	}
