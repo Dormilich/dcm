@@ -60,6 +60,7 @@ body {
 }
 table {
 	margin-top: 2em;
+        table-layout: fixed;
 }
 section {
 	padding: 0 3em;
