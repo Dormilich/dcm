@@ -57,12 +57,12 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								- for (var x=0, l=Math.ceil(_data.Kampf.length/2); x<l; x++)
 									li
-										input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
 										label(for="sf3_"+x)= _data.Kampf[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Kampf.length; y<l; y++)
 									li
-										input(type="checkbox", name="SF[Kampf]", id="sf4_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[Kampf]", id="sf4_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
 										label(for="sf4_"+y)= _data.Kampf[y]
 								+extendedItem('Waffenmeister', 'Kampf')
 
@@ -73,12 +73,12 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								- for (var x=0, l=Math.ceil(_data.Manöver.length/2); x<l; x++)
 									li
-										input(type="checkbox", name="SF[Manöver]", id="sf7_"+x, value=_data.Manöver[x], checked= SF.Manöver.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[Manöver]", id="sf7_"+x, value=_data.Manöver[x], checked= SF.Manöver.indexOf(_data.Manöver[x]) !== -1)
 										label(for="sf7_"+x)= _data.Manöver[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Manöver.length; y<l; y++)
 									li
-										input(type="checkbox", name="SF[Manöver]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[Manöver]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
 										label(for="sf8_"+y)= _data.Manöver[y]
 
 				table.data-section
@@ -129,12 +129,12 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								- for (var x=0, l=Math.ceil(_data.magisch.length/2); x<l; x++)
 									li
-										input(type="checkbox", name="SF[magisch]", id="sf10_"+x, value=_data.magisch[x], checked= SF.allgemein.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[magisch]", id="sf10_"+x, value=_data.magisch[x], checked= SF.magisch.indexOf(_data.magisch[x]) !== -1)
 										label(for="sf10_"+x)= _data.magisch[x]
 							ul.vor-nach.fl-rechts
-								- for (var y=x+1, l=_data.magisch.length; y<l; y++)
+								- for (var y=x, l=_data.magisch.length; y<l; y++)
 									li
-										input(type="checkbox", name="SF[magisch]", id="sf11_"+y, value=_data.magisch[y], checked= SF.allgemein.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[magisch]", id="sf11_"+y, value=_data.magisch[y], checked= SF.magisch.indexOf(_data.magisch[y]) !== -1)
 										label(for="sf11_"+y)= _data.magisch[y]
 								li
 									input.auswahl_liste(type="checkbox", name="SF[magisch]", id="sf11_a", value="Spätweihe")
