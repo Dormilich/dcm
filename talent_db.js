@@ -86,7 +86,7 @@ app.param('talent', function (req, res, next, id) {
 });
 
 app.param('mongoid', function(req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
+	if (!/^[0-9a-fA-F]+$/.test(id)) {
 		return next(new Error("Keine gültige MongoDB ID."));
 	}
 	req.id = id;
@@ -111,7 +111,7 @@ app.get('/', function(req, res, next) {
 		.lean()
 		.exec(function(err, docs) {
 			if (err) return next(err);
-			res.render('table-of-talents', { Liste: docs });
+			res.render('system/table-of-talents', { Liste: docs });
 		})
 	;
 });
@@ -123,7 +123,7 @@ app.get('/talent/:talent', function(req, res, next) {
 		.distinct('typ', function(err, docs) {
 			if (err) return next(err);
 			req.talent.kategorie = docs;
-			res.render('edit-talent', req.talent);
+			res.render('system/edit-talent', req.talent);
 		})
 	;
 });

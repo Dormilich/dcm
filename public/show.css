@@ -98,3 +98,6 @@ h1 {
 	color: white;
 	text-decoration: none;
 }
+.clearfix {
+	clear: both;
+}

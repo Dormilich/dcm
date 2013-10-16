@@ -39,10 +39,10 @@ mixin TalentTable(__liste, __name)
 		tbody
 			each __talent in __liste
 				tr
-					td.links= __talent.name
+					td.links= __talent._talent.name
 						if __talent.Spezialisierung.length
 							|  (#{__talent.Spezialisierung.join(', ')})
-					td
+					td= __talent._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
 					td.mitte= __talent.Lernstufe
 					td.mitte= __talent.wert.toString().replace('-', '–')
 				
@@ -272,7 +272,7 @@ html(lang="de")
 				tbody
 					tr
 						th gesamt
-						td= AP.alle
+						td= AP.alle.toLocaleString('de-DE', { useGrouping: true })
 						th frei
 						td= AP.frei
 		a#sf
@@ -285,16 +285,23 @@ html(lang="de")
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		a#taw				
-		section
+		section.clearfix
 			.vor-nach.fl-links
 				+KampfTable(Talente.Nahkampf, 'Nahkampf')
+			.vor-nach.fl-rechts
 				+KampfTable(Talente.Fernkampf, 'Fernkampf')
+		section.clearfix
+			.vor-nach.fl-links
 				+TalentTable(Talente.körperlich, 'Körperliche Talente')
 				+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente')
 				+TalentTable(Talente.Natur, 'Natur-Talente')
 			.vor-nach.fl-rechts
 				+TalentTable(Talente.Wissen, 'Wissenstalente')
 				+TalentTable(Talente.Handwerk, 'Handwerkstalente')
+		section.clearfix
+			.vor-nach.fl-links
 				+LanguageTable(Talente.Sprachen, 'Sprachen')
+			.vor-nach.fl-rechts
 				+LanguageTable(Talente.Schriften, 'Schriften')
+		section.clearfix
 		

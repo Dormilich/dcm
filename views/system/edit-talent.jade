@@ -21,30 +21,51 @@ html
 			form {
 				padding-left: 5em;
 			}
+			.spez {
+				list-style-type: none;
+				margin: 0;
+				margin-left: 10em;
+				padding: 0;
+			}
+			fieldset {
+				display: inline-block;
+				padding: 2em 4em;
+				border-radius: 3em;
+			}
 	body
 		h1 Talent [#{name}] bearbeiten:
 		form(action="/talent/"+_id, method="post", accept-charset="utf-8")
-			div
-				label(for="t_name") Name
-				input#t_name(type="text", name="name", placeholder="Talent-Name", value=name)
-			div
-				label Talentgruppe
-				select#typ(size="1", name="typ")
-					each val in kategorie
-						option= val
-			div
-				label Probe
-				+Probe3()
-				each val, key in probe
-					script $('.probe').eq(#{key}).val('#{val}');
-			div
-				label Spezialisierungen
-				button#add(type="button") +
-			button(type="submit") speichern
+			fieldset
+				div
+					label(for="t_name") Name
+					input#t_name(type="text", name="name", placeholder="Talent-Name", value=name)
+				div
+					label Talentgruppe
+					select#typ(size="1", name="typ")
+						each val in kategorie
+							option= val
+				div
+					label Probe
+					+Probe3()
+					each val, key in probe
+						script $('.probe').eq(#{key}).val('#{val}');
+				div
+					label Spezialisierungen
+					ul.spez
+						each val in spezialisierungen
+							li
+								input(type="text", name="spezialisierungen", value=val)
+								button.del(type="button")= "\u2717"
+						li
+							button#add(type="button") +
+				button(type="submit") speichern
 		script.
 			$('#add').on("click", function() {
-				$('<input type="text" name="spezialisierungen">').insertBefore(this);
+				$('<li><input type="text" name="spezialisierungen"></li>').insertBefore(this.parentNode);
 			});
 			$('#typ').val('#{typ}');
+			$('.del').on('click', function() {
+				$(this).closest('li').remove();
+			});
 		h1
 			a(href="/") Talentliste

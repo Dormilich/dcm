@@ -60,7 +60,7 @@ mongoose.connection.on('disconnected', function _disconnected() {
 // kill connection on application end
 process.on('SIGINT', function() {
 	mongoose.connection.close(function () {
-		console.log('Mongoose connection disconnected through app termination');
+		console.log('Mongoose connection terminated');
 		process.exit(0);
 	});
 });
