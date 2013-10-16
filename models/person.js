@@ -22,11 +22,14 @@ heldTalentSchema.virtual('TaW').get(function() {
 	if (typeof this.wert === "number") {
 		return this.wert;
 	}
-	else if (typeof this.AT === "number" && typeof this.PA === "number") {
-		return (+this.AT) + (+this.PA);
+	else if (typeof this.AT === "number") {
+		if (typeof this.PA === "number") {
+			return this.AT + this.PA;
+		}
+		return this.AT;
 	}
-	else if (typeof this.AT === "number" && typeof this.PA !== "number") {
-		return (+this.AT);
+	else  {
+		return "—";
 	}
 });
 

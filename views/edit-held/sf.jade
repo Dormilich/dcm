@@ -1,16 +1,40 @@
-mixin extendedItem(name, category)
-	li
-		input.spezifisch(type="checkbox", name="SF["+category+"]", value=name)
-		label= name
-		button.add.fl-rechts(type="button") +
-		input.fl-rechts(type="text")
-
 doctype 5
 html(lang="de")
 	head
 		title Sonderfertigkeiten hinzufügen
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		script(src="/jquery-2.0.3.min.js")
+		style.
+			h1 a {
+				text-decoration: none;
+				color: inherit;
+			}
+			.vor-nach ul li {
+				list-style-type: none;
+			}
+			.vor-nach ul li:nth-child(odd) {
+				background-color: transparent;
+			}
+			nav {
+				position: fixed;
+				top: 0;
+				background-color: #eee;
+				width: 100%;
+			}
+			nav a {
+				display: inline-block;
+				width: 8em;
+				text-decoration: none;
+				color: black;
+				text-align: center;
+				background-color: #eee;
+				padding: 0.3em 0.5em;
+				font-weight: bold;
+			}
+			nav a:hover {
+				color: #eee;
+				background-color: black;
+			}
 	body
 		// nav
 		unless SF
@@ -25,47 +49,96 @@ html(lang="de")
 			- SF.magisch = []
 		unless SF.geweiht
 			- SF.geweiht = []
-		
+		nav
+			a(href="#top") [Seitenanfang]
+			a(href="#allg") allgemeine SF
+			a(href="#kampf") Kampf-SF
+			a(href="#wlk") Manöver
+			a(href="#gott") karmale SF
+			a(href="#mag") magische SF
+			a(href="#save") [speichern]
+			a(href="/held/"+_id)= "[ ⇒ "+Person.Name.split(' ')[0]+" ]"
+			
 		section
-			h1.mitte= Person.Name
-			form(action="/sf/"+_id, method="post", accept-charset="utf-8")
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
+			form#newChar(action="/sf/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
+				a#allg
 				table.data-section
 					caption allgemeine Sonderfertigkeiten
 					tr
 						td
 							ul.vor-nach.fl-links
 								each val, key in _data.allgemein
-									li
-										input(type="checkbox", name="SF[allgemein]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
-										label(for="sf1_"+key)= val
-								+extendedItem('Berufsgeheimnis', 'allgemein')
-								+extendedItem('Ortskenntnis', 'allgemein')
+									if val.charAt(0) === "*"
+										- var __name = val.slice(1)
+										each __sf, __idx in SF.allgemein.filter(function(item) { return (item.indexOf(__name) === 0); })
+											li
+												input.spezifisch(type="checkbox", name="SF[allgemein]", value=__name, checked, id="sf1a_"+__idx)
+												label(for="sf1a_"+__idx)= __name
+												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
+										li
+											input.spezifisch(type="checkbox", name="SF[allgemein]", value=__name, id="sf1_"+key)
+											label(for="sf1_"+key)= __name
+											input.fl-rechts(type="text")
+											button.add.fl-rechts(type="button") +
+									else
+										li
+											input(type="checkbox", name="SF[allgemein]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
+											label(for="sf1_"+key)= val
 							ul.vor-nach.fl-rechts
 								li
 									strong Kulturkunde:
 								each val, key in _data.Kulturkunde
 									li
 										input(type="checkbox", name="SF[allgemein]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde (#{val})") !== -1)
-										label(for="sf2_"+key) Kulturkunde (#{val})
+										label(for="sf2_"+key)= val
 				
+				a#kampf
 				table.data-section
 					caption Kampf-Sonderfertigkeiten
 					tr
 						td
 							ul.vor-nach.fl-links
 								- for (var x=0, l=Math.ceil(_data.Kampf.length/2); x<l; x++)
-									li
-										input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
-										label(for="sf3_"+x)= _data.Kampf[x]
+									if _data.Kampf[x].charAt(0) === "*"
+										- var __name = _data.Kampf[x].slice(1)
+										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
+											li
+												input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, checked, id="sf3a_"+__idx)
+												label(for="sf3a_"+__idx)= __name
+												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
+										li
+											input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, id="sf3_"+x)
+											label(for="sf3_"+x)= __name
+											input.fl-rechts(type="text")
+											button.add.fl-rechts(type="button") +
+									else
+										li
+											input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
+											label(for="sf1_"+x)= _data.Kampf[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Kampf.length; y<l; y++)
-									li
-										input(type="checkbox", name="SF[Kampf]", id="sf4_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
-										label(for="sf4_"+y)= _data.Kampf[y]
-								+extendedItem('Waffenmeister', 'Kampf')
+									if _data.Kampf[y].charAt(0) === "*"
+										- var __name = _data.Kampf[y].slice(1)
+										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
+											li
+												input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, checked, id="sf3a_"+__idx)
+												label(for="sf3a_"+__idx)= __name
+												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
+										li
+											input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, id="sf3_"+y)
+											label(for="sf3_"+y)= __name
+											input.fl-rechts(type="text")
+											button.add.fl-rechts(type="button") +
+									else
+										li
+											input(type="checkbox", name="SF[Kampf]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
+											label(for="sf1_"+y)= _data.Kampf[y]
 
+				a#wlk
 				table.data-section
 					caption Waffenlose Manöver
 					tr
@@ -81,111 +154,104 @@ html(lang="de")
 										input(type="checkbox", name="SF[Manöver]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
 										label(for="sf8_"+y)= _data.Manöver[y]
 
+				a#gott
 				table.data-section
 					caption Karmale Sonderfertigkeiten
 					tr
-						td
+						td.gods
 							ul.vor-nach.fl-links
 								each val, key in _data.geweiht
 									li
 										input(type="checkbox", name="SF[geweiht]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
 										label(for="sf9_"+key)= val
 								li
-									input.auswahl_liste(type="checkbox", name="SF[geweiht]", id="sf9_a", value="Spätweihe")
-									label(for="sf9_a") Spätweihe
-									select#weihe(size="1")
-										optgroup(label="alveranische Gottheiten")
-											option Boron
-											option Efferd
-											option Firun
-											option Hesinde
-											option Ingrimm
-											option Peraine
-											option Phex
-											option Praios
-											option Rahja
-											option Rondra
-											option Travia
-											option Tsa
-										optgroup(label="nicht-alveranische Gottheiten")
-											option Aves
-											option Ifirn
-											option Kor
-											option Nandus
-											option Swafnir
-										optgroup(label="echsiche Gottheiten")
-											option H’Szint
-											option Zsahh
-										optgroup(label="orkische Gottheiten")
-											option Gravesh
-										optgroup(label="zwergische Gottheiten")
-											option Angrosch
-									script 
+									strong Spätweihe (alveranische Gottheiten)
+								each val, key in ["Praios", "Rondra", "Efferd", "Travia", "Boron", "Hesinde", "Firun", "Tsa", "Phex", "Peraine", "Ingrimm", "Rahja"]
+									- var __name = "Spätweihe ("+val+")"
+									li
+										input(type="radio", name="SF[geweiht]", id="sf9a_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
+										label(for="sf9a_"+key)= val
+							ul.vor-nach.fl-rechts
+								li
+									strong Spätweihe (nicht-alveranische Gottheiten)
+								each val, key in ["Aves", "Ifirn", "Kor", "Nandus", "Swafnir"]
+									- var __name = "Spätweihe ("+val+")"
+									li
+										input(type="radio", name="SF[geweiht]", id="sf9b_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
+										label(for="sf9b_"+key)= val
+								li
+									strong Spätweihe (echsische Gottheiten)
+								li
+									input(type="radio", name="SF[geweiht]", id="sf9c_1", value="Spätweihe (H’Szint)", checked= SF.geweiht.indexOf("Spätweihe (H’Szint)") !== -1)
+									label(for="sf9c_1") H’Szint
+								li
+									input(type="radio", name="SF[geweiht]", id="sf9c_2", value="Spätweihe (Zsahh)", checked= SF.geweiht.indexOf("Spätweihe (Zsahh)") !== -1)
+									label(for="sf9c_2") Zsahh
+								li
+									strong Spätweihe (orkische Gottheiten)
+								li
+									input(type="radio", name="SF[geweiht]", id="sf9c_3", value="Spätweihe (Gravesh)", checked= SF.geweiht.indexOf("Spätweihe (Gravesh)") !== -1)
+									label(for="sf9c_3") Gravesh
+								li
+									strong Spätweihe (zwergische Gottheiten)
+								li
+									input(type="radio", name="SF[geweiht]", id="sf9c_4", value="Spätweihe (Angrosch)", checked= SF.geweiht.indexOf("Spätweihe (Angrosch)") !== -1)
+									label(for="sf9c_4") Angrosch
+								li.mitte
+									button#nogod(type="button") Spätweihe entfernen
+							script.
+								$('#nogod').on('click', function() {
+									$('.gods input[type="radio"]:checked').prop('checked', false);
+								});
 				
+				a#mag
 				table.data-section
 					caption Magische Sonderfertigkeiten
 					tr
 						td
 							ul.vor-nach.fl-links
-								- for (var x=0, l=Math.ceil(_data.magisch.length/2); x<l; x++)
+								each val, key in _data.magisch
 									li
-										input(type="checkbox", name="SF[magisch]", id="sf10_"+x, value=_data.magisch[x], checked= SF.magisch.indexOf(_data.magisch[x]) !== -1)
-										label(for="sf10_"+x)= _data.magisch[x]
+										input(type="checkbox", name="SF[magisch]", id="sf10_"+key, value=val, checked= SF.magisch.indexOf(val) !== -1)
+										label(for="sf10_"+key)= val
 							ul.vor-nach.fl-rechts
-								- for (var y=x, l=_data.magisch.length; y<l; y++)
-									li
-										input(type="checkbox", name="SF[magisch]", id="sf11_"+y, value=_data.magisch[y], checked= SF.magisch.indexOf(_data.magisch[y]) !== -1)
-										label(for="sf11_"+y)= _data.magisch[y]
 								li
-									input.auswahl_liste(type="checkbox", name="SF[magisch]", id="sf11_a", value="Spätweihe")
-									label(for="sf11_a") Merkmalskenntnis
-									select.fl-rechts(size="5", multiple, style="width: 50%;")
-										option Antimagie
-										option Beschwörung
-										optgroup(label="Dämonisch")
-											option(value="Dämonisch/gesamt") - gesamt
-											option(value="Dämonisch/Blakharaz") - Blakharaz
-											option(value="Dämonisch/Belhalhar") - Belhalhar
-											option(value="Dämonisch/Charyptoroth") - Charyptoroth
-											option(value="Dämonisch/Lolgramoth") - Lolgramoth
-											option(value="Dämonisch/Thargunitoth") - Thargunitoth
-											option(value="Dämonisch/Amazeroth") - Amazeroth
-											option(value="Dämonisch/Belshirash") - Belshirash
-											option(value="Dämonisch/Asfaloth") - Asfaloth
-											option(value="Dämonisch/Tasfarelel") - Tasfarelel
-											option(value="Dämonisch/Belzhorash") - Belzhorash
-											option(value="Dämonisch/Agrimoth") - Agrimoth
-											option(value="Dämonisch/Belkelel") - Belkelel
-										optgroup(label="Elementar")
-											option(value="Elementar/gesamt") - gesamt
-											option(value="Elementar/Eis") - Eis
-											option(value="Elementar/Erz") - Erz
-											option(value="Elementar/Feuer") - Feuer
-											option(value="Elementar/Humus") - Humus
-											option(value="Elementar/Luft") - Luft
-											option(value="Elementar/Wasser") - Wasser
-										option Eigenschaften
-										option Einfluß
-										option Form
-										option Geisterwesen
-										option Heilung
-										option Hellsicht
-										option Herbeirufung
-										option Herrschaft
-										option Illusion
-										option Kraft
-										option Limbus
-										option Metamagie
-										option Objekt
-										option Schaden
-										option Telekinese
-										option Temporal
-										option Umwelt
-										option Verständigung
-									.fl-clear
+									strong Merkmalskenntnis:
+								li
+									input(type="checkbox", name="SF[magisch]", value="Merkmal (Antimagie)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_a")
+									label(for="sf11_a") Antimagie
+								li
+									input(type="checkbox", name="SF[magisch]", value="Merkmal (Beschwörung)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_b")
+									label(for="sf11_b") Beschwörung
+								li
+									input(type="checkbox", disabled)
+									label Dämonisch
+									ul
+										each val, key in ["gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel"]
+											- var checkval = "Merkmal (Dämonisch/"+val+")"
+											li
+												input(type="checkbox", name="SF[magisch]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
+												label(for="sf11a_"+key)= val
+									
+								li
+									input(type="checkbox", disabled)
+									label Elementar
+									ul
+										each val, key in ["gesamt", "Eis", "Erz", "Feuer", "Humus", "Luft", "Wasser"]
+											- var checkval = "Merkmal (Elementar/"+val+")"
+											li
+												input(type="checkbox", name="SF[magisch]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
+												label(for="sf11b_"+key)= val
+								
+								each val, key in ["Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
+									li
+										input(type="checkbox", name="SF[magisch]", value=val, checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
+										label(for="sf11c_"+key)= val
 
+				a#save
 				.mitte
 					button(type="submit", disabled) speichern
+		
 		script(type="text/javascript", src="/preprocess.vorteile.js")
 		script.
 			(function() {

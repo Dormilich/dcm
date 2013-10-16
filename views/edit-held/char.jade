@@ -67,10 +67,16 @@ html(lang="de")
 				legend Generierung
 				ul.floatLabel
 					each val, key in ["Rasse", "Kultur", "Profession", "BgB"]
+						if Generierung[val]
+							- var __name = Generierung[val].name
+							- var __mod  = Generierung[val].modifikation
+						else
+							- var __name = ''
+							- var __mod  = ''
 						li
 							label(for="rkp"+key, id="rkp"+key+"lab") #{val}:
-							input(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=Generierung[val].name).size15
-							input(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=Generierung[val].modifikation).size30
+							input(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=__name).size15
+							input(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=__mod).size30
 				script.
 					(function() {
 						var $inputs = $('#rkp3, #rkp3mod');
@@ -134,6 +140,8 @@ html(lang="de")
 								input(name="modifikatoren[AuP][add]",   type="number", min="0", step="1", value=modifikatoren.AuP.add)
 							td
 								input(name="modifikatoren[AuP][max]",   type="number", min="0", step="1", value=modifikatoren.AuP.max)
+						unless modifikatoren.AsP
+							- modifikatoren.AsP = { start: '', add: '', max: '' }
 						tr
 							td#asp(title="Zum (De-)Aktivieren klicken") Astralenergie
 							td 
@@ -142,6 +150,8 @@ html(lang="de")
 								input(name="modifikatoren[AsP][add]",   type="number", min="0", step="1", value=modifikatoren.AsP.add)
 							td
 								input(name="modifikatoren[AsP][max]",   type="number", min="0", step="1", value=modifikatoren.AsP.max)
+						unless modifikatoren.KaP
+							- modifikatoren.KaP = { start: '', add: '' }
 						tr
 							td#kap(title="Zum (De-)Aktivieren klicken") Karmaenergie
 							td 

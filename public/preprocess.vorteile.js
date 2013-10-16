@@ -45,7 +45,7 @@ $('#newChar').on('submit', function(jqevt) {
 			else {
 				this.checked = false;
 			}
-		}
+		};
 	}
 	// add explanation/specifics
 	$('.spezifisch:checked').each(function() {
