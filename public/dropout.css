@@ -1,0 +1,50 @@
+/* 
+    Document   : dropout
+    Created on : 19.10.2013, 10:10:31
+    Author     : alexander
+    Description:
+        set CSS for the dropout functionality
+*/
+
+ul.options {
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;
+    border-radius: 0.3em;
+    list-style-type: none;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.options li {
+    padding: 0 0.5em;
+    background-color: white;
+}
+.options li:hover {
+    background-color: #eee;
+}
+.options li:first-child {
+    border-top-left-radius:  0.3em;
+    border-top-right-radius: 0.3em;
+}
+.options li:last-child {
+    border-bottom-left-radius:  0.3em;
+    border-bottom-right-radius: 0.3em;
+}
+.wrapper {
+    display: inline-block;
+    border-right: 2px solid gray;
+    margin-right: 0.5em;
+    padding-right: 0.5em;
+}
+.wrapper button {
+    width:  2em;
+    height: 2em;
+    padding: 0;
+    text-align: center;
+}
+.wrapper input[type="text"] {
+    height: 1.9em;
+}
+
