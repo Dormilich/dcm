@@ -47,7 +47,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 		tbody
 			each val, key in _data_
 				- var _heldentalent = getTalent(_held_, val)
-				tr
+				tr(data-options=val.spezialisierungen.join(','), data-name="Talente[#{_name_}][#{key}]")
 					td.mitte(style="padding: 0.2em;")
 						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=val._id, disabled=!isAvailable(_held_, val))
 						if val.standard
@@ -57,12 +57,19 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 					td
 						label(for=_name_+key)= val.name
 					td
-						button.view(type="button")= "\u270E"
 						if _heldentalent.Spezialisierung && _heldentalent.Spezialisierung.length
 							each spez in _heldentalent.Spezialisierung
-								input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
-						else
-							input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", disabled)
+								.wrapper
+									button.del(type="button")= "\u2717"
+									input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
+
+						//
+							button.view(type="button")= "\u270E"
+							if _heldentalent.Spezialisierung && _heldentalent.Spezialisierung.length
+								each spez in _heldentalent.Spezialisierung
+									input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
+							else
+								input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", disabled)
 						button.add(type="button") +
 					td.mitte
 						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!isAvailable(_held_, val))
@@ -276,14 +283,14 @@ html(lang="de")
 			$('.add').on('click', function() {
 				$(this).prev().clone().insertBefore(this);
 			});
-			$('.view').on('click', function() {
+			/* $('.view').on('click', function() {
 				var $text  = $(this).closest('td').find('input');
 				var $check = $(this).closest('tr').find('.isactive');
 				var check_state = $check.length ? $check.prop('checked') : true;
 				var text_state  = !(check_state && $text.prop('disabled'));
 				$text.prop('disabled', text_state);
 				this.textContent = (text_state) ? "\u270E" : "\u2717";
-			});
+			}); //*/
 			$('label').on('click', function() {
 				// click is faster than label => checkbox
 				var $tr    = $(this).closest('tr');
@@ -302,4 +309,42 @@ html(lang="de")
 					var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 					$(this).find('.nk-taw').val(taw);
 				});
+			});
+			$('.add').on('click', function() {
+				var $datasrc = $(this).closest('tr');
+				var options  = $datasrc.data('options');
+				var $wrapper = $('<div/>').addClass('wrapper');
+				var $text = $('<input type="text"/>').prop('name', $datasrc.data('name'));
+				var $rem  = $('<button type="button"/>').text("\u2717");
+
+				if (options.length) {
+					var $ul   = $('<ul/>').addClass('data');
+					var $down = $('<button type="button">▼</button>');
+					options.split(',').forEach(function(item) {
+						$('<li/>').text(item).appendTo($ul);
+					});
+					$down.on('click', function() {
+						$ul.toggle();
+					});    
+					$ul.on('click', 'li', function() {
+						$text.val(this.textContent);
+						$ul.hide();
+					});
+					$rem.on('click', function() {
+						$wrapper.remove();
+					});
+					$wrapper.append($rem, $ul, $text, $down);
+					$wrapper.insertBefore(this);
+					var style   = $text.offset();
+					style.top  += $text.outerHeight();
+					style.width = $text.outerWidth() - 2;
+					$ul.css(style);
+				}
+				else {
+					$wrapper.append($rem, $text);
+					$wrapper.insertBefore(this);
+				}
+			});
+			$('.del').on('click', function() {
+				$(this.parentNode).remove();
 			});
