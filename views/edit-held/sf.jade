@@ -23,7 +23,7 @@ html(lang="de")
 			}
 			nav a {
 				display: inline-block;
-				width: 8em;
+				width: 9em;
 				text-decoration: none;
 				color: black;
 				text-align: center;
@@ -57,7 +57,7 @@ html(lang="de")
 			a(href="#gott") karmale SF
 			a(href="#mag") magische SF
 			a(href="#save") [speichern]
-			a(href="/held/"+_id)= "[ ⇒ "+Person.Name.split(' ')[0]+" ]"
+			a(href="/held/"+_id)= "⇒ "+Person.Name.split(' ')[0]
 			
 		section
 			h1.mitte
@@ -118,7 +118,7 @@ html(lang="de")
 									else
 										li
 											input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
-											label(for="sf1_"+x)= _data.Kampf[x]
+											label(for="sf3_"+x)= _data.Kampf[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Kampf.length; y<l; y++)
 									if _data.Kampf[y].charAt(0) === "*"
@@ -136,7 +136,7 @@ html(lang="de")
 									else
 										li
 											input(type="checkbox", name="SF[Kampf]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
-											label(for="sf1_"+y)= _data.Kampf[y]
+											label(for="sf3_"+y)= _data.Kampf[y]
 
 				a#wlk
 				table.data-section

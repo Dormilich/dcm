@@ -136,14 +136,15 @@ app.post('/talent/:mongoid', function(req, res, next) {
 });
 
 app.get('/neu', function(req, res, next) {
-	res.render('new-talent', { 
+	res.render('system/new-talent', { 
 		kategorie: [
 			"Körperliche Talente", 
 			"Gesellschaftliche Talente", 
 			"Naturtalente", 
 			"Wissenstalente", 
 			"Handwerkstalente", 
-			"Metatalente"
+			"Metatalente",
+			"Gaben"
 		] 
 	});
 });

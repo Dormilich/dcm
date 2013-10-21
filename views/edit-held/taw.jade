@@ -47,7 +47,9 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 		tbody
 			each val, key in _data_
 				- var _heldentalent = getTalent(_held_, val)
-				tr(data-options=val.spezialisierungen.join(','), data-name="Talente[#{_name_}][#{key}]")
+				unless Array.isArray(val.spezialisierungen)
+					- val.spezialisierungen = [val.spezialisierungen]
+				tr(data-options=val.spezialisierungen.join(','), data-name="Talente[#{_name_}][#{key}][Spezialisierung]")
 					td.mitte(style="padding: 0.2em;")
 						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=val._id, disabled=!isAvailable(_held_, val))
 						if val.standard
@@ -57,19 +59,11 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 					td
 						label(for=_name_+key)= val.name
 					td
-						if _heldentalent.Spezialisierung && _heldentalent.Spezialisierung.length
+						if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
 							each spez in _heldentalent.Spezialisierung
 								.wrapper
 									button.del(type="button")= "\u2717"
 									input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
-
-						//
-							button.view(type="button")= "\u270E"
-							if _heldentalent.Spezialisierung && _heldentalent.Spezialisierung.length
-								each spez in _heldentalent.Spezialisierung
-									input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
-							else
-								input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", disabled)
 						button.add(type="button") +
 					td.mitte
 						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!isAvailable(_held_, val))
@@ -119,6 +113,7 @@ html(lang="de")
 	head
 		title Talentwerte bearbeiten
 		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
 			.view {
@@ -192,7 +187,8 @@ html(lang="de")
 							th TaW
 					tbody#nahkampf
 						each val, key in Nahkampf
-							tr
+							- var _heldentalent = getTalent(_chardata.Talente.Nahkampf, val)
+							tr(data-name="Talente[Nahkampf][#{key}][Spezialisierung]")
 								td.mitte(style="padding: 0.2em;")
 									input.unlock(type="hidden", name="Talente[Nahkampf][#{key}][_talent]", value=val._id, disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
 									if val.standard
@@ -202,12 +198,11 @@ html(lang="de")
 								td
 									label(for="nk"+key)= val.name
 								td
-									button.view(type="button")= "\u270E"
-									if val.Spezialisierung
-										each spez in val.Spezialisierung
-											input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", value=spez)
-									else
-										input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", disabled)
+									if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
+										each spez in _heldentalent.Spezialisierung
+											.wrapper
+												button.del(type="button")= "\u2717"
+												input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", value=spez)
 									button.add(type="button") +
 								td.mitte
 									select.unlock(size="1", name="Talente[Nahkampf][#{key}][Lernstufe]", disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
@@ -238,7 +233,8 @@ html(lang="de")
 							th TaW
 					tbody
 						each val, key in Fernkampf
-							tr
+							- var _heldentalent = getTalent(_chardata.Talente.Fernkampf, val)
+							tr(data-name="Talente[Fernkampf][#{key}][Spezialisierung]")
 								td.mitte(style="padding: 0.2em;")
 									input.unlock(type="hidden", name="Talente[Fernkampf][#{key}][_talent]", value=val._id, disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
 									if val.standard
@@ -248,12 +244,11 @@ html(lang="de")
 								td
 									label(for="fk"+key)= val.name
 								td
-									button.view(type="button")= "\u270E"
-									if val.Spezialisierung
-										each spez in val.Spezialisierung
-											input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", value=spez)
-									else
-										input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", disabled)
+									if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
+										each spez in _heldentalent.Spezialisierung
+											.wrapper
+												button.del(type="button")= "\u2717"
+												input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", value=spez)
 									button.add(type="button") +
 								td.mitte
 									select.unlock(size="1", name="Talente[Fernkampf][#{key}][Lernstufe]", disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
@@ -280,10 +275,10 @@ html(lang="de")
 					button(type="submit") speichern
 
 		script.
-			$('.add').on('click', function() {
+			/* $('.add').on('click', function() {
 				$(this).prev().clone().insertBefore(this);
 			});
-			/* $('.view').on('click', function() {
+			$('.view').on('click', function() {
 				var $text  = $(this).closest('td').find('input');
 				var $check = $(this).closest('tr').find('.isactive');
 				var check_state = $check.length ? $check.prop('checked') : true;
@@ -315,10 +310,15 @@ html(lang="de")
 				var options  = $datasrc.data('options');
 				var $wrapper = $('<div/>').addClass('wrapper');
 				var $text = $('<input type="text"/>').prop('name', $datasrc.data('name'));
-				var $rem  = $('<button type="button"/>').text("\u2717");
-
-				if (options.length) {
-					var $ul   = $('<ul/>').addClass('data');
+				var $rem  = $('<button type="button"/>')
+					.text("\u2717")
+					.addClass('del')
+					.on('click', function() {
+						$wrapper.remove();
+					})
+				;
+				if (options && options.length) {
+					var $ul   = $('<ul/>').addClass('options');
 					var $down = $('<button type="button">▼</button>');
 					options.split(',').forEach(function(item) {
 						$('<li/>').text(item).appendTo($ul);
@@ -329,9 +329,6 @@ html(lang="de")
 					$ul.on('click', 'li', function() {
 						$text.val(this.textContent);
 						$ul.hide();
-					});
-					$rem.on('click', function() {
-						$wrapper.remove();
 					});
 					$wrapper.append($rem, $ul, $text, $down);
 					$wrapper.insertBefore(this);

@@ -39,6 +39,8 @@ html
 				label Spezialisierungen
 				input(type="text", name="spezialisierungen")
 				button#add(type="button") +
+			div
+				button(type="submit") speichern
 		script.
 			$('#add').on("click", function() {
 				var $this = $(this);

@@ -59,4 +59,7 @@ html
 							td
 								if (val.standard === true)
 									| X
-							td= val.spezialisierungen.join(', ')
+							if Array.isArray(val.spezialisierungen)
+								td= val.spezialisierungen.join(', ')
+							else
+								td= val.spezialisierungen
