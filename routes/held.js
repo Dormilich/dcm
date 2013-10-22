@@ -20,7 +20,7 @@ module.exports = {
 	show: function (req, res, next) {
 		Held
 			.findById(req.id)
-			.populate('Talente.körperlich._talent Talente.Gesellschaft._talent Talente.Natur._talent Talente.Wissen._talent Talente.Handwerk._talent')
+			.populate('Talente.körperlich._talent Talente.Gesellschaft._talent Talente.Natur._talent Talente.Wissen._talent Talente.Handwerk._talent Talente.Gaben._talent')
 			.exec(function(err, doc) {
 				if (err) return next(err);
 				if (!doc) return next();

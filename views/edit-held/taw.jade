@@ -1,5 +1,5 @@
 - function getTalent(list, value) { 
-- 	var l = list.length; 
+- 	var l = list ? list.length : 0; 
 - 	while (l--) { 
 - 		if (list[l].name === value.name) {
 - 			return list[l];
@@ -8,7 +8,7 @@
 - 	return { wert: 0, AT: 0, PA: 0 }; 
 - }
 - function isAvailable(list, value) { 
-- 	var l = list.length; 
+- 	var l = list ? list.length : 0; 
 - 	if (value.standard) {
 - 		return true;
 - 	}
@@ -20,7 +20,7 @@
 - 	return false; 
 - }
 - function isLernstufe(list, ref, curr, dflt) { 
-- 	var l = list.length; 
+- 	var l = list ? list.length : 0; 
 - 	while (l--) { 
 - 		if (list[l].name === ref.name) {
 - 			return (curr === list[l].Lernstufe);
@@ -270,6 +270,8 @@ html(lang="de")
 				+languagetable('Sprachen', Sprachen, 'Sprachen', _chardata.Talente.Sprachen)
 				a#jSCR
 				+languagetable('Schriften', Schriften, 'Schriften', _chardata.Talente.Schriften)
+				a#jGAB
+				+talenttable('Gaben', Gaben, 'Gaben', _chardata.Talente.Gaben)
 				
 				.mitte#save
 					button(type="submit") speichern

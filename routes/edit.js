@@ -45,6 +45,7 @@ module.exports = {
 			Natur:        getTalentType("Naturtalente"),
 			Wissen:       getTalentType("Wissenstalente"),
 			Handwerk:     getTalentType("Handwerkstalente"),
+			Gaben:        getTalentType("Gaben"),
 			_chardata: function(cb) {
 				Held
 					.findById(req.id)

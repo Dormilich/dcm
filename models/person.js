@@ -166,7 +166,8 @@ var heldSchema = new Schema({
 		Wissen:       [heldTalentSchema],
 		Handwerk:     [heldTalentSchema],
 		Sprachen:     [heldTalentSchema],
-		Schriften:    [heldTalentSchema]
+		Schriften:    [heldTalentSchema],
+		Gaben:        [heldTalentSchema]
 	}
 });
 heldSchema.virtual('Basiswerte.LeP').get(function() {
