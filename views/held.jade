@@ -292,7 +292,7 @@ html(lang="de")
 				+KampfTable(Talente.Fernkampf, 'Fernkampf')
 		section.clearfix
 			.vor-nach.fl-links
-				if Talente.Gaben
+				if Talente.Gaben.length
 					+TalentTable(Talente.Gaben, 'Gaben')
 				+TalentTable(Talente.körperlich, 'Körperliche Talente')
 				+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente')

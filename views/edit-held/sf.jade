@@ -41,14 +41,29 @@ html(lang="de")
 			- SF = {}
 		unless SF.Kampf
 			- SF.Kampf = []
+		unless Array.isArray(SF.Kampf)
+			- SF.Kampf = [SF.Kampf]
+		
 		unless SF.Manöver
 			- SF.Manöver = []
+		unless Array.isArray(SF.Manöver)
+			- SF.Manöver = [SF.Manöver]
+		
 		unless SF.allgemein
 			- SF.allgemein = []
+		unless Array.isArray(SF.allgemein)
+			- SF.allgemein = [SF.allgemein]
+		
 		unless SF.magisch
 			- SF.magisch = []
+		unless Array.isArray(SF.magisch)
+			- SF.magisch = [SF.magisch]
+		
 		unless SF.geweiht
 			- SF.geweiht = []
+		unless Array.isArray(SF.geweiht)
+			- SF.geweiht = [SF.geweiht]
+
 		nav
 			a(href="#top") [Seitenanfang]
 			a(href="#allg") allgemeine SF
@@ -245,7 +260,7 @@ html(lang="de")
 								
 								each val, key in ["Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
 									li
-										input(type="checkbox", name="SF[magisch]", value=val, checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
+										input(type="checkbox", name="SF[magisch]", value="Merkmal ("+val+")", checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
 										label(for="sf11c_"+key)= val
 
 				a#save
