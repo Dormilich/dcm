@@ -34,7 +34,7 @@ function getTalentType(tname) {
 				}
 			})
 		;
-	}
+	};
 }
 
 module.exports = {
