@@ -9,6 +9,7 @@ module.exports = {
 		Held
 			.find({ disabled: !!req.query.deleted })
 			.select('Person AP')
+			.sort('AP.alle')
 			.lean()
 			.exec(function(err, arr) {
 				if (err) return next(err);

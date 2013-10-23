@@ -42,7 +42,7 @@ mixin TalentTable(__liste, __name)
 					td.links= __talent._talent.name
 						if __talent.Spezialisierung.length
 							|  (#{__talent.Spezialisierung.join(', ')})
-					td= __talent._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
+					td(title=__talent._talent.probe.join(' · '))= __talent._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
 					td.mitte= __talent.Lernstufe
 					td.mitte= __talent.wert.toString().replace('-', '–')
 				
@@ -272,7 +272,7 @@ html(lang="de")
 				tbody
 					tr
 						th gesamt
-						td= AP.alle.toLocaleString('de-DE', { useGrouping: true })
+						td= AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 						th frei
 						td= AP.frei
 		a#sf

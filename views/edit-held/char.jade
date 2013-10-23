@@ -189,10 +189,21 @@ html(lang="de")
 								var $inputs = $(this).closest('tr').find('input');
 								$inputs.prop('disabled', !$inputs.prop('disabled'));
 							})
-							.closest('tr')
-							.find('input')
-							.prop('disabled', true);
-						
+						;
+						if (#{!modifikatoren.AsP.max}) {
+							$('#asp')
+								.closest('tr')
+								.find('input')
+								.prop('disabled', true)
+							;
+						}
+						if (#{!modifikatoren.KaP.start}) {
+							$('#kap')
+								.closest('tr')
+								.find('input')
+								.prop('disabled', true)
+							;
+						}
 					})();
 			
 			fieldset
