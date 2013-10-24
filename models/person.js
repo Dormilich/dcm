@@ -9,28 +9,53 @@ function lernstufeValidator(val) {
 }
 
 var heldTalentSchema = new Schema({
-	_talent: { type: IDREF,  ref: 'Talent' },
+	_talent:   { type: IDREF,  ref: 'Talent' },
+	wert:      { type: Number, min: -3, max: 35 },
+	Lernstufe: { type: String, validator: lernstufeValidator },
+	Spezialisierung: [String],
 	name:  String,
-	wert: { type: Number, min: -3, max: 35 },
 	AT:   { type: Number, min: 0 }, // = FK
 	PA:   { type: Number, min: 0 },
-	Lernstufe:   { type: String, validator: lernstufeValidator },
-	Komplexität: { type: Number, min: 5, max: 30 },
-	Spezialisierung: [String]
+	Komplexität: { type: Number, min: 5, max: 30 }
 });
 heldTalentSchema.virtual('TaW').get(function() {
-	if (typeof this.wert === "number") {
-		return this.wert;
-	}
-	else if (typeof this.AT === "number") {
+	if (typeof this.AT === "number") {
 		if (typeof this.PA === "number") {
 			return this.AT + this.PA;
 		}
 		return this.AT;
 	}
+	else if (typeof this.wert === "number") {
+		return this.wert;
+	}
 	else  {
 		return "—";
 	}
+});
+heldTalentSchema.virtual('TaW').set(function(value) {
+	this.wert = value;
+});
+
+var heldZauberSchema = new Schema({
+	_zauber:        { type: IDREF, ref: 'Zauber', required: true },
+	ZfW:            { type: Number, min: 0, max: 35, default: 0 },
+	Lernstufe:      { type: String, validator: lernstufeValidator },
+	Spezialisierungen: [String],
+	Repräsentation: { type: String, required: true }
+});
+heldZauberSchema.virtual('Varianten').get(function() {
+	var _variants = this._zauber.Varianten
+	  , _rep      = this.Repräsentation
+	  ;
+	if (typeof _variants === 'string') {
+		_variants = [this.Varianten];
+	}
+	if (!Array.isArray(_variants)) {
+		return [];
+	}
+	return _variants.filter(function(item) {
+		return (item.Reps.indexOf(_rep) !== -1);
+	});
 });
 
 var heldSchema = new Schema({
@@ -168,6 +193,15 @@ var heldSchema = new Schema({
 		Sprachen:     [heldTalentSchema],
 		Schriften:    [heldTalentSchema],
 		Gaben:        [heldTalentSchema]
+	},
+	Magie : {
+		Zauber: [heldZauberSchema],
+		Repräsentation: [{
+			short: { type: String, required: true },
+			long:  { type: String, required: true }
+		}],
+		Ritualkenntnis: [heldTalentSchema]
+		//	Rituale: [{ _ritual: { type: IDREF, ref: 'Ritual', required: true }]
 	}
 });
 heldSchema.virtual('Basiswerte.LeP').get(function() {
