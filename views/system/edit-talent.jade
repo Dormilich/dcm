@@ -50,6 +50,21 @@ html
 					each val, key in probe
 						script $('.probe').eq(#{key}).val('#{val}');
 				div
+					label Lernstufe
+					select#stufe(size="1", name="stufe")
+						option A+
+						option A
+						option B
+						option C
+						option D
+						option E
+						option F
+						option G
+						option H
+				div
+					label Standard?
+					input(type="checkbox", name="standard", checked=standard)
+				div
 					label Spezialisierungen
 					ul.spez
 						each val in spezialisierungen
@@ -64,6 +79,7 @@ html
 				$('<li><input type="text" name="spezialisierungen"></li>').insertBefore(this.parentNode);
 			});
 			$('#typ').val('#{typ}');
+			$('#stufe').val('#{stufe}');
 			$('.del').on('click', function() {
 				$(this).closest('li').remove();
 			});

@@ -20,12 +20,22 @@ module.exports = {
 	// show the Character's data (aka Character Sheet)
 	show: function (req, res, next) {
 		Held
-			.findById(req.id)
-			.populate('Talente.körperlich._talent Talente.Gesellschaft._talent Talente.Natur._talent Talente.Wissen._talent Talente.Handwerk._talent Talente.Gaben._talent')
-			.exec(function(err, doc) {
-				if (err) return next(err);
+			.findById(req.id, function(err, doc) {
+				if (err)  return next(err);
 				if (!doc) return next();
-				res.render('held', doc);
+				// auto-populate all Talents
+				var talentTypes = Object.keys(doc.Talente)
+					.filter(function(item) {
+						return (typeof doc.Talente[item] !== 'function');
+					})
+					.map(function(item) {
+						return { path: "Talente."+item+"._talent" };
+					})
+				;
+				Held.populate(doc, talentTypes, function(err, doc) {
+					if (err) return next(err);
+					res.render('held', doc);
+				});
 			})
 		;
 	},

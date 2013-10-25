@@ -34,11 +34,13 @@ html
 			}
 	body
 		section
+			a(href="/neu") neues Talent
+		section
 			table
 				caption Liste der Talente
 				colgroup
-					col(style="width: 15em;")
-					col(style="width: 15em;")
+					col(span="2", style="width: 15em;")
+					col(style="width: 3em;")
 					col(style="width: 10em;")
 					col(style="width: 3em;")
 					col
@@ -46,6 +48,7 @@ html
 					tr
 						th Talent
 						th Kategorie
+						th Stufe
 						th Probe
 						th Basis
 						th Spezialisierungen
@@ -55,6 +58,7 @@ html
 							td
 								a(href="/talent/"+val._id)= val.name
 							td= val.typ
+							td= val.stufe || ''
 							td= val.probe.join(' / ')
 							td
 								if (val.standard === true)

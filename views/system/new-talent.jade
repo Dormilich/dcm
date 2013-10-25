@@ -35,6 +35,21 @@ html
 			div
 				label Probe
 				+Probe3()
+				div
+					label Lernstufe
+					select#stufe(size="1", name="stufe")
+						option A+
+						option A
+						option(selected) B
+						option C
+						option D
+						option E
+						option F
+						option G
+						option H
+			div
+				label Standard?
+				input(type="checkbox", name="standard")
 			div
 				label Spezialisierungen
 				input(type="text", name="spezialisierungen")
