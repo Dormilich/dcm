@@ -1,33 +1,26 @@
-- function getTalent(list, value) { 
-- 	var l = list ? list.length : 0; 
+- function getTalent(_charlist, _stdTalent) { 
+- 	var l = _charlist ? _charlist.length : 0; 
 - 	while (l--) { 
-- 		if (list[l].name === value.name) {
-- 			return list[l];
+- 		if (_charlist[l].name === _stdTalent.name) {
+- 			return _charlist[l];
 - 		}
 - 	} 
 - 	return { wert: 0, AT: 0, PA: 0 }; 
 - }
-- function isAvailable(list, value) { 
-- 	var l = list ? list.length : 0; 
-- 	if (value.standard) {
+- 
+- function isAvailable(_charlist, _stdTalent) { 
+- 	var l = _charlist ? _charlist.length : 0; 
+- 	if (_stdTalent.standard) {
 - 		return true;
 - 	}
 - 	while (l--) { 
-- 		if (list[l].name === value.name) {
+- 		if (_charlist[l].name === _stdTalent.name) {
 - 			return true; 
 - 		}
 - 	} 
 - 	return false; 
 - }
-- function isLernstufe(list, ref, curr, dflt) { 
-- 	var l = list ? list.length : 0; 
-- 	while (l--) { 
-- 		if (list[l].name === ref.name) {
-- 			return (curr === list[l].Lernstufe);
-- 		}
-- 	} 
-- 	return (curr === dflt); 
-- }
+
 mixin talenttable(_titel_, _data_, _name_, _held_)
 	table.data-section.eigenschaften
 		caption= _titel_
@@ -45,32 +38,33 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 				th Lern
 				th TaW
 		tbody
-			each val, key in _data_
-				- var _heldentalent = getTalent(_held_, val)
-				unless Array.isArray(val.spezialisierungen)
-					- val.spezialisierungen = [val.spezialisierungen]
-				tr(data-options=val.spezialisierungen.join(','), data-name="Talente[#{_name_}][#{key}][Spezialisierung]")
+			each __stdTalent, key in _data_
+				- var __heldentalent = getTalent(_held_, __stdTalent)
+				- var __isAvailable  = isAvailable(_held_, __stdTalent)
+				unless Array.isArray(__stdTalent.spezialisierungen)
+					- __stdTalent.spezialisierungen = [__stdTalent.spezialisierungen]
+				tr(data-options=__stdTalent.spezialisierungen.join(','), data-name="Talente[#{_name_}][#{key}][Spezialisierung]")
 					td.mitte(style="padding: 0.2em;")
-						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=val._id, disabled=!isAvailable(_held_, val))
-						if val.standard
-							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=val.name)
+						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
+						if __stdTalent.standard
+							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name)
 						else
-							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=val.name, id=_name_+key, checked=isAvailable(_held_, val))
+							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name, id=_name_+key, checked=__isAvailable)
 					td
-						label(for=_name_+key)= val.name
+						label(for=_name_+key)= __stdTalent.name
 					td
-						if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
-							each spez in _heldentalent.Spezialisierung
+						if __heldentalent.Spezialisierung && Array.isArray(__heldentalent.Spezialisierung)
+							each spez in __heldentalent.Spezialisierung
 								.wrapper
 									button.del(type="button")= "\u2717"
 									input.spez(type="text", name="Talente[#{_name_}][#{key}][Spezialisierung]", value=spez)
 						button.add(type="button") +
 					td.mitte
-						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!isAvailable(_held_, val))
+						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!__isAvailable)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option(selected=isLernstufe(_held_, val, kat, "B"))= kat
+								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=_heldentalent.wert, disabled=!isAvailable(_held_, val))
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 mixin languagetable(_titel_, _data_, _name_, _held_)
 	table.data-section.eigenschaften
@@ -89,23 +83,25 @@ mixin languagetable(_titel_, _data_, _name_, _held_)
 				th Lern.
 				th TaW
 		tbody
-			each val, key in _data_
+			each __stdTalent, key in _data_
+				- var __heldentalent = getTalent(_held_, __stdTalent)
+				- var __isAvailable  = isAvailable(_held_, __stdTalent)
 				tr
 					td.mitte(style="padding: 0.2em;")
-						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][Komplexität]", value=val.komplex, disabled=!isAvailable(_held_, val))
-						if val.standard
-							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=val.name)
+						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][Komplexität]", value=__stdTalent.komplex, disabled=!__isAvailable)
+						if __stdTalent.standard
+							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name)
 						else
-							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=val.name, id=_name_+key, checked=isAvailable(_held_, val))
+							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name, id=_name_+key, checked=__isAvailable)
 					td
-						label(for=_name_+key)= val.name
-					td.mitte= val.komplex
+						label(for=_name_+key)= __stdTalent.name
+					td.mitte= __stdTalent.komplex
 					td.mitte
-						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!isAvailable(_held_, val))
+						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!__isAvailable)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option(selected=isLernstufe(_held_, val, kat, "B"))= kat
+								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : "B" === kat)= kat
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=val.komplex, step="1", value=getTalent(_held_, val).wert, disabled=!isAvailable(_held_, val))
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplex, step="1", value=__heldentalent.wert, disabled=!__isAvailable))
 
 
 doctype 5
@@ -116,9 +112,6 @@ html(lang="de")
 		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
-			.view {
-				width: 2em;
-			}
 			input[type="number"], .nk-taw {
 				text-align: center;
 			}
@@ -186,32 +179,35 @@ html(lang="de")
 							th PA-Mod.
 							th TaW
 					tbody#nahkampf
-						each val, key in Nahkampf
-							- var _heldentalent = getTalent(_chardata.Talente.Nahkampf, val)
-							tr(data-name="Talente[Nahkampf][#{key}][Spezialisierung]")
+						each __stdTalent, key in Nahkampf
+							- var __heldentalent = getTalent(_chardata.Talente.Nahkampf, __stdTalent)
+							- var __isAvailable  = isAvailable(_chardata.Talente.Nahkampf, __stdTalent)
+							unless Array.isArray(__stdTalent.spezialisierungen)
+								- __stdTalent.spezialisierungen = [__stdTalent.spezialisierungen]
+							tr(data-name="Talente[Nahkampf][#{key}][Spezialisierung]", data-options=__stdTalent.spezialisierungen.join(','))
 								td.mitte(style="padding: 0.2em;")
-									input.unlock(type="hidden", name="Talente[Nahkampf][#{key}][_talent]", value=val._id, disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
-									if val.standard
-										input(type="hidden", name="Talente[Nahkampf][#{key}][name]", value=val.name)
+									input.unlock(type="hidden", name="Talente[Nahkampf][#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
+									if __stdTalent.standard
+										input(type="hidden", name="Talente[Nahkampf][#{key}][name]", value=__stdTalent.name)
 									else
-										input.isactive(type="checkbox", name="Talente[Nahkampf][#{key}][name]", value=val.name, id="nk"+key, checked=isAvailable(_chardata.Talente.Nahkampf, val))
+										input.isactive(type="checkbox", name="Talente[Nahkampf][#{key}][name]", value=__stdTalent.name, id="nk"+key, checked=__isAvailable)
 								td
-									label(for="nk"+key)= val.name
+									label(for="nk"+key)= __stdTalent.name
 								td
-									if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
-										each spez in _heldentalent.Spezialisierung
+									if __heldentalent.Spezialisierung && Array.isArray(__heldentalent.Spezialisierung)
+										each spez in __heldentalent.Spezialisierung
 											.wrapper
 												button.del(type="button")= "\u2717"
 												input.spez(type="text", name="Talente[Nahkampf][#{key}][Spezialisierung]", value=spez)
 									button.add(type="button") +
 								td.mitte
-									select.unlock(size="1", name="Talente[Nahkampf][#{key}][Lernstufe]", disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
+									select.unlock(size="1", name="Talente[Nahkampf][#{key}][Lernstufe]", disabled=!__isAvailable)
 										each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-											option(selected=isLernstufe(_chardata.Talente.Nahkampf, val, kat, "D"))= kat
+											option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 								td.mitte
-									input.nk-at.unlock(type="number", name="Talente[Nahkampf][#{key}][AT]", min="0", max="20", step="1", value=getTalent(_chardata.Talente.Nahkampf, val).AT, disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
+									input.nk-at.unlock(type="number", name="Talente[Nahkampf][#{key}][AT]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 								td.mitte
-									input.nk-pa.unlock(type="number", name="Talente[Nahkampf][#{key}][PA]", min="0", max="20", step="1", value=getTalent(_chardata.Talente.Nahkampf, val).PA, disabled=!isAvailable(_chardata.Talente.Nahkampf, val))
+									input.nk-pa.unlock(type="number", name="Talente[Nahkampf][#{key}][PA]", min="0", max="20", step="1", value=__heldentalent.PA, disabled=!__isAvailable)
 								td.mitte
 									input.nk-taw(type="text", size="3", readonly)
 
@@ -232,30 +228,33 @@ html(lang="de")
 							th Lern
 							th TaW
 					tbody
-						each val, key in Fernkampf
-							- var _heldentalent = getTalent(_chardata.Talente.Fernkampf, val)
-							tr(data-name="Talente[Fernkampf][#{key}][Spezialisierung]")
+						each __stdTalent, key in Fernkampf
+							- var __heldentalent = getTalent(_chardata.Talente.Fernkampf, __stdTalent)
+							- var __isAvailable  = isAvailable(_chardata.Talente.Fernkampf, __stdTalent)
+							unless Array.isArray(__stdTalent.spezialisierungen)
+								- __stdTalent.spezialisierungen = [__stdTalent.spezialisierungen]
+							tr(data-name="Talente[Fernkampf][#{key}][Spezialisierung]", data-options=__stdTalent.spezialisierungen.join(','))
 								td.mitte(style="padding: 0.2em;")
-									input.unlock(type="hidden", name="Talente[Fernkampf][#{key}][_talent]", value=val._id, disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
-									if val.standard
-										input(type="hidden", name="Talente[Fernkampf][#{key}][name]", value=val.name)
+									input.unlock(type="hidden", name="Talente[Fernkampf][#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
+									if __stdTalent.standard
+										input(type="hidden", name="Talente[Fernkampf][#{key}][name]", value=__stdTalent.name)
 									else
-										input.isactive(type="checkbox", name="Talente[Fernkampf][#{key}][name]", value=val.name, id="fk"+key, checked=isAvailable(_chardata.Talente.Fernkampf, val))
+										input.isactive(type="checkbox", name="Talente[Fernkampf][#{key}][name]", value=__stdTalent.name, id="fk"+key, checked=__isAvailable)
 								td
-									label(for="fk"+key)= val.name
+									label(for="fk"+key)= __stdTalent.name
 								td
-									if _heldentalent.Spezialisierung && Array.isArray(_heldentalent.Spezialisierung)
-										each spez in _heldentalent.Spezialisierung
+									if __heldentalent.Spezialisierung && Array.isArray(__heldentalent.Spezialisierung)
+										each spez in __heldentalent.Spezialisierung
 											.wrapper
 												button.del(type="button")= "\u2717"
 												input.spez(type="text", name="Talente[Fernkampf][#{key}][Spezialisierung]", value=spez)
 									button.add(type="button") +
 								td.mitte
-									select.unlock(size="1", name="Talente[Fernkampf][#{key}][Lernstufe]", disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
+									select.unlock(size="1", name="Talente[Fernkampf][#{key}][Lernstufe]", disabled=!__isAvailable)
 										each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-											option(selected=isLernstufe(_chardata.Talente.Fernkampf, val, kat, "D"))= kat
+											option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 								td.mitte
-									input.unlock(type="number", name="Talente[Fernkampf][#{key}][AT]", min="0", max="20", step="1", value=getTalent(_chardata.Talente.Fernkampf, val).AT, disabled=!isAvailable(_chardata.Talente.Fernkampf, val))
+									input.unlock(type="number", name="Talente[Fernkampf][#{key}][AT]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 				a#jKOR
 				+talenttable('Körperliche Talente', körperlich, 'körperlich', _chardata.Talente.körperlich)
 				a#jGES
@@ -277,17 +276,6 @@ html(lang="de")
 					button(type="submit") speichern
 
 		script.
-			/* $('.add').on('click', function() {
-				$(this).prev().clone().insertBefore(this);
-			});
-			$('.view').on('click', function() {
-				var $text  = $(this).closest('td').find('input');
-				var $check = $(this).closest('tr').find('.isactive');
-				var check_state = $check.length ? $check.prop('checked') : true;
-				var text_state  = !(check_state && $text.prop('disabled'));
-				$text.prop('disabled', text_state);
-				this.textContent = (text_state) ? "\u270E" : "\u2717";
-			}); //*/
 			$('label').on('click', function() {
 				// click is faster than label => checkbox
 				var $tr    = $(this).closest('tr');

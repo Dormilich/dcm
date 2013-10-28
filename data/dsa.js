@@ -10,37 +10,6 @@ module.exports = {
 		Götter: ["Praios", "Rondra", "Efferd", "Travia", "Boron", "Hesinde", "Firun", "Tsa", "Phex", "Peraine", "Ingerimm", "Rahja", "Aves", "Ifirn", "Kor", "Nandus", "Swafnir", "Angrosch", "H’Szint", "Zsahh", "Gravesh", "Der Namenlose"]
 	},
 	talente: {
-		Nahkampf: [
-			{ standard: false, name: "Anderthalbhänder" }, 
-			{ standard: true,  name: "Dolche" }, 
-			{ standard: false, name: "Fechtwaffen" }, 
-			{ standard: true,  name: "Hiebwaffen" }, 
-			{ standard: false, name: "Infanteriewaffen" }, 
-			{ standard: false, name: "Kettenstäbe" }, 
-			{ standard: false, name: "Kettenwaffen" }, 
-			{ standard: true,  name: "Raufen" }, 
-			{ standard: true,  name: "Ringen" }, 
-			{ standard: true,  name: "Säbel" }, 
-			{ standard: false, name: "Schwerter" }, 
-			{ standard: false, name: "Speere" }, 
-			{ standard: false, name: "Stäbe" }, 
-			{ standard: false, name: "Zweihandflegel" }, 
-			{ standard: false, name: "Zweihandhiebwaffen" }, 
-			{ standard: false, name: "Zweihandschwerter/-säbel" }
-		],
-		Fernkampf: [
-			{ standard: false, name: "Lanzenreiten" }, 
-			{ standard: false, name: "Peitsche" }, 
-			{ standard: false, name: "Armbrust" }, 
-			{ standard: false, name: "Belagerungswaffen" }, 
-			{ standard: false, name: "Blasrohr" }, 
-			{ standard: false, name: "Bogen" }, 
-			{ standard: false, name: "Diskus" }, 
-			{ standard: false, name: "Schleuder" }, 
-			{ standard: false, name: "Wurfbeile" }, 
-			{ standard: true,  name: "Wurfmesser" }, 
-			{ standard: false, name: "Wurfspeere" }
-		],
 		Sprachen: [
 			{ komplex: 18, name: "Garethi" }, 
 			{ komplex: 21, name: "Bosparano" }, 
@@ -83,7 +52,7 @@ module.exports = {
 		Schriften: [
 			{ komplex: 18, name: "Altes Alaani" }, 
 			{ komplex: 21, name: "Altes Kemi" }, 
-			{ komplex: 11, name: "Amulashtra(modern)" }, 
+			{ komplex: 11, name: "Amulashtra (modern)" }, 
 			{ komplex: 17, name: "Amulashtra (historisch)" }, 
 			{ komplex: 21, name: "Angram" }, 
 			{ komplex: 24, name: "Arkanil" }, 

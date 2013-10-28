@@ -40,6 +40,8 @@ function getTalentType(tname) {
 module.exports = {
 	talente : function(req, res, next) {
 		async.parallel({
+			Nahkampf:     getTalentType("Nahkampf"),
+			Fernkampf:    getTalentType("Fernkampf"),
 			körperlich:   getTalentType("Körperliche Talente"),
 			Gesellschaft: getTalentType("Gesellschaftliche Talente"),
 			Natur:        getTalentType("Naturtalente"),
