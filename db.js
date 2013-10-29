@@ -170,6 +170,17 @@ app.post('/zauber/neu', function(req, res, next) {
 	});
 });
 
+app.get('/zauberliste', function(req, res, next) {
+	Zauber
+		.find()
+		.sort('Name')
+		.lean()
+		.exec(function(err, docs) {
+			if (err) return next(err);
+			res.render('system/table-of-spells', { Zauber: docs });
+		})
+	;
+});
 /******************
  *  Start Server  *
  ******************/

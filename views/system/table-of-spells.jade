@@ -1,0 +1,93 @@
+!!! 5
+html(lang="de")
+	head
+		title Zauber-Übersicht
+		style.
+			body {
+				font-family: Georgia;
+				padding: 2em;
+			}
+			table {
+				width: 100%;
+			}
+			caption {
+				font-size: 2em;
+				font-weight: bold;
+				font-family: serif;
+				font-style: italic;
+				padding: 0.5em;
+			}
+			td {
+				text-align: center;
+				padding: 0.2em 0.4em;
+				border: 1px solid gray;
+				border-collapse: collapse;
+			}
+			th {
+				padding: 0.4em 0;
+			}
+			td:first-child {
+				text-align: left;
+			}
+			thead {
+				background-color: #eee;
+			}
+			.zauber > tbody > tr:first-child > td {
+				background-color: #ccc;
+			}
+			.meta td {
+				color: gray;
+				font-style: italic;
+			}
+			.links {
+				text-align: left;
+			}
+			.mitte {
+				text-align: center;
+			}
+	body
+		section
+			a(href="/zauber/neu") neuer Zauber
+		section
+			table.zauber(cellspacing="1")
+				caption Liste der Zauber
+				colgroup
+					col
+					col(style="width: 9em;")
+					col(style="width: 4.5em;", span="2")
+					col(style="width: 9em;", span="4")
+				thead
+					tr
+						th Zauber
+						th Probe
+						th ZfW
+						th Mod.
+						th ZD
+						th AsP
+						th WD
+						th RW
+					tr
+						th
+						th(colspan="3") Spontane Mod.
+						th Merkmale
+						th Ziel
+						th Repräsentation
+						th Komplexität
+				each __spell in Zauber
+					tbody
+						tr
+							td= __spell.Name
+							td= __spell.Probe.join(' · ')
+							td 
+							td= __spell.modifikation.typ
+							td= __spell.cast.ZD
+							td= __spell.cast.AsP
+							td= __spell.cast.WD
+							td= __spell.cast.RW
+						tr.meta
+							td 
+							td(colspan="3")= __spell.SpoMod.join(', ')
+							td= __spell.Merkmale.join(', ')
+							td= __spell.Ziel.join(', ')
+							td= __spell.Repräsentationen.join(', ')
+							td= __spell.Komplexität
