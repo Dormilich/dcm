@@ -28,7 +28,7 @@ app.get('/setup', function (req, res, next) {
 		if (err) return next(err);
 		Talent.create(JSON.parse(data), function(err, docs) {
 			if (err) return next(err);
-			res.end(docs.length + " data sets have been saved.")
+			res.end(docs.length + " data sets have been saved.");
 		});
 	});
 });

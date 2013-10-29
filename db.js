@@ -60,13 +60,15 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var Talent = require('./models/talent');
+var Talent = require('./models/talent')
+  , Zauber = require('./models/zauber')
+  , data   = require('./data/dsa')
+  ;
 
 // pre-route request modification
 app.param('talent', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
-		//next('route');
+		return next('route');
 	}
 	Talent
 		.findById(id)
@@ -87,7 +89,7 @@ app.param('talent', function (req, res, next, id) {
 
 app.param('mongoid', function(req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next(new Error("Keine gültige MongoDB ID."));
+		return next('route');
 	}
 	req.id = id;
 	next();
@@ -103,8 +105,12 @@ function verifyMongoID(identifyer) {
 	};
 }
 
-// request routes
 app.get('/', function(req, res, next) {
+	res.render('system/nav');
+});
+
+// Talente
+app.get('/talente', function(req, res, next) {
 	Talent
 		.find()
 		.sort('typ name')
@@ -135,7 +141,7 @@ app.post('/talent/:mongoid', function(req, res, next) {
 	});
 });
 
-app.get('/neu', function(req, res, next) {
+app.get('/talent/neu', function(req, res, next) {
 	Talent
 		.find()
 		.lean()
@@ -146,8 +152,19 @@ app.get('/neu', function(req, res, next) {
 	;
 });
 
-app.post('/neu', function(req, res, next) {
+app.post('/talent/neu', function(req, res, next) {
 	Talent.create(req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/talente');
+	});
+});
+
+// Zauber
+app.get('/zauber/neu', function(req, res, next) {
+	res.render('system/new-zauber', data.magie);
+});
+app.post('/zauber/neu', function(req, res, next) {
+	Zauber.create(req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/');
 	});

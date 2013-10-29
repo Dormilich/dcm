@@ -1,0 +1,128 @@
+mixin Probe3()
+	- var Attr = ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+	- for (var i=3; i--;)
+		select.probe(size="1", name="Probe")
+			each val in Attr
+				option= val
+!!! 5
+html(lang="de")
+	head
+		title Neuer Zauberspruch
+		style.
+			body {
+				font-family: sans-serif;
+			}
+			form {
+				padding-left: 5em;
+			}
+			fieldset > div {
+				padding: 0.5em 0;
+			}
+			div > label {
+				float: left;
+				width: 10em;
+			}
+			.spez {
+				list-style-type: none;
+				margin: 0;
+				margin-left: 10em;
+				padding: 0;
+			}
+			fieldset {
+				display: inline-block;
+				padding: 2em 4em;
+				border-radius: 3em;
+			}
+			#z_name {
+				width: 30em;
+			}
+	body
+		h1 Neuer Zauberspruch:
+		form#nesp(action="/zauber/neu", method="post", accept-charset="utf-8")
+			fieldset
+				div
+					label(for="z_name") Name
+					input#z_name(type="text", name="Name", required)
+				div
+					label Probe
+					+Probe3()
+				div
+					label Komplexität
+					select#stufe(size="1", name="stufe")
+						option A
+						option B
+						option C
+						option D
+						option E
+						option F
+						option G
+						option H
+				div
+					label(for="z_zd") Zauberdauer
+					input#z_zd(type="text", name="cast[ZD]", required)
+				div
+					label(for="z_asp") Kosten
+					input#z_asp(type="text", name="cast[AsP]", required)
+				div
+					label(for="z_wd") Wirkungsdauer
+					input#z_wd(type="text", name="cast[WD]")
+				div
+					label(for="z_rw") Reichweite
+					input#z_rw(type="text", name="cast[RW]", required)					
+				div
+					label Typ
+					input#typ(type="hidden", name="modifikation[typ]", value="")
+					ul.spez
+						li
+							input(type="checkbox", value="A", id="typ_a")
+							label(for="typ_a") Aufrechterhaltender Zauber
+						li
+							input(type="checkbox", value="M", id="typ_m")
+							label(for="typ_m") wirkt gegen die Magieresistenz
+						li
+							input(type="checkbox", value="S", id="typ_s")
+							label(for="typ_s") Erschwernis durch festgelegte Stufe (Gift, Beschwörungsschwierigkeit, etc.)
+						li
+							input(type="checkbox", value="X", id="typ_x")
+							label(for="typ_x") situationsabhängige Erschwernis
+					script.
+						
+				div
+					label Repräsentationen
+					ul.spez
+						each __rep, __idx in Repräsentation
+							li
+								input(type="checkbox", name="Repräsentationen", value=__rep.short, id="rep"+__idx)
+								label(for="rep"+__idx, title=__rep.short)= __rep.long
+				div
+					label Ziel
+					ul.spez
+						each __ziel, __idx in ziel
+							li
+								input(type="checkbox", name="Ziel", value=__ziel.short, id="zl"+__idx)
+								label(for="zl"+__idx, title=__ziel.short)= __ziel.long
+				div
+					label erlaubte spontane Modifikationen
+					ul.spez
+						each __spm, __idx in spomo
+							li
+								input(type="checkbox", name="SpoMod", value=__spm.short, id="spm"+__idx)
+								label(for="spm"+__idx, title=__spm.short)= __spm.long
+				div
+					label Merkmale
+					ul.spez
+						each __mmk, __idx in Merkmal
+							li
+								input(type="checkbox", name="Merkmale[#{__idx}]", value=__mmk, id="mmk"+__idx)
+								label(for="mmk"+__idx)= __mmk
+				button(type="submit") speichern
+		script.
+			$ = document.getElementById.bind(document);
+			$('nesp').addEventListener('submit', function(evt) {
+				var choices = $('typ').parentNode.querySelectorAll(':checked');
+				var val = "";
+				for (var i=0, l=choices.length; i<l; i+=1) {
+					val += choices[i].value;
+				}
+				$('typ').value = val;
+			});
