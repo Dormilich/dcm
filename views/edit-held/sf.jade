@@ -1,3 +1,20 @@
+unless SF
+	- SF = {}
+unless SF.Kampf
+	- SF.Kampf = []
+
+unless SF.Manöver
+	- SF.Manöver = []
+
+unless SF.allgemein
+	- SF.allgemein = []
+
+unless SF.magisch
+	- SF.magisch = []
+
+unless SF.geweiht
+	- SF.geweiht = []
+
 doctype 5
 html(lang="de")
 	head
@@ -36,34 +53,6 @@ html(lang="de")
 				background-color: black;
 			}
 	body
-		// nav
-		unless SF
-			- SF = {}
-		unless SF.Kampf
-			- SF.Kampf = []
-		unless Array.isArray(SF.Kampf)
-			- SF.Kampf = [SF.Kampf]
-		
-		unless SF.Manöver
-			- SF.Manöver = []
-		unless Array.isArray(SF.Manöver)
-			- SF.Manöver = [SF.Manöver]
-		
-		unless SF.allgemein
-			- SF.allgemein = []
-		unless Array.isArray(SF.allgemein)
-			- SF.allgemein = [SF.allgemein]
-		
-		unless SF.magisch
-			- SF.magisch = []
-		unless Array.isArray(SF.magisch)
-			- SF.magisch = [SF.magisch]
-		
-		unless SF.geweiht
-			- SF.geweiht = []
-		unless Array.isArray(SF.geweiht)
-			- SF.geweiht = [SF.geweiht]
-
 		nav
 			a(href="#top") [Seitenanfang]
 			a(href="#allg") allgemeine SF
@@ -91,24 +80,24 @@ html(lang="de")
 										- var __name = val.slice(1)
 										each __sf, __idx in SF.allgemein.filter(function(item) { return (item.indexOf(__name) === 0); })
 											li
-												input.spezifisch(type="checkbox", name="SF[allgemein]", value=__name, checked, id="sf1a_"+__idx)
+												input.spezifisch(type="checkbox", name="SF[allgemein][]", value=__name, checked, id="sf1a_"+__idx)
 												label(for="sf1a_"+__idx)= __name
 												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
 										li
-											input.spezifisch(type="checkbox", name="SF[allgemein]", value=__name, id="sf1_"+key)
+											input.spezifisch(type="checkbox", name="SF[allgemein][]", value=__name, id="sf1_"+key)
 											label(for="sf1_"+key)= __name
 											input.fl-rechts(type="text")
 											button.add.fl-rechts(type="button") +
 									else
 										li
-											input(type="checkbox", name="SF[allgemein]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
+											input(type="checkbox", name="SF[allgemein][]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
 											label(for="sf1_"+key)= val
 							ul.vor-nach.fl-rechts
 								li
 									strong Kulturkunde:
 								each val, key in _data.Kulturkunde
 									li
-										input(type="checkbox", name="SF[allgemein]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde (#{val})") !== -1)
+										input(type="checkbox", name="SF[allgemein][]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde (#{val})") !== -1)
 										label(for="sf2_"+key)= val
 				
 				a#kampf
@@ -122,17 +111,17 @@ html(lang="de")
 										- var __name = _data.Kampf[x].slice(1)
 										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
 											li
-												input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, checked, id="sf3a_"+__idx)
+												input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, checked, id="sf3a_"+__idx)
 												label(for="sf3a_"+__idx)= __name
 												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
 										li
-											input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, id="sf3_"+x)
+											input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, id="sf3_"+x)
 											label(for="sf3_"+x)= __name
 											input.fl-rechts(type="text")
 											button.add.fl-rechts(type="button") +
 									else
 										li
-											input(type="checkbox", name="SF[Kampf]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
+											input(type="checkbox", name="SF[Kampf][]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
 											label(for="sf3_"+x)= _data.Kampf[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Kampf.length; y<l; y++)
@@ -140,17 +129,17 @@ html(lang="de")
 										- var __name = _data.Kampf[y].slice(1)
 										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
 											li
-												input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, checked, id="sf3a_"+__idx)
+												input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, checked, id="sf3a_"+__idx)
 												label(for="sf3a_"+__idx)= __name
 												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
 										li
-											input.spezifisch(type="checkbox", name="SF[Kampf]", value=__name, id="sf3_"+y)
+											input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, id="sf3_"+y)
 											label(for="sf3_"+y)= __name
 											input.fl-rechts(type="text")
 											button.add.fl-rechts(type="button") +
 									else
 										li
-											input(type="checkbox", name="SF[Kampf]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
+											input(type="checkbox", name="SF[Kampf][]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
 											label(for="sf3_"+y)= _data.Kampf[y]
 
 				a#wlk
@@ -161,12 +150,12 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								- for (var x=0, l=Math.ceil(_data.Manöver.length/2); x<l; x++)
 									li
-										input(type="checkbox", name="SF[Manöver]", id="sf7_"+x, value=_data.Manöver[x], checked= SF.Manöver.indexOf(_data.Manöver[x]) !== -1)
+										input(type="checkbox", name="SF[Manöver][]", id="sf7_"+x, value=_data.Manöver[x], checked= SF.Manöver.indexOf(_data.Manöver[x]) !== -1)
 										label(for="sf7_"+x)= _data.Manöver[x]
 							ul.vor-nach.fl-rechts
 								- for (var y=x, l=_data.Manöver.length; y<l; y++)
 									li
-										input(type="checkbox", name="SF[Manöver]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
+										input(type="checkbox", name="SF[Manöver][]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
 										label(for="sf8_"+y)= _data.Manöver[y]
 
 				a#gott
@@ -177,14 +166,14 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								each val, key in _data.geweiht
 									li
-										input(type="checkbox", name="SF[geweiht]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[geweiht][]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
 										label(for="sf9_"+key)= val
 								li
 									strong Spätweihe (alveranische Gottheiten)
 								each val, key in ["Praios", "Rondra", "Efferd", "Travia", "Boron", "Hesinde", "Firun", "Tsa", "Phex", "Peraine", "Ingrimm", "Rahja"]
 									- var __name = "Spätweihe ("+val+")"
 									li
-										input(type="radio", name="SF[geweiht]", id="sf9a_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
+										input(type="radio", name="SF[geweiht][]", id="sf9a_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
 										label(for="sf9a_"+key)= val
 							ul.vor-nach.fl-rechts
 								li
@@ -192,25 +181,25 @@ html(lang="de")
 								each val, key in ["Aves", "Ifirn", "Kor", "Nandus", "Swafnir"]
 									- var __name = "Spätweihe ("+val+")"
 									li
-										input(type="radio", name="SF[geweiht]", id="sf9b_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
+										input(type="radio", name="SF[geweiht][]", id="sf9b_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
 										label(for="sf9b_"+key)= val
 								li
 									strong Spätweihe (echsische Gottheiten)
 								li
-									input(type="radio", name="SF[geweiht]", id="sf9c_1", value="Spätweihe (H’Szint)", checked= SF.geweiht.indexOf("Spätweihe (H’Szint)") !== -1)
+									input(type="radio", name="SF[geweiht][]", id="sf9c_1", value="Spätweihe (H’Szint)", checked= SF.geweiht.indexOf("Spätweihe (H’Szint)") !== -1)
 									label(for="sf9c_1") H’Szint
 								li
-									input(type="radio", name="SF[geweiht]", id="sf9c_2", value="Spätweihe (Zsahh)", checked= SF.geweiht.indexOf("Spätweihe (Zsahh)") !== -1)
+									input(type="radio", name="SF[geweiht][]", id="sf9c_2", value="Spätweihe (Zsahh)", checked= SF.geweiht.indexOf("Spätweihe (Zsahh)") !== -1)
 									label(for="sf9c_2") Zsahh
 								li
 									strong Spätweihe (orkische Gottheiten)
 								li
-									input(type="radio", name="SF[geweiht]", id="sf9c_3", value="Spätweihe (Gravesh)", checked= SF.geweiht.indexOf("Spätweihe (Gravesh)") !== -1)
+									input(type="radio", name="SF[geweiht][]", id="sf9c_3", value="Spätweihe (Gravesh)", checked= SF.geweiht.indexOf("Spätweihe (Gravesh)") !== -1)
 									label(for="sf9c_3") Gravesh
 								li
 									strong Spätweihe (zwergische Gottheiten)
 								li
-									input(type="radio", name="SF[geweiht]", id="sf9c_4", value="Spätweihe (Angrosch)", checked= SF.geweiht.indexOf("Spätweihe (Angrosch)") !== -1)
+									input(type="radio", name="SF[geweiht][]", id="sf9c_4", value="Spätweihe (Angrosch)", checked= SF.geweiht.indexOf("Spätweihe (Angrosch)") !== -1)
 									label(for="sf9c_4") Angrosch
 								li.mitte
 									button#nogod(type="button") Spätweihe entfernen
@@ -227,16 +216,16 @@ html(lang="de")
 							ul.vor-nach.fl-links
 								each val, key in _data.magisch
 									li
-										input(type="checkbox", name="SF[magisch]", id="sf10_"+key, value=val, checked= SF.magisch.indexOf(val) !== -1)
+										input(type="checkbox", name="SF[magisch][]", id="sf10_"+key, value=val, checked= SF.magisch.indexOf(val) !== -1)
 										label(for="sf10_"+key)= val
 							ul.vor-nach.fl-rechts
 								li
 									strong Merkmalskenntnis:
 								li
-									input(type="checkbox", name="SF[magisch]", value="Merkmal (Antimagie)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_a")
+									input(type="checkbox", name="SF[magisch][]", value="Merkmal (Antimagie)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_a")
 									label(for="sf11_a") Antimagie
 								li
-									input(type="checkbox", name="SF[magisch]", value="Merkmal (Beschwörung)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_b")
+									input(type="checkbox", name="SF[magisch][]", value="Merkmal (Beschwörung)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_b")
 									label(for="sf11_b") Beschwörung
 								li
 									input(type="checkbox", disabled)
@@ -245,7 +234,7 @@ html(lang="de")
 										each val, key in ["gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel"]
 											- var checkval = "Merkmal (Dämonisch/"+val+")"
 											li
-												input(type="checkbox", name="SF[magisch]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
+												input(type="checkbox", name="SF[magisch][]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
 												label(for="sf11a_"+key)= val
 									
 								li
@@ -255,12 +244,12 @@ html(lang="de")
 										each val, key in ["gesamt", "Eis", "Erz", "Feuer", "Humus", "Luft", "Wasser"]
 											- var checkval = "Merkmal (Elementar/"+val+")"
 											li
-												input(type="checkbox", name="SF[magisch]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
+												input(type="checkbox", name="SF[magisch][]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
 												label(for="sf11b_"+key)= val
 								
 								each val, key in ["Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
 									li
-										input(type="checkbox", name="SF[magisch]", value="Merkmal ("+val+")", checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
+										input(type="checkbox", name="SF[magisch][]", value="Merkmal ("+val+")", checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
 										label(for="sf11c_"+key)= val
 
 				a#save
