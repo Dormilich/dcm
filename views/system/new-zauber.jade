@@ -92,28 +92,28 @@ html(lang="de")
 					ul.spez
 						each __rep, __idx in Repräsentation
 							li
-								input(type="checkbox", name="Repräsentationen", value=__rep.short, id="rep"+__idx)
+								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
 								label(for="rep"+__idx, title=__rep.short)= __rep.long
 				div
 					label Ziel
 					ul.spez
 						each __ziel, __idx in ziel
 							li
-								input(type="checkbox", name="Ziel", value=__ziel.short, id="zl"+__idx)
+								input(type="checkbox", name="Ziel[]", value=__ziel.short, id="zl"+__idx)
 								label(for="zl"+__idx, title=__ziel.short)= __ziel.long
 				div
 					label erlaubte spontane Modifikationen
 					ul.spez
 						each __spm, __idx in spomo
 							li
-								input(type="checkbox", name="SpoMod", value=__spm.short, id="spm"+__idx)
+								input(type="checkbox", name="SpoMod[]", value=__spm.short, id="spm"+__idx)
 								label(for="spm"+__idx, title=__spm.short)= __spm.long
 				div
 					label Merkmale
 					ul.spez
 						each __mmk, __idx in Merkmal
 							li
-								input(type="checkbox", name="Merkmale[#{__idx}]", value=__mmk, id="mmk"+__idx)
+								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)
 								label(for="mmk"+__idx)= __mmk
 				button(type="submit") speichern
 		script.

@@ -160,16 +160,6 @@ app.post('/talent/neu', function(req, res, next) {
 });
 
 // Zauber
-app.get('/zauber/neu', function(req, res, next) {
-	res.render('system/new-zauber', data.magie);
-});
-app.post('/zauber/neu', function(req, res, next) {
-	Zauber.create(req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/');
-	});
-});
-
 app.get('/zauberliste', function(req, res, next) {
 	Zauber
 		.find()
@@ -181,6 +171,42 @@ app.get('/zauberliste', function(req, res, next) {
 		})
 	;
 });
+
+app.get('/zauber/neu', function(req, res, next) {
+	res.render('system/new-zauber', data.magie);
+});
+app.post('/zauber/neu', function(req, res, next) {
+	Zauber.create(req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/');
+	});
+});
+
+app.get('/variante/neu', function(req, res, next) {
+	Zauber
+		.find()
+		.sort('Name')
+		.select('Name _id')
+		.lean()
+		.exec(function(err, objs) {
+			if (err) return next(err);
+			data.magie.Zauber = objs;
+			res.render('system/new-variant', data.magie);
+		})
+	;
+});
+
+app.post('/variante/neu', function(req, res, next) {
+	Zauber.findById(req.body.zauber, function(err, doc) {
+		if (err) return next(err);
+		doc.Varianten.push(req.body);
+		doc.save(function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/zauberliste');
+		});
+	});
+});
+
 /******************
  *  Start Server  *
  ******************/

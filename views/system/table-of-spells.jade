@@ -36,6 +36,7 @@ html(lang="de")
 				background-color: #ccc;
 			}
 			.meta td {
+				background-color: #eee;
 				color: gray;
 				font-style: italic;
 			}
@@ -48,6 +49,8 @@ html(lang="de")
 	body
 		section
 			a(href="/zauber/neu") neuer Zauber
+			br
+			a(href="/variante/neu") neue Variante
 		section
 			table.zauber(cellspacing="1")
 				caption Liste der Zauber
@@ -91,3 +94,17 @@ html(lang="de")
 							td= __spell.Ziel.join(', ')
 							td= __spell.Repräsentationen.join(', ')
 							td= __spell.Komplexität
+						if Array.isArray(__spell.Varianten)
+							each __variant in __spell.Varianten
+								tr
+									td= "- "+__variant.Name + " ("+__variant.Repräsentationen.join(', ')+")"
+									td=__variant.modifikation.probe
+									td
+										if __variant.modifikation.minZfW
+											| (#{__variant.modifikation.minZfW})
+									td=__variant.modifikation.typ
+									td= __variant.cast.ZD
+									td= __variant.cast.AsP
+									td= __variant.cast.WD
+									td= __variant.cast.RW
+									

@@ -1,0 +1,98 @@
+!!! 5
+html(lang="de")
+	head
+		title Neue Zaubervariante
+		style.
+			body {
+				font-family: Georgia;
+			}
+			form {
+				padding-left: 5em;
+			}
+			fieldset > div {
+				padding: 0.5em 0;
+			}
+			div > label {
+				float: left;
+				width: 10em;
+			}
+			.spez {
+				list-style-type: none;
+				margin: 0;
+				margin-left: 10em;
+				padding: 0;
+			}
+			fieldset {
+				display: inline-block;
+				padding: 2em 4em;
+				border-radius: 3em;
+			}
+			#z_name {
+				width: 30em;
+			}
+	body
+		h1 Neue Zaubervariante:
+		form#nesp(action="/variante/neu", method="post", accept-charset="utf-8")
+			fieldset
+				div
+					label Variante des
+					select(size="1", name="zauber", style="width: 50%")
+						each __spell in Zauber
+							option(value=__spell._id)=__spell.Name
+				div
+					label(for="v_name") Name:
+					input#v_name(type="text", name="Name", required, style="width: 50%")
+				div
+					label(for="v_min") Mindest-ZfW:
+					input#v_min(type="number", name="modifikation[minZfW]", min="1", step="1", value="")
+				div
+					label(for="v_promo") Probenmodifikator:
+					input(type="text", name="modifikation[probe]", value="")
+				div
+					label(for="v_zd") Zauberdauer:
+					input#v_zd(type="text", name="cast[ZD]", value="")
+				div
+					label(for="v_asp") Kosten:
+					input#v_asp(type="text", name="cast[AsP]", value="")
+				div
+					label(for="v_wd") Wirkungsdauer:
+					input#v_wd(type="text", name="cast[WD]", value="")
+				div
+					label(for="v_rw") Reichweite:
+					input#v_rw(type="text", name="cast[RW]", value="")					
+				div
+					label Typ:
+					input#typ(type="hidden", name="modifikation[typ]", value="")
+					ul.spez
+						li
+							input(type="checkbox", value="A", id="typ_a")
+							label(for="typ_a") Aufrechterhaltender Zauber
+						li
+							input(type="checkbox", value="M", id="typ_m")
+							label(for="typ_m") wirkt gegen die Magieresistenz
+						li
+							input(type="checkbox", value="S", id="typ_s")
+							label(for="typ_s") Erschwernis durch festgelegte Stufe (Gift, Beschwörungsschwierigkeit, etc.)
+						li
+							input(type="checkbox", value="X", id="typ_x")
+							label(for="typ_x") situationsabhängige Erschwernis
+					script.
+						
+				div
+					label vorhanden in:
+					ul.spez
+						each __rep, __idx in Repräsentation
+							li
+								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
+								label(for="rep"+__idx, title=__rep.short)= __rep.long
+				button(type="submit") speichern
+		script.
+			$ = document.getElementById.bind(document);
+			$('nesp').addEventListener('submit', function(evt) {
+				var choices = $('typ').parentNode.querySelectorAll(':checked');
+				var val = "";
+				for (var i=0, l=choices.length; i<l; i+=1) {
+					val += choices[i].value;
+				}
+				$('typ').value = val;
+			});
