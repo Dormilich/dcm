@@ -79,7 +79,8 @@ html(lang="de")
 				each __spell in Zauber
 					tbody
 						tr
-							td= __spell.Name
+							td
+								a(href="/zauber/"+__spell._id)=__spell.Name
 							td= __spell.Probe.join(' · ')
 							td 
 							td= __spell.modifikation.typ
@@ -97,7 +98,9 @@ html(lang="de")
 						if Array.isArray(__spell.Varianten)
 							each __variant in __spell.Varianten
 								tr
-									td= "- "+__variant.Name + " ("+__variant.Repräsentationen.join(', ')+")"
+									td - 
+										a(href="/zauber/"+__spell._id+"/variante/"+__variant._id)=__variant.Name
+										|  (#{__variant.Repräsentationen.join(', ')})
 									td=__variant.modifikation.probe
 									td
 										if __variant.modifikation.minZfW

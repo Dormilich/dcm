@@ -110,7 +110,7 @@ app.get('/', function(req, res, next) {
 });
 
 // Talente
-app.get('/talente', function(req, res, next) {
+app.get('/talent/liste', function(req, res, next) {
 	Talent
 		.find()
 		.sort('typ name')
@@ -134,10 +134,10 @@ app.get('/talent/:talent', function(req, res, next) {
 	;
 });
 
-app.post('/talent/:mongoid', function(req, res, next) {
-	Talent.findByIdAndUpdate(req.id, req.body, function(err, doc) {
+app.post('/talent/:tid', function(req, res, next) {
+	Talent.findByIdAndUpdate(req.tid, req.body, function(err, doc) {
 		if (err) return next(err);
-		res.redirect('/');
+		res.redirect('/talent/liste');
 	});
 });
 
@@ -155,12 +155,12 @@ app.get('/talent/neu', function(req, res, next) {
 app.post('/talent/neu', function(req, res, next) {
 	Talent.create(req.body, function(err, doc) {
 		if (err) return next(err);
-		res.redirect('/talente');
+		res.redirect('/talent/liste');
 	});
 });
 
 // Zauber
-app.get('/zauberliste', function(req, res, next) {
+app.get('/zauber/liste', function(req, res, next) {
 	Zauber
 		.find()
 		.sort('Name')
@@ -178,7 +178,20 @@ app.get('/zauber/neu', function(req, res, next) {
 app.post('/zauber/neu', function(req, res, next) {
 	Zauber.create(req.body, function(err, doc) {
 		if (err) return next(err);
-		res.redirect('/');
+		res.redirect('/zauber/liste');
+	});
+});
+
+app.get('/zauber/:zid',function(req, res, next) {
+	Zauber.findById(req.zid, function(err, doc) {
+		if (err) return next(err);
+		res.render('system/edit-zauber', doc);
+	});
+});
+app.post('/zauber/:zid',function(req, res, next) {
+	Zauber.findByIdandUpdate(req.zid, req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/zauber/liste');
 	});
 });
 
@@ -195,16 +208,31 @@ app.get('/variante/neu', function(req, res, next) {
 		})
 	;
 });
-
 app.post('/variante/neu', function(req, res, next) {
 	Zauber.findById(req.body.zauber, function(err, doc) {
 		if (err) return next(err);
 		doc.Varianten.push(req.body);
 		doc.save(function(err, doc) {
 			if (err) return next(err);
-			res.redirect('/zauberliste');
+			res.redirect('/zauber/liste');
 		});
 	});
+});
+app.get('/zauber/:zid/variante/:vid', function(req, res, next) {
+	Zauber.find({ "_id": req.zid, "Varianten._id": req.vid }, function(err, doc) {
+		if (err) return next(err);
+		res.render('system/edit-variant', doc);
+	});
+});
+app.post('/zauber/:zid/variante/:vid', function(req, res, next) {
+	Zauber.update(
+		{ "_id": req.zid, "Varianten._id": req.vid },
+		{ $set: { "Varianten.$": req.body } },
+		function(err, numAffected) {
+			if (err) return next(err);
+			res.redirect('/zauber/liste');
+		}
+	);
 });
 
 /******************
