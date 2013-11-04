@@ -133,9 +133,14 @@ app.get('/talent/:talent', function(req, res, next) {
 		})
 	;
 });
-
 app.put('/talent/:tid', function(req, res, next) {
-	Talent.findByIdAndUpdate(req.tid, req.body, function(err, doc) {
+	Talent.findByIdAndUpdate(req.params.tid, req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/talent/liste');
+	});
+});
+app.delete('/talent/:tid', function(req, res, next) {
+	Talent.findByIdAndRemove(req.params.tid, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/talent/liste');
 	});
@@ -151,7 +156,6 @@ app.get('/talent/neu', function(req, res, next) {
 		})
 	;
 });
-
 app.post('/talent/neu', function(req, res, next) {
 	Talent.create(req.body, function(err, doc) {
 		if (err) return next(err);
@@ -182,7 +186,7 @@ app.post('/zauber/neu', function(req, res, next) {
 	});
 });
 
-app.get('/zauber/:zid',function(req, res, next) {
+app.get('/zauber/:zid', function(req, res, next) {
 	Zauber.findById(req.params.zid, function(err, doc) {
 		if (err)  return next(err);
 		if (!doc) return next('route');
@@ -190,13 +194,20 @@ app.get('/zauber/:zid',function(req, res, next) {
 		res.render('system/edit-zauber', data.magie);
 	});
 });
-app.put('/zauber/:zid',function(req, res, next) {
+app.put('/zauber/:zid', function(req, res, next) {
 	Zauber.findByIdAndUpdate(req.params.zid, req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/zauber/liste');
 	});
 });
+app.delete('/zauber/:zid', function(req, res, next) {
+	Zauber.findByIdAndRemove(req.params.zid, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/zauber/liste');
+	});
+});
 
+// Zauber-Varianten
 app.get('/variante/neu', function(req, res, next) {
 	Zauber
 		.find()
@@ -221,20 +232,53 @@ app.post('/variante/neu', function(req, res, next) {
 	});
 });
 app.get('/zauber/:zid/variante/:vid', function(req, res, next) {
-	Zauber.find({ "_id": req.zid, "Varianten._id": req.vid }, function(err, doc) {
-		if (err) return next(err);
-		res.render('system/edit-variant', doc);
-	});
+	Zauber.findById(
+		req.params.zid, 
+		{ 
+			"Varianten": { $elemMatch: { "_id": req.params.vid } },
+			_id:  true,
+			Name: true
+		}, 
+		function(err, doc) {
+			if (err) return next(err);
+			data.magie._Zauber = {
+				Name: doc.Name,
+				_id : doc._id
+			};
+			data.magie._Variante = doc.Varianten[0];
+			res.render('system/edit-variant', data.magie);
+		}
+	);
 });
-app.post('/zauber/:zid/variante/:vid', function(req, res, next) {
+app.put('/zauber/:zid/variante/:vid', function(req, res, next) {
 	Zauber.update(
-		{ "_id": req.zid, "Varianten._id": req.vid },
+		{ "_id": req.params.zid, "Varianten._id": req.params.vid },
 		{ $set: { "Varianten.$": req.body } },
 		function(err, numAffected) {
 			if (err) return next(err);
+			console.log("%d Variante geändert", numAffected);
 			res.redirect('/zauber/liste');
 		}
 	);
+});
+app.delete('/zauber/:zid/variante/:vid', function(req, res, next) {
+	/* keep it as info how to do it with a $pull operator
+	Zauber.findByIdAndUpdate(
+		req.params.zid,
+		{ $pull: { Varianten: { "_id": req.params.vid } } },
+		function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/zauber/liste');
+		}
+	);//*/
+	Zauber.findById(req.param.zid, function(err, doc) {
+		if (err) return next(err);
+		doc.Varianten.remove(req.params.vid);
+		doc.save(function(err, doc, num) {
+			console.log("%d Variante gelöscht.", num);
+			res.redirect('/zauber/liste');
+		});
+	});
 });
 
 /******************

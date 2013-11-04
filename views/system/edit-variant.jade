@@ -1,0 +1,101 @@
+!!! 5
+html(lang="de")
+	head
+		title Zaubervariante bearbeiten
+		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+		style.
+			body {
+				font-family: Georgia;
+			}
+			form {
+				padding-left: 5em;
+			}
+			fieldset > div {
+				padding: 0.5em 0;
+			}
+			div > label {
+				float: left;
+				width: 10em;
+			}
+			.spez {
+				list-style-type: none;
+				margin: 0;
+				margin-left: 10em;
+				padding: 0;
+			}
+			fieldset {
+				display: inline-block;
+				padding: 2em 4em;
+				border-radius: 3em;
+			}
+			#z_name {
+				width: 30em;
+			}
+	body
+		h1 Zaubervariante:
+		form#nesp(action="/zauber/"+_Zauber._id+"/variante/"+_Variante._id, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+			fieldset
+				div
+					label Variante des
+					span=_Zauber.Name
+				div
+					label(for="v_name") Name:
+					input#v_name(type="text", name="Name", required, style="width: 50%", value=_Variante.Name)
+				div
+					label(for="v_min") Mindest-ZfW:
+					input#v_min(type="number", name="modifikation[minZfW]", min="1", step="1", value=_Variante.modifikation.minZfW)
+				div
+					label(for="v_promo") Probenmodifikator:
+					input(type="text", name="modifikation[probe]", value=_Variante.modifikation.probe)
+				div
+					label(for="v_zd") Zauberdauer:
+					input#v_zd(type="text", name="cast[ZD]", value=_Variante.cast.ZD)
+				div
+					label(for="v_asp") Kosten:
+					input#v_asp(type="text", name="cast[AsP]", value=_Variante.cast.AsP)
+				div
+					label(for="v_wd") Wirkungsdauer:
+					input#v_wd(type="text", name="cast[WD]", value=_Variante.cast.WD)
+				div
+					label(for="v_rw") Reichweite:
+					input#v_rw(type="text", name="cast[RW]", value=_Variante.cast.RW)					
+				div
+					label Typ:
+					input#typ(type="hidden", name="modifikation[typ]", value="")
+					ul.spez
+						li
+							input(type="checkbox", value="A", id="typ_a", checked=_Variante.modifikation.typ.indexOf('A') > -1)
+							label(for="typ_a") Aufrechterhaltender Zauber
+						li
+							input(type="checkbox", value="M", id="typ_m", checked=_Variante.modifikation.typ.indexOf('M') > -1)
+							label(for="typ_m") wirkt gegen die Magieresistenz
+						li
+							input(type="checkbox", value="S", id="typ_s", checked=_Variante.modifikation.typ.indexOf('S') > -1)
+							label(for="typ_s") Erschwernis durch festgelegte Stufe (Gift, Beschwörungsschwierigkeit, etc.)
+						li
+							input(type="checkbox", value="X", id="typ_x", checked=_Variante.modifikation.typ.indexOf('X') > -1)
+							label(for="typ_x") situationsabhängige Erschwernis
+				div
+					label vorhanden in:
+					ul.spez
+						each __rep, __idx in Repräsentation
+							- var __active = _Variante.Repräsentationen.indexOf(__rep.short) > -1
+							li
+								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx, checked=__active)
+								label(for="rep"+__idx, title=__rep.short)= __rep.long
+				button(type="submit") speichern
+		script.
+			$ = document.getElementById.bind(document);
+			$('nesp').addEventListener('submit', function(evt) {
+				var choices = $('typ').parentNode.querySelectorAll(':checked');
+				var val = "";
+				for (var i=0, l=choices.length; i<l; i+=1) {
+					val += choices[i].value;
+				}
+				$('typ').value = val;
+			});
+		form(action="/zauber/"+_Zauber._id+"/variante/"+_Variante._id, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="delete")
+			fieldset
+				button(type="submit") löschen
