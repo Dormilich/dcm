@@ -134,7 +134,7 @@ app.get('/talent/:talent', function(req, res, next) {
 	;
 });
 
-app.post('/talent/:tid', function(req, res, next) {
+app.put('/talent/:tid', function(req, res, next) {
 	Talent.findByIdAndUpdate(req.tid, req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/talent/liste');
@@ -183,13 +183,15 @@ app.post('/zauber/neu', function(req, res, next) {
 });
 
 app.get('/zauber/:zid',function(req, res, next) {
-	Zauber.findById(req.zid, function(err, doc) {
-		if (err) return next(err);
-		res.render('system/edit-zauber', doc);
+	Zauber.findById(req.params.zid, function(err, doc) {
+		if (err)  return next(err);
+		if (!doc) return next('route');
+		data.magie._Zauber = doc;
+		res.render('system/edit-zauber', data.magie);
 	});
 });
-app.post('/zauber/:zid',function(req, res, next) {
-	Zauber.findByIdandUpdate(req.zid, req.body, function(err, doc) {
+app.put('/zauber/:zid',function(req, res, next) {
+	Zauber.findByIdAndUpdate(req.params.zid, req.body, function(err, doc) {
 		if (err) return next(err);
 		res.redirect('/zauber/liste');
 	});
