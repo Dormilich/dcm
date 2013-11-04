@@ -251,8 +251,15 @@ heldSchema.virtual('Basiswerte.MR').get(function() {
 heldSchema.virtual('Basiswerte.GS').get(function() {
 	var GE  = this.Attribute.GE.wert
 	  , mod = this.modifikatoren.GS
+	  , GS  = 8
 	  ;
-	return Math.floor( (GE >>> 3) + 7 + mod );
+	if (GE < 10) {
+		GS -= 1;
+	}
+	else if (GE > 15) {
+		GS += 1;
+	}
+	return GS + mod;
 });
 heldSchema.virtual('Kampfwerte.INI').get(function() {
 	var MU = this.Attribute.MU.wert
