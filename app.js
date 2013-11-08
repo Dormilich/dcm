@@ -18,7 +18,9 @@ app.set('view engine', 'jade');
 app.use(express.favicon(__dirname + '/public/Favicon_Chromatrix.png'));
 app.use(express.logger('dev'));
 app.use(express.compress());              // gzip/deflate
-app.use(express.bodyParser());            // parse POST data into req.body
+//app.use(express.bodyParser());            // parse POST data into req.body
+app.use(express.urlencoded());
+app.use(express.json());
 app.use(express.methodOverride());        // use PUT/DELETE
 app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
@@ -71,7 +73,7 @@ process.on('SIGINT', function() {
 
 var routes = {};
 // set up routes
-["neu", "held", "edit"].forEach(function(file) {
+["neu", "held", "edit", "magie"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
@@ -106,14 +108,18 @@ app.post('/neu', routes.neu.create);
 // list all characters
 app.get('/helden', routes.held.list);
 // display character sheet
-app.get(   '/held/:mongoid', routes.held.show);
+app.get('/held/:mongoid', routes.held.show);
+// display character sheet (magic)
+app.get('/magie/:mongoid', routes.magie.show);
+// delete character
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character sheet sections
-app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
+app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/,     mapMatch('section', 'id'), routes.held.edit);
 app.put(/^\/(ap|sf|char|taw)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.save);
 // edit CharSheet Talent section (needs to load data from system table)
-app.get('/taw/:mongoid', routes.edit.talente);
+app.get('/taw/:mongoid',    routes.edit.talente);
+app.get('/zauber/:mongoid', routes.edit.zauber);
 
 /******************
  *  Start Server  *

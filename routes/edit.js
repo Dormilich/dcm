@@ -4,6 +4,7 @@ var path    = require('path')
   , data    = require( path.join(appRoot, 'data/dsa') )
   , Held    = require( path.join(appRoot, 'models/person') )
   , Talent  = require( path.join(appRoot, 'models/talent') )
+  , Zauber  = require( path.join(appRoot, 'models/zauber') )
   ;
 
 function merge(target, source) {
@@ -49,9 +50,42 @@ module.exports = {
 			Handwerk:     getTalentType("Handwerkstalente"),
 			Gaben:        getTalentType("Gaben"),
 			_chardata: function(cb) {
+				Held.findById(req.id, function(err, doc) {
+					if (err) {
+						cb(err);
+					}
+					else if (!doc) {
+						cb(new Error("Kein Datensatz gefunden."));
+					}
+					else {
+						cb(null, doc);
+					}
+				});
+			}
+		},
+		function(err, obj) {
+			if (err) return next(err);
+			merge(obj, data.talente);
+			res.render('edit-held/taw', obj);
+		});
+	},
+	zauber : function(req, res, next) {
+		async.parallel({
+			Zauber: function(cb) {
+				Zauber
+					.find()
+					.sort('Name')
+					.lean()
+					.exec(function(err, objs) {
+						if (err) return cb(err);
+						cb(null, objs);
+					})
+				;
+			},
+			Held: function(cb) {
 				Held
 					.findById(req.id)
-					.populate('held')
+					.select('Person')
 					.exec(function(err, doc) {
 						if (err) {
 							cb(err);
@@ -68,8 +102,7 @@ module.exports = {
 		},
 		function(err, obj) {
 			if (err) return next(err);
-			merge(obj, data.talente);
-			res.render('edit-held/taw', obj);
+			res.render('edit-held/zauber', obj);
 		});
 	}
 };

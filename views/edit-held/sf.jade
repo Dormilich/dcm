@@ -53,6 +53,7 @@ html(lang="de")
 				background-color: black;
 			}
 	body
+		a#top
 		nav
 			a(href="#top") [Seitenanfang]
 			a(href="#allg") allgemeine SF
@@ -234,7 +235,7 @@ html(lang="de")
 										each val, key in ["gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel"]
 											- var checkval = "Merkmal (Dämonisch/"+val+")"
 											li
-												input(type="checkbox", name="SF[magisch][]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
+												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
 												label(for="sf11a_"+key)= val
 									
 								li
@@ -244,13 +245,20 @@ html(lang="de")
 										each val, key in ["gesamt", "Eis", "Erz", "Feuer", "Humus", "Luft", "Wasser"]
 											- var checkval = "Merkmal (Elementar/"+val+")"
 											li
-												input(type="checkbox", name="SF[magisch][]", value=checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
+												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
 												label(for="sf11b_"+key)= val
 								
 								each val, key in ["Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
 									li
 										input(type="checkbox", name="SF[magisch][]", value="Merkmal ("+val+")", checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
 										label(for="sf11c_"+key)= val
+								li
+									strong Repräsentation:
+								each val, key in ["Borbaradianer", "Elf", "Druide", "Geode", "Gildenmagier", "Hexe", "Kristallomant", "Scharlatan", "Schelm"]
+									- var checkval = "Repräsentation ("+val+")"
+									li
+										input(type="checkbox", name="SF[magisch][]", id="sf12_"+key, value= checkval, checked= SF.magisch.indexOf(checkval) !== -1)
+										label(for="sf12_"+key)= val
 
 				a#save
 				.mitte

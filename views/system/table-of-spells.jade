@@ -29,16 +29,25 @@ html(lang="de")
 			td:first-child {
 				text-align: left;
 			}
+			td a {
+				color: inherit;
+				text-decoration: none;
+			}
 			thead {
 				background-color: #eee;
 			}
 			.zauber > tbody > tr:first-child > td {
 				background-color: #ccc;
+				color: gray;
+				font-style: italic;
+			}
+			.zauber > tbody > tr:first-child > td:first-child {
+				color: inherit;
+				font-style: normal;
+				font-weight: bold;
 			}
 			.meta td {
 				background-color: #eee;
-				color: gray;
-				font-style: italic;
 			}
 			.links {
 				text-align: left;
@@ -62,6 +71,13 @@ html(lang="de")
 				thead
 					tr
 						th Zauber
+						th(colspan="3") Spontane Mod.
+						th Merkmale
+						th Ziel
+						th Repräsentation
+						th Komplexität
+					tr
+						th
 						th Probe
 						th ZfW
 						th Mod.
@@ -69,18 +85,18 @@ html(lang="de")
 						th AsP
 						th WD
 						th RW
-					tr
-						th
-						th(colspan="3") Spontane Mod.
-						th Merkmale
-						th Ziel
-						th Repräsentation
-						th Komplexität
 				each __spell in Zauber
 					tbody
 						tr
 							td
 								a(href="/zauber/"+__spell._id)=__spell.Name
+							td(colspan="3")= __spell.SpoMod.join(', ')
+							td= __spell.Merkmale.join(', ')
+							td= __spell.Ziel.join(', ')
+							td= __spell.Repräsentationen.join(', ')
+							td= __spell.Komplexität
+						tr.meta
+							td 
 							td= __spell.Probe.join(' · ')
 							td 
 							td= __spell.modifikation.typ
@@ -88,13 +104,6 @@ html(lang="de")
 							td= __spell.cast.AsP
 							td= __spell.cast.WD
 							td= __spell.cast.RW
-						tr.meta
-							td 
-							td(colspan="3")= __spell.SpoMod.join(', ')
-							td= __spell.Merkmale.join(', ')
-							td= __spell.Ziel.join(', ')
-							td= __spell.Repräsentationen.join(', ')
-							td= __spell.Komplexität
 						if Array.isArray(__spell.Varianten)
 							each __variant in __spell.Varianten
 								tr

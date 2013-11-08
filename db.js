@@ -18,7 +18,9 @@ app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.compress());              // gzip/deflate
-app.use(express.bodyParser());            // parse POST data into req.body
+//app.use(express.bodyParser());            // parse POST data into req.body
+app.use(express.urlencoded());
+app.use(express.json());
 app.use(express.methodOverride());        // use PUT/DELETE
 app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
@@ -273,7 +275,7 @@ app.delete('/zauber/:zid/variante/:vid', function(req, res, next) {
 	);//*/
 	Zauber.findById(req.param.zid, function(err, doc) {
 		if (err) return next(err);
-		doc.Varianten.remove(req.params.vid);
+		doc.Varianten.pull(req.params.vid);
 		doc.save(function(err, doc, num) {
 			console.log("%d Variante gelöscht.", num);
 			res.redirect('/zauber/liste');

@@ -1,0 +1,108 @@
+!!! 5
+html(lang="de")
+	head
+		title Zauber hinzufügen
+		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		script(src="/jquery-2.0.3.min.js")
+		//- there are errors in the implementation!
+		script(src="/sorttable.js")
+		style.
+			body {
+				font-family: Georgia;
+			}
+			nav a {
+				width: 10em;
+			}
+	body
+		a#top
+		nav
+			a(href="#top") [Seitenanfang]
+			a(href="#save") [speichern]
+			a(href="#own") Zauber steigern
+			a(href="#spr") Zauber hinzufügen
+			a(href="/held/"+_id)= "⇒ "+Held.Person.Name.split(' ')[0]
+			
+		section
+			h1.mitte
+				a(href="/held/"+_id)= Held.Person.Name
+			form#newChar(action="/zauber/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				
+				a#own
+				table.data-section.eigenschaften.mitte.sortable
+					caption Zauber
+					colgroup
+						col(style="width: 3em;")
+						col
+						col(style="width: 5em;")
+						col(style="width: 12em;")
+						col(span="2" style="width: 5em;")
+						col(style="width: 8em;")
+					thead
+						tr
+							td
+							th Zauber
+							th Rep.
+							th.sottable_nosort Spezialisierung
+							th Kompl.
+							th Lern
+							th.sortable_nosort ZfW
+					if Array.isArray(Held.Magie.Zauber)
+						tbody
+							each __spell, __idx in Held.Magie.Zauber
+								tr
+									td
+										input.unlock(type="checkbox", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
+										button.del(type="button")
+									td=__spell._zauber.Name
+									td=__spell.Repräsentation
+									td=__spell.Spezialisierungen.join(', ')
+									td=__spell._zauber.Komplexität
+									td
+										select.unlock(size="1", name="Magie.Zauber[#{__idx}][Lernstufe]")
+											each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+												option(selected=__spell.Lernstufe === kat)= kat
+									td
+										input.unlock(type="number", name="Magie.Zauber[#{__idx}][ZfW]", min="0", max="35", step="1", value=__spell.ZfW)
+				a#save
+				.mitte
+					button(type="submit", disabled) speichern
+		section
+			a#spr
+			table.data-section.eigenschaften.mitte.sortable
+				caption Zauber hinzufügen
+				colgroup
+					col
+					col(style="width: 15em")
+					col(style="width: 10em")
+					col(style="width: 3em")
+					col(span="2", style="width: 7em;")
+				thead
+					tr
+						th Zauber
+						th Merkmal
+						th Probe
+						th.sortable_nosort
+						th.sortable_nosort Rep.
+						th.sortable_nosort
+				tbody
+					- var __heldReps = ["Mag"]
+					if Array.isArray(Held.Magie.Repräsentation)
+						- __heldReps = Held.Magie.Repräsentation.map(function(item) {return item.short; })
+					each __stdSpell in Zauber
+						tr
+							td.links
+								input.id(type="hidden", value=__stdSpell._id)
+								| #{__stdSpell.Name}
+							td.links=__stdSpell.Merkmale.join(', ')
+							td="("+__stdSpell.Probe.join(' · ')+")"
+							td=__stdSpell.modifikation.typ
+							td
+								select(size="1")
+									each __rep in __stdSpell.Repräsentationen
+										option(selected=(__heldReps.indexOf(__rep) > -1))=__rep
+							td
+								button.add(type="button") neu
+							
+			

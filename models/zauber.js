@@ -1,14 +1,13 @@
 // DCM spell mongo schema
 var mongoose = require("mongoose")
   , Schema   = mongoose.Schema
-  , IDREF    = Schema.Types.ObjectId
   ;
 
 function lernstufeValidator(val) {
 	return (["A+", "A", "B", "C", "D", "E", "F", "G", "H"].indexOf(val) > -1);
 }
 function probeValidator(val) {
-	return (["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"].indexOf(val) > -1);
+	return (["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "?"].indexOf(val) > -1);
 }
 
 var varianteSchema = new Schema({
@@ -29,7 +28,7 @@ var varianteSchema = new Schema({
 });
 
 var zauberSchema = new Schema({
-	Name  :  { type: String, required: true }, // unique?
+	Name  :  { type: String, required: true, unique: true }, // unique?
 	Probe : [{ type: String, validator: probeValidator }],
 	cast  : {
 		ZD  :  { type: String, required: true },

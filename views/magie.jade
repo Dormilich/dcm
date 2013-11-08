@@ -1,0 +1,161 @@
+mixin SFTableSection(__liste, __name)
+	if __liste.length
+		tbody
+			tr
+				th= __name
+			tr.links
+				td
+					ul.vor-nach.fl-links
+						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
+							li= __liste[x]
+					ul.vor-nach.fl-rechts
+						- for (var y=x, l=__liste.length; y<l; y++)
+							li= __liste[y]
+
+!!! 5
+html(lang="de")
+	head
+		title= Person.Name
+		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		style.
+			.eigenschaften {
+				table-layout: fixed;
+			}
+	body
+		a#top
+		nav
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
+						li
+							a(href="#vnt") Vor- & Nachteile
+						li
+							a(href="#sf") Sonderfertigkeiten
+						li
+							a(href="#spr") Zauber
+						li
+							a Rituale
+						li
+							a(href="/held/"+_id) ► Heldenbogen
+				li
+					a.mitte(href="/helden") [ Charakterliste ]
+				li
+					a.mitte(href="/neu") [ Neuer Charakter ]
+				li 
+					a.mitte #{Person.Name.split(' ')[0]} bearbeiten
+					ul
+						li
+							a(href="/sf/"+_id) Sonderfertigkeiten
+						li
+							a(href="/zauber/"+_id Zauber
+						li
+							a Rituale
+
+		section(style="clear: both;")
+			h1.mitte= Person.Name
+			h2.mitte –Magiebogen–
+			
+			a#vnt
+			table.data-section
+				caption Vor- und Nachteile
+				tr
+					td
+						ul.vor-nach.fl-links
+							li.mitte
+								strong Vorteile
+							each val in Vorteile
+								li= val
+						ul.vor-nach.fl-rechts
+							li.mitte
+								strong Nachteile
+							each val in Nachteile
+								li= val
+			a#att
+			table.data-section.mitte.eigenschaften
+				caption Attribute
+				thead
+					tr
+						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+							th= val
+				tbody
+					tr
+						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+							td= Attribute[val].wert
+			a#bas
+			table.data-section.mitte.eigenschaften
+				caption Basiswerte
+				tbody
+					tr
+						each val in ["LeP", "AuP", "AsP", "MR"]
+							th= val
+							td= Basiswerte[val] || '—'
+		a#sf
+		section
+			table.data-section.mitte.eigenschaften
+				caption Sonderfertigkeiten
+				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
+				
+		a#spr
+		section
+			table.data-section.eigenschaften.mitte
+				caption Zaubersprüche
+				colgroup
+					col
+					col(style="width: 9em;")
+					col(style="width: 4.5em;", span="2")
+					col(style="width: 9em;", span="4")
+				thead
+					tr
+						th Zauber
+						th(colspan="3") Spontane Mod.
+						th Merkmale
+						th Ziel
+						th Repräsentation
+						th Komplexität
+					tr
+						th
+						th Probe
+						th ZfW
+						th Mod.
+						th ZD
+						th AsP
+						th WD
+						th RW
+				each __spell in Magie.Zauber
+				//-
+					tbody
+						tr
+							td=__spell._zauber.Name
+							td(colspan="3")= __spell._zauber.SpoMod.join(', ')
+							td= __spell._zauber.Merkmale.join(', ')
+							td= __spell._zauber.Ziel.join(', ')
+							td= __spell.Repräsentation
+							td= __spell._zauber.Komplexität
+						tr.meta
+							td 
+							td= __spell._zauber.Probe.join(' · ')
+							td 
+							td= __spell._zauber.modifikation.typ
+							td= __spell._zauber.cast.ZD
+							td= __spell._zauber.cast.AsP
+							td= __spell._zauber.cast.WD
+							td= __spell._zauber.cast.RW
+						if Array.isArray(__spell._zauber.Varianten)
+							each __variant in __spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) })
+								tr
+									td="- "+__variant.Name
+									td=__variant.modifikation.probe
+									td
+										if __variant.modifikation.minZfW
+											| (#{__variant.modifikation.minZfW})
+									td=__variant.modifikation.typ
+									td= __variant.cast.ZD
+									td= __variant.cast.AsP
+									td= __variant.cast.WD
+									td= __variant.cast.RW

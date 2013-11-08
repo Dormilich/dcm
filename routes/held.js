@@ -19,25 +19,23 @@ module.exports = {
 	},
 	// show the Character's data (aka Character Sheet)
 	show: function (req, res, next) {
-		Held
-			.findById(req.id, function(err, doc) {
-				if (err)  return next(err);
-				if (!doc) return next();
-				// auto-populate all Talents
-				var talentTypes = Object.keys(doc.Talente)
-					.filter(function(item) {
-						return (typeof doc.Talente[item] !== 'function');
-					})
-					.map(function(item) {
-						return { path: "Talente."+item+"._talent" };
-					})
-				;
-				Held.populate(doc, talentTypes, function(err, doc) {
-					if (err) return next(err);
-					res.render('held', doc);
-				});
-			})
-		;
+		Held.findById(req.id, function(err, doc) {
+			if (err)  return next(err);
+			if (!doc) return next();
+			// auto-populate all Talents
+			var talentTypes = Object.keys(doc.Talente)
+				.filter(function(item) {
+					return (typeof doc.Talente[item] !== 'function');
+				})
+				.map(function(item) {
+					return { path: "Talente."+item+"._talent" };
+				})
+			;
+			Held.populate(doc, talentTypes, function(err, doc) {
+				if (err) return next(err);
+				res.render('held', doc);
+			});
+		});
 	},
 	// remove Character from list
 	disable: function (req, res, next) {
