@@ -1,0 +1,23 @@
+nav {
+	position: fixed;
+	top: 0;
+	background-color: #eee;
+	width: 100%;
+}
+nav a {
+	display: inline-block;
+	text-decoration: none;
+	color: black;
+	text-align: center;
+	background-color: #eee;
+	padding: 0.3em 0.5em;
+	font-weight: bold;
+}
+nav a:hover {
+	color: #eee;
+	background-color: black;
+}
+h1 a {
+	text-decoration: none;
+	color: inherit;
+}

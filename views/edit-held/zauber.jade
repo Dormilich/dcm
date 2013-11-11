@@ -4,15 +4,22 @@ html(lang="de")
 		title Zauber hinzufügen
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/tablesorter/tablesorter.css")
 		script(src="/jquery-2.0.3.min.js")
-		//- there are errors in the implementation!
-		script(src="/sorttable.js")
+		script(src="/tablesorter/jquery.tablesorter.min.js")
 		style.
 			body {
 				font-family: Georgia;
 			}
 			nav a {
 				width: 10em;
+			}
+			#spell_choice tbody td:first-child {
+				padding-left: 0;
+				padding-right: 0;
+			}
+			.disabled {
+				color: #ddd;
 			}
 	body
 		a#top
@@ -25,67 +32,86 @@ html(lang="de")
 			
 		section
 			h1.mitte
-				a(href="/held/"+_id)= Held.Person.Name
-			form#newChar(action="/zauber/"+_id, method="post", accept-charset="utf-8")
+				a(href="/held/"+Held._id)= Held.Person.Name
+			form#newSpell(action="/zauber/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
 				a#own
-				table.data-section.eigenschaften.mitte.sortable
+				table#spell_choice.data-section.eigenschaften.mitte.tablesorter
 					caption Zauber
 					colgroup
-						col(style="width: 3em;")
+						col(style="width: 2.5em;")
+						col(style="width: 25em;")
+						col(style="width: 7em;")
 						col
-						col(style="width: 5em;")
-						col(style="width: 12em;")
+						col(style="width: 7em;")
 						col(span="2" style="width: 5em;")
-						col(style="width: 8em;")
 					thead
 						tr
 							td
 							th Zauber
 							th Rep.
-							th.sottable_nosort Spezialisierung
+							th Spezialisierung
 							th Kompl.
 							th Lern
-							th.sortable_nosort ZfW
-					if Array.isArray(Held.Magie.Zauber)
-						tbody
+							th ZfW
+					tfoot(style="display: none;")
+						tr#spell_template
+							td
+								input.id(type="hidden", name="Magie[Zauber][{index}][_zauber]", value="")
+								input.lock(type="checkbox", checked)
+							td.links
+								label.name
+							td
+								input.rep(type="hidden", name="Magie[Zauber][{index}][Repräsentation]")
+								label.rep
+							td.links.spez(data-name="Magie[Zauber][{index}][Spezialisierungen][]")
+								button.addspez(type="button") +
+							td.kompl
+							td
+								select.lern(size="1", name="Magie[Zauber][{index}][Lernstufe]")
+									each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+										option= kat
+							td
+								input.mitte(type="number", name="Magie[Zauber][{index}][ZfW]", value="0", min="0", step="1", style="width: 100%;")
+								
+					tbody
+						if Array.isArray(Held.Magie.Zauber)
 							each __spell, __idx in Held.Magie.Zauber
 								tr
 									td
-										input.unlock(type="checkbox", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
+										input.lock(type="checkbox", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
 										button.del(type="button")
 									td=__spell._zauber.Name
 									td=__spell.Repräsentation
 									td=__spell.Spezialisierungen.join(', ')
 									td=__spell._zauber.Komplexität
 									td
-										select.unlock(size="1", name="Magie.Zauber[#{__idx}][Lernstufe]")
+										select(size="1", name="Magie.Zauber[#{__idx}][Lernstufe]")
 											each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 												option(selected=__spell.Lernstufe === kat)= kat
 									td
-										input.unlock(type="number", name="Magie.Zauber[#{__idx}][ZfW]", min="0", max="35", step="1", value=__spell.ZfW)
+										input(type="number", name="Magie.Zauber[#{__idx}][ZfW]", min="0", max="35", step="1", value=__spell.ZfW)
 				a#save
 				.mitte
 					button(type="submit", disabled) speichern
 		section
 			a#spr
-			table.data-section.eigenschaften.mitte.sortable
+			table#spell_list.data-section.eigenschaften.mitte.tablesorter
 				caption Zauber hinzufügen
 				colgroup
+					col(style="width: 25em")
 					col
-					col(style="width: 15em")
 					col(style="width: 10em")
-					col(style="width: 3em")
-					col(span="2", style="width: 7em;")
+					col(span="3", style="width: 7em;")
 				thead
 					tr
 						th Zauber
 						th Merkmal
 						th Probe
-						th.sortable_nosort
-						th.sortable_nosort Rep.
-						th.sortable_nosort
+						th Kompl.
+						th Rep.
+						td
 				tbody
 					- var __heldReps = ["Mag"]
 					if Array.isArray(Held.Magie.Repräsentation)
@@ -93,16 +119,71 @@ html(lang="de")
 					each __stdSpell in Zauber
 						tr
 							td.links
+								span.name=__stdSpell.Name
 								input.id(type="hidden", value=__stdSpell._id)
-								| #{__stdSpell.Name}
 							td.links=__stdSpell.Merkmale.join(', ')
 							td="("+__stdSpell.Probe.join(' · ')+")"
-							td=__stdSpell.modifikation.typ
+							td.kompl=__stdSpell.Komplexität
 							td
 								select(size="1")
 									each __rep in __stdSpell.Repräsentationen
-										option(selected=(__heldReps.indexOf(__rep) > -1))=__rep
+										option(value=__rep, selected=(__heldReps.indexOf(__rep) > -1))=__rep
 							td
 								button.add(type="button") neu
-							
-			
+		script.
+			$('#spell_list')
+				.tablesorter({
+					headers: {
+						4: { sorter: false },
+						5: { sorter: false }
+					}
+				})
+				.on("click", 'button', function(evt) {
+					var $row = $(this).closest('tr');
+					var rep  = $row.find('select').val();
+					var name = $row.find('.name').text();
+					var id   = $row.find('.id').val();
+					var kompl = $row.find('.kompl').text();
+					var index = $('#spell_choice tbody tr').length;
+					var $new = $('#spell_template').clone().removeAttr('id');
+					
+					$new.find('input.id').val(id);
+					$new.find('label.name').text(name);
+					$new.find('input.rep').val(rep).next().text(rep);
+					// $new.find('label.rep').text(rep);
+					$new.find('td.kompl').text(kompl);
+					$new.find('select.lern').val(kompl);
+					
+					$new.find('*[name]').each(function() {
+						this.name = this.name.replace("{index}", index);
+					});
+					var $spez = $new.find('td.spez');
+					$spez.data('name', $spez.data('name').replace("{index}", index));
+					
+					$new.appendTo('#spell_choice');
+					$row.find("option[value='" + rep + "']").remove();
+				})
+			;
+			$('#spell_choice')
+				.tablesorter({
+					headers: {
+						2: { sorter: false },
+						4: { sorter: false },
+						5: { sorter: false }
+					}
+				})
+				.on("click", "input.lock", function(evt) {
+					var $row = $(this).closest('tr');
+					$row.find("*[name]").prop("disabled", !this.checked);
+					if (this.checked) {
+						$row.removeClass("disabled");
+					}
+					else {
+						$row.addClass("disabled");
+					}
+				})
+			;
+			$("button[type='submit']").prop("disabled", false);
+			$("#newSpell").on("submit", function() {
+				$('#spell_template').remove();
+			});
