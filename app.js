@@ -95,7 +95,7 @@ app.param('mongoid', function (req, res, next, id) {
 	next();
 });
 
-
+var util = require('util');
 // demo
 app.get('/', function (req, res) {
 	res.redirect('/helden');
@@ -115,8 +115,8 @@ app.get('/magie/:mongoid', routes.magie.show);
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character sheet sections
-app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/,     mapMatch('section', 'id'), routes.held.edit);
-app.put(/^\/(ap|sf|char|taw)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.save);
+app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
+app.put(/^\/(ap|sf|char|taw|zauber)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.save);
 // edit CharSheet Talent section (needs to load data from system table)
 app.get('/taw/:mongoid',    routes.edit.talente);
 app.get('/zauber/:mongoid', routes.edit.zauber);

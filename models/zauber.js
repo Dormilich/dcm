@@ -7,7 +7,7 @@ function lernstufeValidator(val) {
 	return (["A+", "A", "B", "C", "D", "E", "F", "G", "H"].indexOf(val) > -1);
 }
 function probeValidator(val) {
-	return (["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "?"].indexOf(val) > -1);
+	return (["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "??"].indexOf(val) > -1);
 }
 
 var varianteSchema = new Schema({

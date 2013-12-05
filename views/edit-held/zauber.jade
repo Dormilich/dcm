@@ -28,12 +28,12 @@ html(lang="de")
 			a(href="#save") [speichern]
 			a(href="#own") Zauber steigern
 			a(href="#spr") Zauber hinzufügen
-			a(href="/held/"+_id)= "⇒ "+Held.Person.Name.split(' ')[0]
+			a(href="/held/"+Held._id)= "⇒ "+Held.Person.Name.split(' ')[0]
 			
 		section
 			h1.mitte
 				a(href="/held/"+Held._id)= Held.Person.Name
-			form#newSpell(action="/zauber/"+_id, method="post", accept-charset="utf-8")
+			form#newSpell(action="/zauber/"+Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
 				a#own
@@ -186,4 +186,5 @@ html(lang="de")
 			$("button[type='submit']").prop("disabled", false);
 			$("#newSpell").on("submit", function() {
 				$('#spell_template').remove();
+				$('#spell_choice').trigger("sorton", [[[0,0], [1,0]]]);
 			});
