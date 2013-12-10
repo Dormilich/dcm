@@ -5,15 +5,19 @@ var path    = require('path')
   ;
 module.exports = {
 	show: function(req, res, next) {
-		Held.findById(req.id, function(err, doc) {
-			if (err)  return next(err);
-			if (!doc) return next();
-			res.render('magie', doc);
-			/*
-			Held.populate(doc, 'Magie.Zauber._zauber', function(err, doc) {
-				if (err) return next(err);
+		Held
+			.findById(req.id)
+			.populate('Magie.Zauber._zauber')
+			.exec(function(err, doc) {
+				if (err)  return next(err);
+				if (!doc) return next();
 				res.render('magie', doc);
-			});//*/
-		});
+				/*
+				Held.populate(doc, 'Magie.Zauber._zauber', function(err, doc) {
+					if (err) return next(err);
+					res.render('magie', doc);
+				});//*/
+			})
+		;
 	}
 };
