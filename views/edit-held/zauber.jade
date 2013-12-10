@@ -1,3 +1,6 @@
+mixin print(__data)
+	p!=JSON.stringify(__data)
+
 !!! 5
 html(lang="de")
 	head
@@ -42,59 +45,62 @@ html(lang="de")
 					colgroup
 						col(style="width: 2.5em;")
 						col(style="width: 25em;")
-						col(style="width: 7em;")
 						col
-						col(style="width: 7em;")
-						col(span="2" style="width: 5em;")
+						col(span="4" style="width: 7em;")
 					thead
 						tr
 							td
 							th Zauber
-							th Rep.
 							th Spezialisierung
+							th Rep.
 							th Kompl.
 							th Lern
 							th ZfW
 					tfoot(style="display: none;")
 						tr#spell_template
 							td
-								input.id(type="hidden", name="Magie[Zauber][{index}][_zauber]", value="")
+								input.id(type="hidden", name="Magie.Zauber[{index}][_zauber]", value="")
 								input.lock(type="checkbox", checked)
 							td.links
 								label.name
-							td
-								input.rep(type="hidden", name="Magie[Zauber][{index}][Repräsentation]")
-								label.rep
-							td.links.spez(data-name="Magie[Zauber][{index}][Spezialisierungen][]")
+							td.links.spez(data-name="Magie.Zauber[{index}][Spezialisierungen][]")
 								button.addspez(type="button") +
+							td
+								input.rep(type="hidden", name="Magie.Zauber[{index}][Repräsentation]")
+								label.rep
 							td.kompl
 							td
-								select.lern(size="1", name="Magie[Zauber][{index}][Lernstufe]")
+								select.lern(size="1", name="Magie.Zauber[{index}][Lernstufe]")
 									each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 										option= kat
-							td
-								input.mitte(type="number", name="Magie[Zauber][{index}][ZfW]", value="0", min="0", step="1", style="width: 100%;")
+							td.mitte
+								input.mitte(type="number", name="Magie.Zauber[{index}][ZfW]", value="0", min="0", max="35" step="1")
 								
 					tbody
 						if Array.isArray(Held.Magie.Zauber)
 							each __spell, __idx in Held.Magie.Zauber
 								tr
 									td
-										input.lock(type="checkbox", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
-										button.del(type="button")
-									td=__spell._zauber.Name
-									td=__spell.Repräsentation
-									td=__spell.Spezialisierungen.join(', ')
+										input(type="hidden", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
+										input.lock(type="checkbox", checked)
+									td.links
+										label.name=__spell._zauber.Name
+									td.links=__spell.Spezialisierungen.join(', ')
+										button.addspez(type="button") +
+									td
+										input.rep(type="hidden", name="Magie.Zauber[#{__idx}][Repräsentation]", value=__spell.Repräsentation)
+										label.rep=__spell.Repräsentation
 									td=__spell._zauber.Komplexität
 									td
 										select(size="1", name="Magie.Zauber[#{__idx}][Lernstufe]")
 											each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 												option(selected=__spell.Lernstufe === kat)= kat
-									td
-										input(type="number", name="Magie.Zauber[#{__idx}][ZfW]", min="0", max="35", step="1", value=__spell.ZfW)
+									td.mitte
+										input.mitte(type="number", name="Magie.Zauber[#{__idx}][ZfW]", min="0", max="35", step="1", value=__spell.ZfW)
 				a#save
 				.mitte
 					button(type="submit", disabled) speichern
+		//- +print(Held)
 		section
 			a#spr
 			table#spell_list.data-section.eigenschaften.mitte.tablesorter
@@ -114,8 +120,8 @@ html(lang="de")
 						td
 				tbody
 					- var __heldReps = ["Mag"]
-					if Array.isArray(Held.Magie.Repräsentation)
-						- __heldReps = Held.Magie.Repräsentation.map(function(item) {return item.short; })
+					if Array.isArray(Held.Magie.Repräsentation) && Held.Magie.Repräsentation.length
+						- __heldReps = Held.Magie.Repräsentation.map(function(item) { return item.short; })
 					each __stdSpell in Zauber
 						tr
 							td.links
@@ -187,4 +193,7 @@ html(lang="de")
 			$("#newSpell").on("submit", function() {
 				$('#spell_template').remove();
 				$('#spell_choice').trigger("sorton", [[[0,0], [1,0]]]);
+				$('.isactive:not(:checked)').each(function() {
+					$(this).closest('tr').find('select, input').prop('disabled', true);
+				});
 			});

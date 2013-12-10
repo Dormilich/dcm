@@ -85,7 +85,8 @@ module.exports = {
 			Held: function(cb) {
 				Held
 					.findById(req.id)
-					.select('Person')
+					.select('Person Magie')
+					.populate('Magie.Zauber._zauber')
 					.exec(function(err, doc) {
 						if (err) {
 							cb(err);

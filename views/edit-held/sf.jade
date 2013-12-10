@@ -254,11 +254,16 @@ html(lang="de")
 										label(for="sf11c_"+key)= val
 								li
 									strong Repräsentation:
-								each val, key in ["Borbaradianer", "Elf", "Druide", "Geode", "Gildenmagier", "Hexe", "Kristallomant", "Scharlatan", "Schelm"]
+								- var __count = 0
+								each val, key in {"Bor":"Borbaradianer", "Elf":"Elf", "Dru":"Druide", "Geo":"Geode", "Mag":"Gildenmagier", "Hex":"Hexe", "Ach":"Kristallomant", "Srl":"Scharlatan", "Sch":"Schelm"}
 									- var checkval = "Repräsentation ("+val+")"
+									- var __isSet  = (SF.magisch.indexOf(checkval) !== -1)
 									li
-										input(type="checkbox", name="SF[magisch][]", id="sf12_"+key, value= checkval, checked= SF.magisch.indexOf(checkval) !== -1)
+										input.rep(type="checkbox", name="SF[magisch][]", id="sf12_"+key, value= checkval, checked=__isSet)
+										input(type="hidden", name="Magie.Repräsentation[#{__count}][short]", value=key, disabled=!__isSet)
+										input(type="hidden", name="Magie.Repräsentation[#{__count}][long]",  value=val, disabled=!__isSet)
 										label(for="sf12_"+key)= val
+									- __count++
 
 				a#save
 				.mitte
@@ -271,5 +276,10 @@ html(lang="de")
 					var $li = $(this).closest('li')
 					$li.clone().insertAfter($li);
 					$(this).remove();
+				});
+				$('#newChar').on('submit', function(evt) {
+					$('.rep').each(function() {
+						$(this).closest('li').find("input[type='hidden']").prop('disabled', !this.checked);
+					});
 				});
 			})();

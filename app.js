@@ -37,6 +37,7 @@ app.use(function(req, res) {
 // Handle errors
 app.use(function(error, req, res, next) {
 	var status = res.statusCode < 400 ? 500 : res.statusCode;
+	//console.log(error.stack)
 	res.status(status).render('error-message', {
 		title: 'Error ' + status + ': ' + http.STATUS_CODES[status], 
 		message: error.message || error
@@ -48,7 +49,7 @@ app.locals.pretty = true;
  *  Connect to and Watch MongoDB  *
  **********************************/
 
-mongoose.connect('localhost', 'dsa'); 
+mongoose.connect('mongodb://localhost/dsa'); 
 // watch DB events
 mongoose.connection.on('error', function _error(err) {
 	console.log('Mongoose error: ' + err);
@@ -95,7 +96,6 @@ app.param('mongoid', function (req, res, next, id) {
 	next();
 });
 
-var util = require('util');
 // demo
 app.get('/', function (req, res) {
 	res.redirect('/helden');
