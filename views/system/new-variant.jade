@@ -82,7 +82,7 @@ html(lang="de")
 						each __rep, __idx in Repräsentation
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
-								label(for="rep"+__idx, title=__rep.short)= __rep.long
+								label(for="rep"+__idx, title=__rep.short)= "("+__rep.short+") "+__rep.long
 				button(type="submit") speichern
 		script.
 			$ = document.getElementById.bind(document);

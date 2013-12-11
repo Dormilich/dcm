@@ -91,7 +91,7 @@ html(lang="de")
 						each __rep, __idx in Repräsentation
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
-								label(for="rep"+__idx, title=__rep.short)= __rep.long
+								label(for="rep"+__idx, title=__rep.short)= "("+__rep.short+") "+__rep.long
 				div
 					label Ziel
 					ul.spez
@@ -105,7 +105,7 @@ html(lang="de")
 						each __spm, __idx in spomo
 							li
 								input(type="checkbox", name="SpoMod[]", value=__spm.short, id="spm"+__idx)
-								label(for="spm"+__idx, title=__spm.short)= __spm.long
+								label(for="spm"+__idx, title=__spm.short)= "("+__spm.short+") "+__spm.long
 				div
 					label Merkmale
 					ul.spez

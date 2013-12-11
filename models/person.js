@@ -40,7 +40,7 @@ var heldZauberSchema = new Schema({
 	_zauber:        { type: IDREF, ref: 'Zauber', required: true },
 	ZfW:            { type: Number, min: 0, max: 35, default: 0 },
 	Lernstufe:      { type: String, validator: lernstufeValidator },
-	Spezialisierungen: [String],
+	Spezialisierung: [String],
 	Repräsentation: { type: String, required: true }
 });
 heldZauberSchema.virtual('Varianten').get(function() {

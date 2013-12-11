@@ -21,6 +21,7 @@ html(lang="de")
 		title= Person.Name
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		link(rel="stylesheet", type="text/css", href="/nav.css")
+		script(src="/jquery-2.0.3.min.js")
 		style.
 			.eigenschaften {
 				table-layout: fixed;
@@ -30,11 +31,23 @@ html(lang="de")
 				color: gray;
 				font-style: italic;
 			}
+			.zauber tbody tr:first-child td {
+				height: 2em;
+			}
 			.zauber > tbody > tr:first-child > td {
 				background-color: #ccc;
 			}
 			.zauber td:first-child {
 				text-align: left;
+			}
+			.hide-rows tr {
+				display: none;
+			}
+			.hide-rows tr:first-child {
+				display: table-row;
+			}
+			.fett {
+				font-weight: bold;
 			}
 	body
 		a#top
@@ -135,18 +148,18 @@ html(lang="de")
 						th WD
 						th RW
 					tr
-						th
+						th Spezialisierungen
 						th(colspan="3") Spontane Mod.
 						th Merkmale
 						th Ziel
 						th Repräsentation
 						th Komplexität
 				each __spell in Magie.Zauber
-					tbody
+					tbody.hide-rows
 						tr
-							td= __spell._zauber.Name
+							td.fett= __spell._zauber.Name
 							td= __spell._zauber.Probe.join(' · ')
-							td= __spell.ZfW
+							td.fett= __spell.ZfW
 							td= __spell._zauber.modifikation.typ
 							td= __spell._zauber.cast.ZD
 							td= __spell._zauber.cast.AsP
@@ -154,11 +167,13 @@ html(lang="de")
 							td= __spell._zauber.cast.RW
 						tr.meta
 							td
+								if Array.isArray(__spell.Spezialisierung)
+									__spell.Spezialisierung.join(', ')
 							td(colspan="3")= __spell._zauber.SpoMod.join(', ')
 							td= __spell._zauber.Merkmale.join(', ')
 							td= __spell._zauber.Ziel.join(', ')
 							td= __spell.Repräsentation
-							td= __spell._zauber.Komplexität
+							td= __spell._zauber.Komplexität + " (" + __spell.Lernstufe + ")"
 						if Array.isArray(__spell._zauber.Varianten)
 							each __variant in __spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) })
 								tr
@@ -172,3 +187,8 @@ html(lang="de")
 									td= __variant.cast.AsP
 									td= __variant.cast.WD
 									td= __variant.cast.RW
+		script.
+			$('.zauber').on('click', 'tbody', function(evt) {
+				$(this).toggleClass('hide-rows');
+			});
+			alert("Zum Anzeigen der Details einfach auf den Zauber klicken.");

@@ -243,7 +243,7 @@ html(lang="de")
 								td
 									label(for="fk"+key)= __stdTalent.name
 								td
-									if __heldentalent.Spezialisierung && Array.isArray(__heldentalent.Spezialisierung)
+									if Array.isArray(__heldentalent.Spezialisierung)
 										each spez in __heldentalent.Spezialisierung
 											.wrapper
 												button.del(type="button")= "\u2717"

@@ -7,6 +7,7 @@ html(lang="de")
 		title Zauber hinzufügen
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		link(rel="stylesheet", type="text/css", href="/tablesorter/tablesorter.css")
 		script(src="/jquery-2.0.3.min.js")
 		script(src="/tablesorter/jquery.tablesorter.min.js")
@@ -63,8 +64,7 @@ html(lang="de")
 								input.lock(type="checkbox", checked)
 							td.links
 								label.name
-							td.links.spez(data-name="Magie.Zauber[{index}][Spezialisierungen][]")
-								button.addspez(type="button") +
+							td.links.spez
 							td
 								input.rep(type="hidden", name="Magie.Zauber[{index}][Repräsentation]")
 								label.rep
@@ -79,13 +79,18 @@ html(lang="de")
 					tbody
 						if Array.isArray(Held.Magie.Zauber)
 							each __spell, __idx in Held.Magie.Zauber
-								tr
+								tr(data-name="Magie.Zauber[[#{__idx}]Spezialisierung][]", data-options=__spell._zauber.SpoMod.concat(__spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) }).map(function(item) { return item.Name})).join('|'))
 									td
 										input(type="hidden", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
 										input.lock(type="checkbox", checked)
 									td.links
 										label.name=__spell._zauber.Name
-									td.links=__spell.Spezialisierungen.join(', ')
+									td.links
+										if Array.isArray(__spell.Spezialisierung)
+											each __spez in __spell.Spezialisierung
+												.wrapper
+													button.del(type="button")= "\u2717"
+													input(type="text", name="Magie.Zauber[#{__idx}][Spezialisierung]", value=__spez)
 										button.addspez(type="button") +
 									td
 										input.rep(type="hidden", name="Magie.Zauber[#{__idx}][Repräsentation]", value=__spell.Repräsentation)
@@ -100,7 +105,6 @@ html(lang="de")
 				a#save
 				.mitte
 					button(type="submit", disabled) speichern
-		//- +print(Held)
 		section
 			a#spr
 			table#spell_list.data-section.eigenschaften.mitte.tablesorter
@@ -163,8 +167,6 @@ html(lang="de")
 					$new.find('*[name]').each(function() {
 						this.name = this.name.replace("{index}", index);
 					});
-					var $spez = $new.find('td.spez');
-					$spez.data('name', $spez.data('name').replace("{index}", index));
 					
 					$new.appendTo('#spell_choice');
 					$row.find("option[value='" + rep + "']").remove();
@@ -196,4 +198,44 @@ html(lang="de")
 				$('.isactive:not(:checked)').each(function() {
 					$(this).closest('tr').find('select, input').prop('disabled', true);
 				});
+			});
+			$('#spell_choice').on('click', '.addspez', function() {
+				var $datasrc = $(this).closest('tr');
+				var options  = $datasrc.data('options');
+				var $wrapper = $('<div/>').addClass('wrapper');
+				var $text = $('<input type="text"/>').prop('name', $datasrc.data('name'));
+				var $rem  = $('<button type="button"/>')
+					.text("\u2717")
+					.addClass('del')
+					.on('click', function() {
+						$wrapper.remove();
+					})
+				;
+				if (options && options.length) {
+					var $ul   = $('<ul/>').addClass('options');
+					var $down = $('<button type="button">▼</button>');
+					options.split('|').forEach(function(item) {
+						$('<li/>').text(item).appendTo($ul);
+					});
+					$down.on('click', function() {
+						$ul.toggle();
+					});    
+					$ul.on('click', 'li', function() {
+						$text.val(this.textContent);
+						$ul.hide();
+					});
+					$wrapper.append($rem, $ul, $text, $down);
+					$wrapper.insertBefore(this);
+					var style   = $text.offset();
+					style.top  += $text.outerHeight();
+					style.width = $text.outerWidth() - 2;
+					$ul.css(style);
+				}
+				else {
+					$wrapper.append($rem, $text);
+					$wrapper.insertBefore(this);
+				}
+			});
+			$('#spell_choice').on('click', 'button.del', function() {
+				$(this.parentNode).remove();
 			});
