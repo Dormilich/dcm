@@ -103,6 +103,18 @@ html(lang="de")
 								strong Nachteile
 							each val in Nachteile
 								li= val
+			a#sf
+			table.data-section.mitte.eigenschaften
+				caption Sonderfertigkeiten
+				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
+			a#bas
+			table.data-section.mitte.eigenschaften
+				caption Basiswerte
+				tbody
+					tr
+						each val in ["LeP", "AuP", "AsP", "MR"]
+							th= val
+							td= Basiswerte[val] || '—'
 			a#att
 			table.data-section.mitte.eigenschaften
 				caption Attribute
@@ -114,22 +126,8 @@ html(lang="de")
 					tr
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
 							td= Attribute[val].wert
-			a#bas
-			table.data-section.mitte.eigenschaften
-				caption Basiswerte
-				tbody
-					tr
-						each val in ["LeP", "AuP", "AsP", "MR"]
-							th= val
-							td= Basiswerte[val] || '—'
-		a#sf
 		section
-			table.data-section.mitte.eigenschaften
-				caption Sonderfertigkeiten
-				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-				
-		a#spr
-		section
+			a#spr
 			table.data-section.eigenschaften.mitte.zauber
 				caption Zaubersprüche
 				colgroup
@@ -167,7 +165,7 @@ html(lang="de")
 							td= __spell._zauber.cast.RW
 						tr.meta
 							td
-								if Array.isArray(__spell.Spezialisierung)
+								if Array.isArray(__spell.Spezialisierung) && __spell.Spezialisierung.length > 0
 									__spell.Spezialisierung.join(', ')
 							td(colspan="3")= __spell._zauber.SpoMod.join(', ')
 							td= __spell._zauber.Merkmale.join(', ')
@@ -191,4 +189,3 @@ html(lang="de")
 			$('.zauber').on('click', 'tbody', function(evt) {
 				$(this).toggleClass('hide-rows');
 			});
-			alert("Zum Anzeigen der Details einfach auf den Zauber klicken.");
