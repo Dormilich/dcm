@@ -247,8 +247,13 @@ app.get('/zauber/:zid/variante/:vid', function(req, res, next) {
 				Name: doc.Name,
 				_id : doc._id
 			};
-			data.magie._Variante = doc.Varianten[0];
-			res.render('system/edit-variant', data.magie);
+			if (Array.isArray(doc.Varianten) && doc.Varianten.length > 0) {
+				data.magie._Variante = doc.Varianten[0];
+				res.render('system/edit-variant', data.magie);
+			}
+			else {
+				next("Keine solche Variante vorhanden.");
+			}
 		}
 	);
 });
