@@ -194,6 +194,10 @@ var heldSchema = new Schema({
 		Schriften:    [heldTalentSchema],
 		Gaben:        [heldTalentSchema]
 	},
+	Weihe : {
+		Liturgiekenntnis: [heldTalentSchema],
+		Liturgien: [{ type: IDREF, ref: 'Liturgie' }]
+	},
 	Magie : {
 		Zauber: [heldZauberSchema],
 		Repräsentation: [{

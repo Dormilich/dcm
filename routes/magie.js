@@ -12,11 +12,6 @@ module.exports = {
 				if (err)  return next(err);
 				if (!doc) return next();
 				res.render('magie', doc);
-				/*
-				Held.populate(doc, 'Magie.Zauber._zauber', function(err, doc) {
-					if (err) return next(err);
-					res.render('magie', doc);
-				});//*/
 			})
 		;
 	}

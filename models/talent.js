@@ -17,7 +17,8 @@ var talentSchema = new Schema({
 	probe: [{ type: String, validator: talentProbeValidator }],
 	standard : { type: Boolean, default: false },
 	spezialisierungen: [String],
-	stufe: { type: String, validator: lernstufeValidator }
+	stufe: { type: String, validator: lernstufeValidator },
+	komplexität: { type: Number, min: 1, max: 30 }
 });
 
 module.exports = mongoose.model('Talent', talentSchema);

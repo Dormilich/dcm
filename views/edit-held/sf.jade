@@ -169,39 +169,17 @@ html(lang="de")
 									li
 										input(type="checkbox", name="SF[geweiht][]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
 										label(for="sf9_"+key)= val
-								li
-									strong Spätweihe (alveranische Gottheiten)
-								each val, key in ["Praios", "Rondra", "Efferd", "Travia", "Boron", "Hesinde", "Firun", "Tsa", "Phex", "Peraine", "Ingrimm", "Rahja"]
-									- var __name = "Spätweihe ("+val+")"
-									li
-										input(type="radio", name="SF[geweiht][]", id="sf9a_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
-										label(for="sf9a_"+key)= val
 							ul.vor-nach.fl-rechts
-								li
-									strong Spätweihe (nicht-alveranische Gottheiten)
-								each val, key in ["Aves", "Ifirn", "Kor", "Nandus", "Swafnir"]
-									- var __name = "Spätweihe ("+val+")"
+								- var __count = 0
+								each __list, __typ in _data.Götter
 									li
-										input(type="radio", name="SF[geweiht][]", id="sf9b_"+key, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
-										label(for="sf9b_"+key)= val
-								li
-									strong Spätweihe (echsische Gottheiten)
-								li
-									input(type="radio", name="SF[geweiht][]", id="sf9c_1", value="Spätweihe (H’Szint)", checked= SF.geweiht.indexOf("Spätweihe (H’Szint)") !== -1)
-									label(for="sf9c_1") H’Szint
-								li
-									input(type="radio", name="SF[geweiht][]", id="sf9c_2", value="Spätweihe (Zsahh)", checked= SF.geweiht.indexOf("Spätweihe (Zsahh)") !== -1)
-									label(for="sf9c_2") Zsahh
-								li
-									strong Spätweihe (orkische Gottheiten)
-								li
-									input(type="radio", name="SF[geweiht][]", id="sf9c_3", value="Spätweihe (Gravesh)", checked= SF.geweiht.indexOf("Spätweihe (Gravesh)") !== -1)
-									label(for="sf9c_3") Gravesh
-								li
-									strong Spätweihe (zwergische Gottheiten)
-								li
-									input(type="radio", name="SF[geweiht][]", id="sf9c_4", value="Spätweihe (Angrosch)", checked= SF.geweiht.indexOf("Spätweihe (Angrosch)") !== -1)
-									label(for="sf9c_4") Angrosch
+										strong Spätweihe (#{__typ})
+									each val, key in _data.Götter[__typ]
+										- var __name = "Spätweihe ("+val+")"
+										- __count++
+										li
+											input(type="radio", name="SF[geweiht][]", id="sf9b_"+__count, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
+											label(for="sf9b_"+__count)= val
 								li.mitte
 									button#nogod(type="button") Spätweihe entfernen
 							script.
@@ -259,6 +237,32 @@ html(lang="de")
 										input(type="hidden", name="Magie.Repräsentation[#{__count}][long]",  value=val, disabled=!__isSet)
 										label(for="sf12_"+key)= val
 									- __count++
+								li
+									strong Ritualkenntnis:
+								each val, key in ["Alchimie", "Derwische", "Druidenmagie", "Durro-Dûn", "Geodenmagie", "Gildenmagie", "Hexenmagie", "Kristallomantie", "Petromantie", "Scharlatan", "Seher", "Vertrautenmagie", "Zibilja"]
+									- var __checkval = "Ritualkenntnis ("+val+")"
+									- var __isSet  = (SF.magisch.indexOf(__checkval) !== -1)
+									li
+										input.rep(type="checkbox", name="SF[magisch][]", id="sf13_"+key, value=__checkval, checked=__isSet)
+										label(for="sf13_"+key)= val
+								li
+									input(type="checkbox", disabled)
+									label Zaubertänzer
+									ul
+										each val, key in ["Tulamidische Sharisad", "Novadische Sharisad", "Hazaqi", "Majuna"]
+											- var __checkval = "Ritualkenntnis ("+val+")"
+											li
+												input(type="checkbox", name="SF[magisch][]", value= __checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf13b_"+key)
+												label(for="sf13b_"+key)= val
+								li
+									input(type="checkbox", disabled)
+									label Schamanismus
+									ul
+										each val, key in _data.Schamanismus
+											- var __checkval = "Ritualkenntnis ("+val+")"
+											li
+												input(type="checkbox", name="SF[magisch][]", value= __checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf13c_"+key)
+												label(for="sf13c_"+key)= val
 
 				a#save
 				.mitte

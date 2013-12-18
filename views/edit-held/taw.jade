@@ -88,20 +88,20 @@ mixin languagetable(_titel_, _data_, _name_, _held_)
 				- var __isAvailable  = isAvailable(_held_, __stdTalent)
 				tr
 					td.mitte(style="padding: 0.2em;")
-						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][Komplexität]", value=__stdTalent.komplex, disabled=!__isAvailable)
+						input.unlock(type="hidden", name="Talente[#{_name_}][#{key}][Komplexität]", value=__stdTalent.komplexität, disabled=!__isAvailable)
 						if __stdTalent.standard
 							input(type="hidden", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name)
 						else
 							input.isactive(type="checkbox", name="Talente[#{_name_}][#{key}][name]", value=__stdTalent.name, id=_name_+key, checked=__isAvailable)
 					td
 						label(for=_name_+key)= __stdTalent.name
-					td.mitte= __stdTalent.komplex
+					td.mitte= __stdTalent.komplexität
 					td.mitte
 						select.unlock(size="1", name="Talente[#{_name_}][#{key}][Lernstufe]", disabled=!__isAvailable)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : "B" === kat)= kat
+								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplex, step="1", value=__heldentalent.wert, disabled=!__isAvailable))
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplexität, step="1", value=__heldentalent.wert, disabled=!__isAvailable))
 
 
 doctype 5

@@ -1,0 +1,84 @@
+!!! 5
+html(lang="de")
+	head
+		title= Person.Name
+		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		style.
+	body
+		a#top
+		nav
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
+						li
+							a(href="#vnt") Vor- & Nachteile
+						li
+							a(href="#sf") Sonderfertigkeiten
+						li
+							a(href="#lit") Liturgien
+						li
+							a(href="/held/"+_id) ► Heldenbogen
+						li
+							a(href="/magie/"+_id) ► Magiebogen
+				li
+					a.mitte(href="/helden") [ Charakterliste ]
+				li
+					a.mitte(href="/neu") [ Neuer Charakter ]
+				li 
+					a.mitte #{Person.Name.split(' ')[0]} bearbeiten
+					ul
+						li
+							a(href="/sf/"+_id) Sonderfertigkeiten
+						li
+							a(href="/zauber/"+_id) Liturgien
+						li
+							a Liturgiekenntnis
+
+		section(style="clear: both;")
+			h1.mitte= Person.Name
+			h2.mitte –Geweihtenbogen–
+			
+			a#vnt
+			table.data-section
+				caption Vor- und Nachteile
+				tr
+					td
+						ul.vor-nach.fl-links
+							li.mitte
+								strong Vorteile
+							each val in Vorteile
+								li= val
+						ul.vor-nach.fl-rechts
+							li.mitte
+								strong Nachteile
+							each val in Nachteile
+								li= val
+			a#sf
+			table.data-section.mitte.eigenschaften
+				caption Sonderfertigkeiten
+				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
+			a#bas
+			table.data-section.mitte.eigenschaften
+				caption Basiswerte
+				tbody
+					tr
+						each val in ["LeP", "AuP", "AsP", "MR"]
+							th= val
+							td= Basiswerte[val] || '—'
+			a#att
+			table.data-section.mitte.eigenschaften
+				caption Attribute
+				thead
+					tr
+						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+							th= val
+				tbody
+					tr
+						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+							td= Attribute[val].wert

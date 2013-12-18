@@ -48,6 +48,8 @@ module.exports = {
 			Natur:        getTalentType("Naturtalente"),
 			Wissen:       getTalentType("Wissenstalente"),
 			Handwerk:     getTalentType("Handwerkstalente"),
+			Sprachen:     getTalentType("Sprachen"),
+			Schriften:    getTalentType("Schriften"),
 			Gaben:        getTalentType("Gaben"),
 			_chardata: function(cb) {
 				Held.findById(req.id, function(err, doc) {
@@ -65,7 +67,6 @@ module.exports = {
 		},
 		function(err, obj) {
 			if (err) return next(err);
-			merge(obj, data.talente);
 			res.render('edit-held/taw', obj);
 		});
 	},
