@@ -222,18 +222,17 @@ html(lang="de")
 							ul.vor-nach.fl-rechts
 								li
 									strong Merkmalskenntnis:
-								li
-									input(type="checkbox", name="SF[magisch][]", value="Merkmal (Antimagie)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_a")
-									label(for="sf11_a") Antimagie
-								li
-									input(type="checkbox", name="SF[magisch][]", value="Merkmal (Beschwörung)", checked= SF.magisch.indexOf("Merkmal (Antimagie)") !== -1, id="sf11_b")
-									label(for="sf11_b") Beschwörung
+								each val, key in ["Antimagie", "Beschwörung", "Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
+									- var __checkval = "Merkmalskenntnis ("+val+")"
+									li
+										input(type="checkbox", name="SF[magisch][]", value=__checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf11c_"+key)
+										label(for="sf11c_"+key)= val
 								li
 									input(type="checkbox", disabled)
 									label Dämonisch
 									ul
 										each val, key in ["gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel"]
-											- var checkval = "Merkmal (Dämonisch/"+val+")"
+											- var checkval = "Merkmalskenntnis (Dämonisch/"+val+")"
 											li
 												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
 												label(for="sf11a_"+key)= val
@@ -243,15 +242,11 @@ html(lang="de")
 									label Elementar
 									ul
 										each val, key in ["gesamt", "Eis", "Erz", "Feuer", "Humus", "Luft", "Wasser"]
-											- var checkval = "Merkmal (Elementar/"+val+")"
+											- var checkval = "Merkmalskenntnis (Elementar/"+val+")"
 											li
 												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
 												label(for="sf11b_"+key)= val
 								
-								each val, key in ["Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
-									li
-										input(type="checkbox", name="SF[magisch][]", value="Merkmal ("+val+")", checked= SF.magisch.indexOf(val) !== -1, id="sf11c_"+key)
-										label(for="sf11c_"+key)= val
 								li
 									strong Repräsentation:
 								- var __count = 0

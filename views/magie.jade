@@ -31,11 +31,10 @@ html(lang="de")
 				color: gray;
 				font-style: italic;
 			}
-			.zauber tbody tr:first-child td {
-				height: 2em;
-			}
 			.zauber > tbody > tr:first-child > td {
 				background-color: #ccc;
+				height: 2em;
+				cursor: pointer;
 			}
 			.zauber td:first-child {
 				text-align: left;
@@ -156,7 +155,7 @@ html(lang="de")
 					tbody.hide-rows
 						tr
 							td.fett= __spell._zauber.Name
-							td= __spell._zauber.Probe.join(' · ')
+							td(title=__spell._zauber.Probe.join(' · '))= __spell._zauber.Probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
 							td.fett= __spell.ZfW
 							td= __spell._zauber.modifikation.typ
 							td= __spell._zauber.cast.ZD
