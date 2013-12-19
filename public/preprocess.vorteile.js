@@ -56,7 +56,7 @@ $('#newChar').on('submit', function(jqevt) {
 	});
 	// value completion
 	$('.zusatz:checked').each(function() {
-		var $radio = $(this).nextAll('input:checked');
+		var $radio = $(this).closest('li').find('input[type="radio"]:checked');
 		if ($radio.length) {
 			this.value += wrapValue($radio.val());
 		}

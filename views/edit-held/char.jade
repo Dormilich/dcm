@@ -211,13 +211,13 @@ html(lang="de")
 				ul.pro_con.fl_links
 					li.mitte 
 						strong Vorteile
-					each val in Vorteile
+					each val in Vorteile.filter(function(item) { return item.length; })
 						li
 							input(name="Vorteile", type="text", value=val)
 				ul.pro_con.fl_rechts
 					li.mitte 
 						strong Nachteile
-					each val in Nachteile
+					each val in Nachteile.filter(function(item) { return item.length; })
 						li
 							input(name="Nachteile", type="text", value=val)
 			
