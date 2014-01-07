@@ -1,0 +1,57 @@
+!!! 5
+html
+	head
+		title Liturgie-Übersicht
+		style.
+			body {
+				font-family: Georgia, sans-serif;
+			}
+			h1 {
+				text-align: center;
+			}
+			section {
+				padding: 0 5em;
+			}
+			table {
+				min-width: 75%;
+			}
+			caption {
+				font-size: 2em;
+				font-weight: bold;
+				font-family: serif;
+				font-style: italic;
+				padding: 0.5em;
+			}
+			td {
+				padding: 0.2em 1em;
+				border: 1px solid black;
+			}
+			.mitte {
+				text-align: center;
+			}
+	body
+		header
+			a(href="/liturgie/neu") neue Liturgie
+		main
+			table
+				caption Liste der Liturgien
+				thead
+					tr
+						th Name
+						th Grad
+						th Dauer
+						th Ziel
+						th Reichweite
+						th Wirkungsdauer
+						th Götter
+				tbody
+					each __lit in $Liste
+						tr
+							td
+								a(href="/liturgie/"+__lit._id)=__lit.name
+							td=__lit.grad
+							td=__lit.rd
+							td=__lit.ziel
+							td=__lit.rw
+							td=__lit.wd
+							td=__lit.typ.join(', ')

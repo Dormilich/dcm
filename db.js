@@ -62,9 +62,10 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var Talent = require('./models/talent')
+var data = require('./data/dsa')
+  , Talent = require('./models/talent')
   , Zauber = require('./models/zauber')
-  , data   = require('./data/dsa')
+  , Liturgie = require('./models/liturgie')
   ;
 
 // pre-route request modification
@@ -285,6 +286,29 @@ app.delete('/zauber/:zid/variante/:vid', function(req, res, next) {
 			console.log("%d Variante gelöscht.", num);
 			res.redirect('/zauber/liste');
 		});
+	});
+});
+
+// Liturgien
+app.get('/liturgie/liste', function (req, res, next) {
+	Liturgie
+		.find()
+		.sort('name grad')
+		.lean()
+		.exec(function(err, objs) {
+			if (err) return next(err);
+			
+			res.render('system/table-of-miracles', { "$Liste": objs });
+		})
+	;
+});
+app.get('/liturgie/neu', function(req, res, next) {
+	res.render('system/new-liturgie', { "$Liste": data.sf.Götter });
+});
+app.post('/liturgie/neu', function(req, res, next) {
+	Liturgie.create(req.body, function(err, doc) {
+		if (err) return next(err);
+		res.redirect('/liturgie/liste');
 	});
 });
 

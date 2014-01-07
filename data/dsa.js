@@ -358,7 +358,7 @@ module.exports = {
 		],
 		Ritualkenntnis: [ // TR - Traditionsrituale, OR - Objektrituale, Sch - Schamanismus, VT - Vertrautenmagie
 			{ short: "Mag", long: "Gildenmagie", typ: ["OR", "TR"] },
-			{ short: "Srl", long: "Scharlatanerie", typ: ["OR"] },
+			{ short: "Srl", long: "Scharlatan", typ: ["OR"] },
 			{ short: "Hex", long: "Hexenmagie", typ: ["OR", "TR", "VT"] },
 			{ short: "Dru", long: "Druidenmagie", typ: ["OR", "TR"] },
 			{ short: "Geo", long: "Geodenmagie", typ: ["OR", "TR", "VT"] },
