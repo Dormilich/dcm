@@ -43,7 +43,7 @@ html
 						th Ziel
 						th Reichweite
 						th Wirkungsdauer
-						th Götter
+						th(style="width: 50%") Götter
 				tbody
 					each __lit in $Liste
 						tr
@@ -55,3 +55,5 @@ html
 							td=__lit.rw
 							td=__lit.wd
 							td=__lit.typ.join(', ')
+		footer
+			a(href="/liturgie/neu") neue Liturgie

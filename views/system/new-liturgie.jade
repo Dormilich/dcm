@@ -8,7 +8,7 @@ html
 			body {
 				font-family: Georgia, sans-serif;
 			}
-			form > div {
+			fieldset > div {
 				padding: 0.5em;
 			}
 			div > label {
@@ -24,82 +24,104 @@ html
 				margin-left: 10em;
 				padding: 0;
 			}
+			fieldset {
+				border-radius: 3em;
+				padding: 2em 4em;
+				width: 30em;
+				margin: 1em;
+			}
+			.mitte {
+				text-align: center;
+			}
+			#submitter button {
+				width: 10em;
+				height: 2.5em;
+				margin: 0 1em;
+			}
+			#gott button {
+				width: 15em;
+			}
 	body
-		h1 Neue Liturgie:
 		form#new(action="/liturgie/neu", method="post", accept-charset="utf-8")
-			div
-				label(for="l_name") Name
-				input#l_name(type="text", name="name", placeholder="Liturgie-Name", required)
-			div
-				label(for="l_grad") Grad
-				select#l_grad(name="grad", size="1")
-					option(value="1", selected) I
-					option(value="2") II
-					option(value="3") III
-					option(value="4") IV
-					option(value="5") V
-					option(value="6") VI
-					option(value="7") VII
-			div
-				label(for="l_rd") Dauer
-				select#l_wd(name="wd", size="1")
-					option Stoßgebet
-					option(selected) Gebet
-					option Andacht
-					option Zeremonie
-					option Zyklus
-				input#l_wd_sg(type="number", min="1", max="20", step="1", value="20", title="nur bei Stoßgebeten")
-				| Aktionen
-			div
-				label(for="l_rw") Reichweite
-				select#l_rw(name="rw", size="1")
-					option selbst
-					option Berührung
-					option Sicht
-					option fern
-					option 13 m
-			div
-				label(for="l_wd") Wirkungsdauer
-				input#l_wd(type="text", name="wd", placeholder="Wirkungsdauer", value="LkP* SR")
-			div
-				label(for="l_ziel") Ziel
-				select#l_ziel(name="ziel", size="1")
-					option(value="G") Geweihter
-					option(value="P", selected) 1 Person/Objekt
-					option(value="PP") ≤ 10 Pers./Obj.
-					option(value="PPP") ≤ 100 Pers./Obj.
-					option(value="PPPP") ≤ 1.000 Pers./Obj.
-					option(value="P+P") 2 Personen gegenseitig
-					option(value="P+PP") Person & Gruppe
-					option(value="Z") ≤ 10 m
-					option(value="ZZ") ≤ 100 m
-					option(value="ZZZ") ≤ 1.000 m
-					option(value="ZZZZ") ≤ 10 km
-			div#gott
-				label Zugehörigkeit
-				div.spez
-					button#zwoelf(type="button") zwölfgöttlich
+			fieldset
+				h1.mitte Neue Liturgie
+			fieldset
+				div
+					label(for="l_name") Name
+					input#l_name(type="text", name="name", placeholder="Liturgie-Name", required)
+				div
+					label(for="l_grad") Grad
+					select#l_grad(name="grad", size="1")
+						option(value="1", selected) I
+						option(value="2") II
+						option(value="3") III
+						option(value="4") IV
+						option(value="5") V
+						option(value="6") VI
+						option(value="7") VII
+				div
+					label(for="l_rd") Dauer
+					select#l_rd(name="rd", size="1")
+						option Stoßgebet
+						option(selected) Gebet
+						option Andacht
+						option Zeremonie
+						option Zyklus
+					input#l_rd_sg(type="number", min="1", max="20", step="1", value="20", title="nur bei Stoßgebeten", style="width: 3em; text-align: center;")
+					| &nbsp;Aktionen
+				div
+					label(for="l_rw") Reichweite
+					select#l_rw(name="rw", size="1")
+						option Selbst
+						option(selected) Berührung
+						option Sicht
+						option Fern
+				div
+					label(for="l_wd") Wirkungsdauer
+					input#l_wd(type="text", name="wd", placeholder="Wirkungsdauer", value="LkP* SR")
+				div
+					label(for="l_ziel") Ziel
+					select#l_ziel(name="ziel", size="1")
+						option(value="G") Geweihter
+						option(value="P", selected) 1 Person/Objekt
+						option(value="PP") ≤ 10 Pers./Obj.
+						option(value="PPP") ≤ 100 Pers./Obj.
+						option(value="PPPP") ≤ 1.000 Pers./Obj.
+						option(value="P+P") 2 Personen gegenseitig
+						option(value="P+PP") Person & Gruppe
+						option(value="Z") ≤ 10 m
+						option(value="ZZ") ≤ 100 m
+						option(value="ZZZ") ≤ 1.000 m
+						option(value="ZZZZ") ≤ 10 km
+				div#gott
+					label Zugehörigkeit
 					button#uni(type="button") universell
-					button(type="reset") zurücksetzen
-				each __name, __typ in $Liste
-					ul.spez
-						li
-							strong=__typ
-						each __gott, __idx in __name
+					- var __count = 0
+					each __name, __typ in $Liste
+						- __count += 1
+						ul.spez
 							li
-								input(type="checkbox", name="typ[]", id="g"+__idx, value=__gott)
-								label(for="g"+__idx)=__gott
+								button(type="button")=__typ
+							each __gott, __idx in __name
+								li
+									input(type="checkbox", name="typ[]", id="g"+__count+"_"+__idx, value=__gott)
+									label(for="g"+__count+"_"+__idx)=__gott
+			fieldset#submitter.mitte
+				button(type="submit") speichern
+				button(type="reset") zurücksetzen
 		script.
-			document.getElementById('new').addEventListener("submit", function(evt) {
-				var wd = document.getElementById('l_wd');
-				var sg = document.getElementById('l_wd_sg');
-				if (wd.value === "Stoßgebet") {
-					wd.value += " (" + sg.value + " A)";
+			$('#new').on("submit", function() {
+				var $rd = $('#l_rd');
+				var $sg = $('#l_rd_sg');
+				if ($rd.val() === "Stoßgebet") {
+					$rd.remove();
+					$('<input name="rd" type="hidden"/>').val("Stoßgebet (" + $sg.val() + " A)").appendTo(this);
 				}
 			});
 			$('#uni').on("click", function() {
 				$('#gott input').prop('checked', true);
 			});
-			$('#zwoelf').on("click", function() {
-				$('#gott ul:lt(2) input').prop('checked', true);
+			$('#gott').on("click", ".spez button", function() {
+				var $boxes = $(this).closest('ul').find('input');
+				$boxes.prop('checked', !$boxes.prop('checked'));
 			});

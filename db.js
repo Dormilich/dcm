@@ -1,3 +1,26 @@
+/* 
+ * The MIT License
+ *
+ * Copyright 2014 Bertold von Dormilich <Dormilich@netscape.net>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 /***********************
  *  Load Dependencies  *
@@ -62,11 +85,12 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var data = require('./data/dsa')
-  , Talent = require('./models/talent')
-  , Zauber = require('./models/zauber')
-  , Liturgie = require('./models/liturgie')
-  ;
+var routes = {
+	  talent:   require('./routes/system/talent'),
+	  zauber:   require('./routes/system/zauber'),
+	  liturgie: require('./routes/system/liturgie')
+    }
+  , Talent = require('./models/talent');
 
 // pre-route request modification
 app.param('talent', function (req, res, next, id) {
@@ -90,227 +114,40 @@ app.param('talent', function (req, res, next, id) {
 		});
 });
 
-app.param('mongoid', function(req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next('route');
-	}
-	req.id = id;
-	next();
-});
-
-function verifyMongoID(identifyer) {
-	return function (req, res, next) {
-		if (!/^[0-9a-fA-F]+$/.test(req.params[identifyer])) {
-			return next(new Error("Keine gültige MongoDB ID."));
-		}
-		req.id = req.params[identifyer];
-		next();
-	};
-}
-
 app.get('/', function(req, res, next) {
 	res.render('system/nav');
 });
 
 // Talente
-app.get('/talent/liste', function(req, res, next) {
-	Talent
-		.find()
-		.sort('typ name')
-		.lean()
-		.exec(function(err, docs) {
-			if (err) return next(err);
-			res.render('system/table-of-talents', { Liste: docs });
-		})
-	;
-});
-
-app.get('/talent/:talent', function(req, res, next) {
-	Talent
-		.find()
-		.lean()
-		.distinct('typ', function(err, docs) {
-			if (err) return next(err);
-			req.talent.kategorie = docs;
-			res.render('system/edit-talent', req.talent);
-		})
-	;
-});
-app.put('/talent/:tid', function(req, res, next) {
-	Talent.findByIdAndUpdate(req.params.tid, req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/talent/liste');
-	});
-});
-app.delete('/talent/:tid', function(req, res, next) {
-	Talent.findByIdAndRemove(req.params.tid, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/talent/liste');
-	});
-});
-
-app.get('/talent/neu', function(req, res, next) {
-	Talent
-		.find()
-		.lean()
-		.distinct('typ', function(err, arr) {
-			if (err) return next(err);
-			res.render('system/new-talent', { kategorie: arr });
-		})
-	;
-});
-app.post('/talent/neu', function(req, res, next) {
-	Talent.create(req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/talent/liste');
-	});
-});
+app.get('/talent/liste',   routes.talent.list);
+app.get('/talent/neu',     routes.talent.create);
+app.post('/talent/neu',    routes.talent.save);
+app.get('/talent/:talent', routes.talent.edit);
+app.put('/talent/:tid',    routes.talent.update);
+app.delete('/talent/:tid', routes.talent.remove);
 
 // Zauber
-app.get('/zauber/liste', function(req, res, next) {
-	Zauber
-		.find()
-		.sort('Name')
-		.lean()
-		.exec(function(err, docs) {
-			if (err) return next(err);
-			res.render('system/table-of-spells', { Zauber: docs });
-		})
-	;
-});
-
-app.get('/zauber/neu', function(req, res, next) {
-	res.render('system/new-zauber', data.magie);
-});
-app.post('/zauber/neu', function(req, res, next) {
-	Zauber.create(req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/zauber/liste');
-	});
-});
-
-app.get('/zauber/:zid', function(req, res, next) {
-	Zauber.findById(req.params.zid, function(err, doc) {
-		if (err)  return next(err);
-		if (!doc) return next('route');
-		data.magie._Zauber = doc;
-		res.render('system/edit-zauber', data.magie);
-	});
-});
-app.put('/zauber/:zid', function(req, res, next) {
-	Zauber.findByIdAndUpdate(req.params.zid, req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/zauber/liste');
-	});
-});
-app.delete('/zauber/:zid', function(req, res, next) {
-	Zauber.findByIdAndRemove(req.params.zid, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/zauber/liste');
-	});
-});
+app.get('/zauber/liste',   routes.zauber.list);
+app.get('/zauber/neu',     routes.zauber.create);
+app.post('/zauber/neu',    routes.zauber.save);
+app.get('/zauber/:zid',    routes.zauber.edit);
+app.put('/zauber/:zid',    routes.zauber.update);
+app.delete('/zauber/:zid', routes.zauber.remove);
 
 // Zauber-Varianten
-app.get('/variante/neu', function(req, res, next) {
-	Zauber
-		.find()
-		.sort('Name')
-		.select('Name _id')
-		.lean()
-		.exec(function(err, objs) {
-			if (err) return next(err);
-			data.magie.Zauber = objs;
-			res.render('system/new-variant', data.magie);
-		})
-	;
-});
-app.post('/variante/neu', function(req, res, next) {
-	Zauber.findById(req.body.zauber, function(err, doc) {
-		if (err) return next(err);
-		doc.Varianten.push(req.body);
-		doc.save(function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/zauber/liste');
-		});
-	});
-});
-app.get('/zauber/:zid/variante/:vid', function(req, res, next) {
-	Zauber.findById(
-		req.params.zid, 
-		{ 
-			"Varianten": { $elemMatch: { "_id": req.params.vid } },
-			_id:  true,
-			Name: true
-		}, 
-		function(err, doc) {
-			if (err) return next(err);
-			data.magie._Zauber = {
-				Name: doc.Name,
-				_id : doc._id
-			};
-			if (Array.isArray(doc.Varianten) && doc.Varianten.length > 0) {
-				data.magie._Variante = doc.Varianten[0];
-				res.render('system/edit-variant', data.magie);
-			}
-			else {
-				next("Keine solche Variante vorhanden.");
-			}
-		}
-	);
-});
-app.put('/zauber/:zid/variante/:vid', function(req, res, next) {
-	Zauber.update(
-		{ "_id": req.params.zid, "Varianten._id": req.params.vid },
-		{ $set: { "Varianten.$": req.body } },
-		function(err, numAffected) {
-			if (err) return next(err);
-			console.log("%d Variante geändert", numAffected);
-			res.redirect('/zauber/liste');
-		}
-	);
-});
-app.delete('/zauber/:zid/variante/:vid', function(req, res, next) {
-	/* keep it as info how to do it with a $pull operator
-	Zauber.findByIdAndUpdate(
-		req.params.zid,
-		{ $pull: { Varianten: { "_id": req.params.vid } } },
-		function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/zauber/liste');
-		}
-	);//*/
-	Zauber.findById(req.param.zid, function(err, doc) {
-		if (err) return next(err);
-		doc.Varianten.pull(req.params.vid);
-		doc.save(function(err, doc, num) {
-			console.log("%d Variante gelöscht.", num);
-			res.redirect('/zauber/liste');
-		});
-	});
-});
+app.get('/variante/neu',  routes.zauber.variante.create);
+app.post('/variante/neu', routes.zauber.variante.save);
+app.get('/zauber/:zid/variante/:vid',    routes.zauber.variante.edit);
+app.put('/zauber/:zid/variante/:vid',    routes.zauber.variante.update);
+app.delete('/zauber/:zid/variante/:vid', routes.zauber.variante.remove);
 
 // Liturgien
-app.get('/liturgie/liste', function (req, res, next) {
-	Liturgie
-		.find()
-		.sort('name grad')
-		.lean()
-		.exec(function(err, objs) {
-			if (err) return next(err);
-			
-			res.render('system/table-of-miracles', { "$Liste": objs });
-		})
-	;
-});
-app.get('/liturgie/neu', function(req, res, next) {
-	res.render('system/new-liturgie', { "$Liste": data.sf.Götter });
-});
-app.post('/liturgie/neu', function(req, res, next) {
-	Liturgie.create(req.body, function(err, doc) {
-		if (err) return next(err);
-		res.redirect('/liturgie/liste');
-	});
-});
+app.get('/liturgie/liste',   routes.liturgie.list);
+app.get('/liturgie/neu',     routes.liturgie.create);
+app.post('/liturgie/neu',    routes.liturgie.save);
+app.get('/liturgie/:lid',    routes.liturgie.edit);
+app.put('/liturgie/:lid',    routes.liturgie.update);
+app.delete('/liturgie/:lid', routes.liturgie.remove);
 
 /******************
  *  Start Server  *
