@@ -21,11 +21,14 @@ html(lang="de")
 						li
 							a(href="#sf") Sonderfertigkeiten
 						li
+							a(href="#lkw") Liturgiekenntnis
+						li
 							a(href="#lit") Liturgien
 						li
 							a(href="/held/"+_id) ► Heldenbogen
-						li
-							a(href="/magie/"+_id) ► Magiebogen
+						if Magie && (Magie.Zauber && Magie.Zauber.length || Magie.Rituale && Magie.Rituale.length)
+							li
+								a(href="/magie/"+_id) ► Magiebogen
 				li
 					a.mitte(href="/helden") [ Charakterliste ]
 				li
@@ -82,3 +85,53 @@ html(lang="de")
 					tr
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
 							td= Attribute[val].wert
+			a#lkw
+			table.data-section.mitte.eigenschaften
+				caption Liturgiekenntnis
+				colgroup
+					col
+					col(style="width: 8em;")
+					col(style="width: 3em;")
+					col(style="width: 5em;")
+				thead
+					tr
+						th Liturgiekenntnis
+						th Probe
+						th(title="Lernschwierigkeit")
+						th LkW
+				tbody
+					each __lk in Weihe.Liturgiekenntnis
+						tr
+							td=__lk.name
+							td(title=__lk._talent.probe.join(' · '))= __lk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
+							td.mitte= __lk.Lernstufe
+							td.mitte= __lk.wert.toString().replace('-', '–')
+			a#lit
+			table.data-section
+				caption Liturgien
+				colgroup
+					col
+					col
+					col
+					col
+					col
+					col
+				thead
+					tr
+						th Name
+						th Grad
+						th Dauer
+						th Ziel
+						th Reichweite
+						th Wirkungsdauer
+				if Weihe.Liturgien && Weihe.Liturgien.length
+					- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
+					tbody
+						each __lit in Weihe.Liturgien
+							tr
+								td=__lit.name
+								td.mitte=__grad[__lit.grad]
+								td=__lit.rd
+								td.mitte=__lit.ziel
+								td=__lit.rw
+								td=__lit.wd

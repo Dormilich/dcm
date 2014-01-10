@@ -75,6 +75,7 @@ module.exports = {
 			Sprachen:     getTalentType("Sprachen"),
 			Schriften:    getTalentType("Schriften"),
 			Gaben:        getTalentType("Gaben"),
+			Liturgiekenntnis: getTalentType("Liturgiekenntnis"),
 			_chardata: function(cb) {
 				Held.findById(req.id, function(err, doc) {
 					if (err) {

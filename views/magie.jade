@@ -48,6 +48,10 @@ html(lang="de")
 			.fett {
 				font-weight: bold;
 			}
+			h1 a {
+				text-decoration: none;
+				color: inherit;
+			}
 	body
 		a#top
 		nav
@@ -84,7 +88,8 @@ html(lang="de")
 							a Rituale
 
 		section(style="clear: both;")
-			h1.mitte= Person.Name
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
 			h2.mitte –Magiebogen–
 			
 			a#vnt

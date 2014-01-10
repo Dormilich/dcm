@@ -60,7 +60,7 @@ html
 						option(value="6") VI
 						option(value="7") VII
 				div
-					label(for="l_rd") Dauer
+					label(for="l_rd") Ritualdauer
 					select#l_rd(name="rd", size="1")
 						option Stoßgebet
 						option(selected) Gebet
@@ -82,19 +82,19 @@ html
 				div
 					label(for="l_ziel") Ziel
 					select#l_ziel(name="ziel", size="1")
-						option(value="G") Geweihter
-						option(value="P", selected) 1 Person/Objekt
-						option(value="PP") ≤ 10 Pers./Obj.
-						option(value="PPP") ≤ 100 Pers./Obj.
-						option(value="PPPP") ≤ 1.000 Pers./Obj.
-						option(value="P+P") 2 Personen gegenseitig
-						option(value="P+PP") Person & Gruppe
-						option(value="Z") ≤ 10 m
-						option(value="ZZ") ≤ 100 m
-						option(value="ZZZ") ≤ 1.000 m
-						option(value="ZZZZ") ≤ 10 km
+						option(value="G", title="G") Geweihter
+						option(value="P", title="P", selected) 1 Person/Objekt
+						option(value="PP", title="PP") ≤ 10 Pers./Obj.
+						option(value="PPP", title="PPP") ≤ 100 Pers./Obj.
+						option(value="PPPP", title="PPPP") ≤ 1.000 Pers./Obj.
+						option(value="P+P", title="P+P") 2 Personen gegenseitig
+						option(value="P+PP", title="P+PP") Person & Gruppe
+						option(value="Z", title="Z") ≤ 10 m
+						option(value="ZZ", title="ZZ") ≤ 100 m
+						option(value="ZZZ", title="ZZZ") ≤ 1.000 m
+						option(value="ZZZZ", title="ZZZZ") ≤ 10 km
 				div#gott
-					label Zugehörigkeit
+					label Herkunft
 					button#uni(type="button") universell
 					- var __count = 0
 					each __name, __typ in $Liste
@@ -110,6 +110,7 @@ html
 				button(type="submit") speichern
 				button(type="reset") zurücksetzen
 		script.
+			document.getElementById('l_name').focus();
 			$('#new').on("submit", function() {
 				var $rd = $('#l_rd');
 				var $sg = $('#l_rd_sg');

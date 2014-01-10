@@ -228,7 +228,7 @@ var heldSchema = new Schema({
 			short: { type: String, required: true },
 			long:  { type: String, required: true }
 		}],
-		Ritualkenntnis: [heldTalentSchema]
+		//	Ritualkenntnis: [heldRKSchema]
 		//	Rituale: [{ _ritual: { type: IDREF, ref: 'Ritual', required: true }]
 	}
 });
@@ -325,14 +325,11 @@ heldSchema.virtual('Kampfwerte.WS').get(function() {
 	return Math.round( KO/2 + mod );
 });
 
-heldSchema.post('init', function (doc) {
-  console.log('%s has been initialized from the db', doc._id);
-});
-heldSchema.post('validate', function (doc) {
-  console.log('%s has been validated (but not saved yet)', doc._id);
+heldSchema.post('update', function (doc) {
+  console.log('%s has been updated', doc.Person.Name);
 });
 heldSchema.post('save', function (doc) {
-  console.log('%s has been saved', doc._id);
+  console.log('%s has been saved', doc.Person.Name);
 });
 
 module.exports = mongoose.model('Held', heldSchema);

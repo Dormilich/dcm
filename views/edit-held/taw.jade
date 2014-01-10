@@ -66,9 +66,9 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 					td.mitte
 						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max="35", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
-mixin languagetable(_titel_, _data_, _name_, _held_)
+mixin languagetable(_data_, _name_, _held_)
 	table.data-section.eigenschaften
-		caption= _titel_
+		caption= _name_
 		colgroup
 			col(style="width: 2em;")
 			col
@@ -80,7 +80,7 @@ mixin languagetable(_titel_, _data_, _name_, _held_)
 				td
 				th Talent
 				th Kompl.
-				th Lern.
+				th Lern
 				th TaW
 		tbody
 			each __stdTalent, key in _data_
@@ -101,8 +101,38 @@ mixin languagetable(_titel_, _data_, _name_, _held_)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 					td.mitte
-						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplexität, step="1", value=__heldentalent.wert, disabled=!__isAvailable))
+						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplexität, step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
+mixin liturgietable(_data_, _held_)
+	table.data-section.eigenschaften
+		caption Liturgiekenntnis
+		colgroup
+			col(style="width: 2em;")
+			col
+			col(style="width: 7em;")
+			col(style="width: 7em;")
+		thead
+			tr
+				td
+				th Gottheit
+				th Lern
+				th TaW
+		tbody
+			each __stdTalent, key in _data_
+				- var __heldentalent = getTalent(_held_, __stdTalent)
+				- var __isAvailable  = isAvailable(_held_, __stdTalent)
+				tr
+					td.mitte(style="padding: 0.2em;")
+						input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
+						input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__stdTalent.name, id=lk+key, checked=__isAvailable)
+					td
+						label(for=lk+key)= __stdTalent.name
+					td.mitte
+						select.unlock(size="1", name="Weihe.Liturgiekenntnis[#{key}][Lernstufe]", disabled=!__isAvailable)
+							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
+					td.mitte
+						input.unlock(type="number", name="Weihe.Liturgiekenntnis[#{key}][wert]", min="3", max="35", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 doctype 5
 html(lang="de")
@@ -123,7 +153,7 @@ html(lang="de")
 			}
 			nav a {
 				display: inline-block;
-				width: 6em;
+				width: 12em;
 				text-decoration: none;
 				color: black;
 				text-align: center;
@@ -139,20 +169,25 @@ html(lang="de")
 				text-decoration: none;
 				color: inherit;
 			}
+			main {
+				margin-top: 5em;
+			}
 	body
-		nav
-			a(href="#jNK") Nahkampf
-			a(href="#jFK") Fernkampf
-			a(href="#jKOR") Körper
-			a(href="#jGES") Gesellschaft
-			a(href="#jNAT") Natur
-			a(href="#jWIS") Wissen
-			a(href="#jHWK") Handwerk
-			a(href="#jSPR") Sprachen
-			a(href="#jSCR") Schriften
-			a(href="#jGAB") Gaben
-			a(href="#save") [speichern]
-		section
+		header
+			nav
+				a(href="#jNK") Nahkampf
+				a(href="#jFK") Fernkampf
+				a(href="#jKOR") Körper
+				a(href="#jGES") Gesellschaft
+				a(href="#jNAT") Natur
+				a(href="#jWIS") Wissen
+				a(href="#jHWK") Handwerk
+				a(href="#jSPR") Sprachen
+				a(href="#jSCR") Schriften
+				a(href="#jGAB") Gaben
+				a(href="#jLKW") Liturgiekenntnis
+				a(href="#save") [speichern]
+		main
 			h1.mitte
 				a(href="/held/"+_chardata._id)= _chardata.Person.Name
 			form(action="/taw/"+_chardata._id, method="post", accept-charset="utf-8")
@@ -266,11 +301,13 @@ html(lang="de")
 				a#jHWK
 				+talenttable('Handwerkstalente', Handwerk, 'Handwerk', _chardata.Talente.Handwerk)
 				a#jSPR
-				+languagetable('Sprachen', Sprachen, 'Sprachen', _chardata.Talente.Sprachen)
+				+languagetable(Sprachen, 'Sprachen', _chardata.Talente.Sprachen)
 				a#jSCR
-				+languagetable('Schriften', Schriften, 'Schriften', _chardata.Talente.Schriften)
+				+languagetable(Schriften, 'Schriften', _chardata.Talente.Schriften)
 				a#jGAB
 				+talenttable('Gaben', Gaben, 'Gaben', _chardata.Talente.Gaben)
+				a#jLKW
+				+liturgietable(Liturgiekenntnis, 'Liturgiekenntnis', _chardata.Talente.Liturgiekenntnis)
 				
 				.mitte#save
 					button(type="submit") speichern

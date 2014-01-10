@@ -284,7 +284,8 @@ module.exports = {
 				"Zsahh"
 			], 
 			"orkische Gottheiten": [
-				"Gravesh"
+				"Gravesh",
+				"Tairach"
 			], 
 			"zwergische Gottheiten": [
 				"Angrosch"

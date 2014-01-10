@@ -121,10 +121,12 @@ html(lang="de")
 							a(href="#sf") Sonderfertigkeiten
 						li
 							a(href="#taw") Talentwerte
-						li
-							a(href="/magie/"+_id) ► Magiebogen
-						li
-							a ► Geweihtenbogen
+						if Magie && (Magie.Zauber && Magie.Zauber.length || Magie.Rituale && Magie.Rituale.length)
+							li
+								a(href="/magie/"+_id) ► Magiebogen
+						if Weihe && Weihe.Liturgiekenntnis.length
+							li
+								a ► Geweihtenbogen
 				li
 					a.mitte(href="/helden") [ Charakterliste ]
 				li
