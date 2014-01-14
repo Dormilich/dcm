@@ -97,7 +97,7 @@ process.on('SIGINT', function() {
 
 var routes = {};
 // set up routes
-["neu", "held", "edit", "magie"].forEach(function(file) {
+["neu", "held", "edit", "magie", "weihe"].forEach(function(file) {
 	routes[file] = require('./routes/'+file);
 });
 
@@ -134,6 +134,8 @@ app.get('/helden', routes.held.list);
 app.get('/held/:mongoid', routes.held.show);
 // display character sheet (magic)
 app.get('/magie/:mongoid', routes.magie.show);
+// display character sheet (ordained)
+app.get('/weihe/:mongoid', routes.weihe.show);
 // delete character
 app.delete('/held/:mongoid', routes.held.disable);
 

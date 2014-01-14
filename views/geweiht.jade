@@ -1,3 +1,17 @@
+mixin SFTableSection(__liste, __name)
+	if __liste.length
+		tbody
+			tr
+				th= __name
+			tr.links
+				td
+					ul.vor-nach.fl-links
+						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
+							li= __liste[x]
+					ul.vor-nach.fl-rechts
+						- for (var y=x, l=__liste.length; y<l; y++)
+							li= __liste[y]
+
 !!! 5
 html(lang="de")
 	head
@@ -71,7 +85,7 @@ html(lang="de")
 				caption Basiswerte
 				tbody
 					tr
-						each val in ["LeP", "AuP", "AsP", "MR"]
+						each val in ["LeP", "AuP", "KaP", "MR"]
 							th= val
 							td= Basiswerte[val] || '—'
 			a#att
@@ -90,9 +104,9 @@ html(lang="de")
 				caption Liturgiekenntnis
 				colgroup
 					col
-					col(style="width: 8em;")
-					col(style="width: 3em;")
+					col(style="width: 10em;")
 					col(style="width: 5em;")
+					col(style="width: 10em;")
 				thead
 					tr
 						th Liturgiekenntnis
@@ -102,7 +116,7 @@ html(lang="de")
 				tbody
 					each __lk in Weihe.Liturgiekenntnis
 						tr
-							td=__lk.name
+							td.links=__lk.name
 							td(title=__lk._talent.probe.join(' · '))= __lk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
 							td.mitte= __lk.Lernstufe
 							td.mitte= __lk.wert.toString().replace('-', '–')

@@ -124,9 +124,9 @@ html(lang="de")
 						if Magie && (Magie.Zauber && Magie.Zauber.length || Magie.Rituale && Magie.Rituale.length)
 							li
 								a(href="/magie/"+_id) ► Magiebogen
-						if Weihe && Weihe.Liturgiekenntnis.length
+						if Weihe && Weihe.Liturgiekenntnis && Weihe.Liturgiekenntnis.length
 							li
-								a ► Geweihtenbogen
+								a(href="/weihe/"+_id) ► Geweihtenbogen
 				li
 					a.mitte(href="/helden") [ Charakterliste ]
 				li

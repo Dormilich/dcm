@@ -26,9 +26,10 @@ var path    = require('path')
   , async   = require('async')
   , appRoot = path.dirname(require.main.filename)
   , data    = require( path.join(appRoot, 'data/dsa') )
-  , Held    = require( path.join(appRoot, 'models/person') )
-  , Talent  = require( path.join(appRoot, 'models/talent') )
-  , Zauber  = require( path.join(appRoot, 'models/zauber') )
+  , Held     = require( path.join(appRoot, 'models/person') )
+  , Talent   = require( path.join(appRoot, 'models/talent') )
+  , Zauber   = require( path.join(appRoot, 'models/zauber') )
+  , Liturgie = require( path.join(appRoot, 'models/liturgie') )
   ;
 
 function merge(target, source) {
@@ -131,5 +132,16 @@ module.exports = {
 			if (err) return next(err);
 			res.render('edit-held/zauber', obj);
 		});
+	},
+	liturgien : function(req, res, next) {
+		Held
+			.findById(req.id)
+			.select('Person Weihe')
+			.exec(function(err, doc) {
+				if (err)  return next(err);
+				if (!doc) return next(new Error("Kein Datensatz gefunden."));
+				// ...
+			})
+		;
 	}
 };
