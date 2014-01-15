@@ -136,11 +136,27 @@ module.exports = {
 	liturgien : function(req, res, next) {
 		Held
 			.findById(req.id)
-			.select('Person Weihe')
-			.exec(function(err, doc) {
+			.populate('Weihe.Liturgiekenntnis._talent')
+			// da fehlt irgendwie noch das populate auf die Liturgien => Model prüfen!
+			.select('Attribute Person Weihe')
+			.lean()
+			.exec(function(err, obj) {
 				if (err)  return next(err);
-				if (!doc) return next(new Error("Kein Datensatz gefunden."));
-				// ...
+				if (!obj) return next(new Error("Kein Datensatz gefunden."));
+				obj._götter = obj.Weihe.Liturgiekenntnis.map(function(item) {
+					return item._talent.name;
+				});
+				Liturgie
+					.find()
+					.in('typ', obj._götter)
+					.sort('name grad')
+					.lean()
+					.exec(function(err, docs) {
+						if (err) return next(err);
+						obj._liturgien = docs;
+						res.render('edit-held/liturgie', obj);
+					})
+				;
 			})
 		;
 	}

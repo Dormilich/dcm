@@ -123,28 +123,32 @@ app.param('mongoid', function (req, res, next, id) {
 app.get('/', function (req, res) {
 	res.redirect('/helden');
 });
+// list all characters
+app.get('/helden', routes.held.list);
 
 // create and save a character
 app.get( '/neu', routes.neu.index);
 app.post('/neu', routes.neu.create);
 
-// list all characters
-app.get('/helden', routes.held.list);
 // display character sheet
 app.get('/held/:mongoid', routes.held.show);
 // display character sheet (magic)
 app.get('/magie/:mongoid', routes.magie.show);
 // display character sheet (ordained)
 app.get('/weihe/:mongoid', routes.weihe.show);
+
 // delete character
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character sheet sections
 app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
-app.put(/^\/(ap|sf|char|taw|zauber)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.save);
 // edit CharSheet Talent section (needs to load data from system table)
-app.get('/taw/:mongoid',    routes.edit.talente);
-app.get('/zauber/:mongoid', routes.edit.zauber);
+app.get('/talente/:mongoid', routes.edit.talente);
+app.get('/zauber/:mongoid',  routes.edit.zauber);
+app.get('/liturgien/:mongoid', routes.edit.liturgien)
+// save changes
+app.put(/^\/(ap|sf|char|talente|zauber|liturgien)\/([0-9a-fA-F]+)$/, 
+	mapMatch('section', 'id'), routes.held.save);
 
 /******************
  *  Start Server  *

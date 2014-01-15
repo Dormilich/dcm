@@ -1,11 +1,25 @@
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
+- function isAvailable(_charlist, _stdTalent) { 
+- 	var l = _charlist ? _charlist.length : 0; 
+- 	if (_stdTalent.standard) {
+- 		return true;
+- 	}
+- 	while (l--) { 
+- 		if (_charlist[l].name === _stdTalent.name) {
+- 			return true; 
+- 		}
+- 	} 
+- 	return false; 
+- }
+
 !!! 5
 html(lang="de")
 	head
 		title Liturgien hinzufügen
 		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
 			body {
@@ -17,64 +31,64 @@ html(lang="de")
 			.disabled {
 				color: #ddd;
 			}
+			main, aside {
+				padding: 0 5em;
+			}
+			tbody tr:hover {
+				background-color: silver;
+			}
 	body
 		a#top
 		nav
 			a(href="#top") [Seitenanfang]
 			a(href="#save") [speichern]
-			a(href="/held/"+Held._id)= "⇒ "+Held.Person.Name.split(' ')[0]
+			a(href="/held/"+_id)= "⇒ "+Person.Name.split(' ')[0]
 		h1.mitte
-			a(href="/held/"+Held._id)= Held.Person.Name
+			a(href="/held/"+_id)= Person.Name
 		aside
 			table.data-section.mitte.eigenschaften
 				caption Liturgiekenntnis
-				colgroup
-					col
-					col(style="width: 8em;")
-					col(style="width: 3em;")
-					col(style="width: 5em;")
 				thead
 					tr
-						th Liturgiekenntnis
-						th Probe
-						th(title="Lernschwierigkeit")
+						th Gottheit
 						th LkW
 				tbody
 					each __lk in Weihe.Liturgiekenntnis
 						tr
 							td=__lk.name
-							td(title=__lk._talent.probe.join(' · '))= __lk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
-							td.mitte= __lk.Lernstufe
-							td.mitte= __lk.wert.toString().replace('-', '–')
+							td.mitte= __lk.wert
 		main
 			table.data-section.mitte.eigenschaften
 				caption Liturgien
 				colgroup
+					col(style="width: 4em;")
 					col
-					col
+					col(style="width: 12em")
+					col(style="width: 6em;")
+					col(span="2", style="width: 12em")
 				thead
 					tr
 						td
 						th Liturgie
-						th Grad
-				tfoot(style="display: none;")
-					tr#liturgy_template
-						td
-							input.id(type="hidden", name="Weihe.Liturgien[{index}][_talent]", value="")
-							input.lock(type="checkbox", checked)
-						td.links
-							label.name
-						td
-							label.grad
+						th Dauer
+						th Ziel
+						th Reichweite
+						th Wirkungsdauer
 				tbody
 					- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
-					if Array.isArray(Weihe.Liturgien)
-						each __lit, __idx in Weihe.Liturgien
-							tr
-								td
-									input(type="hidden", name="Weihe.Liturgien[#{__idx}][_talent]", value=__lit._talent._id)
-									input.lock(type="checkbox", checked)
-								td.links
-									label.name=__lit._talent.name
-								td=__grad[__lit.grad]
-							
+					each __lit, __idx in _liturgien
+					- var __isAvailable  = isAvailable(Weihe.Liturgien, __lit)
+						tr
+							td
+								input(type="hidden", name="Weihe.Liturgien[#{__idx}][_talent]", value=__lit._id)
+								input.lock(type="checkbox")
+							td.links
+								label.name=__lit.name + " ("+__grad[__lit.grad]+")"
+							td=__lit.rd
+							td=__lit.ziel
+							td=__lit.rw
+							td=__lit.wd
+			a#save
+			.mitte
+				button(type="submit", disabled) speichern
+			
