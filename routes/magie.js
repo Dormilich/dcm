@@ -32,6 +32,7 @@ module.exports = {
 		Held
 			.findById(req.id)
 			.populate('Magie.Zauber._zauber')
+			.sort('Magie.Zauber._zauber.Name')
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();

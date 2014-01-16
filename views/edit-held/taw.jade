@@ -190,7 +190,7 @@ html(lang="de")
 		main
 			h1.mitte
 				a(href="/held/"+_chardata._id)= _chardata.Person.Name
-			form(action="/taw/"+_chardata._id, method="post", accept-charset="utf-8")
+			form(action="/talente/"+_chardata._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
 				a#jNK
@@ -307,8 +307,7 @@ html(lang="de")
 				a#jGAB
 				+talenttable('Gaben', Gaben, 'Gaben', _chardata.Talente.Gaben)
 				a#jLKW
-				+liturgietable(Liturgiekenntnis, 'Liturgiekenntnis', _chardata.Talente.Liturgiekenntnis)
-				
+				+liturgietable(Liturgiekenntnis, _chardata.Weihe.Liturgiekenntnis)
 				.mitte#save
 					button(type="submit") speichern
 

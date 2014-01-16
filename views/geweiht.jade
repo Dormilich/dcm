@@ -55,7 +55,7 @@ html(lang="de")
 						li
 							a(href="/zauber/"+_id) Liturgien
 						li
-							a Liturgiekenntnis
+							a(href="/talente/"+_id+"#jLKW") Liturgiekenntnis
 
 		section(style="clear: both;")
 			h1.mitte= Person.Name
@@ -121,13 +121,13 @@ html(lang="de")
 							td.mitte= __lk.Lernstufe
 							td.mitte= __lk.wert.toString().replace('-', '–')
 			a#lit
-			table.data-section
+			table.data-section.eigenschaften
 				caption Liturgien
 				colgroup
+					col(style="width: 30%;")
+					col(style="width: 5em;")
 					col
-					col
-					col
-					col
+					col(style="width: 8em;")
 					col
 					col
 				thead

@@ -136,9 +136,8 @@ module.exports = {
 	liturgien : function(req, res, next) {
 		Held
 			.findById(req.id)
-			.populate('Weihe.Liturgiekenntnis._talent')
-			// da fehlt irgendwie noch das populate auf die Liturgien => Model prüfen!
-			.select('Attribute Person Weihe')
+			.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
+			.select('Person Weihe')
 			.lean()
 			.exec(function(err, obj) {
 				if (err)  return next(err);

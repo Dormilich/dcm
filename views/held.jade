@@ -104,6 +104,7 @@ html(lang="de")
 			ul#main-menu
 				li
 					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					// display section
 					ul
 						li
 							a(href="#bes") Beschreibung
@@ -121,7 +122,7 @@ html(lang="de")
 							a(href="#sf") Sonderfertigkeiten
 						li
 							a(href="#taw") Talentwerte
-						if Magie && (Magie.Zauber && Magie.Zauber.length || Magie.Rituale && Magie.Rituale.length)
+						if Magie && (Magie.Repräsentation && Magie.Repräsentation.length)
 							li
 								a(href="/magie/"+_id) ► Magiebogen
 						if Weihe && Weihe.Liturgiekenntnis && Weihe.Liturgiekenntnis.length
@@ -133,6 +134,7 @@ html(lang="de")
 					a.mitte(href="/neu") [ Neuer Charakter ]
 				li 
 					a.mitte #{Person.Name.split(' ')[0]} bearbeiten
+					// edit section
 					ul
 						li
 							a(href="/ap/"+_id) Abenteuerpunkte

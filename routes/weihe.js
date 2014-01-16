@@ -28,15 +28,23 @@ var path    = require('path')
   , data    = require( path.join(appRoot, 'data/dsa') )
   ;
 module.exports = {
-	show: function(req, res, next) {
+	show : function(req, res, next) {
 		Held
 			.findById(req.id)
-			.populate('Weihe.Liturgiekenntnis._talent')
+			.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
 				res.render('geweiht', doc);
 			})
 		;
+	},
+	save : function(req, res, next) {
+		// if not Liturgiekenntnis => delete Liturgien
+		req.body.modified = new Date();
+		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/held/' + req.id);
+		});
 	}
 };
