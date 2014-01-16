@@ -3,6 +3,7 @@ html
 	head
 		title Neue Liturgie
 		meta(charset="utf-8")
+		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
 		style.
 			body {
@@ -60,39 +61,17 @@ html
 						option(value="6") VI
 						option(value="7") VII
 				div
-					label(for="l_rd") Ritualdauer
-					select#l_rd(name="rd", size="1")
-						option Stoßgebet
-						option(selected) Gebet
-						option Andacht
-						option Zeremonie
-						option Zyklus
-					input#l_rd_sg(type="number", min="1", max="20", step="1", value="20", title="nur bei Stoßgebeten", style="width: 3em; text-align: center;")
-					| &nbsp;Aktionen
+					label Ritualdauer
+					.dropout(data-name="rd", data-options="Stoßgebet (20 A),Gebet,Andacht,Zeremonie,Zyklus", data-default="Gebet")
 				div
-					label(for="l_rw") Reichweite
-					select#l_rw(name="rw", size="1")
-						option Selbst
-						option(selected) Berührung
-						option Sicht
-						option Fern
+					label Reichweite
+					.dropout(data-name="rw", data-options="Selbst,Berührung,Sicht,Fern", data-default="Berührung")
 				div
 					label(for="l_wd") Wirkungsdauer
 					input#l_wd(type="text", name="wd", placeholder="Wirkungsdauer", value="LkP* SR")
 				div
-					label(for="l_ziel") Ziel
-					select#l_ziel(name="ziel", size="1")
-						option(value="G", title="G") Geweihter
-						option(value="P", title="P", selected) 1 Person/Objekt
-						option(value="PP", title="PP") ≤ 10 Pers./Obj.
-						option(value="PPP", title="PPP") ≤ 100 Pers./Obj.
-						option(value="PPPP", title="PPPP") ≤ 1.000 Pers./Obj.
-						option(value="P+P", title="P+P") 2 Personen gegenseitig
-						option(value="P+PP", title="P+PP") Person & Gruppe
-						option(value="Z", title="Z") ≤ 10 m
-						option(value="ZZ", title="ZZ") ≤ 100 m
-						option(value="ZZZ", title="ZZZ") ≤ 1.000 m
-						option(value="ZZZZ", title="ZZZZ") ≤ 10 km
+					label Ziel
+					.dropout(data-name="ziel", data-options="G,P,PP,PPP,PPPP,G+P,G+PP,P+P,P+PP,Z,ZZ,ZZZ,ZZZZ", data-default="P")
 				div#gott
 					label Herkunft
 					button#uni(type="button") universell
@@ -111,14 +90,6 @@ html
 				button(type="reset") zurücksetzen
 		script.
 			document.getElementById('l_name').focus();
-			$('#new').on("submit", function() {
-				var $rd = $('#l_rd');
-				var $sg = $('#l_rd_sg');
-				if ($rd.val() === "Stoßgebet") {
-					$rd.remove();
-					$('<input name="rd" type="hidden"/>').val("Stoßgebet (" + $sg.val() + " A)").appendTo(this);
-				}
-			});
 			$('#uni').on("click", function() {
 				$('#gott input').prop('checked', true);
 			});
@@ -126,3 +97,34 @@ html
 				var $boxes = $(this).closest('ul').find('input');
 				$boxes.prop('checked', !$boxes.prop('checked'));
 			});
+			$('.dropout').each(function() {
+				var $datasrc = $(this);
+				var options  = $datasrc.data('options');
+				var $text    = $('<input type="text"/>')
+					.prop('name', $datasrc.data('name'))
+					.val($datasrc.data('default'))
+				;
+				if (options && options.length) {
+					var $ul   = $('<ul/>').addClass('options');
+					var $down = $('<button type="button">▼</button>');
+					options.split(',').forEach(function(item) {
+						$('<li/>').text(item).appendTo($ul);
+					});
+					$down.on('click', function() {
+						$ul.toggle();
+					});    
+					$ul.on('click', 'li', function() {
+						$text.val(this.textContent);
+						$ul.hide();
+					});
+					$(this).append($ul, $text, $down);
+					var style   = $text.offset();
+					style.top  += $text.outerHeight();
+					style.width = $text.outerWidth() - 2;
+					$ul.css(style);
+				}
+				else {
+					$(this).append($text);
+				}
+			});
+				
