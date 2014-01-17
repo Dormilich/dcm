@@ -48,6 +48,7 @@ module.exports = {
 			"Gegenhalten", 
 			"Geschützmeister", 
 			"Gezielter Stich", 
+			"Halbschwert", 
 			"Hammerschlag", 
 			"Improvisierte Waffen", 
 			"Kampf im Wasser", 
@@ -379,7 +380,8 @@ module.exports = {
 			{ short: "Geo", long: "Geodische Rep." },
 			{ short: "Elf", long: "Elfische Rep." },
 			{ short: "Bor", long: "Borbaradianische Rep." },
-			{ short: "Ach", long: "Achaz-Kristallomantische Rep." }
+			{ short: "Ach", long: "Achaz-Kristallomantische Rep." },
+			{ short: "Dil", long: "Natürliche Rep." }
 		],
 		Ritualkenntnis: [ // TR - Traditionsrituale, OR - Objektrituale, Sch - Schamanismus, VT - Vertrautenmagie
 			{ short: "Mag", long: "Gildenmagie", typ: ["OR", "TR"] },

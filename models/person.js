@@ -175,7 +175,7 @@ var heldSchema = new Schema({
 			max:   { type: Number, min: 0 }
 		},
 		AsP: {
-			start: { type: Number, min: -1 },
+			start: { type: Number },
 			add:   { type: Number, min:  0 },
 			max:   { type: Number, min:  0 },
 			sterne:{ type: Boolean }
@@ -227,7 +227,7 @@ var heldSchema = new Schema({
 		Repräsentation: [{
 			short: { type: String, required: true },
 			long:  { type: String, required: true }
-		}],
+		}]
 		//	Ritualkenntnis: [heldRKSchema]
 		//	Rituale: [{ _ritual: { type: IDREF, ref: 'Ritual', required: true }]
 	}
@@ -253,7 +253,7 @@ heldSchema.virtual('Basiswerte.AsP').get(function() {
 	  , CH  = this.Attribute.CH.wert
 	  , mod = this.modifikatoren.AsP
 	  ;
-	if (!mod || mod.start === -1) {
+	if (!mod) {
 		return null;
 	}
 	if (mod.sterne) {
@@ -263,7 +263,7 @@ heldSchema.virtual('Basiswerte.AsP').get(function() {
 });
 heldSchema.virtual('Basiswerte.KaP').get(function() {
 	var mod = this.modifikatoren.KaP;
-	if (!mod || mod.start === -1) {
+	if (!mod) {
 		return null;
 	}
 	return Math.round( mod.start + mod.add );
