@@ -46,5 +46,18 @@ module.exports = {
 			if (err) return next(err);
 			res.redirect('/held/' + req.id);
 		});
+	},
+	unset : function(req, res, next) {
+		if ("Weihe.Liturgiekenntnis" in req.body) {
+			return next();
+		}
+		Held.findById(req.id, function(err, doc) {
+			if (err)  return next(err);
+			doc.Weihe = undefined;
+			doc.save(function(err, doc) {
+				if (err)  return next(err);
+				next();
+			});
+		});
 	}
 };

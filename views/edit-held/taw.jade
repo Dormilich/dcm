@@ -104,7 +104,7 @@ mixin languagetable(_data_, _name_, _held_)
 						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplexität, step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 mixin liturgietable(_data_, _held_)
-	table.data-section.eigenschaften
+	table.data-section.eigenschaften#weihe
 		caption Liturgiekenntnis
 		colgroup
 			col(style="width: 2em;")
@@ -124,9 +124,9 @@ mixin liturgietable(_data_, _held_)
 				tr
 					td.mitte(style="padding: 0.2em;")
 						input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
-						input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__stdTalent.name, id=lk+key, checked=__isAvailable)
+						input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__stdTalent.name, id="lk"+key, checked=__isAvailable)
 					td
-						label(for=lk+key)= __stdTalent.name
+						label(for="lk"+key)= __stdTalent.name
 					td.mitte
 						select.unlock(size="1", name="Weihe.Liturgiekenntnis[#{key}][Lernstufe]", disabled=!__isAvailable)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -190,7 +190,7 @@ html(lang="de")
 		main
 			h1.mitte
 				a(href="/held/"+_chardata._id)= _chardata.Person.Name
-			form(action="/talente/"+_chardata._id, method="post", accept-charset="utf-8")
+			form#edit(action="/talente/"+_chardata._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
 				a#jNK

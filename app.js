@@ -145,8 +145,10 @@ app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.he
 // edit CharSheet Talent section (needs to load data from system table)
 app.get('/talente/:mongoid', routes.edit.talente);
 app.get('/zauber/:mongoid',  routes.edit.zauber);
-app.get('/liturgien/:mongoid', routes.edit.liturgien)
+app.get('/liturgien/:mongoid', routes.edit.liturgien);
 // save changes
+// Liturgie preprocessing of Talent's Liturgiekenntnis section
+app.put('/talente/:mongoid', routes.weihe.unset);
 app.put(/^\/(ap|sf|char|talente|zauber|liturgien)\/([0-9a-fA-F]+)$/, 
 	mapMatch('section', 'id'), routes.held.save);
 

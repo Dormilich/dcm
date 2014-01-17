@@ -144,13 +144,7 @@ html(lang="de")
 							a(href="/char/"+_id) Eigenschaften
 						li
 							a(href="/sf/"+_id) Sonderfertigkeiten
-						li
-							a(href="/zauber/"+_id) Zauber
-						li
-							a Rituale
-						li
-							a(href="/liturgien/"+_id) Liturgien
-
+		p!=JSON.stringify(Weihe)
 		section(style="clear: both;")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
