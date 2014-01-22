@@ -1,6 +1,18 @@
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
+-	function contains(__array, __string) {
+-		if (typeof __array === "string") {
+-			return __array.indexOf(__string) > -1;
+-		}
+-		if (Array.isArray(__array)) {
+-			return __array.filter(function(item) {
+-				return item.indexOf(__string) > -1;
+-			}).length > 0;
+-		}
+-		return false;
+-	}
+
 mixin SFTableSection(__liste, __name)
 	if __liste.length
 		tbody
@@ -122,10 +134,10 @@ html(lang="de")
 							a(href="#sf") Sonderfertigkeiten
 						li
 							a(href="#taw") Talentwerte
-						if Magie && (Magie.Repräsentation && Magie.Repräsentation.length)
+						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
 							li
 								a(href="/magie/"+_id) ► Magiebogen
-						if Weihe && Weihe.Liturgiekenntnis && Weihe.Liturgiekenntnis.length
+						if SF && contains(SF.geweiht, "Liturgiekenntnis")
 							li
 								a(href="/weihe/"+_id) ► Geweihtenbogen
 				li

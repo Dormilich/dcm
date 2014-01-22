@@ -52,6 +52,9 @@ html(lang="de")
 				color: #eee;
 				background-color: black;
 			}
+			li > select, li > input[type="text"] {
+				width: 35%;
+			}
 	body
 		a#top
 		nav
@@ -96,10 +99,24 @@ html(lang="de")
 							ul.vor-nach.fl-rechts
 								li
 									strong Kulturkunde:
-								each val, key in _data.Kulturkunde
+								each __sf, __idx in SF.allgemein.filter(function(item) { return (item.indexOf("Kulturkunde") === 0); })
 									li
-										input(type="checkbox", name="SF[allgemein][]", id="sf2_"+key, value="Kulturkunde (#{val})", checked= SF.allgemein.indexOf("Kulturkunde (#{val})") !== -1)
-										label(for="sf2_"+key)= val
+										input.auswahl_liste2(type="checkbox", name="SF[allgemein][]", value=__sf, checked, id="sf1a_"+__idx)
+										label(for="sf1a_"+__idx)=__sf
+								li
+									input.auswahl_liste2(type="checkbox", name="SF[allgemein][]", id="sf1a", value="Kulturkunde")
+									label(for="sf1a") Kulturkunde
+									select.fl-rechts(size="1")
+										each __kk in _data.Kulturkunde.sort()
+											option(value=__kk)=__kk
+									button.add.fl-rechts(type="button") +
+								li
+									input.spezifisch(type="checkbox", name="SF[allgemein][]", id="sf1b", value="Kulturkunde")
+									label(for="sf1b") Kulturkunde
+									input.fl-rechts(type="text", placeholder="sonstige Kulturkunde")
+									button.add.fl-rechts(type="button") +
+								
+
 				
 				a#kampf
 				table.data-section
@@ -170,18 +187,34 @@ html(lang="de")
 										input(type="checkbox", name="SF[geweiht][]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
 										label(for="sf9_"+key)= val
 							ul.vor-nach.fl-rechts
-								- var __count = 0
-								each __list, __typ in _data.Götter
+								each __sf, __idx in SF.geweiht.filter(function(item) { return (item.indexOf("Liturgiekenntnis") === 0); })
 									li
-										strong Spätweihe (#{__typ})
-									each val, key in _data.Götter[__typ]
-										- var __name = "Spätweihe ("+val+")"
-										- __count++
-										li
-											input(type="radio", name="SF[geweiht][]", id="sf9b_"+__count, value=__name, checked= SF.geweiht.indexOf(__name) !== -1)
-											label(for="sf9b_"+__count)= val
-								li.mitte
-									button#nogod(type="button") Spätweihe entfernen
+										input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", value=__sf, checked, id="sf9a_"+__idx)
+										label(for="sf9a_"+__idx)=__sf
+								li
+									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf9a", value="Liturgiekenntnis")
+									label(for="sf9a") Liturgiekenntnis
+									select.fl-rechts(size="1")
+										each __list, __typ in _data.Götter
+											optgroup(label=__typ)
+												each __gott in __list
+													option(value=__gott)=__gott
+									button.add.fl-rechts(type="button") +
+								
+								each __sf, __idx in SF.geweiht.filter(function(item) { return (item.indexOf("Spätweihe") === 0); })
+									li
+										input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", value=__sf, checked, id="sf9b_"+__idx)
+										label(for="sf9b_"+__idx)=__sf
+								li
+									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf9b", value="Spätweihe")
+									label(for="sf9b") Spätweihe
+									select.fl-rechts(size="1")
+										each __list, __typ in _data.Götter
+											optgroup(label=__typ)
+												each __gott in __list
+													option(value=__gott)=__gott
+									button.add.fl-rechts(type="button") +
+																		
 							script.
 								$('#nogod').on('click', function() {
 									$('.gods input[type="radio"]:checked').prop('checked', false);
@@ -200,69 +233,58 @@ html(lang="de")
 							ul.vor-nach.fl-rechts
 								li
 									strong Merkmalskenntnis:
-								each val, key in ["Antimagie", "Beschwörung", "Eigenschaften", "Einfluß", "Form", "Geisterwesen", "Heilung", "Hellsicht", "Herbeirufung", "Herrschaft", "Illusion", "Kraft", "Limbus", "Metamagie", "Objekt", "Schaden", "Telekinese", "Temporal", "Umwelt", "Verständigung"]
-									- var __checkval = "Merkmalskenntnis ("+val+")"
+								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Merkmalskenntnis") === 0); })
 									li
-										input(type="checkbox", name="SF[magisch][]", value=__checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf11c_"+key)
-										label(for="sf11c_"+key)= val
+										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf11b_"+__idx)
+										label(for="sf11b_"+__idx)=__sf
 								li
-									input(type="checkbox", disabled)
-									label Dämonisch
-									ul
-										each val, key in ["gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel"]
-											- var checkval = "Merkmalskenntnis (Dämonisch/"+val+")"
-											li
-												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11a_"+key)
-												label(for="sf11a_"+key)= val
-									
-								li
-									input(type="checkbox", disabled)
-									label Elementar
-									ul
-										each val, key in ["gesamt", "Eis", "Erz", "Feuer", "Humus", "Luft", "Wasser"]
-											- var checkval = "Merkmalskenntnis (Elementar/"+val+")"
-											li
-												input(type="checkbox", name="SF[magisch][]", value= checkval, checked= SF.magisch.indexOf(checkval) !== -1, id="sf11b_"+key)
-												label(for="sf11b_"+key)= val
-								
+									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf11b", value="Merkmalskenntnis")
+									label(for="sf11b") Merkmalskenntnis
+									select.fl-rechts(size="1")
+										- var __mmkext
+										each __list, __typ in _data.Merkmalskenntnis
+											- var __ext = ["Dämonisch", "Elementar"].indexOf(__typ) > -1 ? __typ+" / " : ""
+											optgroup(label=__typ)
+												each __mmk in __list
+													option(value=__ext+__mmk)=__mmk
+									button.add.fl-rechts(type="button") +
 								li
 									strong Repräsentation:
-								- var __count = 0
-								each val, key in {"Bor":"Borbaradianer", "Elf":"Elf", "Dru":"Druide", "Geo":"Geode", "Mag":"Gildenmagier", "Hex":"Hexe", "Ach":"Kristallomant", "Dil":"Magiedilletant", "Srl":"Scharlatan", "Sch":"Schelm"}
-									- var checkval = "Repräsentation ("+val+")"
-									- var __isSet  = (SF.magisch.indexOf(checkval) !== -1)
+								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Repräsentation") === 0); })
 									li
-										input.rep(type="checkbox", name="SF[magisch][]", id="sf12_"+key, value= checkval, checked=__isSet)
-										input(type="hidden", name="Magie.Repräsentation[#{__count}][short]", value=key, disabled=!__isSet)
-										input(type="hidden", name="Magie.Repräsentation[#{__count}][long]",  value=val, disabled=!__isSet)
-										label(for="sf12_"+key)= val
-									- __count++
+										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf12_"+__idx)
+										label(for="sf12_"+__idx)=__sf
+								li
+									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf12a", value="Repräsentation")
+									label(for="sf12a") Repräsentation
+									select.fl-rechts(size="1")
+										each __rep in _data.Repräsentation
+											option(value=__rep)=__rep
+									button.add.fl-rechts(type="button") +
+								li
+									input.spezifisch(type="checkbox", name="SF[magisch][]", id="sf12b", value="Repräsentation")
+									label(for="sf12b") Repräsentation
+									input.fl-rechts(type="text", placeholder="sonstige Repräsentation")
+									button.add.fl-rechts(type="button") +
 								li
 									strong Ritualkenntnis:
-								each val, key in ["Alchimie", "Derwische", "Druidenmagie", "Durro-Dûn", "Geodenmagie", "Gildenmagie", "Hexenmagie", "Kristallomantie", "Petromantie", "Scharlatan", "Seher", "Vertrautenmagie", "Zibilja"]
-									- var __checkval = "Ritualkenntnis ("+val+")"
-									- var __isSet  = (SF.magisch.indexOf(__checkval) !== -1)
+								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Ritualkenntnis") === 0); })
 									li
-										input.rep(type="checkbox", name="SF[magisch][]", id="sf13_"+key, value=__checkval, checked=__isSet)
-										label(for="sf13_"+key)= val
+										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf13_"+__idx)
+										label(for="sf13_"+__idx)=__sf
 								li
-									input(type="checkbox", disabled)
-									label Zaubertänzer
-									ul
-										each val, key in ["Tulamidische Sharisad", "Novadische Sharisad", "Hazaqi", "Majuna"]
-											- var __checkval = "Ritualkenntnis ("+val+")"
-											li
-												input(type="checkbox", name="SF[magisch][]", value= __checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf13b_"+key)
-												label(for="sf13b_"+key)= val
+									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf13a", value="Ritualkenntnis")
+									label(for="sf13a") Ritualkenntnis
+									select.fl-rechts(size="1")
+										each __rep in _data.Ritualkenntnis
+											option(value=__rep)=__rep
+									button.add.fl-rechts(type="button") +
 								li
-									input(type="checkbox", disabled)
-									label Schamanismus
-									ul
-										each val, key in _data.Schamanismus
-											- var __checkval = "Ritualkenntnis ("+val+")"
-											li
-												input(type="checkbox", name="SF[magisch][]", value= __checkval, checked= SF.magisch.indexOf(__checkval) !== -1, id="sf13c_"+key)
-												label(for="sf13c_"+key)= val
+									input.spezifisch(type="checkbox", name="SF[magisch][]", id="sf13b", value="Ritualkenntnis")
+									label(for="sf13b") Ritualkenntnis
+									input.fl-rechts(type="text", placeholder="sonstige Ritualkenntnis")
+									button.add.fl-rechts(type="button") +
+								li Ritualkenntnis Schamane (fehlt noch)
 
 				a#save
 				.mitte

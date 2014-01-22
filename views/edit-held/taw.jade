@@ -53,7 +53,7 @@ mixin talenttable(_titel_, _data_, _name_, _held_)
 					td
 						label(for=_name_+key)= __stdTalent.name
 					td
-						if __heldentalent.Spezialisierung && Array.isArray(__heldentalent.Spezialisierung)
+						if Array.isArray(__heldentalent.Spezialisierung)
 							each spez in __heldentalent.Spezialisierung
 								.wrapper
 									button.del(type="button")= "\u2717"
@@ -102,37 +102,6 @@ mixin languagetable(_data_, _name_, _held_)
 								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 					td.mitte
 						input.unlock(type="number", name="Talente[#{_name_}][#{key}][wert]", min="-3", max=__stdTalent.komplexität, step="1", value=__heldentalent.wert, disabled=!__isAvailable)
-
-mixin liturgietable(_data_, _held_)
-	table.data-section.eigenschaften#weihe
-		caption Liturgiekenntnis
-		colgroup
-			col(style="width: 2em;")
-			col
-			col(style="width: 7em;")
-			col(style="width: 7em;")
-		thead
-			tr
-				td
-				th Gottheit
-				th Lern
-				th TaW
-		tbody
-			each __stdTalent, key in _data_
-				- var __heldentalent = getTalent(_held_, __stdTalent)
-				- var __isAvailable  = isAvailable(_held_, __stdTalent)
-				tr
-					td.mitte(style="padding: 0.2em;")
-						input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__stdTalent._id, disabled=!__isAvailable)
-						input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__stdTalent.name, id="lk"+key, checked=__isAvailable)
-					td
-						label(for="lk"+key)= __stdTalent.name
-					td.mitte
-						select.unlock(size="1", name="Weihe.Liturgiekenntnis[#{key}][Lernstufe]", disabled=!__isAvailable)
-							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
-					td.mitte
-						input.unlock(type="number", name="Weihe.Liturgiekenntnis[#{key}][wert]", min="3", max="35", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 doctype 5
 html(lang="de")
@@ -185,7 +154,6 @@ html(lang="de")
 				a(href="#jSPR") Sprachen
 				a(href="#jSCR") Schriften
 				a(href="#jGAB") Gaben
-				a(href="#jLKW") Liturgiekenntnis
 				a(href="#save") [speichern]
 		main
 			h1.mitte
@@ -306,8 +274,6 @@ html(lang="de")
 				+languagetable(Schriften, 'Schriften', _chardata.Talente.Schriften)
 				a#jGAB
 				+talenttable('Gaben', Gaben, 'Gaben', _chardata.Talente.Gaben)
-				a#jLKW
-				+liturgietable(Liturgiekenntnis, _chardata.Weihe.Liturgiekenntnis)
 				.mitte#save
 					button(type="submit") speichern
 

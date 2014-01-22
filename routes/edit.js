@@ -76,7 +76,6 @@ module.exports = {
 			Sprachen:     getTalentType("Sprachen"),
 			Schriften:    getTalentType("Schriften"),
 			Gaben:        getTalentType("Gaben"),
-			Liturgiekenntnis: getTalentType("Liturgiekenntnis"),
 			_chardata: function(cb) {
 				Held.findById(req.id, function(err, doc) {
 					if (err) {
@@ -134,28 +133,37 @@ module.exports = {
 		});
 	},
 	liturgien : function(req, res, next) {
-		Held
-			.findById(req.id)
-			.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
-			.select('Person Weihe')
+		// I could un-nest one level at most, but get it m.o.l. back through async
+		Talent
+			.find({ typ: "Liturgiekenntnis" })
+			.sort('name')
 			.lean()
-			.exec(function(err, obj) {
+			.exec(function(err, lks) {
 				if (err)  return next(err);
-				if (!obj) return next(new Error("Kein Datensatz gefunden."));
-				obj._götter = obj.Weihe.Liturgiekenntnis.map(function(item) {
-					return item._talent.name;
-				});
-				Liturgie
-					.find()
-					.in('typ', obj._götter)
-					.sort('name grad')
+				Held
+					.findById(req.id)
+					.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
+					.select('Person Weihe')
 					.lean()
-					.exec(function(err, docs) {
-						if (err) return next(err);
-						obj._liturgien = docs;
-						res.render('edit-held/liturgie', obj);
+					.exec(function(err, obj) {
+						if (err)  return next(err);
+						obj._gottheiten = lks;
+						obj._götter = obj.Weihe.Liturgiekenntnis.map(function(item) {
+							return item._talent.name;
+						});
+						Liturgie
+							.find()
+							.in('typ', obj._götter)
+							.sort('name grad')
+							.lean()
+							.exec(function(err, docs) {
+								if (err) return next(err);
+								obj._liturgien = docs;
+								res.render('edit-held/liturgie', obj);
+							})
+						;
 					})
-				;
+				;	
 			})
 		;
 	}

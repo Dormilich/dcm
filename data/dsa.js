@@ -297,19 +297,97 @@ module.exports = {
 				"Der Namenlose"
 			]
 		},
+		Repräsentation: [
+			"Gildenmagier",
+			"Scharlatan",
+			"Schelm",
+			"Hexe",
+			"Druide",
+			"Geode",
+			"Elf",
+			"Borbaradianer",
+			"Kristallomant",
+			"Magiedilettant"
+		],
+		Ritualkenntnis: [
+			"Gildenmagier",
+			"Scharlatan", 
+			"Hexe",
+			"Druide",
+			"Geode",
+			"Kristallomantie",
+			"Alchimie",
+			"Zibilja",
+			"Durro-Dûn",
+			"Derwische",
+			"Tulamidische Sharisad",
+			"Novadische Sharisad",
+			"Hazaqi",
+			"Majuna",
+			"Seher",
+			"Petromantie"
+		],
 		Schamanismus: [
 			"Ferkina", 
 			"Fjarninger", 
 			"Gjalskerländer", 
 			"Goblin", 
-			"Kristallomantie", 
+			"Kristallomant", 
 			"Nivesen", 
 			"Ork", 
 			"Tocamuyac", 
 			"Trollzacker", 
 			"Utulu", 
 			"Waldmenschen"
-		]
+		],
+		Merkmalskenntnis: {
+			allgemein: [
+				"Antimagie", 
+				"Beschwörung", 
+				"Eigenschaften", 
+				"Einfluß", 
+				"Form", 
+				"Geisterwesen", 
+				"Heilung", 
+				"Hellsicht", 
+				"Herbeirufung", 
+				"Herrschaft", 
+				"Illusion", 
+				"Kraft", 
+				"Limbus", 
+				"Metamagie", 
+				"Objekt", 
+				"Schaden", 
+				"Telekinese", 
+				"Temporal", 
+				"Umwelt", 
+				"Verständigung"
+			],
+			Dämonisch: [
+				"gesamt", 
+				"Blakharaz", 
+				"Belhalhar", 
+				"Charyptoroth", 
+				"Lolgramoth", 
+				"Thargunitoth", 
+				"Amazeroth", 
+				"Belshirash", 
+				"Asfaloth", 
+				"Tasfarelel", 
+				"Belzhorash", 
+				"Agrimoth", 
+				"Belkelel"
+			],
+			Elementar: [
+				"gesamt", 
+				"Eis", 
+				"Erz", 
+				"Feuer", 
+				"Humus", 
+				"Luft", 
+				"Wasser"
+			]
+		}
 	},
 	talente: {},
 	magie: {

@@ -81,6 +81,15 @@ $('#newChar').on('submit', function(jqevt) {
 			this.value += wrapValue(selection, '[', ']');
 		}
 	});
+	$('.auswahl_liste2:checked').each(function() {
+		var selection = $(this).nextAll('select').val();
+		if ($.isArray(selection)) {
+			selection = selection.join(', ');
+		}
+		if (selection) {
+			this.value += wrapValue(selection, '(', ')');
+		}
+	});
 	// add multiple text fields
 	$('.auswahl_text:checked').each(function() {
 		var $texts = $(this).closest('li').find('input[type="text"]');
