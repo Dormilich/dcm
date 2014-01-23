@@ -1,3 +1,6 @@
+mixin print(__data)
+	p!=JSON.stringify(__data)
+
 mixin SFTableSection(__liste, __name)
 	if __liste.length
 		tbody
@@ -53,9 +56,9 @@ html(lang="de")
 						li
 							a(href="/sf/"+_id) Sonderfertigkeiten
 						li
-							a(href="/liturgien/"+_id) Liturgien
+							a(href="/liturgien/"+_id+'#liturgien') Liturgien
 						li
-							a(href="/talente/"+_id+"#jLKW") Liturgiekenntnis
+							a(href="/liturgien/"+_id+"#liturgiekenntnis") Liturgiekenntnis
 
 		section(style="clear: both;")
 			h1.mitte= Person.Name
@@ -104,9 +107,9 @@ html(lang="de")
 				caption Liturgiekenntnis
 				colgroup
 					col
-					col(style="width: 10em;")
+					col(style="width: 15em;")
 					col(style="width: 5em;")
-					col(style="width: 10em;")
+					col(style="width: 15em;")
 				thead
 					tr
 						th Liturgiekenntnis

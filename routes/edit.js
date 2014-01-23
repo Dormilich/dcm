@@ -137,14 +137,12 @@ module.exports = {
 		Talent
 			.find({ typ: "Liturgiekenntnis" })
 			.sort('name')
-			.lean()
 			.exec(function(err, lks) {
 				if (err)  return next(err);
 				Held
 					.findById(req.id)
 					.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
 					.select('Person Weihe')
-					.lean()
 					.exec(function(err, obj) {
 						if (err)  return next(err);
 						obj._gottheiten = lks;
@@ -155,7 +153,6 @@ module.exports = {
 							.find()
 							.in('typ', obj._götter)
 							.sort('name grad')
-							.lean()
 							.exec(function(err, docs) {
 								if (err) return next(err);
 								obj._liturgien = docs;
