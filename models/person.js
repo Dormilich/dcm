@@ -227,8 +227,17 @@ var heldSchema = new Schema({
 		Repräsentation: [{
 			short: { type: String, required: true },
 			long:  { type: String, required: true }
+		}],
+		Ritualkenntnis: [{
+			short:     { type: String, required: true }, // z.B. Hex, Mag, Ztz, Smn
+			long:        String,
+			RkW:       { type: Number, min: 0, max: 35, required: true },
+			Lernstufe: { type: String, validator: lernstufeValidator },
+			// für Schamanen
+			_talent:   { type: IDREF,  ref: 'Talent' },
+			// und Zaubertänzer
+			tradition:   String // Ork, Wdm, Haz, Tul
 		}]
-		//	Ritualkenntnis: [heldRKSchema]
 		//	Rituale: [{ _ritual: { type: IDREF, ref: 'Ritual', required: true }]
 	}
 });

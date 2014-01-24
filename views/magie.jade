@@ -1,3 +1,15 @@
+-	function contains(__array, __string) {
+-		if (typeof __array === "string") {
+-			return __array.indexOf(__string) > -1;
+-		}
+-		if (Array.isArray(__array)) {
+-			return __array.filter(function(item) {
+-				return item.indexOf(__string) > -1;
+-			}).length > 0;
+-		}
+-		return false;
+-	}
+
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
@@ -73,6 +85,9 @@ html(lang="de")
 							a Rituale
 						li
 							a(href="/held/"+_id) ► Heldenbogen
+						if SF && contains(SF.geweiht, "Liturgiekenntnis")
+							li
+								a(href="/weihe/"+_id) ► Geweihtenbogen
 				li
 					a.mitte(href="/helden") [ Charakterliste ]
 				li
@@ -84,6 +99,8 @@ html(lang="de")
 							a(href="/sf/"+_id) Sonderfertigkeiten
 						li
 							a(href="/zauber/"+_id) Zauber
+						li
+							a Ritualkenntnis
 						li
 							a Rituale
 

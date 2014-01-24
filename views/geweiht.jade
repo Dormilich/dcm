@@ -1,3 +1,15 @@
+-	function contains(__array, __string) {
+-		if (typeof __array === "string") {
+-			return __array.indexOf(__string) > -1;
+-		}
+-		if (Array.isArray(__array)) {
+-			return __array.filter(function(item) {
+-				return item.indexOf(__string) > -1;
+-			}).length > 0;
+-		}
+-		return false;
+-	}
+
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
@@ -43,7 +55,7 @@ html(lang="de")
 							a(href="#lit") Liturgien
 						li
 							a(href="/held/"+_id) ► Heldenbogen
-						if Magie && (Magie.Zauber && Magie.Zauber.length || Magie.Rituale && Magie.Rituale.length)
+						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
 							li
 								a(href="/magie/"+_id) ► Magiebogen
 				li
