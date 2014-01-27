@@ -322,10 +322,10 @@ module.exports = {
 			"Derwische",
 			"Seher",
 			"Petromantie",
-			"Zaubertänzer / Tulamidische Sharisad",
-			"Zaubertänzer / Novadische Sharisad",
-			"Zaubertänzer / Hazaqi",
-			"Zaubertänzer / Majuna",
+			"Tulamidische Sharisad",
+			"Novadische Sharisad",
+			"Hazaqi",
+			"Majuna",
 			"Achaz-Schamane",
 			"Ferkina-Schamane", 
 			"Fjarninger-Schamane", 
@@ -488,5 +488,40 @@ module.exports = {
 			{ short: "God", long: "Seher", typ: ["TR"] },
 			{ short: "Ptr", long: "Petromantie", typ: ["TR"] }
 		]
-	}
+	},
+	ritual: {
+		Ritualkenntnis: {
+			Mag: "Gildenmagier",
+			Srl: "Scharlatan", 
+			Hex: "Hexe",
+			Dru: "Druide",
+			Geo: "Geode",
+			Ach: "Kristallomantie",
+			Alc: "Alchimie",
+			Zib: "Zibilja",
+			Dur: "Durro-Dûn",
+			Der: "Derwische",
+			God: "Seher",
+			Pet: "Petromantie",
+			Zaubertänzer: {
+				Tul: "Tulamidische Sharisad",
+				Nov: "Novadische Sharisad",
+				Haz: "Hazaqi",
+				Maj: "Majuna"
+			},
+			Schamane: {
+				Ach: "Achaz",
+				Fer: "Ferkina", 
+				Fja: "Fjarninger", 
+				Gja: "Gjalskerländer", 
+				Gob: "Goblin", 
+				Niv: "Nivesen", 
+				Ork: "Ork", 
+				Toc: "Tocamuyac", 
+				Trz: "Trollzacker", 
+				Utu: "Utulu", 
+				Wdm: "Waldmenschen"
+			}
+		}
+	},
 };

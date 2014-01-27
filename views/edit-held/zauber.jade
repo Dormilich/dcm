@@ -80,7 +80,7 @@ html(lang="de")
 					tbody
 						if Array.isArray(Held.Magie.Zauber)
 							each __spell, __idx in Held.Magie.Zauber
-								tr(data-name="Magie.Zauber[[#{__idx}]Spezialisierung][]", data-options=__spell._zauber.SpoMod.concat(__spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) }).map(function(item) { return item.Name})).join('|'))
+								tr(data-name="Magie.Zauber[#{__idx}][Spezialisierung][]", data-options=__spell._zauber.SpoMod.concat(__spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) }).map(function(item) { return item.Name})).join('|'))
 									td
 										input(type="hidden", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
 										input.lock(type="checkbox", checked)

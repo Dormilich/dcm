@@ -163,5 +163,16 @@ module.exports = {
 				;	
 			})
 		;
+	},
+	rituale : function(req, res, next) {
+		Held
+			.findById(req.id)
+			.select('Person')
+			.lean()
+			.exec(function(err, obj) {
+				if (err)  return next(err);
+				res.render('edit-held/ritual', obj);
+			})
+		;
 	}
 };
