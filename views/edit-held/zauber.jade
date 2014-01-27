@@ -34,9 +34,10 @@ html(lang="de")
 			a(href="#spr") Zauber hinzufügen
 			a(href="/held/"+Held._id)= "⇒ "+Held.Person.Name.split(' ')[0]
 			
+		h1.mitte
+			a(href="/held/"+Held._id)= Held.Person.Name
+		
 		section
-			h1.mitte
-				a(href="/held/"+Held._id)= Held.Person.Name
 			form#newSpell(action="/zauber/"+Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				

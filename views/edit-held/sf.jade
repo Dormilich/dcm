@@ -1,3 +1,6 @@
+mixin print(__data)
+	p!=JSON.stringify(__data)
+
 unless SF
 	- SF = {}
 unless SF.Kampf
@@ -250,18 +253,28 @@ html(lang="de")
 									button.add.fl-rechts(type="button") +
 								li
 									strong Repräsentation:
-								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Repräsentation") === 0); })
+								- var __count = 0
+								each __long, __short in _data.Repräsentation
+									- var __isAvailable = SF.magisch.indexOf("Repräsentation ("+__long+")") > -1
 									li
-										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf12_"+__idx)
+										input(type="hidden", name="Magie.Repräsentation[#{__count}][short]", value=__short, disabled=!__isAvailable)
+										input(type="hidden", name="Magie.Repräsentation[#{__count}][long]",  value=__long, disabled=!__isAvailable)
+										input.rep(type="checkbox", name="SF[magisch][]", value="Repräsentation (#{__long})", id="rep_"+__count, checked=__isAvailable)
+										label(for="rep_"+__count)= __long
+									- __count++
+								
+								//- each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Repräsentation") === 0); })
+									li
+										input.rep.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf12_"+__idx)
 										label(for="sf12_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf12a", value="Repräsentation")
+								//- li
+									input.rep.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf12a", value="Repräsentation")
 									label(for="sf12a") Repräsentation
 									select.fl-rechts(size="1")
 										each __rep in _data.Repräsentation
 											option(value=__rep)=__rep
 									button.add.fl-rechts(type="button") +
-								li
+								//- li
 									input.spezifisch(type="checkbox", name="SF[magisch][]", id="sf12b", value="Repräsentation")
 									label(for="sf12b") Repräsentation
 									input.fl-rechts(type="text", placeholder="sonstige Repräsentation")

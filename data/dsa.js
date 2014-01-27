@@ -297,18 +297,18 @@ module.exports = {
 				"Der Namenlose"
 			]
 		},
-		Repräsentation: [
-			"Gildenmagier",
-			"Scharlatan",
-			"Schelm",
-			"Hexe",
-			"Druide",
-			"Geode",
-			"Elf",
-			"Borbaradianer",
-			"Kristallomant",
-			"Magiedilettant"
-		],
+		Repräsentation: {
+			Mag: "Gildenmagier",
+			Srl: "Scharlatan",
+			Sch: "Schelm",
+			Hex: "Hexe",
+			Dru: "Druide",
+			Geo: "Geode",
+			Elf: "Elf",
+			Bor: "Borbaradianer",
+			Ach: "Achaz-Kristallomant",
+			Dil: "Magiedilettant"
+		},
 		Ritualkenntnis: [
 			"Gildenmagier",
 			"Scharlatan", 
