@@ -76,15 +76,15 @@ html(lang="de")
 											option(data-long="Schamane", data-short="Scm", data-rep-short=__short, data-rep-long=__long)=__long
 							td.mitte(colspan="2")
 								button#addrks(type="button") neue Ritualkenntnis
-		table#tmpl-tbl
+		table#tbl-tmpl
 			tbody#tmpl-allg
 				tr
 					td.mitte(style="padding: 0;")
 						input.isactive(type="checkbox", id="rk_{index}", checked)
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="{short}").short
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]",  value="{long}").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]").short
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 					td
-						label(for="rk_{index}") {long}
+						label(for="rk_{index}")
 					td
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -95,14 +95,14 @@ html(lang="de")
 			tbody#tmpl-tanz
 				tr
 					td.mitte(style="padding: 0;")
-						input.isactive(type="checkbox", id="zt_{index}", name="Magie.Ritualkenntnis[{index}][short]", value="Ztz")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Zaubertänzer")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]", value="Zaubertänzer")
+						input.isactive(type="checkbox", id="zt_{index}", checked)
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Ztz")
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
 					td
 						label(for="zt_{index}") Zaubertänzer
 					td 
-						label(for="zt_{index}") Tulamidische Sharisad
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]" value="Tul")
+						label(for="zt_{index}").long
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -204,4 +204,28 @@ html(lang="de")
 				$row.find('.long').val($src.data("long"));
 				// append
 				$('#tbl-rk').append($row);
+				$src.remove();
+			});
+			$('#addrkz').on("click", function() {
+				var $src = $('#rkz option').filter(':selected');
+				var $row = $('#tmpl-tanz tr').clone();
+				var idx  = $('#tbl-rk tbody tr').length;
+				// replace {index}
+				$row.find('.unlock').each(function(){
+					this.name = this.name.replace('{index}', idx);
+				});
+				$row.find('label').each(function(){
+					this.htmlFor = this.htmlFor.replace('{index}', idx);
+				});
+				var rkid = $row.find('input[type="checkbox"]')[0];
+				rkid.id  = rkid.id.replace('{index}', idx);
+				// default dropdown to "E"
+				$row.find('select').val('E');
+				// set values
+				$row.find('.short').val($src.data("rep-short"));
+				$row.find('input.long').val($src.data("rep-long"));
+				$row.find('label.long').text($src.data("rep-long"));
+				// append
+				$('#tbl-rk').append($row);
+				$src.remove();
 			});
