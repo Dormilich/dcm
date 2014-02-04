@@ -27,8 +27,8 @@ mixin SFTableSection(__liste, __name)
 						- for (var y=x, l=__liste.length; y<l; y++)
 							li= __liste[y]
 
-mixin TalentTable(__liste, __name)
-	table.data-section.mitte.eigenschaften
+mixin TalentTable(__liste, __name, __id)
+	table.data-section.mitte.eigenschaften(id=__id)
 		caption= __name
 		colgroup
 			col
@@ -127,13 +127,27 @@ html(lang="de")
 						li
 							a(href="#bas") Basiswerte
 						li
-							a(href="#vnt") Vor- & Nachteile
+							a(href="#vnt") Vor- &amp; Nachteile
 						li
 							a(href="#ap") Abenteuerpunkte
 						li
 							a(href="#sf") Sonderfertigkeiten
 						li
 							a(href="#taw") Talentwerte
+						li 
+							a(href="#t_kam") – Kampf-Talente
+						li 
+							a(href="#t_koe") – Körperliche Talente
+						li 
+							a(href="#t_ges") – Gesellschaftstalente
+						li 
+							a(href="#t_nat") – Naturtalente
+						li 
+							a(href="#t_wis") – Wissenstalente
+						li 
+							a(href="#t_han") – Handwerkstalente
+						li 
+							a(href="#t_spr") – Sprachen &amp; Schriften
 						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
 							li
 								a(href="/magie/"+_id) ► Magiebogen
@@ -292,7 +306,7 @@ html(lang="de")
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		a#taw
-		section.clearfix
+		section.clearfix#t_kam
 			.vor-nach.fl-links
 				+KampfTable(Talente.Nahkampf, 'Nahkampf')
 			.vor-nach.fl-rechts
@@ -301,13 +315,13 @@ html(lang="de")
 			.vor-nach.fl-links
 				if Talente.Gaben.length
 					+TalentTable(Talente.Gaben, 'Gaben')
-				+TalentTable(Talente.körperlich, 'Körperliche Talente')
-				+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente')
-				+TalentTable(Talente.Natur, 'Natur-Talente')
+				+TalentTable(Talente.körperlich, 'Körperliche Talente', "t_koe")
+				+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente', "t_ges")
+				+TalentTable(Talente.Natur, 'Natur-Talente', "t_nat")
 			.vor-nach.fl-rechts
-				+TalentTable(Talente.Wissen, 'Wissenstalente')
-				+TalentTable(Talente.Handwerk, 'Handwerkstalente')
-		section.clearfix
+				+TalentTable(Talente.Wissen, 'Wissenstalente', "t_wis")
+				+TalentTable(Talente.Handwerk, 'Handwerkstalente', "t_han")
+		section.clearfix#t-spr
 			.vor-nach.fl-links
 				+LanguageTable(Talente.Sprachen, 'Sprachen')
 			.vor-nach.fl-rechts

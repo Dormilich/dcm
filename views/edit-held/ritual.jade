@@ -36,7 +36,7 @@ html(lang="de")
 			
 			a#ritualkenntnis
 			section
-				table.data-section.eigenschaften#tbl-rk
+				table.data-section.eigenschaften.mitte#tbl-rk
 					caption Ritualkenntnis
 					colgroup
 						col(style="width: 2em;")
@@ -53,34 +53,34 @@ html(lang="de")
 					tfoot
 						tr
 							td
-							td
+							td.links
 								select#rk(size="1", title="Allgemeine Ritualkenntnisse")
 									optgroup(label="Allgemeine RK")
 										each __long, __short in _data.Ritualkenntnis
 											if typeof __long === "string"
 												option(data-long=__long, data-short=__short)=__long
 							td
-							td.mitte(colspan="2")
+							td(colspan="2")
 								button#addrk(type="button") neue Ritualkenntnis
 						tr
 							td
-							td Zaubertänzer
-							td.mitte
+							td.links Zaubertänzer
+							td
 								select#rkz(size="1", title="Zaubertänzer")
 									optgroup(label="Zaubertänzer")
 										each __long, __short in _data.Ritualkenntnis.Zaubertänzer
 											option(data-long="Zaubertänzer", data-short="Ztz", data-rep-short=__short, data-rep-long=__long)=__long
-							td.mitte(colspan="2")
+							td(colspan="2")
 								button#addrkz(type="button") neue Ritualkenntnis
 						tr
 							td
-							td Schamane
-							td.mitte
+							td.links Schamane
+							td
 								select#rks(size="1", title="Schamanen")
 									optgroup(label="Schamanen")
 										each __long, __short in _data.Ritualkenntnis.Schamane
 											option(data-long="Schamane", data-short="Scm", data-rep-short=__short, data-rep-long=__long)=__long
-							td.mitte(colspan="2")
+							td(colspan="2")
 								button#addrks(type="button") neue Ritualkenntnis
 			section#save
 				.mitte
@@ -89,104 +89,104 @@ html(lang="de")
 		table#tbl-tmpl
 			tbody#tmpl-allg
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="rk_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]").short
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
-					td
+					td.links
 						label(for="rk_{index}")
 					td
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 			tbody#tmpl-tanz
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="zt_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Ztz")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
+					td.links
+						label.links(for="zt_{index}") Zaubertänzer
 					td
-						label(for="zt_{index}") Zaubertänzer
-					td 
 						label(for="zt_{index}").long
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 			tbody#tmpl-schm
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
-					td
+					td.links
 						label(for="sr_{index}") Geister binden
-					td.mitte
+					td
 						label(for="sr_{index}").long
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
-					td
+					td.links
 						label(for="sr_{index}") Geister rufen
-					td.mitte 
+					td 
 						label(for="sr_{index}").long
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
-					td
+					td.links
 						label(for="sr_{index}") Geister bannen
-					td.mitte 
+					td 
 						label(for="sr_{index}").long
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td.mitte(style="padding: 0;")
+					td(style="padding: 0;")
 						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
-					td
+					td.links
 						label(for="sr_{index}") Geister aufnehmen
-					td.mitte 
+					td 
 						label(for="sr_{index}").long
-					td.mitte
+					td
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 								option= kat
-					td.mitte
+					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 		script.
 			// activate/deactivate entries
