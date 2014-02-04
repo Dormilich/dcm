@@ -15,6 +15,12 @@ html(lang="de")
 			tfoot select {
 				width: 50%;
 			}
+			#tbl-tmpl {
+				display: none;
+			}
+			tfoot tr {
+				background-color: #eee;
+			}
 	body
 		a#top
 		nav
@@ -76,6 +82,10 @@ html(lang="de")
 											option(data-long="Schamane", data-short="Scm", data-rep-short=__short, data-rep-long=__long)=__long
 							td.mitte(colspan="2")
 								button#addrks(type="button") neue Ritualkenntnis
+			section#save
+				.mitte
+					button(type="submit") speichern
+					
 		table#tbl-tmpl
 			tbody#tmpl-allg
 				tr
@@ -111,16 +121,16 @@ html(lang="de")
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 			tbody#tmpl-schm
 				tr
-					td.mitte(style="padding: 0;", rowspan="4")
-						input.isactive(type="checkbox", id="sr_{index}")
-					td
-						label Geister binden
+					td.mitte(style="padding: 0;")
+						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
-					td 
-						label(for="sr_{index}") Ork-Schamane
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]",  value="Schamane")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]" value="Ork")
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
+					td
+						label(for="sr_{index}") Geister binden
+					td.mitte
+						label(for="sr_{index}").long
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -128,14 +138,16 @@ html(lang="de")
 					td.mitte
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td
-						label Geister rufen
+					td.mitte(style="padding: 0;")
+						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
-					td 
-						label(for="sr_{index}") Ork-Schamane
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]",  value="Schamane")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]" value="Ork")
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
+					td
+						label(for="sr_{index}") Geister rufen
+					td.mitte 
+						label(for="sr_{index}").long
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -143,14 +155,16 @@ html(lang="de")
 					td.mitte
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td
-						label Geister bannen
+					td.mitte(style="padding: 0;")
+						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
-					td 
-						label(for="sr_{index}") Ork-Schamane
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]",  value="Schamane")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]" value="Ork")
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
+					td
+						label(for="sr_{index}") Geister bannen
+					td.mitte 
+						label(for="sr_{index}").long
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -158,14 +172,16 @@ html(lang="de")
 					td.mitte
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 				tr
-					td
-						label Geister aufnehmen
+					td.mitte(style="padding: 0;")
+						input.isactive(type="checkbox", id="sr_{index}", checked)
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][_talent]", value="...")
-					td 
-						label(for="sr_{index}") Ork-Schamane
 						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Scm")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]",  value="Schamane")
-						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]" value="Ork")
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][long]").long
+						input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]").short
+					td
+						label(for="sr_{index}") Geister aufnehmen
+					td.mitte 
+						label(for="sr_{index}").long
 					td.mitte
 						select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
@@ -184,21 +200,24 @@ html(lang="de")
 					$row.addClass("disabled");
 				}
 			});
+			function reIndex($obj, index) {
+				$obj.find('.unlock').each(function() {
+					this.name = this.name.replace('{index}', index);
+				});
+				$obj.find('label').each(function() {
+					this.htmlFor = this.htmlFor.replace('{index}', index);
+				});
+				var rkid = $obj.find('input[type="checkbox"]')[0];
+				rkid.id  = rkid.id.replace('{index}', index);
+				// default dropdown to "E"
+				$obj.find('select').val('E');
+			}
 			$('#addrk').on("click", function() {
 				var $src = $('#rk option').filter(':selected');
 				var $row = $('#tmpl-allg tr').clone();
 				var idx  = $('#tbl-rk tbody tr').length;
-				// replace {index}
-				$row.find('.unlock').each(function(){
-					this.name = this.name.replace('{index}', idx);
-				});
-				var lbl  = $row.find('label')[0];
-				lbl.htmlFor = lbl.htmlFor.replace('{index}', idx);
-				lbl.textContent = $src.data("long");
-				var rkid = $row.find('input[type="checkbox"]')[0];
-				rkid.id  = rkid.id.replace('{index}', idx);
-				// default dropdown to "E"
-				$row.find('select').val('E');
+				reIndex($row, idx);
+				$row.find('label').text($src.data("long"));
 				// set values
 				$row.find('.short').val($src.data("short"));
 				$row.find('.long').val($src.data("long"));
@@ -210,22 +229,28 @@ html(lang="de")
 				var $src = $('#rkz option').filter(':selected');
 				var $row = $('#tmpl-tanz tr').clone();
 				var idx  = $('#tbl-rk tbody tr').length;
-				// replace {index}
-				$row.find('.unlock').each(function(){
-					this.name = this.name.replace('{index}', idx);
-				});
-				$row.find('label').each(function(){
-					this.htmlFor = this.htmlFor.replace('{index}', idx);
-				});
-				var rkid = $row.find('input[type="checkbox"]')[0];
-				rkid.id  = rkid.id.replace('{index}', idx);
-				// default dropdown to "E"
-				$row.find('select').val('E');
+				reIndex($row, idx);
 				// set values
 				$row.find('.short').val($src.data("rep-short"));
 				$row.find('input.long').val($src.data("rep-long"));
 				$row.find('label.long').text($src.data("rep-long"));
 				// append
 				$('#tbl-rk').append($row);
+				$src.remove();
+			});
+			$('#addrks').on("click", function() {
+				var $src  = $('#rks option').filter(':selected');
+				var $rows = $('#tmpl-schm tr');
+				$('#tmpl-schm tr').each(function() {
+					var idx  = $('#tbl-rk tbody tr').length;
+					var $row = $(this).clone();
+					reIndex($row, idx);
+					// set values
+					$row.find('.short').val($src.data("rep-short"));
+					$row.find('input.long').val( $src.data("rep-long") + "-Schamane");
+					$row.find('label.long').text($src.data("rep-long") + "-Schamane");
+					// append
+					$('#tbl-rk').append($row);
+				});
 				$src.remove();
 			});
