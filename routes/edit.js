@@ -165,13 +165,20 @@ module.exports = {
 		;
 	},
 	rituale : function(req, res, next) {
-		Held
-			.findById(req.id)
-			.select('Person')
-			.lean()
-			.exec(function(err, obj) {
+		Talent
+			.find({ typ: "Schamanismus" })
+			.exec(function(err, objs) {
 				if (err)  return next(err);
-				res.render('edit-held/ritual', obj);
+				Held
+					.findById(req.id)
+					.populate("Magie.Ritualkenntnis._talent")
+					.exec(function(err, obj) {
+						if (err)  return next(err);
+						obj._data    = data.ritual;
+						obj._talente = objs;
+						res.render('edit-held/ritual', obj);
+					})
+				;
 			})
 		;
 	}

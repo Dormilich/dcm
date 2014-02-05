@@ -82,7 +82,7 @@ html(lang="de")
 						li
 							a(href="#spr") Zauber
 						li
-							a Rituale
+							a(href="#rit") Rituale
 						li
 							a(href="/held/"+_id) ► Heldenbogen
 						if SF && contains(SF.geweiht, "Liturgiekenntnis")
@@ -149,8 +149,7 @@ html(lang="de")
 							td= Attribute[val].wert
 		
 		if Array.isArray(Magie.Zauber) && Magie.Zauber.length > 0
-			section
-				a#spr
+			section#spr
 				table.data-section.eigenschaften.mitte.zauber
 					caption Zaubersprüche
 					colgroup
@@ -212,3 +211,45 @@ html(lang="de")
 					$('.zauber').on('click', 'tbody', function(evt) {
 						$(this).toggleClass('hide-rows');
 					});
+		if Array.isArray(Magie.Ritualkenntnis) && Magie.Ritualkenntnis.length > 0
+			section#rit
+				table.data-section.eigenschaften.mitte
+					caption Ritualkenntnis
+					colgroup
+						col
+						col
+						col(style="width: 10em;")
+						col(style="width: 5em;")
+						col(style="width: 10em;")
+					thead
+						tr
+							th Ritualkenntnis
+							th Tradition
+							th Probe
+							th 
+							th RkW
+					tbody
+						each __rk, __idx in Magie.Ritualkenntnis
+							case __rk.short
+								when "Ztz"
+									tr
+										td.links Zaubertänzer
+										td=__rk.long
+										td(title="sh. Ritual")
+										td=__rk.Lernstufe
+										td=__rk.RkW
+								when "Shm"
+									tr
+										td.links=__rk._talent.name
+										td=__rk.long
+										td(title=__rk._talent.probe.join(' · '))=__rk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
+										td=__rk.Lernstufe
+										td=__rk.RkW
+								default
+									tr
+										td.links=__rk.long
+										td
+										td(title="sh. Ritual")
+										td=__rk.Lernstufe
+										td=__rk.RkW
+				

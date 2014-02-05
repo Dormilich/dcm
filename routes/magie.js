@@ -31,7 +31,7 @@ module.exports = {
 	show: function(req, res, next) {
 		Held
 			.findById(req.id)
-			.populate('Magie.Zauber._zauber')
+			.populate('Magie.Zauber._zauber Magie.Ritualkenntnis._talent')
 			.sort('Magie.Zauber._zauber.Name')
 			.exec(function(err, doc) {
 				if (err)  return next(err);
