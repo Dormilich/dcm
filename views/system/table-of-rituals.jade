@@ -1,0 +1,85 @@
+!!! 5
+html(lang="de")
+	head
+		title Ritual-Übersicht
+		style.
+			*[title] {
+				cursor: help;
+			}
+			body {
+				font-family: Georgia, sans-serif;
+			}
+			h1 {
+				text-align: center;
+			}
+			section, header, main, footer {
+				padding: 0 5em;
+			}
+			table {
+				min-width: 75%;
+				margin-bottom: 3em;
+			}
+			caption {
+				font-size: 2em;
+				font-weight: bold;
+				font-family: serif;
+				font-style: italic;
+				padding: 0.5em;
+			}
+			td {
+				padding: 0.2em 1em;
+				border: 1px solid black;
+			}
+			th {
+				background-color: silver;
+			}
+			.mitte {
+				text-align: center;
+			}
+			.links {
+				text-align: left;
+			}
+			tbody:nth-child(odd) {
+				background-color: #ddd;
+			}
+	body
+		header
+			a(href="/ritual/neu") Neues Ritual
+		main
+			table
+				caption Liste der Rituale
+				colgroup
+					col
+					col
+					col(span="4", style="width: 15%;")
+				thead
+					tr
+						th(rowspan="2") Name
+						th Probe
+						th RD
+						th AsP
+						th WD
+						th RW
+					tr
+						th Mod.
+						th(title="Ritualkenntnis") RK.
+						th(title="Tradition/Repräsentation") Trad.
+						th(colspan="2") Merkmale
+				each __rit in Rituale
+					- var __talente = Array.isArray(__rit.Talent) ? __rit.Talent : [];
+					- if (Array.isArray(__rit.Probe)) { __talente.unshift(__rit.Probe.join(' · ')); }
+					tbody.mitte
+						tr
+							td.links(rowspan="2")=__rit.Name
+							td=__talente.join(', ')
+							td=__rit.cast.RD
+							td=__rit.cast.AsP
+							td=__rit.cast.WD
+							td=__rit.cast.RW
+						tr
+							td=__rit.Modifikator
+							td=__rit.Repräsentationen.join(', ')
+							td=__rit.Traditionen.join(', ')
+							td(colspan="2")=__rit.Merkmale.join(', ')
+		footer
+			a(href="/ritual/neu") Neues Ritual

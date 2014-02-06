@@ -31,7 +31,15 @@ var path    = require('path')
 
 module.exports = {
 	list: function (req, res, next) {
-		
+		Ritual
+			.find()
+			.sort('Name')
+			.lean()
+			.exec(function(err, objs) {
+				if (err) return next(err);
+				res.render('system/table-of-rituals', { Rituale: objs });
+			})
+		;
 	},
 	edit: function(req, res, next) {
 		
@@ -53,7 +61,7 @@ module.exports = {
 	save: function(req, res, next) {
 		Ritual.create(req.body, function(err, doc) {
 			if (err) return next(err);
-			res.redirect('/ritual/neu');// => liste!
+			res.redirect('/ritual/liste');
 		});
 	}
 };
