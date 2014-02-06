@@ -88,6 +88,7 @@ process.on('SIGINT', function() {
 var routes = {
 	  talent:   require('./routes/system/talent'),
 	  zauber:   require('./routes/system/zauber'),
+	  ritual:   require('./routes/system/ritual'),
 	  liturgie: require('./routes/system/liturgie')
     }
   , Talent = require('./models/talent');
@@ -140,6 +141,14 @@ app.post('/variante/neu', routes.zauber.variante.save);
 app.get('/zauber/:zid/variante/:vid',    routes.zauber.variante.edit);
 app.put('/zauber/:zid/variante/:vid',    routes.zauber.variante.update);
 app.delete('/zauber/:zid/variante/:vid', routes.zauber.variante.remove);
+
+// Rituale
+app.get('/ritual/liste',   routes.ritual.list);
+app.get('/ritual/neu',     routes.ritual.create);
+app.post('/ritual/neu',    routes.ritual.save);
+app.get('/ritual/:rid',    routes.ritual.edit);
+app.put('/ritual/:rid',    routes.ritual.update);
+app.delete('/ritual/:rid', routes.ritual.remove);
 
 // Liturgien
 app.get('/liturgie/liste',   routes.liturgie.list);

@@ -22,33 +22,38 @@
  * THE SOFTWARE.
  */
 
-// DCM Ritual mongo schema
-var mongoose = require("mongoose")
-  , Schema   = mongoose.Schema
+
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , Ritual  = require( path.join(appRoot, 'models/ritual') )
+  , data    = require( path.join(appRoot, '/data/dsa') )
   ;
 
-function lernstufeValidator(val) {
-	return (["A+", "A", "B", "C", "D", "E", "F", "G", "H"].indexOf(val) > -1);
-}
-function probeValidator(val) {
-	return (["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"].indexOf(val) > -1);
-}
-
-var ritualSchema = new Schema({
-	Name  :  { type: String, required: true }, // unique?
-	Probe : [{ type: String, validator: probeValidator }],
-	Talent:   [String],
-	cast  : {
-		RD  :  String,
-		AsP :  String,
-		WD  :  String,
-		RW  :  String
+module.exports = {
+	list: function (req, res, next) {
+		
 	},
-	Repräsentationen : [String],
-	Modifikator :  String,
-	Traditionen : [String],
-	Merkmale    : [String],
-	Kommentar   :  String
-});
-
-module.exports = mongoose.model('Ritual', ritualSchema);
+	edit: function(req, res, next) {
+		
+	},
+	update: function(req, res, next) {
+		
+	},
+	remove: function(req, res, next) {
+		
+	},
+	create: function(req, res, next) {
+		var obj = {
+			_merkmal: data.magie.Merkmal,
+			_rkListe: data.ritual.Ritualkenntnis,
+			_rkTypen: data.magie.Ritualkenntnis
+		};
+		res.render('system/new-ritual', obj);
+	},
+	save: function(req, res, next) {
+		Ritual.create(req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/ritual/neu');// => liste!
+		});
+	}
+};

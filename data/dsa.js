@@ -466,25 +466,25 @@ module.exports = {
 			{ short: "Hex", long: "Hexenmagie", typ: ["OR", "TR", "VT"] },
 			{ short: "Dru", long: "Druidenmagie", typ: ["OR", "TR"] },
 			{ short: "Geo", long: "Geodenmagie", typ: ["OR", "TR", "VT"] },
-			{ short: "Ach", long: "Kristallomantie", typ: ["OR", "Sch"] },
+			{ short: "Ach", long: "Kristallomantie", typ: ["OR", "Shm"] },
 			{ short: "Alc", long: "Alchimie", typ: ["OR"] },
 			{ short: "Zib", long: "Zibilja", typ: ["TR", "VT"] },
 			{ short: "Dur", long: "Durro-Dûn", typ: ["TR"] },
 			{ short: "Der", long: "Derwische", typ: ["TR"] },
-			{ short: "Gob", long: "Goblin", typ: ["Sch", "VT"] },
-			{ short: "Fer", long: "Ferkina", typ: ["Sch"] },
-			{ short: "Trz", long: "Trollzacker", typ: ["Sch"] },
-			{ short: "Gja", long: "Gjalskerländer", typ: ["Sch"] },
-			{ short: "Fja", long: "Fjarninger", typ: ["Sch"] },
-			{ short: "Niv", long: "Nivesen", typ: ["Sch"] },
-			{ short: "Toc", long: "Tocamuyac", typ: ["Sch"] },
-			{ short: "Wdm", long: "Waldmenschen", typ: ["Sch"] },
-			{ short: "Utu", long: "Utulu", typ: ["Sch"] },
-			{ short: "Ork", long: "Ork", typ: ["Sch"] },
-			{ short: "Tul", long: "Tulamidische Sharisad", typ: ["TR"] },
-			{ short: "Nov", long: "Novadische Sharisad", typ: ["TR"] },
-			{ short: "Haz", long: "Hazaqi", typ: ["TR"] },
-			{ short: "Maj", long: "Majuna", typ: ["TR"] },
+			{ short: "Gob", long: "Goblin", typ: ["Shm", "VT"] },
+			{ short: "Fer", long: "Ferkina", typ: ["Shm"] },
+			{ short: "Trz", long: "Trollzacker", typ: ["Shm"] },
+			{ short: "Gja", long: "Gjalskerländer", typ: ["Shm"] },
+			{ short: "Fja", long: "Fjarninger", typ: ["Shm"] },
+			{ short: "Niv", long: "Nivesen", typ: ["Shm"] },
+			{ short: "Toc", long: "Tocamuyac", typ: ["Shm"] },
+			{ short: "Wdm", long: "Waldmenschen", typ: ["Shm"] },
+			{ short: "Utu", long: "Utulu", typ: ["Shm"] },
+			{ short: "Ork", long: "Ork", typ: ["Shm"] },
+			{ short: "Tul", long: "Tulamidische Sharisad", typ: ["TR", "Ztz"] },
+			{ short: "Nov", long: "Novadische Sharisad", typ: ["TR", "Ztz"] },
+			{ short: "Haz", long: "Hazaqi", typ: ["TR", "Ztz"] },
+			{ short: "Maj", long: "Majuna", typ: ["TR", "Ztz"] },
 			{ short: "God", long: "Seher", typ: ["TR"] },
 			{ short: "Ptr", long: "Petromantie", typ: ["TR"] }
 		]
@@ -523,5 +523,5 @@ module.exports = {
 				Wdm: "Waldmenschen"
 			}
 		}
-	},
+	}
 };

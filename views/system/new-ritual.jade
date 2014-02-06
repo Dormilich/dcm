@@ -1,0 +1,150 @@
+mixin Probe3()
+	- var Attr = ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+	- for (var i=3; i--;)
+		select.probe(size="1", name="Probe")
+			each val in Attr
+				option= val
+!!! 5
+html(lang="de")
+	head
+		title Neues Ritual
+		script(src="/jquery-2.0.3.min.js")
+		style.
+			body {
+				font-family: sans-serif;
+			}
+			form {
+				padding-left: 5em;
+			}
+			fieldset > div {
+				padding: 0.5em 0;
+			}
+			div > label {
+				float: left;
+				width: 10em;
+			}
+			ul.nolist {
+				list-style-type: none;
+			}
+			ul.spez {
+				margin: 0;
+				margin-left: 10em;
+				padding: 0;
+			}
+			li {
+				padding-top: 0.2em;
+				padding-bottom: 0.2em;
+			}
+			fieldset {
+				display: inline-block;
+				padding: 2em 4em;
+				border-radius: 3em;
+			}
+			#r_name {
+				width: 30em;
+			}
+			*[title] {
+				cursor: help;
+			}
+	body
+		h1 Neues Ritual:
+		form#nerit(action="/ritual/neu", method="post", accept-charset="utf-8")
+			fieldset
+				div
+					label(for="r_name") Name
+					input#r_name(type="text", name="Name", placeholder="Ritualname", required)
+				div
+					label#probe(title="zum Deaktivieren klicken") Probe
+					+Probe3()
+				div
+					label(for="mod") Modifikator
+					input#mod(type="text", name="Modifikator", value="")
+				div
+					label Talent
+					ul.spez.nolist
+						li
+							strong Schamanistische Rituale:
+						li
+							input#ruf(type="checkbox", name="Talent[]", value="Geister rufen")
+							label(for="ruf") Geister rufen
+						li
+							input#bin(type="checkbox", name="Talent[]", value="Geister binden")
+							label(for="bin") Geister binden
+						li
+							input#ban(type="checkbox", name="Talent[]", value="Geister bannen")
+							label(for="ban") Geister bannen
+						li
+							input#auf(type="checkbox", name="Talent[]", value="Geister aufnehmen")
+							label(for="auf") Geister aufnehmen
+						li
+							strong Elfenlieder:
+						li
+							input#sing(type="checkbox", name="Talent[]", value="Singen")
+							label(for="sing") Singen
+						li
+							input#mus(type="checkbox", name="Talent[]", value="Musizieren")
+							label(for="mus") Musizieren
+				div
+					label(for="r_rd") Ritualdauer
+					input#r_rd(type="text", name="cast[RD]", placeholder="Aktivierung")
+				div
+					label(for="r_asp") Kosten
+					input#r_asp(type="text", name="cast[AsP]")
+				div
+					label(for="r_wd") Wirkungsdauer
+					input#r_wd(type="text", name="cast[WD]")
+				div
+					label(for="r_rw") Reichweite
+					input#r_rw(type="text", name="cast[RW]")					
+				div
+					label Ritualkenntnis
+					ul.spez.nolist
+						each __rk, __key in _rkListe
+							if typeof __rk === "string"
+								li
+									input(type="checkbox", name="Repräsentationen[]", value=__key, id="rk_"+__key)
+									label(for="rk_"+__key)=__rk
+						li
+							input(type="checkbox", name="Repräsentationen[]", value="Vtm", id="vt")
+							label(for="vt") Vertrautenmagie
+						li.sublist
+							input#ztz(type="checkbox", name="Repräsentationen[]", value="Ztz")
+							label(for="ztz") Zaubertänzer
+							ul.nolist
+								each __trad, __key in _rkListe.Zaubertänzer
+									li
+										input(type="checkbox", name="Traditionen[]", value=__key, id="zt_"+__key)
+										label(for="zt_"+__key)=__trad
+						li.sublist
+							input#shm(type="checkbox", name="Repräsentationen[]", value="Shm")
+							label(for="shm") Schamanismus
+							ul.nolist
+								each __trad, __key in _rkListe.Schamane
+									li
+										input(type="checkbox", name="Traditionen[]", value=__key, id="sm_"+__key)
+										label(for="sm_"+__key)=__trad
+				div
+					label Merkmale
+					ul.spez.nolist
+						each __mmk, __idx in _merkmal
+							li
+								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)
+								label(for="mmk"+__idx)= __mmk
+				button(type="submit") speichern
+		script.
+			// make sure when a tradition is checked the resp. ritualkenntnis is checked, too
+			$('form').on("submit", function() {
+				$('.sublist').each(function() {
+					if ($(this).find('ul input:checked').length) {
+						$(this).children('input').prop('checked', true);
+					}
+					else {
+						$(this).children('input').prop('checked', false);
+					}
+				});
+			});
+			$('#probe').on('click', function() {
+				$(this).parent().find('select').prop('disabled', function(i, chk) {
+					return !chk;
+				});
+			});
