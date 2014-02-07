@@ -8,51 +8,15 @@ mixin Probe3()
 html(lang="de")
 	head
 		title Neues Ritual
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
-		style.
-			body {
-				font-family: sans-serif;
-			}
-			form {
-				padding-left: 5em;
-			}
-			fieldset > div {
-				padding: 0.5em 0;
-			}
-			div > label {
-				float: left;
-				width: 10em;
-			}
-			ul.nolist {
-				list-style-type: none;
-			}
-			ul.spez {
-				margin: 0;
-				margin-left: 10em;
-				padding: 0;
-			}
-			li {
-				padding-top: 0.2em;
-				padding-bottom: 0.2em;
-			}
-			fieldset {
-				display: inline-block;
-				padding: 2em 4em;
-				border-radius: 3em;
-			}
-			#r_name {
-				width: 30em;
-			}
-			*[title] {
-				cursor: help;
-			}
 	body
 		h1 Neues Ritual:
 		form#nerit(action="/ritual/neu", method="post", accept-charset="utf-8")
 			fieldset
 				div
 					label(for="r_name") Name
-					input#r_name(type="text", name="Name", placeholder="Ritualname", required)
+					input#r_name.primary-field(type="text", name="Name", placeholder="Ritualname", required)
 				div
 					label#probe(title="zum Deaktivieren klicken") Probe
 					+Probe3()
@@ -61,7 +25,7 @@ html(lang="de")
 					input#mod(type="text", name="Modifikator", value="")
 				div
 					label Talent
-					ul.spez.nolist
+					ul.indent
 						li
 							strong Schamanistische Rituale:
 						li
@@ -98,7 +62,7 @@ html(lang="de")
 					input#r_rw(type="text", name="cast[RW]")					
 				div
 					label Ritualkenntnis
-					ul.spez.nolist
+					ul.indent
 						each __rk, __key in _rkListe
 							if typeof __rk === "string"
 								li
@@ -110,7 +74,7 @@ html(lang="de")
 						li.sublist
 							input#ztz(type="checkbox", name="Repräsentationen[]", value="Ztz")
 							label(for="ztz") Zaubertänzer
-							ul.nolist
+							ul
 								each __trad, __key in _rkListe.Zaubertänzer
 									li
 										input(type="checkbox", name="Traditionen[]", value=__key, id="zt_"+__key)
@@ -118,14 +82,14 @@ html(lang="de")
 						li.sublist
 							input#shm(type="checkbox", name="Repräsentationen[]", value="Shm")
 							label(for="shm") Schamanismus
-							ul.nolist
+							ul
 								each __trad, __key in _rkListe.Schamane
 									li
 										input(type="checkbox", name="Traditionen[]", value=__key, id="sm_"+__key)
 										label(for="sm_"+__key)=__trad
 				div
 					label Merkmale
-					ul.spez.nolist
+					ul.indent
 						each __mmk, __idx in _merkmal
 							li
 								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)

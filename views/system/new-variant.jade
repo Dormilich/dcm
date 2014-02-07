@@ -2,46 +2,19 @@
 html(lang="de")
 	head
 		title Neue Zaubervariante
-		style.
-			body {
-				font-family: Georgia;
-			}
-			form {
-				padding-left: 5em;
-			}
-			fieldset > div {
-				padding: 0.5em 0;
-			}
-			div > label {
-				float: left;
-				width: 10em;
-			}
-			.spez {
-				list-style-type: none;
-				margin: 0;
-				margin-left: 10em;
-				padding: 0;
-			}
-			fieldset {
-				display: inline-block;
-				padding: 2em 4em;
-				border-radius: 3em;
-			}
-			#z_name {
-				width: 30em;
-			}
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
 		h1 Neue Zaubervariante:
 		form#nesp(action="/variante/neu", method="post", accept-charset="utf-8")
 			fieldset
 				div
 					label Variante des
-					select(size="1", name="zauber", style="width: 50%")
+					select.primary-field(size="1", name="zauber")
 						each __spell in Zauber
 							option(value=__spell._id)=__spell.Name
 				div
 					label(for="v_name") Name:
-					input#v_name(type="text", name="Name", required, style="width: 50%")
+					input#v_name.primary-field(type="text", name="Name", required, style="width: 50%")
 				div
 					label(for="v_min") Mindest-ZfW:
 					input#v_min(type="number", name="modifikation[minZfW]", min="1", step="1", value="")
@@ -63,7 +36,7 @@ html(lang="de")
 				div
 					label Typ:
 					input#typ(type="hidden", name="modifikation[typ]", value="")
-					ul.spez
+					ul.indent
 						li
 							input(type="checkbox", value="A", id="typ_a")
 							label(for="typ_a") Aufrechterhaltender Zauber
@@ -78,7 +51,7 @@ html(lang="de")
 							label(for="typ_x") situationsabhängige Erschwernis
 				div
 					label vorhanden in:
-					ul.spez
+					ul.indent
 						each __rep, __idx in Repräsentation
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)

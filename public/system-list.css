@@ -1,0 +1,44 @@
+/* common classes */
+.mitte {
+	text-align: center;
+}
+.links {
+	text-align: left;
+}
+
+/* elements */
+body {
+	font-family: Georgia, sans-serif;
+}
+*[title] {
+	cursor: help;
+}
+h1 {
+	text-align: center;
+}
+
+/* grouping content */
+section, header, main, footer {
+	padding: 0 5em;
+}
+
+/* tables */
+table {
+	width: 100%;
+	margin-bottom: 3em;
+}
+caption {
+	font-size: 2em;
+	font-weight: bold;
+	font-family: serif;
+	font-style: italic;
+	padding: 0.5em;
+}
+td {
+	padding: 0.2em 1em;
+	border: 1px solid black;
+}
+td a {
+	color: inherit;
+	text-decoration: none;
+}

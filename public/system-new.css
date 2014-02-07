@@ -1,0 +1,52 @@
+/* classes */
+.mitte {
+	text-align: center;
+}
+.links {
+	text-align: left;
+}
+.indent {
+	margin: 0;
+	margin-left: 10em;
+	padding: 0;
+}
+.primary-field {
+	width: 30em;
+}
+
+/* elements */
+body {
+	font-family: Georgia, sans-serif;
+}
+*[title] {
+	cursor: help;
+}
+
+
+/* forms */
+form {
+	padding-left: 5em;
+}
+fieldset {
+	display: inline-block;
+	padding: 2em 4em;
+	margin:  1em;
+	border-radius: 3em;
+}
+fieldset > div {
+	padding: 0.5em 0;
+}
+div > label {
+	float: left;
+	width: 10em;
+}
+
+/* lists */
+ul {
+	list-style-type: none;
+}
+li {
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+

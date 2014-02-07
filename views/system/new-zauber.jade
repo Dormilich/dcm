@@ -8,41 +8,14 @@ mixin Probe3()
 html(lang="de")
 	head
 		title Neuer Zauberspruch
-		style.
-			body {
-				font-family: sans-serif;
-			}
-			form {
-				padding-left: 5em;
-			}
-			fieldset > div {
-				padding: 0.5em 0;
-			}
-			div > label {
-				float: left;
-				width: 10em;
-			}
-			.spez {
-				list-style-type: none;
-				margin: 0;
-				margin-left: 10em;
-				padding: 0;
-			}
-			fieldset {
-				display: inline-block;
-				padding: 2em 4em;
-				border-radius: 3em;
-			}
-			#z_name {
-				width: 30em;
-			}
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
 		h1 Neuer Zauberspruch:
 		form#nesp(action="/zauber/neu", method="post", accept-charset="utf-8")
 			fieldset
 				div
 					label(for="z_name") Name
-					input#z_name(type="text", name="Name", required)
+					input#z_name.primary-field(type="text", name="Name", required)
 				div
 					label Probe
 					+Probe3()
@@ -72,7 +45,7 @@ html(lang="de")
 				div
 					label Typ
 					input#typ(type="hidden", name="modifikation[typ]", value="")
-					ul.spez
+					ul.indent
 						li
 							input(type="checkbox", value="A", id="typ_a")
 							label(for="typ_a") Aufrechterhaltender Zauber
@@ -87,28 +60,28 @@ html(lang="de")
 							label(for="typ_x") situationsabhängige Erschwernis
 				div
 					label Repräsentationen
-					ul.spez
+					ul.indent
 						each __rep, __idx in Repräsentation
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
 								label(for="rep"+__idx, title=__rep.short)= "("+__rep.short+") "+__rep.long
 				div
 					label Ziel
-					ul.spez
+					ul.indent
 						each __ziel, __idx in ziel
 							li
 								input(type="checkbox", name="Ziel[]", value=__ziel.short, id="zl"+__idx)
 								label(for="zl"+__idx, title=__ziel.short)= __ziel.long
 				div
 					label erlaubte spontane Modifikationen
-					ul.spez
+					ul.indent
 						each __spm, __idx in spomo
 							li
 								input(type="checkbox", name="SpoMod[]", value=__spm.short, id="spm"+__idx)
 								label(for="spm"+__idx, title=__spm.short)= "("+__spm.short+") "+__spm.long
 				div
 					label Merkmale
-					ul.spez
+					ul.indent
 						each __mmk, __idx in Merkmal
 							li
 								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)

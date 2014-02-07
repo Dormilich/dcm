@@ -2,25 +2,11 @@
 html(lang="de")
 	head
 		title Zauber-Übersicht
+		link(rel="stylesheet", type="text/css", href="/system-list.css")
 		style.
-			body {
-				font-family: Georgia;
-				padding: 2em;
-			}
-			table {
-				width: 100%;
-			}
-			caption {
-				font-size: 2em;
-				font-weight: bold;
-				font-family: serif;
-				font-style: italic;
-				padding: 0.5em;
-			}
 			td {
 				text-align: center;
 				padding: 0.2em 0.4em;
-				border: 1px solid gray;
 				border-collapse: collapse;
 			}
 			th {
@@ -28,10 +14,6 @@ html(lang="de")
 			}
 			td:first-child {
 				text-align: left;
-			}
-			td a {
-				color: inherit;
-				text-decoration: none;
 			}
 			thead {
 				background-color: #eee;
@@ -48,12 +30,6 @@ html(lang="de")
 			}
 			.meta td {
 				background-color: #eee;
-			}
-			.links {
-				text-align: left;
-			}
-			.mitte {
-				text-align: center;
 			}
 	body
 		section
