@@ -12,8 +12,9 @@ html(lang="de")
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
 	body
-		h1 Neues Ritual:
 		form#nerit(action="/ritual/neu", method="post", accept-charset="utf-8")
+			fieldset
+				h1.mitte Neues Ritual:
 			fieldset
 				div
 					label(for="r_name") Name

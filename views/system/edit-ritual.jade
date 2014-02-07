@@ -13,9 +13,10 @@ html(lang="de")
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
 	body
-		h1 Ritual [#{_ritual.Name}] bearbeiten:
 		form#nerit(action="/ritual/"+_ritual._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
+			fieldset
+				h1.mitte [#{_ritual.Name}] bearbeiten:
 			fieldset
 				div
 					label(for="r_name") Name

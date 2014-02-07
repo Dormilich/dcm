@@ -1,31 +1,35 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Startseite
-		style.
-			body {
-				font-family: Georgia;
-			}
-			li {
-				padding: 0.3em;
-			}
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
+		h1 Mach was in der Datenbank …
 		ul
-			li
-				a(href="/talent/liste") Übersicht der Talente
-			li
-				a(href="/talent/neu") Neues Talent
-			li
-				a(href="/zauber/liste") Übersicht der Zaubersprüche
-			li
-				a(href="/zauber/neu") Neuer Zauberspruch
-			li
-				a(href="/variante/neu") Neue Zauber-Variante
-			li
-				a(href="/ritual/liste") Übersicht der Rituale
-			li
-				a(href="/ritual/neu") Neues Ritual
-			li
-				a(href="/liturgie/liste") Übersicht der Liturgien
-			li
-				a(href="/liturgie/neu") Neue Liturgie
+			li Talente
+				ul
+					li
+						a(href="/talent/liste") Übersicht der Talente
+					li
+						a(href="/talent/neu") Neues Talent
+			li Zauber
+				ul
+					li
+						a(href="/zauber/liste") Übersicht der Zaubersprüche
+					li
+						a(href="/zauber/neu") Neuer Zauberspruch
+					li
+						a(href="/variante/neu") Neue Zauber-Variante
+			li Rituale
+				ul
+					li
+						a(href="/ritual/liste") Übersicht der Rituale
+					li
+						a(href="/ritual/neu") Neues Ritual
+			li Liturgien
+				ul
+					li
+						a(href="/liturgie/liste") Übersicht der Liturgien
+					li
+						a(href="/liturgie/neu") Neue Liturgie
