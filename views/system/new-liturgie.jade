@@ -1,17 +1,12 @@
 !!! 5
 html
 	head
-		title Neue Liturgie
 		meta(charset="utf-8")
+		title Neue Liturgie
 		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
 		style.
-			#submitter button {
-				width: 10em;
-				height: 2.5em;
-				margin: 0 1em;
-			}
 			#gott button {
 				width: 15em;
 			}
@@ -22,7 +17,7 @@ html
 			fieldset
 				div
 					label(for="l_name") Name
-					input#l_name(type="text", name="name", placeholder="Liturgie-Name", required)
+					input#l_name.primary-field(type="text", name="name", placeholder="Liturgie-Name", required)
 				div
 					label(for="l_grad") Grad
 					select#l_grad(name="grad", size="1")
@@ -58,7 +53,7 @@ html
 								li
 									input(type="checkbox", name="typ[]", id="g"+__count+"_"+__idx, value=__gott)
 									label(for="g"+__count+"_"+__idx)=__gott
-			fieldset#submitter.mitte
+			fieldset.submitter.mitte
 				button(type="submit") speichern
 				button(type="reset") zurücksetzen
 		script.

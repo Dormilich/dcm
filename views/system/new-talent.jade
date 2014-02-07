@@ -5,54 +5,57 @@ mixin Probe3()
 			each val in Attr
 				option= val
 
-
 doctype 5
 html
 	head
+		meta(charset="utf-8")
 		title Neues Talent
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
-		h1 Neues Talent:
 		form(action="/talent/neu", method="post", accept-charset="utf-8")
-			div
-				label(for="t_name") Name
-				input#t_name(type="text", name="name", placeholder="Talent-Name", required)
-			div
-				label Talentgruppe
-				select.swap(size="1", name="typ")
-					each val in kategorie
-						option= val
-				button#swap(type="button") &#8644;
-				input.swap(type="text", name="typ", placeholder="Talentgruppe", disabled)
-			div
-				label Probe
-				+Probe3()
-			div
-				label Lernstufe
-				select#stufe(size="1", name="stufe")
-					option A+
-					option A
-					option(selected) B
-					option C
-					option D
-					option E
-					option F
-					option G
-					option H
-			div
-				label Standard?
-				input(type="checkbox", name="standard")
-			div
-				label Spezialisierungen
-				input(type="text", name="spezialisierungen")
-				button#add(type="button") +
-			div
+			fieldset
+				h1.mitte Neues Talent:
+			fieldset
+				div
+					label(for="t_name") Name
+					input#t_name.primary-field(type="text", name="name", placeholder="Talent-Name", required)
+				div
+					label Talentgruppe
+					select.swap(size="1", name="typ")
+						each val in kategorie
+							option= val
+					button#swap(type="button") &#8644;
+					input.swap(type="text", name="typ", placeholder="Talentgruppe", disabled)
+				div
+					label Probe
+					+Probe3()
+				div
+					label Lernstufe
+					select#stufe(size="1", name="stufe")
+						option A+
+						option A
+						option(selected) B
+						option C
+						option D
+						option E
+						option F
+						option G
+						option H
+				div
+					label Standard?
+					input(type="checkbox", name="standard")
+				div
+					label Spezialisierungen
+					ul.indent
+						li
+							button#add(type="button") +
+			fieldset.submitter.mitte
 				button(type="submit") speichern
+				button(type="reset") zurücksetzen
 		script.
 			$('#add').on("click", function() {
-				var $this = $(this);
-				$this.prev().clone().insertBefore($this);
+				$('<li><input type="text" name="spezialisierungen"></li>').insertBefore(this.parentNode);
 			});
 			$('#swap').on("click", function() {
 				var $prev = $(this).prev(), $next = $(this).next();

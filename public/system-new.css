@@ -13,6 +13,11 @@
 .primary-field {
 	width: 30em;
 }
+.submitter button {
+	width:  40%;
+	height: 2.5em;
+	margin: 0 1em;
+}
 
 /* elements */
 body {
@@ -32,6 +37,7 @@ fieldset {
 	padding: 2em 4em;
 	margin:  1em;
 	border-radius: 3em;
+	min-width: 40em;
 }
 fieldset > div {
 	padding: 0.5em 0;

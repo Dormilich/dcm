@@ -1,0 +1,113 @@
+mixin Probe3()
+	- var Attr = ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "??"]
+	- for (var i=3; i--;)
+		select.probe(size="1", name="Probe")
+			each val in Attr
+				option= val
+
+!!! 5
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title Ritual bearbeiten
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
+		script(src="/jquery-2.0.3.min.js")
+	body
+		h1 Ritual [#{_ritual.Name}] bearbeiten:
+		form#nerit(action="/ritual/"+_ritual._id, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="put")
+			fieldset
+				div
+					label(for="r_name") Name
+					input#r_name.primary-field(type="text", name="Name", value=_ritual.Name, required)
+				div 
+					label#probe(title="zum Deaktivieren klicken") Probe
+					+Probe3()
+					if Array.isArray(_ritual.Probe) && _ritual.Probe.length > 0
+						each val, key in _ritual.Probe
+							script $('.probe').eq(#{key}).val('#{val}');
+					else
+						script $('#probe').trigger("click");
+					
+				div
+					label(for="mod") Modifikator
+					input#mod(type="text", name="Modifikator", value=_ritual.Modifikator)
+				div
+					label Talent
+					ul.indent
+						li
+							strong Schamanistische Rituale:
+						li
+							input#ruf(type="checkbox", name="Talent[]", value="Geister rufen", checked=_ritual.Talent.indexOf("Geister rufen") > -1)
+							label(for="ruf") Geister rufen
+						li
+							input#bin(type="checkbox", name="Talent[]", value="Geister binden", checked=_ritual.Talent.indexOf("Geister binden") > -1)
+							label(for="bin") Geister binden
+						li
+							input#ban(type="checkbox", name="Talent[]", value="Geister bannen", checked=_ritual.Talent.indexOf("Geister bannen") > -1)
+							label(for="ban") Geister bannen
+						li
+							input#auf(type="checkbox", name="Talent[]", value="Geister aufnehmen", checked=_ritual.Talent.indexOf("Geister aufnehmen") > -1)
+							label(for="auf") Geister aufnehmen
+						li
+							strong Elfenlieder:
+						li
+							input#sing(type="checkbox", name="Talent[]", value="Singen", checked=_ritual.Talent.indexOf("Singen") > -1)
+							label(for="sing") Singen
+						li
+							input#mus(type="checkbox", name="Talent[]", value="Musizieren", checked=_ritual.Talent.indexOf("Musizieren") > -1)
+							label(for="mus") Musizieren
+				div
+					label(for="r_rd") Ritualdauer
+					input#r_rd(type="text", name="cast[RD]", value=_ritual.cast.RD)
+				div
+					label(for="r_asp") Kosten
+					input#r_asp(type="text", name="cast[AsP]", value=_ritual.cast.AsP)
+				div
+					label(for="r_wd") Wirkungsdauer
+					input#r_wd(type="text", name="cast[WD]", value=_ritual.cast.WD)
+				div
+					label(for="r_rw") Reichweite
+					input#r_rw(type="text", name="cast[RW]", value=_ritual.cast.RW)					
+				div
+					label Ritualkenntnis
+					ul.indent
+						each __rk, __key in _rkListe
+							if typeof __rk === "string"
+								li
+									input(type="checkbox", name="Repräsentationen[]", value=__key, id="rk_"+__key, checked=_ritual.Repräsentationen.indexOf(__key) > -1)
+									label(for="rk_"+__key)=__rk
+						li
+							input(type="checkbox", name="Repräsentationen[]", value="Vtm", id="vt", checked=_ritual.Repräsentationen.indexOf("Vtm") > -1)
+							label(for="vt") Vertrautenmagie
+						li.sublist
+							input#ztz(type="checkbox", name="Repräsentationen[]", value="Ztz", checked=_ritual.Repräsentationen.indexOf("Ztz") > -1)
+							label(for="ztz") Zaubertänzer
+							ul
+								each __trad, __key in _rkListe.Zaubertänzer
+									li
+										input(type="checkbox", name="Traditionen[]", value=__key, id="zt_"+__key, checked=_ritual.Traditionen.indexOf(__key) > -1)
+										label(for="zt_"+__key)=__trad
+						li.sublist
+							input#shm(type="checkbox", name="Repräsentationen[]", value="Shm", checked=_ritual.Repräsentationen.indexOf("Shm") > -1)
+							label(for="shm") Schamanismus
+							ul
+								each __trad, __key in _rkListe.Schamane
+									li
+										input(type="checkbox", name="Traditionen[]", value=__key, id="sm_"+__key, checked=_ritual.Traditionen.indexOf(__key) > -1)
+										label(for="sm_"+__key)=__trad
+				div
+					label Merkmale
+					ul.indent
+						each __mmk, __idx in _merkmal
+							li
+								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx, checked=_ritual.Merkmale.indexOf(__mmk) > -1)
+								label(for="mmk"+__idx)= __mmk
+			fieldset.mitte.submitter
+				button(type="submit") speichern
+		script(src="/system-ritual.js")
+		
+		form(action="/ritual/"+_ritual._id, method="post", accept-charset="utf-8")
+			input(type="hidden", name="_method", value="delete")
+			fieldset.mitte.submitter
+				button(type="submit") löschen

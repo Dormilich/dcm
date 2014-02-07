@@ -7,6 +7,7 @@ mixin Probe3()
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Neues Ritual
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
@@ -94,21 +95,7 @@ html(lang="de")
 							li
 								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)
 								label(for="mmk"+__idx)= __mmk
+			fieldset.submitter.mitte
 				button(type="submit") speichern
-		script.
-			// make sure when a tradition is checked the resp. ritualkenntnis is checked, too
-			$('form').on("submit", function() {
-				$('.sublist').each(function() {
-					if ($(this).find('ul input:checked').length) {
-						$(this).children('input').prop('checked', true);
-					}
-					else {
-						$(this).children('input').prop('checked', false);
-					}
-				});
-			});
-			$('#probe').on('click', function() {
-				$(this).parent().find('select').prop('disabled', function(i, chk) {
-					return !chk;
-				});
-			});
+				button(type="reset") zurücksetzen
+		script(src="/system-ritual.js")

@@ -1,11 +1,15 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Ritual-Übersicht
 		link(rel="stylesheet", type="text/css", href="/system-list.css")
 		style.
 			th {
-				background-color: silver;
+				padding: 0.4em 0;
+			}
+			thead {
+				background-color: #eee;
 			}
 			tbody:nth-child(odd) {
 				background-color: #ddd;
@@ -38,7 +42,8 @@ html(lang="de")
 					- if (Array.isArray(__rit.Probe)) { __talente.unshift(__rit.Probe.join(' · ')); }
 					tbody.mitte
 						tr
-							td.links(rowspan="2")=__rit.Name
+							td.links(rowspan="2")
+								a(href="/ritual/"+__rit._id)=__rit.Name
 							td=__talente.join(', ')
 							td=__rit.cast.RD
 							td=__rit.cast.AsP

@@ -1,6 +1,7 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Zauber-Übersicht
 		link(rel="stylesheet", type="text/css", href="/system-list.css")
 		style.
@@ -32,11 +33,11 @@ html(lang="de")
 				background-color: #eee;
 			}
 	body
-		section
+		header
 			a(href="/zauber/neu") neuer Zauber
 			br
 			a(href="/variante/neu") neue Variante
-		section
+		main
 			table.zauber(cellspacing="1")
 				caption Liste der Zauber
 				colgroup
@@ -95,7 +96,7 @@ html(lang="de")
 									td= __variant.cast.AsP
 									td= __variant.cast.WD
 									td= __variant.cast.RW
-		section
+		footer
 			a(href="/zauber/neu") neuer Zauber
 			br
 			a(href="/variante/neu") neue Variante

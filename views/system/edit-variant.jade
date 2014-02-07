@@ -1,48 +1,25 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Zaubervariante bearbeiten
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
-		style.
-			body {
-				font-family: Georgia;
-			}
-			form {
-				padding-left: 5em;
-			}
-			fieldset > div {
-				padding: 0.5em 0;
-			}
-			div > label {
-				float: left;
-				width: 10em;
-			}
-			.spez {
-				list-style-type: none;
-				margin: 0;
-				margin-left: 10em;
-				padding: 0;
-			}
-			fieldset {
-				display: inline-block;
-				padding: 2em 4em;
-				border-radius: 3em;
-			}
-			#z_name {
-				width: 30em;
-			}
 	body
-		h1 Zaubervariante:
+		nav
+			a(href="/zauber/liste") Zauberliste
 		form#nesp(action="/zauber/"+_Zauber._id+"/variante/"+_Variante._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			input(type="hidden", name="_id", value=_Variante._id)
+			fieldset
+				h1.mitte [#{_Variante.Name}] bearbeiten:
 			fieldset
 				div
 					label Variante des
 					span=_Zauber.Name
 				div
 					label(for="v_name") Name:
-					input#v_name(type="text", name="Name", required, style="width: 50%", value=_Variante.Name)
+					input#v_name.primary-field(type="text", name="Name", required, style="width: 50%", value=_Variante.Name)
 				div
 					label(for="v_min") Mindest-ZfW:
 					input#v_min(type="number", name="modifikation[minZfW]", min="1", step="1", value=_Variante.modifikation.minZfW)
@@ -64,7 +41,7 @@ html(lang="de")
 				div
 					label Typ:
 					input#typ(type="hidden", name="modifikation[typ]", value="")
-					ul.spez
+					ul.indent
 						li
 							input(type="checkbox", value="A", id="typ_a", checked=_Variante.modifikation.typ.indexOf('A') > -1)
 							label(for="typ_a") Aufrechterhaltender Zauber
@@ -79,12 +56,13 @@ html(lang="de")
 							label(for="typ_x") situationsabhängige Erschwernis
 				div
 					label vorhanden in:
-					ul.spez
+					ul.indent
 						each __rep, __idx in Repräsentation
 							- var __active = _Variante.Repräsentationen.indexOf(__rep.short) > -1
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx, checked=__active)
 								label(for="rep"+__idx, title=__rep.short)= __rep.long
+			fieldset.submitter.mitte
 				button(type="submit") speichern
 		script.
 			$ = document.getElementById.bind(document);
@@ -98,5 +76,5 @@ html(lang="de")
 			});
 		form(action="/zauber/"+_Zauber._id+"/variante/"+_Variante._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="delete")
-			fieldset
+			fieldset.submitter.mitte
 				button(type="submit") löschen

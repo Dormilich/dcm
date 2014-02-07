@@ -7,11 +7,13 @@ mixin Probe3()
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Neuer Zauberspruch
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
-		h1 Neuer Zauberspruch:
 		form#nesp(action="/zauber/neu", method="post", accept-charset="utf-8")
+			fieldset
+				h1.mitte Neuer Zauberspruch:
 			fieldset
 				div
 					label(for="z_name") Name
@@ -86,7 +88,9 @@ html(lang="de")
 							li
 								input(type="checkbox", name="Merkmale[]", value=__mmk, id="mmk"+__idx)
 								label(for="mmk"+__idx)= __mmk
+			fieldset.submitter.mitte
 				button(type="submit") speichern
+				button(type="reset") zurücksetzen
 		script.
 			$ = document.getElementById.bind(document);
 			$('nesp').addEventListener('submit', function(evt) {

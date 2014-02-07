@@ -42,13 +42,29 @@ module.exports = {
 		;
 	},
 	edit: function(req, res, next) {
-		
+		Ritual.findById(req.params.rid, function(err, doc) {
+			if (err)  return next(err);
+			if (!doc) return next('route');
+			var obj = {
+				_merkmal: data.magie.Merkmal,
+				_rkListe: data.ritual.Ritualkenntnis,
+				_rkTypen: data.magie.Ritualkenntnis,
+				_ritual : doc
+			};
+			res.render('system/edit-ritual', obj);
+		});
 	},
 	update: function(req, res, next) {
-		
+		Ritual.findByIdAndUpdate(req.params.rid, req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/ritual/liste');
+		});
 	},
 	remove: function(req, res, next) {
-		
+		Ritual.findByIdAndRemove(req.params.rid, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/ritual/liste');
+		});
 	},
 	create: function(req, res, next) {
 		var obj = {

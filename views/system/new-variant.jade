@@ -1,11 +1,13 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Neue Zaubervariante
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 	body
-		h1 Neue Zaubervariante:
 		form#nesp(action="/variante/neu", method="post", accept-charset="utf-8")
+			fieldset
+				h1.mitte Neue Zaubervariante:
 			fieldset
 				div
 					label Variante des
@@ -56,6 +58,7 @@ html(lang="de")
 							li
 								input(type="checkbox", name="Repräsentationen[]", value=__rep.short, id="rep"+__idx)
 								label(for="rep"+__idx, title=__rep.short)= "("+__rep.short+") "+__rep.long
+			fieldset.submitter.mitte
 				button(type="submit") speichern
 		script.
 			$ = document.getElementById.bind(document);

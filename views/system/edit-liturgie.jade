@@ -1,44 +1,12 @@
 !!! 5
 html
 	head
-		title Liturgie [#{name}] bearbeiten
 		meta(charset="utf-8")
+		title Liturgie bearbeiten
 		link(rel="stylesheet", type="text/css", href="/dropout.css")
+		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
 		style.
-			body {
-				font-family: Georgia, sans-serif;
-			}
-			fieldset > div {
-				padding: 0.5em;
-			}
-			div > label {
-				float: left;
-				width: 10em;
-			}
-			ul {
-				list-style-type: none;
-			}
-			.spez {
-				list-style-type: none;
-				margin: 0;
-				margin-left: 10em;
-				padding: 0;
-			}
-			fieldset {
-				border-radius: 3em;
-				padding: 2em 4em;
-				width: 30em;
-				margin: 1em;
-			}
-			.mitte {
-				text-align: center;
-			}
-			.submitter button {
-				width: 10em;
-				height: 2.5em;
-				margin: 0 1em;
-			}
 			#gott button {
 				width: 15em;
 			}
@@ -46,11 +14,11 @@ html
 		form#new(action="/liturgie/"+_id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			fieldset
-				h1.mitte [#{name}] bearbeiten
+				h1.mitte [#{name}] bearbeiten:
 			fieldset
 				div
 					label(for="l_name") Name
-					input#l_name(type="text", name="name", placeholder="Liturgie-Name", value=name, required)
+					input#l_name.primary-field(type="text", name="name", placeholder="Liturgie-Name", value=name, required)
 				div
 					label(for="l_grad") Grad
 					select#l_grad(name="grad", size="1")
@@ -74,7 +42,7 @@ html
 					- var __count = 0
 					each __name, __typ in _Götter
 						- __count += 1
-						ul.spez
+						ul.indent
 							li
 								button(type="button")=__typ
 							each __gott, __idx in __name
@@ -83,7 +51,7 @@ html
 									label(for="g"+__count+"_"+__idx)=__gott
 			fieldset.submitter.mitte
 				button(type="submit") speichern
-				button(type="reset") zurücksetzen
+
 		form#new(action="/liturgie/"+_id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="delete")
 			fieldset.submitter.mitte
@@ -92,7 +60,7 @@ html
 			$('#uni').on("click", function() {
 				$('#gott input').prop('checked', true);
 			});
-			$('#gott').on("click", ".spez button", function() {
+			$('#gott').on("click", ".indent button", function() {
 				var $boxes = $(this).closest('ul').find('input');
 				$boxes.prop('checked', !$boxes.prop('checked'));
 			});
