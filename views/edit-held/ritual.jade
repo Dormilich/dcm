@@ -23,7 +23,9 @@ html(lang="de")
 		title Rituale hinzufügen
 		link(rel="stylesheet", type="text/css", href="/show.css")
 		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/tablesorter/tablesorter.css")
 		script(src="/jquery-2.0.3.min.js")
+		script(src="/tablesorter/jquery.tablesorter.min.js")
 		style.
 			label[for] {
 				cursor: pointer;
@@ -41,17 +43,18 @@ html(lang="de")
 		a#top
 		nav
 			a(href="#top") [Seitenanfang]
+			a(href="#ritualkenntnis") Ritualkenntnis
+			a(href="#rituale") Rituale
 			a(href="#save") [speichern]
-			a(href="/magie/"+_id, title="Magiebogen")= "⇒ "+Person.Name.split(' ')[0]
+			a(href="/magie/"+_held._id, title="Magiebogen")= "⇒ "+_held.Person.Name.split(' ')[0]
 		
 		h1.mitte
-			a(href="/held/"+_id, title="Heldenbogen")= Person.Name
+			a(href="/held/"+_held._id, title="Heldenbogen")= _held.Person.Name
 		
-		form(action="/ritual/"+_id, method="post", accept-charset="utf-8")
+		form(action="/ritual/"+_held._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			
-			a#ritualkenntnis
-			section
+			section#ritualkenntnis
 				table.data-section.eigenschaften.mitte#tbl-rk
 					caption Ritualkenntnis
 					colgroup
@@ -99,8 +102,8 @@ html(lang="de")
 							td(colspan="2")
 								button#addrks(type="button") neue Ritualkenntnis
 					tbody
-						if Array.isArray(Magie.Ritualkenntnis)
-							each __rk, __idx in Magie.Ritualkenntnis
+						if Array.isArray(_held.Magie.Ritualkenntnis)
+							each __rk, __idx in _held.Magie.Ritualkenntnis
 								case __rk.short
 									when "Ztz"
 										tr
@@ -152,10 +155,42 @@ html(lang="de")
 														option(selected=(__rk.Lernstufe === kat))= kat
 											td
 												input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[#{__idx}][RkW]", min="3", max="35", step="1", value=__rk.RkW)
+			section#rituale
+				table.data-section.eigenschaften.tablesorter#newrit
+					caption Ritual hinzufügen
+					colgroup
+						col(style="width: 2em;")
+						col
+						col(style="width: 10em;")
+						col
+						col
+					thead
+						tr
+							td
+							th Ritual
+							th Probe
+							th RK
+							th Tradition
+					tbody
+						each __rit in _rituale
+							tr
+								td.mitte(style="padding: 0;")
+									input(type="checkbox")
+								td=__rit.Name
+								td.mitte
+									if Array.isArray(__rit.Probe)
+										div=__rit.Probe.join(' · ')
+									if Array.isArray(__rit.Talent)
+										div=__rit.Talent.join(', ')
+								td=__rit.Repräsentationen.join(', ')
+								if __rit.Traditionen
+									td=__rit.Traditionen.join(', ')
+								else
+									td
+			
 			section#save
 				.mitte
 					button(type="submit") speichern
-		
 		table#tbl-tmpl
 			tbody#tmpl-allg
 				tr
@@ -258,74 +293,4 @@ html(lang="de")
 								option= kat
 					td
 						input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
-		script.
-			// activate/deactivate entries
-			$('#tbl-rk').on("click", "input.isactive", function(evt) {
-				var $row = $(this).closest('tr');
-				$row.find("*[name]").prop("disabled", !this.checked);
-				if (this.checked) {
-					$row.removeClass("disabled");
-				}
-				else {
-					$row.addClass("disabled");
-				}
-			});
-			function reIndex($obj, index) {
-				$obj.find('.unlock').each(function() {
-					this.name = this.name.replace('{index}', index);
-				});
-				$obj.find('label').each(function() {
-					this.htmlFor = this.htmlFor.replace('{index}', index);
-				});
-				var rkid = $obj.find('input[type="checkbox"]')[0];
-				rkid.id  = rkid.id.replace('{index}', index);
-				// default dropdown to "E"
-				$obj.find('select').val('E');
-			}
-			$('#addrk').on("click", function() {
-				var $src = $('#rk option').filter(':selected');
-				var $row = $('#tmpl-allg tr').clone();
-				var idx  = $('#tbl-rk tbody tr').length;
-				reIndex($row, idx);
-				$row.find('label').text($src.data("long"));
-				// set values
-				$row.find('.short').val($src.data("short"));
-				$row.find('.long').val($src.data("long"));
-				// append
-				$('#tbl-rk').append($row);
-				$src.remove();
-			});
-			$('#addrkz').on("click", function() {
-				var $src = $('#rkz option').filter(':selected');
-				var $row = $('#tmpl-tanz tr').clone();
-				var idx  = $('#tbl-rk tbody tr').length;
-				reIndex($row, idx);
-				// set values
-				$row.find('.short').val($src.data("rep-short"));
-				$row.find('input.long').val($src.data("rep-long"));
-				$row.find('label.long').text($src.data("rep-long"));
-				// append
-				$('#tbl-rk').append($row);
-				$src.remove();
-			});
-			$('#addrks').on("click", function() {
-				var $src  = $('#rks option').filter(':selected');
-				var $rows = $('#tmpl-schm tr');
-				$('#tmpl-schm tr').each(function() {
-					var idx  = $('#tbl-rk tbody tr').length;
-					var $row = $(this).clone();
-					reIndex($row, idx);
-					// set values
-					$row.find('.short').val($src.data("rep-short"));
-					$row.find('input.long').val( $src.data("rep-long") + "-Schamane");
-					$row.find('label.long').text($src.data("rep-long") + "-Schamane");
-					// append
-					$('#tbl-rk').append($row);
-				});
-				$src.remove();
-			});
-			/*$("form").on("submit", function() {
-				$('.isactive:not(:checked)').each(function() {
-					$(this).closest('tr').find('select, input').prop('disabled', true);
-				});
-			});//*/
+		script(src="/edit-ritual.js")

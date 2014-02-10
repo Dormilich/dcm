@@ -29,6 +29,7 @@ var path    = require('path')
   , Held     = require( path.join(appRoot, 'models/person') )
   , Talent   = require( path.join(appRoot, 'models/talent') )
   , Zauber   = require( path.join(appRoot, 'models/zauber') )
+  , Ritual   = require( path.join(appRoot, 'models/ritual') )
   , Liturgie = require( path.join(appRoot, 'models/liturgie') )
   ;
 
@@ -165,7 +166,54 @@ module.exports = {
 		;
 	},
 	rituale : function(req, res, next) {
-		Talent
+		async.parallel({
+			_talente: function (cb) {
+				Talent
+					.find({ typ: "Schamanismus" })
+					.exec(function(err, docs) {
+						if (err) return cb(err);
+						cb(null, docs);
+					})
+				;
+			},
+			_held: function (cb) {
+				Held
+					.findById(req.id)
+					.populate("Magie.Ritualkenntnis._talent")
+					.select("Person Magie")
+					.exec(function(err, doc) {
+						if (err) return cb(err);
+						cb(null, doc);
+					})
+				;
+			},
+			_rituale: function (cb) {
+				Held
+					.findById(req.id)
+					.select("Magie")
+					.exec(function(err, doc) {
+						if (err) return cb(err);
+						var rk = doc.Magie.Ritualkenntnis.map(function (item) {
+							return item.short;
+						});
+						Ritual
+							.find()
+							.in("Repräsentationen", rk)
+							.sort("Name")
+							.exec(function(err, doc) {
+								if (err) return cb(err);
+								cb(null, doc);
+							})
+					})
+				;
+			}
+		},
+		function(err, obj) {
+			if (err) return next(err);
+			obj._data = data.ritual;
+			res.render('edit-held/ritual', obj);
+		});
+		/*Talent
 			.find({ typ: "Schamanismus" })
 			.exec(function(err, objs) {
 				if (err)  return next(err);
@@ -180,6 +228,6 @@ module.exports = {
 					})
 				;
 			})
-		;
+		;//*/
 	}
 };
