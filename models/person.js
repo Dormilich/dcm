@@ -237,8 +237,8 @@ var heldSchema = new Schema({
 			_talent:   { type: IDREF,  ref: 'Talent' },
 			// und Zaubertänzer
 			tradition:   String // Ork, Wdm, Haz, Tul
-		}]
-		//	Rituale: [{ _ritual: { type: IDREF, ref: 'Ritual', required: true }]
+		}],
+		Rituale: [{ type: IDREF, ref: 'Ritual' }]
 	}
 });
 heldSchema.virtual('Basiswerte.LeP').get(function() {

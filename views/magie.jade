@@ -9,6 +9,11 @@
 -		}
 -		return false;
 -	}
+-	function intersect(__ar1, __ar2) {
+-		return __ar1.filter(function(item) {
+-			return __ar2.indexOf(item) > -1;
+-		});
+-	}
 
 mixin print(__data)
 	p!=JSON.stringify(__data)
@@ -65,8 +70,7 @@ html(lang="de")
 				color: inherit;
 			}
 	body
-		a#top
-		nav
+		nav#top
 			ul#main-menu
 				li
 					a.mitte(title="springe zu Abschnitt ...") &#8681;
@@ -100,16 +104,16 @@ html(lang="de")
 						li
 							a(href="/zauber/"+_id) Zauber
 						li
-							a(href="/ritual/"+_id) Ritualkenntnis
+							a(href="/ritual/"+_id+"#ritualkenntnis") Ritualkenntnis
 						li
-							a Rituale
+							a(href="/ritual/"+_id+"#rituale") Rituale
 
-		section(style="clear: both;")
+		header(style="clear: both;")
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
 			h2.mitte –Magiebogen–
 			
-			a#vnt
+		section#vnt
 			table.data-section
 				caption Vor- und Nachteile
 				tr
@@ -148,8 +152,8 @@ html(lang="de")
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
 							td= Attribute[val].wert
 		
-		if Array.isArray(Magie.Zauber) && Magie.Zauber.length > 0
-			section#spr
+		section#spr
+			if Array.isArray(Magie.Zauber) && Magie.Zauber.length > 0
 				table.data-section.eigenschaften.mitte.zauber
 					caption Zaubersprüche
 					colgroup
@@ -211,8 +215,8 @@ html(lang="de")
 					$('.zauber').on('click', 'tbody', function(evt) {
 						$(this).toggleClass('hide-rows');
 					});
-		if Array.isArray(Magie.Ritualkenntnis) && Magie.Ritualkenntnis.length > 0
-			section#rit
+		section#rit
+			if Array.isArray(Magie.Ritualkenntnis) && Magie.Ritualkenntnis.length > 0
 				table.data-section.eigenschaften.mitte
 					caption Ritualkenntnis
 					colgroup
@@ -252,4 +256,43 @@ html(lang="de")
 										td(title="sh. Ritual")
 										td=__rk.Lernstufe
 										td=__rk.RkW
-				
+			if Array.isArray(Magie.Rituale) && Magie.Rituale.length > 0
+				- var __rks = Magie.Ritualkenntnis.map(function(item) { return item.short; });
+				table.data-section.eigenschaften.mitte
+					caption Rituale
+					colgroup
+						col(style="width: 30%;")
+						col
+					thead
+						tr
+							th(rowspan="2", style="vertical-align: middle;") Ritual
+							th Probe
+							th Mod.
+							th RD
+							th AsP
+						tr
+							th(colspan="2") Ritualkenntnis
+							th WD
+							th RW
+					tbody
+						each __rit in Magie.Rituale
+							-	__rk  = intersect(__rks, __rit.Repräsentationen);
+							-	__rkl = __rk.map(function(short) {
+							-		return Magie.Ritualkenntnis.filter(function(obj) {
+							-			return obj.short === short;
+							-		})[0].long;
+							-	});
+							tr
+								td.links(rowspan="2")=__rit.Name
+								td
+									if intersect(__rks, ["Shm", "Elf"]).length
+										div=__rit.Talent.join(', ')
+									if Array.isArray(__rit.Probe) && __rit.Probe.length > 0
+										div(title=__rit.Probe.join(' · '))=__rit.Probe.map(function(item) { return Attribute[item] ? Attribute[item].wert : item; }).join(' · ')
+								td=__rit.Modifikator
+								td=__rit.cast.RD
+								td=__rit.cast.AsP
+							tr
+								td(colspan="2")=__rkl.join(', ')
+								td=__rit.cast.WD
+								td=__rit.cast.RW

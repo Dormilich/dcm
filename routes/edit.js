@@ -179,7 +179,7 @@ module.exports = {
 			_held: function (cb) {
 				Held
 					.findById(req.id)
-					.populate("Magie.Ritualkenntnis._talent")
+					.populate("Magie.Ritualkenntnis._talent Magie.Rituale")
 					.select("Person Magie")
 					.exec(function(err, doc) {
 						if (err) return cb(err);
@@ -204,6 +204,7 @@ module.exports = {
 								if (err) return cb(err);
 								cb(null, doc);
 							})
+						;
 					})
 				;
 			}

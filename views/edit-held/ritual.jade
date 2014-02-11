@@ -16,6 +16,15 @@ mixin print(__data)
 -		}
 -		return null;
 -	}
+- function isAvailable(_charlist, _stdTalent) { 
+- 	var l = _charlist ? _charlist.length : 0;
+- 	while (l--) { 
+- 		if (String(_charlist[l]._id) == String(_stdTalent._id)) {
+- 			return true; 
+- 		}
+- 	} 
+- 	return false; 
+- }
 
 !!! 5
 html(lang="de")
@@ -162,8 +171,7 @@ html(lang="de")
 						col(style="width: 2em;")
 						col
 						col(style="width: 10em;")
-						col
-						col
+						col(span="2", style="width: 20em;")
 					thead
 						tr
 							td
@@ -172,11 +180,13 @@ html(lang="de")
 							th RK
 							th Tradition
 					tbody
-						each __rit in _rituale
+						each __rit, __idx in _rituale
+							- var __isAvailable  = isAvailable(_held.Magie.Rituale, __rit)
 							tr
 								td.mitte(style="padding: 0;")
-									input(type="checkbox")
-								td=__rit.Name
+									input(type="checkbox", name="Magie.Rituale[#{__idx}]", value=__rit._id, id="rit_"+__idx, checked=__isAvailable)
+								td
+									label(for="rit_"+__idx)=__rit.Name
 								td.mitte
 									if Array.isArray(__rit.Probe)
 										div=__rit.Probe.join(' · ')
