@@ -193,9 +193,16 @@ module.exports = {
 					.select("Magie")
 					.exec(function(err, doc) {
 						if (err) return cb(err);
-						var rk = doc.Magie.Ritualkenntnis.map(function (item) {
+						var rk = doc.Magie.Ritualkenntnis || [];
+						var rk = rk.map(function (item) {
 							return item.short;
 						});
+						var elf = doc.Magie.Repräsentation.filter(function(item) {
+							return item.short === "Elf";
+						}).length;
+						if (elf) {
+							rk.push("Elf");
+						}
 						Ritual
 							.find()
 							.in("Repräsentationen", rk)

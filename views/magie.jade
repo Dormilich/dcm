@@ -271,7 +271,8 @@ html(lang="de")
 							th RD
 							th AsP
 						tr
-							th(colspan="2") Ritualkenntnis
+							th Ritualkenntnis
+							th Merkmale
 							th WD
 							th RW
 					tbody
@@ -293,6 +294,7 @@ html(lang="de")
 								td=__rit.cast.RD
 								td=__rit.cast.AsP
 							tr
-								td(colspan="2")=__rkl.join(', ')
+								td=__rkl.join(', ')
+								td.links=__rit.Merkmale.join(', ')
 								td=__rit.cast.WD
 								td=__rit.cast.RW

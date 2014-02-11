@@ -97,6 +97,9 @@ html(lang="de")
 									li
 										input(type="checkbox", name="Traditionen[]", value=__key, id="sm_"+__key, checked=_ritual.Traditionen.indexOf(__key) > -1)
 										label(for="sm_"+__key)=__trad
+						li
+							input#el(type="checkbox", name="Repräsentationen[]", value="Elf", checked=_ritual.Repräsentationen.indexOf("Elf") > -1)
+							label(for="el") Elfenlied
 				div
 					label Merkmale
 					ul.indent

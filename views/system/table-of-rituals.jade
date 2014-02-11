@@ -14,6 +14,9 @@ html(lang="de")
 			tbody:nth-child(odd) {
 				background-color: #ddd;
 			}
+			td {
+				height: 1em;
+			}
 	body
 		header
 			a(href="/ritual/neu") Neues Ritual
@@ -39,7 +42,7 @@ html(lang="de")
 						th(colspan="2") Merkmale
 				each __rit in Rituale
 					- var __talente = Array.isArray(__rit.Talent) ? __rit.Talent : [];
-					- if (Array.isArray(__rit.Probe)) { __talente.unshift(__rit.Probe.join(' · ')); }
+					- if (__rit.Probe.length) { __talente.unshift(__rit.Probe.join(' · ')); }
 					tbody.mitte
 						tr
 							td.links(rowspan="2")
