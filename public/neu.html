@@ -1,136 +1,251 @@
 <!DOCTYPE html>
 <html lang="de">
   <head>
+    <meta charset="utf-8">
     <title>Neuen Charakter anlegen</title>
-    <link rel="stylesheet" type="text/css" href="/neu.css">
+    <link rel="stylesheet" type="text/css" href="/edit.css">
+    <link rel="stylesheet" type="text/css" href="/nav.css">
     <script type="text/javascript" src="/jquery-2.0.3.min.js"></script>
+    <style>
+      .setting tbody tr:nth-child(odd) {
+       background-color: #eee;
+      }
+      .talente tbody td.links {
+       text-align: left;
+      }
+    </style>
   </head>
   <body>
-    <h1 class="mitte">Neuen Charakter erstellen</h1>
-    <form action="/neu" method="post" accept-charset="utf-8" id="newChar">
-      <fieldset>
-        <legend>Beschreibung</legend>
-        <ul class="floatLabel">
-          <li>
-            <label for="char_name">Name:</label>
-            <input name="Person[Name]" id="char_name" type="text" placeholder="Name" class="halfSize">
-          </li>
-          <li>
-            <label for="char_gender">Geschlecht:</label>
-            <select name="Person[Geschlecht]" id="char_gender">
-              <option selected>männlich</option>
-              <option>weiblich</option>
-            </select>
-          </li>
-          <li>
-            <label for="char_so">Sozialstatus:</label>
-            <input name="Person[SO]" id="char_so" type="number" min="0" max="20" step="1" value="5" placeholder="Sozialstatus">
-          </li>
-          <li>
-            <label for="char_height">Größe:</label>
-            <input name="Person[Größe]" id="char_height" type="number" min="25" max="250" step="1" value="175">&nbsp; Halbfinger
-          </li>
-          <li>
-            <label for="char_weight">Gewicht:</label>
-            <input name="Person[Gewicht]" id="char_weight" type="number" min="20" max="300" step="1" value="75">&nbsp; Stein
-          </li>
-          <li>
-            <label for="char_alter">Alter:</label>
-            <input name="Person[Alter]" id="char_alter" type="number" min="10" step="1" value="17">
-          </li>
-          <li>
-            <label>Tsatag:</label>
-            <select name="Person[Tsatag][tag]" size="1">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
-              <option value="25">25</option>
-              <option value="26">26</option>
-              <option value="27">27</option>
-              <option value="28">28</option>
-              <option value="29">29</option>
-              <option value="30">30</option>
-            </select>
-            <select name="Person[Tsatag][monat]" size="1">
-              <option value="0">PRA</option>
-              <option value="1">RON</option>
-              <option value="2">EFF</option>
-              <option value="3">TRA</option>
-              <option value="4">BOR</option>
-              <option value="5">HES</option>
-              <option value="6">FIR</option>
-              <option value="7">TSA</option>
-              <option value="8">PHE</option>
-              <option value="9">PER</option>
-              <option value="10">ING</option>
-              <option value="11">RAH</option>
-              <option value="12">(NLT)</option>
-            </select>
-            <input name="Person[Tsatag][jahr]" type="number" step="1" value="1010">&nbsp; BF
-          </li>
-          <li>
-            <label for="char_hair">Haarfarbe:</label>
-            <input name="Person[Haarfarbe]" id="char_hair" type="text" placeholder="Haarfarbe">
-          </li>
-          <li>
-            <label for="char_eyes">Augenfarbe:</label>
-            <input name="Person[Augenfarbe]" id="char_eyes" type="text" placeholder="Augenfarbe">
-          </li>
-          <li>
-            <label for="char_looks">Aussehen:</label>
-            <textarea name="Person[Aussehen]" id="char_looks" rows="5" placeholder="Aussehen" class="halfSize"></textarea>
-          </li>
-          <li>
-            <label for="char_story">Hintergrund:</label>
-            <textarea name="Person[Hintergrund]" id="char_story" rows="5" placeholder="Hintergrund" class="halfSize"></textarea>
-          </li>
-        </ul>
-      </fieldset>
-      <fieldset>
-        <legend>Generierung</legend>
-        <ul class="floatLabel">
-          <li>
-            <label for="rkp0" id="rkp0lab">Rasse:</label>
-            <input name="Generierung[Rasse][name]" id="rkp0" type="text" placeholder="Rasse" class="size15">
-            <input name="Generierung[Rasse][modifikation]" id="rkp0mod" type="text" placeholder="Rasse-Modifikaton(en)" class="size30">
-          </li>
-          <li>
-            <label for="rkp1" id="rkp1lab">Kultur:</label>
-            <input name="Generierung[Kultur][name]" id="rkp1" type="text" placeholder="Kultur" class="size15">
-            <input name="Generierung[Kultur][modifikation]" id="rkp1mod" type="text" placeholder="Kultur-Modifikaton(en)" class="size30">
-          </li>
-          <li>
-            <label for="rkp2" id="rkp2lab">Profession:</label>
-            <input name="Generierung[Profession][name]" id="rkp2" type="text" placeholder="Profession" class="size15">
-            <input name="Generierung[Profession][modifikation]" id="rkp2mod" type="text" placeholder="Profession-Modifikaton(en)" class="size30">
-          </li>
-          <li>
-            <label for="rkp3" id="rkp3lab">BgB:</label>
-            <input name="Generierung[BgB][name]" id="rkp3" type="text" placeholder="BgB" class="size15">
-            <input name="Generierung[BgB][modifikation]" id="rkp3mod" type="text" placeholder="BgB-Modifikaton(en)" class="size30">
-          </li>
-        </ul>
+    <nav>
+      <ul id="main-menu">
+        <li><a title="springe zu Abschnitt ...">&#8681;</a>
+          <ul>
+            <li><a href="#bes">Beschreibung</a></li>
+            <li><a href="#gen">Generierung</a></li>
+            <li><a href="#att">Attribute</a></li>
+            <li><a href="#bas">Basiswerte</a></li>
+            <li><a href="#vnn">Vor- &amp; Nachteile</a></li>
+          </ul>
+        </li>
+        <li><a href="#top">[Seitenanfang]</a></li>
+        <li><a href="#save">[speichern]</a></li>
+        <li><a href="/helden">⇒ Charakterliste</a></li>
+      </ul>
+    </nav>
+    <header id="top">
+      <h1 class="mitte">Neuen Charakter erstellen</h1>
+    </header>
+    <main>
+      <form action="/neu" method="post" accept-charset="utf-8" id="newChar">
+        <table id="bes" class="data-section setting links">
+          <caption>Beschreibung</caption>
+          <colgroup>
+            <col style="width: 20%">
+            <col>
+          </colgroup>
+          <tbody>
+            <tr>
+              <td> 
+                <label for="char_name">Name:</label>
+              </td>
+              <td> 
+                <input name="Person[Name]" id="char_name" type="text" placeholder="Name" class="fullSize">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_titel">Titel</label>
+              </td>
+              <td>
+                <input name="Person[Titel]" id="char_titel" type="text" placeholder="Titel" class="halfSize">
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="char_gender">Geschlecht:</label>
+              </td>
+              <td> 
+                <select name="Person[Geschlecht]" id="char_gender">
+                  <option>männlich</option>
+                  <option>weiblich</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="char_so">Sozialstatus:</label>
+              </td>
+              <td> 
+                <input name="Person[SO]" id="char_so" type="number" min="0" max="20" step="1" placeholder="SO">
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="char_height">Größe:</label>
+              </td>
+              <td> 
+                <input name="Person[Größe]" id="char_height" type="number" min="25" max="250" step="1" placeholder="cm">&nbsp; Halbfinger
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="char_weight">Gewicht:</label>
+              </td>
+              <td> 
+                <input name="Person[Gewicht]" id="char_weight" type="number" min="20" max="300" step="1" placeholder="kg">&nbsp; Stein
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_alter">Alter:</label>
+              </td>
+              <td>
+                <input name="Person[Alter]" id="char_alter" type="number" min="10" step="1" placeholder="Jahre">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Tsatag:</label>
+              </td>
+              <td>
+                <select id="tt-tag" name="Person[Tsatag][tag]" size="1">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+                  <option value="26">26</option>
+                  <option value="27">27</option>
+                  <option value="28">28</option>
+                  <option value="29">29</option>
+                  <option value="30">30</option>
+                </select>
+                <select id="tt-mon" name="Person[Tsatag][monat]" size="1">
+                  <option value="0">PRA</option>
+                  <option value="1">RON</option>
+                  <option value="2">EFF</option>
+                  <option value="3">TRA</option>
+                  <option value="4">BOR</option>
+                  <option value="5">HES</option>
+                  <option value="6">FIR</option>
+                  <option value="7">TSA</option>
+                  <option value="8">PHE</option>
+                  <option value="9">PER</option>
+                  <option value="10">ING</option>
+                  <option value="11">RAH</option>
+                  <option value="12" title="Namenlose Tage">(NLT)</option>
+                </select>
+                <input name="Person[Tsatag][jahr]" type="number" step="1" value="1010">&nbsp; BF 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_hair">Haarfarbe:</label>
+              </td>
+              <td>
+                <input name="Person[Haarfarbe]" id="char_hair" type="text" placeholder="Haarfarbe">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_eyes">Augenfarbe:</label>
+              </td>
+              <td>
+                <input name="Person[Augenfarbe]" id="char_eyes" type="text" placeholder="Augenfarbe">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_looks">Aussehen:</label>
+              </td>
+              <td>
+                <textarea name="Person[Aussehen]" id="char_looks" rows="5" placeholder="Aussehen" class="fullSize"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="char_story">Hintergrund:</label>
+              </td>
+              <td>
+                <textarea name="Person[Hintergrund]" id="char_story" rows="5" placeholder="Hintergrund" class="fullSize"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table id="gen" class="data-section talente links">
+          <caption>Generierung</caption>
+          <colgroup>
+            <col style="width: 20%">
+            <col>
+            <col>
+          </colgroup>
+          <tbody>
+            <tr>
+              <td> 
+                <label for="rkp0" id="rkp0lab">Rasse:</label>
+              </td>
+              <td> 
+                <input name="Generierung[Rasse][name]" id="rkp0" type="text" placeholder="Rasse" class="fullSize">
+              </td>
+              <td>
+                <input name="Generierung[Rasse][modifikation]" id="rkp0mod" type="text" placeholder="Rasse-Modifikaton(en)" class="fullSize">
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="rkp1" id="rkp1lab">Kultur:</label>
+              </td>
+              <td> 
+                <input name="Generierung[Kultur][name]" id="rkp1" type="text" placeholder="Kultur" class="fullSize">
+              </td>
+              <td>
+                <input name="Generierung[Kultur][modifikation]" id="rkp1mod" type="text" placeholder="Kultur-Modifikaton(en)" class="fullSize">
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="rkp2" id="rkp2lab">Profession:</label>
+              </td>
+              <td> 
+                <input name="Generierung[Profession][name]" id="rkp2" type="text" placeholder="Profession" class="fullSize">
+              </td>
+              <td>
+                <input name="Generierung[Profession][modifikation]" id="rkp2mod" type="text" placeholder="Profession-Modifikaton(en)" class="fullSize">
+              </td>
+            </tr>
+            <tr>
+              <td> 
+                <label for="rkp3" id="rkp3lab">BgB:</label>
+              </td>
+              <td> 
+                <input name="Generierung[BgB][name]" id="rkp3" type="text" placeholder="BgB" class="fullSize">
+              </td>
+              <td>
+                <input name="Generierung[BgB][modifikation]" id="rkp3mod" type="text" placeholder="BgB-Modifikaton(en)" class="fullSize">
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <script>
           (function() {
            var $inputs = $('#rkp3, #rkp3mod');
@@ -142,10 +257,8 @@
             });
           })();
         </script>
-      </fieldset>
-      <fieldset>
-        <legend>Attribute</legend>
-        <table>
+        <table id="att" class="data-section talente">
+          <caption>Attribute</caption>
           <colgroup>
             <col style="width: 40%">
             <col span="3" style="width: 20%">
@@ -257,10 +370,8 @@
             </tr>
           </tbody>
         </table>
-      </fieldset>
-      <fieldset>
-        <legend>Basiswerte</legend>
-        <table>
+        <table id="bas" class="data-section talente">
+          <caption>Basiswerte</caption>
           <colgroup>
             <col style="width: 40%">
             <col span="3" style="width: 20%">
@@ -313,10 +424,10 @@
             <tr>
               <td id="kap" title="Zum (De-)Aktivieren klicken">Karmaenergie</td>
               <td> 
-                <input name="modifikatoren[KaP][start]" type="number" min="0" step="12">
+                <input name="modifikatoren[KaP][start]" type="number" min="0" step="1">
               </td>
               <td>
-                <input name="modifikatoren[KaP][add]" type="number" min="0" step="4">
+                <input name="modifikatoren[KaP][add]" type="number" min="0" step="1">
               </td>
               <td></td>
             </tr>
@@ -379,1573 +490,1579 @@
           </tbody>
         </table>
         <script>
-          (function() {
-           $('#asp, #kap')
-            .on("click", function() {
-             var $inputs = $(this).closest('tr').find('input');
-             $inputs.prop('disabled', !$inputs.prop('disabled'));
-            })
-            .closest('tr')
-            .find('input')
-            .prop('disabled', true);
-          })();
+          $('#asp, #kap')
+           .on("click", function() {
+            var $inputs = $(this).closest('tr').find('input');
+            $inputs.prop('disabled', !$inputs.prop('disabled'));
+           })
+           .closest('tr')
+           .find('input')
+           .prop('disabled', true);
         </script>
-      </fieldset>
-      <fieldset>
-        <legend>Vor- & Nachteile</legend>
-        <ul class="vor_nach fl_links">
-          <li class="mitte"><strong>Vorteile</strong></li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Adlige Abstammung" id="pc_1"/>
-            <label for="pc_1">Adlige Abstammung</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Adliges Erbe" id="pc_2"/>
-            <label for="pc_2">Adliges Erbe</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Amtsadel" id="pc_3"/>
-            <label for="pc_3">Amtsadel</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Affinität" id="vorteil_4" class="auswahl_liste">
-            <label for="vorteil_4">Affinität zu</label>
-            <select size="1" class="fl_rechts">
-              <option value="Dämonen">Dämonen</option>
-              <option value="Elementare">Elementaren</option>
-              <option value="Geister">Geistern</option>
-            </select>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Akademische Ausbildung" id="vorteil_5" class="auswahl_liste">
-            <label for="vorteil_5">Akademische Ausbildung</label>
-            <select size="1" class="fl_rechts">
-              <option value="Gelehrter">Gelehrter</option>
-              <option value="Krieger">Krieger</option>
-              <option value="Magier">Magier</option>
-            </select>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Altersresistenz" id="pc_4"/>
-            <label for="pc_4">Altersresistenz</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Astrale Regeneration" id="vorteil_7" class="zusatz">
-            <label for="vorteil_7">Astrale Regeneration</label><span class="fl_rechts">
-              <input type="radio" name="temp[v][7]" value="I" id="vorteil_7_1">
-              <label for="vorteil_7_1">I</label>
-              <input type="radio" name="temp[v][7]" value="II" id="vorteil_7_2">
-              <label for="vorteil_7_2">II</label>
-              <input type="radio" name="temp[v][7]" value="III" id="vorteil_7_3">
-              <label for="vorteil_7_3">III</label></span>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Astralmacht" id="pc_5" class="stufe"/>
-            <label for="pc_5">Astralmacht</label>
-            <input type="number" min="1" max="6" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Ausdauernd" id="pc_6" class="stufe"/>
-            <label for="pc_6">Ausdauernd</label>
-            <input type="number" min="2" max="6" step="2"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Ausdauernder Zauberer" id="pc_7"/>
-            <label for="pc_7">Ausdauernder Zauberer</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Ausrüstungsvorteil" id="pc_8" class="stufe"/>
-            <label for="pc_8">Ausrüstungsvorteil</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Balance" id="pc_9"/>
-            <label for="pc_9">Balance</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Begabung (Merkmal)" id="vorteil_13" class="auswahl_liste">
-            <label for="vorteil_13">Begabung für Merkmal</label>
-            <select size="5" multiple class="fl_rechts">
-              <option>Antimagie</option>
-              <option>Beschwörung</option>
-              <optgroup label="Dämonisch">
-                <option value="Dämonisch/gesamt">- gesamt</option>
-                <option value="Dämonisch/Blakharaz">- Blakharaz</option>
-                <option value="Dämonisch/Belhalhar">- Belhalhar</option>
-                <option value="Dämonisch/Charyptoroth">- Charyptoroth</option>
-                <option value="Dämonisch/Lolgramoth">- Lolgramoth</option>
-                <option value="Dämonisch/Thargunitoth">- Thargunitoth</option>
-                <option value="Dämonisch/Amazeroth">- Amazeroth</option>
-                <option value="Dämonisch/Belshirash">- Belshirash</option>
-                <option value="Dämonisch/Asfaloth">- Asfaloth</option>
-                <option value="Dämonisch/Tasfarelel">- Tasfarelel</option>
-                <option value="Dämonisch/Belzhorash">- Belzhorash</option>
-                <option value="Dämonisch/Agrimoth">- Agrimoth</option>
-                <option value="Dämonisch/Belkelel">- Belkelel</option>
-              </optgroup>
-              <optgroup label="Elementar">
-                <option value="Elementar/gesamt">- gesamt</option>
-                <option value="Elementar/Eis">- Eis</option>
-                <option value="Elementar/Erz">- Erz</option>
-                <option value="Elementar/Feuer">- Feuer</option>
-                <option value="Elementar/Humus">- Humus</option>
-                <option value="Elementar/Luft">- Luft</option>
-                <option value="Elementar/Wasser">- Wasser</option>
-              </optgroup>
-              <option>Eigenschaften</option>
-              <option>Einfluß</option>
-              <option>Form</option>
-              <option>Geisterwesen</option>
-              <option>Heilung</option>
-              <option>Hellsicht</option>
-              <option>Herbeirufung</option>
-              <option>Herrschaft</option>
-              <option>Illusion</option>
-              <option>Kraft</option>
-              <option>Limbus</option>
-              <option>Metamagie</option>
-              <option>Objekt</option>
-              <option>Schaden</option>
-              <option>Telekinese</option>
-              <option>Temporal</option>
-              <option>Umwelt</option>
-              <option>Verständigung</option>
-            </select>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Begabung (Ritual)" id="vorteil_14" class="auswahl_text">
-            <label for="vorteil_14">Begabung für Ritual</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Begabung (Zauber)" id="vorteil_15" class="auswahl_text">
-            <label for="vorteil_15">Begabung für Zauber</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Begabung (Talent)" id="vorteil_16" class="auswahl_text">
-            <label for="vorteil_16">Begabung für Talent</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Begabung (Talentgruppe)" id="vorteil_17" class="auswahl_liste">
-            <label for="vorteil_17">Begabung für Talentgruppe</label>
-            <select size="5" multiple class="fl_rechts">
-              <optgroup label="Kampftalente">
-                <option value="Kampf">gesamt</option>
-                <option>Nahkampf</option>
-                <option>Fernkampf</option>
-              </optgroup>
-              <option>Körperliche Talente</option>
-              <option>Gesellschaft</option>
-              <option>Natur</option>
-              <option>Wissen</option>
-              <option>Handwerk</option>
-              <option>Sprachen und Schriften</option>
-            </select>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Beidhändig" id="pc_10"/>
-            <label for="pc_10">Beidhändig</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Beseelte Knochenkeule" id="pc_11"/>
-            <label for="pc_11">Beseelte Knochenkeule</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Besonderer Besitz" id="vorteil_20" class="spezifisch">
-            <label for="vorteil_20">Besonderer Besitz</label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Breitgefächerte Bildung" id="pc_12"/>
-            <label for="pc_12">Breitgefächerte Bildung</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Dschinngeboren" id="pc_13"/>
-            <label for="pc_13">Dschinngeboren</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Dämmerungssicht" id="pc_14"/>
-            <label for="pc_14">Dämmerungssicht</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Eidetisches Gedächtnis" id="pc_15"/>
-            <label for="pc_15">Eidetisches Gedächtnis</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Eigeboren" id="pc_16"/>
-            <label for="pc_16">Eigeboren</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Eisenaffine Aura" id="pc_17"/>
-            <label for="pc_17">Eisenaffine Aura</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Eisern" id="pc_18"/>
-            <label for="pc_18">Eisern</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Empathie" id="pc_19"/>
-            <label for="pc_19">Empathie</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Entfernungssinn" id="pc_20"/>
-            <label for="pc_20">Entfernungssinn</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Ererbte Knochenkeule" id="pc_21"/>
-            <label for="pc_21">Ererbte Knochenkeule</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Feenfreund" id="pc_22"/>
-            <label for="pc_22">Feenfreund</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Feste Matrix" id="pc_23"/>
-            <label for="pc_23">Feste Matrix</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Flink" id="pc_24"/>
-            <label for="pc_24">Flink</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Früher Vertrauter" id="pc_25"/>
-            <label for="pc_25">Früher Vertrauter</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Gebildet" id="pc_26" class="stufe"/>
-            <label for="pc_26">Gebildet</label>
-            <input type="number" min="1" max="5" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Gefahreninstinkt" id="pc_27"/>
-            <label for="pc_27">Gefahreninstinkt</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Geräuschhexerei" id="pc_28"/>
-            <label for="pc_28">Geräuschhexerei</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Geweiht" id="vorteil_38" class="auswahl_liste">
-            <label for="vorteil_38">Geweiht</label>
-            <select size="1" class="fl_rechts">
-              <optgroup label="alveranische Gottheiten">
-                <option>Boron</option>
-                <option>Efferd</option>
-                <option>Firun</option>
-                <option>Hesinde</option>
-                <option>Ingrimm</option>
-                <option>Peraine</option>
-                <option>Phex</option>
-                <option>Praios</option>
-                <option>Rahja</option>
-                <option>Rondra</option>
-                <option>Travia</option>
-                <option>Tsa</option>
-              </optgroup>
-              <optgroup label="nicht-alveranische Gottheiten">
-                <option>Aves</option>
-                <option>Ifirn</option>
-                <option>Nandus</option>
-                <option>Swafnir</option>
-                <!-- option Kamaluq-->
-                <!-- option Himmelswölfe-->
-              </optgroup>
-              <optgroup label="echsiche Gottheiten">
-                <option>H’Szint</option>
-                <option>Zsahh</option>
-              </optgroup>
-              <optgroup label="orkische Gottheiten">
-                <option>Gravesh</option>
-              </optgroup>
-              <optgroup label="zwergische Gottheiten">
-                <option>Angrosch</option>
-              </optgroup>
-            </select>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Glück" id="pc_29"/>
-            <label for="pc_29">Glück</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Glück im Spiel" id="pc_30"/>
-            <label for="pc_30">Glück im Spiel</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Gut Aussehend" id="pc_31"/>
-            <label for="pc_31">Gut Aussehend</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Guter Ruf" id="pc_32" class="stufe"/>
-            <label for="pc_32">Guter Ruf</label>
-            <input type="number" min="1" max="10" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Gutes Gedächtnis" id="pc_33"/>
-            <label for="pc_33">Gutes Gedächtnis</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Halbzauberer" id="pc_34"/>
-            <label for="pc_34">Halbzauberer</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Herausragende Balance" id="pc_35"/>
-            <label for="pc_35">Herausragende Balance</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Herausragende Eigenschaft" id="vorteil_46" class="sammeln-alle">
-            <label for="vorteil_46">Herausragende Eigenschaft</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="MU" id="vorteil_46_1" class="stufe">
-                <label for="vorteil_46_1">Mut</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="KL" id="vorteil_46_2" class="stufe">
-                <label for="vorteil_46_2">Klugheit</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="IN" id="vorteil_46_3" class="stufe">
-                <label for="vorteil_46_3">Intuition</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li> 
-                <input type="checkbox" value="CH" id="vorteil_46_4" class="stufe">
-                <label for="vorteil_46_4">Charisma</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="FF" id="vorteil_46_5" class="stufe">
-                <label for="vorteil_46_5">Fingerfertigkeit</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="GE" id="vorteil_46_6" class="stufe">
-                <label for="vorteil_46_6">Gewandheit</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="KO" id="vorteil_46_7" class="stufe">
-                <label for="vorteil_46_7">Konstitution</label>
-                <input type="number" min="1" step="1">
-              </li>
-              <li>
-                <input type="checkbox" value="KK" id="vorteil_46_8" class="stufe">
-                <label for="vorteil_46_8">Körperkraft</label>
-                <input type="number" min="1" step="1">
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Herausragender Sechster Sinn" id="pc_36"/>
-            <label for="pc_36">Herausragender Sechster Sinn</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Herausragender Sinn" id="vorteil_48" class="sammeln-eins">
-            <label for="vorteil_48">Herausragender Sinn</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="Sicht" id="vorteil_48_1">
-                <label for="vorteil_48_1">Sicht</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Gehör" id="vorteil_48_2">
-                <label for="vorteil_48_2">Gehör</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Geruch/Geschmack" id="vorteil_48_3">
-                <label for="vorteil_48_3">Geruch/Geschmack</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Tastsinn" id="vorteil_48_4">
-                <label for="vorteil_48_4">Tastsinn</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Herausragendes Aussehen" id="pc_37"/>
-            <label for="pc_37">Herausragendes Aussehen</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Hitzeresistenz" id="pc_38"/>
-            <label for="pc_38">Hitzeresistenz</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Hohe Lebenskraft" id="pc_39" class="stufe"/>
-            <label for="pc_39">Hohe Lebenskraft</label>
-            <input type="number" min="1" max="3" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Hohe Magieresistenz" id="pc_40" class="stufe"/>
-            <label for="pc_40">Hohe Magieresistenz</label>
-            <input type="number" min="1" max="3" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Immunität gegen Gift" id="vorteil_53" class="sammeln-nowrap">
-            <label for="vorteil_53">Immunität gegen Gift</label>
-            <ul>
-              <li>
-                <input type="radio" name="temp[v][53]" value="" id="vorteil_53_1" class="auswahl_text">
-                <label for="vorteil_53_1">einzelnes Gift:</label>
-                <input type="text">
-              </li>
-              <li>
-                <input type="radio" name="temp[v][53]" value="" id="vorteil_53_2" class="auswahl_liste">
-                <label for="vorteil_53_2">Giftgruppe:</label><br>
-                <select size="5" multiple>
-                  <option>tierische Gifte</option>
-                  <option>mineralische Gifte</option>
-                  <option>pflanzliche Gifte</option>
-                  <option>alchimistische Gifte</option>
-                  <option>Atemgifte</option>
-                  <option>Einnahmegifte</option>
-                  <option>Kontaktgifte</option>
-                  <option>Blut-/Waffengifte</option>
-                </select>
-              </li>
-              <li>
-                <input type="radio" name="temp[v][53]" value="[alle Gifte]" id="vorteil_53_3">
-                <label for="vorteil_53_3">alle Gifte</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Immunität gegen Krankheiten" id="vorteil_54" class="sammeln-nowrap">
-            <label for="vorteil_54">Immunität gegen Krankheiten</label>
-            <ul>
-              <li>
-                <input type="radio" name="temp[v][54]" value="" id="vorteil_54_1" class="auswahl_text">
-                <label for="vorteil_54_1">einzelne Krankheit:</label>
-                <input type="text">
-              </li>
-              <li>
-                <input type="radio" name="temp[v][54]" value="[alle Krankheiten]" id="vorteil_54_3">
-                <label for="vorteil_54_3">alle Krankheiten</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Innerer Kompass" id="pc_41"/>
-            <label for="pc_41">Innerer Kompass</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Kälteresistenz" id="pc_42"/>
-            <label for="pc_42">Kälteresistenz</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Kampfrausch" id="pc_43"/>
-            <label for="pc_43">Kampfrausch</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Koboldfreund" id="pc_44"/>
-            <label for="pc_44">Koboldfreund</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Kräfteschub" id="vorteil_59" class="sammeln-eins">
-            <label for="vorteil_59">Kräfteschub</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="MU" id="vorteil_59_1">
-                <label for="vorteil_59_1">Mut</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KL" id="vorteil_59_2">
-                <label for="vorteil_59_2">Klugheit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="IN" id="vorteil_59_3">
-                <label for="vorteil_59_3">Intuition</label>
-              </li>
-              <li>
-                <input type="checkbox" value="CH" id="vorteil_59_4">
-                <label for="vorteil_59_4">Charisma</label>
-              </li>
-              <li>
-                <input type="checkbox" value="FF" id="vorteil_59_5">
-                <label for="vorteil_59_5">Fingerfertigkeit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="GE" id="vorteil_59_6">
-                <label for="vorteil_59_6">Gewandheit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KO" id="vorteil_59_7">
-                <label for="vorteil_59_7">Konstitution</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KK" id="vorteil_59_8">
-                <label for="vorteil_59_8">Körperkraft</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Linkshänder" id="pc_45"/>
-            <label for="pc_45">Linkshänder</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Machtvoller Vertrauter" id="pc_46"/>
-            <label for="pc_46">Machtvoller Vertrauter</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Magiegespür" id="pc_47"/>
-            <label for="pc_47">Magiegespür</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Meisterhandwerk" id="vorteil_63" class="auswahl_text">
-            <label for="vorteil_63">Meisterhandwerk</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Nachtsicht" id="pc_48"/>
-            <label for="pc_48">Nachtsicht</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Natürliche Waffen" id="vorteil_65" class="sammeln-alle">
-            <label for="vorteil_65">Natürliche Waffen</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="Gebiß" id="vorteil_65_1" class="auswahl_liste">
-                <label for="vorteil_65_1">Gebiß</label>
-                <select size="1">
-                  <option>1W6 TP(A)</option>
-                  <option>1W6 TP</option>
-                  <option>1W6+1 TP</option>
-                  <option>1W6+2 TP</option>
-                  <option>1W6+3 TP</option>
-                  <option>1W6+4 TP</option>
-                  <option>1W6+5 TP</option>
-                  <option>1W6+6 TP</option>
-                </select>
-              </li>
-              <li>
-                <input type="checkbox" value="Krallen" id="vorteil_65_2" class="auswahl_liste">
-                <label for="vorteil_65_2">Krallen</label>
-                <select size="1">
-                  <option>1W6 TP(A)</option>
-                  <option>1W6 TP</option>
-                  <option>1W6+1 TP</option>
-                  <option>1W6+2 TP</option>
-                  <option>1W6+3 TP</option>
-                  <option>1W6+4 TP</option>
-                  <option>1W6+5 TP</option>
-                  <option>1W6+6 TP</option>
-                </select>
-              </li>
-              <li>
-                <input type="checkbox" value="Schwanz" id="vorteil_65_3" class="auswahl_liste">
-                <label for="vorteil_65_3">Schwanz</label>
-                <select size="1">
-                  <option>1W6 TP(A)</option>
-                  <option>1W6 TP</option>
-                  <option>1W6+1 TP</option>
-                  <option>1W6+2 TP</option>
-                  <option>1W6+3 TP</option>
-                  <option>1W6+4 TP</option>
-                  <option>1W6+5 TP</option>
-                  <option>1W6+6 TP</option>
-                </select>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Natürlicher Rüstungsschutz" id="pc_49" class="stufe"/>
-            <label for="pc_49">Natürlicher Rüstungsschutz</label>
-            <input type="number" min="1" max="3" step="1"/>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Prophezeihen" id="pc_50"/>
-            <label for="pc_50">Prophezeihen</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Resistenz gegen Gift" id="vorteil_68" class="sammeln-nowrap">
-            <label for="vorteil_68">Resistenz gegen Gift</label>
-            <ul>
-              <li>
-                <input type="radio" name="temp[v][68]" value="" id="vorteil_68_1" class="auswahl_text">
-                <label for="vorteil_68_1">einzelnes Gift:</label>
-                <input type="text">
-              </li>
-              <li>
-                <input type="radio" name="temp[v][68]" value="" id="vorteil_68_2" class="auswahl_liste">
-                <label for="vorteil_68_2">Giftgruppe:</label>
-                <select size="5" multiple>
-                  <option>tierische Gifte</option>
-                  <option>mineralische Gifte</option>
-                  <option>pflanzliche Gifte</option>
-                  <option>alchimistische Gifte</option>
-                  <option>Atemgifte</option>
-                  <option>Einnahmegifte</option>
-                  <option>Kontaktgifte</option>
-                  <option>Blut-/Waffengifte</option>
-                </select>
-              </li>
-              <li>
-                <input type="radio" name="temp[v][68]" value="[alle Gifte]" id="vorteil_68_3">
-                <label for="vorteil_68_3">alle Gifte</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Resistenz gegen Krankheiten" id="pc_51"/>
-            <label for="pc_51">Resistenz gegen Krankheiten</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Richtungssinn" id="pc_52"/>
-            <label for="pc_52">Richtungssinn</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Schlangenmensch" id="pc_53"/>
-            <label for="pc_53">Schlangenmensch</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Schnelle Heilung" id="vorteil_72">
-            <label for="vorteil_72">Schnelle Heilung</label><span class="fl_rechts">
-              <input type="radio" name="temp[v][72]" value="I" id="vorteil_72_1">
-              <label for="vorteil_72_1">I</label>
-              <input type="radio" name="temp[v][72]" value="II" id="vorteil_72_2">
-              <label for="vorteil_72_2">II</label>
-              <input type="radio" name="temp[v][72]" value="III" id="vorteil_72_3">
-              <label for="vorteil_72_3">III</label></span>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Schutzgeist" id="pc_54"/>
-            <label for="pc_54">Schutzgeist</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Schwer zu verzaubern" id="pc_55"/>
-            <label for="pc_55">Schwer zu verzaubern</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Soziale Anpassungsfähigkeit" id="pc_56"/>
-            <label for="pc_56">Soziale Anpassungsfähigkeit</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Tierempathie" id="vorteil_76" class="sammeln-nowrap">
-            <label for="vorteil_76">Tierempathie</label>
-            <ul>
-              <li>
-                <input type="radio" name="temp[v][76]" value="[allgemein]" id="vorteil_76_1">
-                <label for="vorteil_76_1">allgemein</label>
-              </li>
-              <li>
-                <input type="radio" name="temp[v][76]" value="" id="vorteil_76_2" class="auswahl_text">
-                <input type="text">
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Tierfreund" id="pc_57"/>
-            <label for="pc_57">Tierfreund</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Übernatürliche Begabung" id="vorteil_78" class="auswahl_text">
-            <label for="vorteil_78">Übernatürliche Begabung</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Unbeschwertes Zaubern" id="pc_58"/>
-            <label for="pc_58">Unbeschwertes Zaubern</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Verbindungen" id="vorteil_80" class="stufe">
-            <label for="vorteil_80">Verbindungen</label>
-            <input type="number" min="1" step="1">
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Verhüllte Aura" id="pc_59"/>
-            <label for="pc_59">Verhüllte Aura</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Veteran" id="pc_60"/>
-            <label for="pc_60">Veteran</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Viertelzauberer" id="vorteil_83" class="zusatz">
-            <label for="vorteil_83">Viertelzauberer</label><span class="fl_rechts">
-              <input type="radio" name="temp[v][83]" value="" id="vorteil_83_1">
-              <label for="vorteil_83_1">bewußt</label>
-              <input type="radio" name="temp[v][83]" value="unbewußter " id="vorteil_83_2">
-              <label for="vorteil_83_2">unbewußt</label></span>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Vollzauberer" id="pc_61"/>
-            <label for="pc_61">Vollzauberer</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Vom Schicksal begünstigt" id="pc_62"/>
-            <label for="pc_62">Vom Schicksal begünstigt</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Wesen der Nacht" id="vorteil_86" class="zusatz">
-            <label for="vorteil_86">Wesen der Nacht</label><span class="fl_rechts">
-              <input type="radio" name="temp[v][86]" value="I" id="vorteil_86_1">
-              <label for="vorteil_86_1">I</label>
-              <input type="radio" name="temp[v][86]" value="II" id="vorteil_86_2">
-              <label for="vorteil_86_2">II</label>
-              <input type="radio" name="temp[v][86]" value="III" id="vorteil_86_3">
-              <label for="vorteil_86_3">III</label></span>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Wohlklang" id="pc_63"/>
-            <label for="pc_63">Wohlklang</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Wolfskind" id="vorteil_87" class="zusatz">
-            <label for="vorteil_87">Wolfskind</label><span class="fl_rechts">
-              <input type="radio" name="temp[v][87]" value="" id="vorteil_87_1">
-              <label for="vorteil_87_1">bewußt</label>
-              <input type="radio" name="temp[v][87]" value="unbewußtes " id="vorteil_87_2">
-              <label for="vorteil_87_2">unbewußt</label></span>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zäher Hund" id="pc_64"/>
-            <label for="pc_64">Zäher Hund</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zauberhaar" id="pc_65"/>
-            <label for="pc_65">Zauberhaar</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zeitgefühl" id="pc_66"/>
-            <label for="pc_66">Zeitgefühl</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zusätzliche Gliedmaßen" id="vorteil_91" class="sammeln-alle">
-            <label for="vorteil_91">Zusätzliche Gliedmaßen</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="Arme" id="vorteil_91_1">
-                <label for="vorteil_91_1">Arme</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Schwanz" id="vorteil_91_2">
-                <label for="vorteil_91_2">Schwanz</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Flügel" id="vorteil_91_3">
-                <label for="vorteil_91_3">Flügel</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zweistimmiger Gesang" id="pc_67"/>
-            <label for="pc_67">Zweistimmiger Gesang</label>
-          </li>
-          <li>
-            <input name="Vorteile" type="checkbox" value="Zwergennase" id="pc_68"/>
-            <label for="pc_68">Zwergennase</label>
-          </li>
-        </ul>
-        <ul class="vor_nach fl_rechts">
-          <li class="mitte"><strong>Nachteile</strong></li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Aberglaube" id="pc_69" class="stufe"/>
-            <label for="pc_69">Aberglaube</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Albino" id="pc_70"/>
-            <label for="pc_70">Albino</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor Insekten" id="pc_71" class="stufe"/>
-            <label for="pc_71">Angst vor Insekten</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor Spinnen" id="pc_72" class="stufe"/>
-            <label for="pc_72">Angst vor Spinnen</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor Reptilien" id="pc_73" class="stufe"/>
-            <label for="pc_73">Angst vor Reptilien</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor Feuer" id="pc_74" class="stufe"/>
-            <label for="pc_74">Angst vor Feuer</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor Wasser" id="pc_75" class="stufe"/>
-            <label for="pc_75">Angst vor Wasser</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_8" class="zusatz stufe">
-            <label for="nachteil_8">Angst vor </label>
-            <input type="text">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_9" class="zusatz stufe">
-            <label for="nachteil_9">Angst vor </label>
-            <input type="text">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_10" class="zusatz stufe">
-            <label for="nachteil_10">Angst vor </label>
-            <input type="text">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Animalische Magie" id="pc_76"/>
-            <label for="pc_76">Animalische Magie</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Arkanophobie" id="pc_77" class="stufe"/>
-            <label for="pc_77">Arkanophobie</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Arroganz" id="pc_78" class="stufe"/>
-            <label for="pc_78">Arroganz</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Artefaktgebunden" id="pc_79"/>
-            <label for="pc_79">Artefaktgebunden</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Astraler Block" id="pc_80"/>
-            <label for="pc_80">Astraler Block</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Autoritätsgläubig" id="pc_81" class="stufe"/>
-            <label for="pc_81">Autoritätsgläubig</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Behäbig" id="pc_82"/>
-            <label for="pc_82">Behäbig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Blutdurst" id="pc_83" class="stufe"/>
-            <label for="pc_83">Blutdurst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Blutrausch" id="pc_84"/>
-            <label for="pc_84">Blutrausch</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Brünstigkeit" id="pc_85" class="stufe"/>
-            <label for="pc_85">Brünstigkeit</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Dunkelangst" id="pc_86" class="stufe"/>
-            <label for="pc_86">Dunkelangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Einarmig" id="pc_87"/>
-            <label for="pc_87">Einarmig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Einäugig" id="pc_88"/>
-            <label for="pc_88">Einäugig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Einbeinig" id="pc_89"/>
-            <label for="pc_89">Einbeinig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Einbildungen" id="pc_90"/>
-            <label for="pc_90">Einbildungen</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Eingeschränkte Elementarnähe" id="pc_91"/>
-            <label for="pc_91">Eingeschränkte Elementarnähe</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Eingeschränkter Sinn" id="nachteil_27" class="sammeln-eins">
-            <label for="nachteil_27">Eingeschränkter Sinn</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="Sicht" id="nachteil_27_1">
-                <label for="nachteil_27_1">Sicht</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Gehör" id="nachteil_27_2">
-                <label for="nachteil_27_2">Gehör</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Geruch/Geschmack" id="nachteil_27_3">
-                <label for="nachteil_27_3">Geruch/Geschmack</label>
-              </li>
-              <li>
-                <input type="checkbox" value="Tastsinn" id="nachteil_27_4">
-                <label for="nachteil_27_4">Tastsinn</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Einhändig" id="pc_92"/>
-            <label for="pc_92">Einhändig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Eitelkeit" id="pc_93" class="stufe"/>
-            <label for="pc_93">Eitelkeit</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Elfische Weltsicht" id="pc_94"/>
-            <label for="pc_94">Elfische Weltsicht</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Farbenblind" id="pc_95"/>
-            <label for="pc_95">Farbenblind</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Feind" id="pc_96" class="stufe"/>
-            <label for="pc_96">Feind</label>
-            <input type="number" min="1" max="15" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Feste Gewohnheit" id="nachteil_33" class="spezifisch">
-            <label for="nachteil_33">Feste Gewohnheit</label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Festgefügtes Denken" id="pc_97" class="stufe"/>
-            <label for="pc_97">Festgefügtes Denken</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Fettleibig" id="pc_98"/>
-            <label for="pc_98">Fettleibig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Fluch der Finsternis" id="nachteil_36" class="zusatz">
-            <label for="nachteil_36">Fluch der Finsternis</label><span class="fl_rechts">
-              <input type="radio" name="temp[n][36]" value="I" id="nachteil_36_1">
-              <label for="nachteil_36_1">I</label>
-              <input type="radio" name="temp[n][36]" value="II" id="nachteil_36_2">
-              <label for="nachteil_36_2">II</label>
-              <input type="radio" name="temp[n][36]" value="III" id="nachteil_36_3">
-              <label for="nachteil_36_3">III</label></span>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Geiz" id="pc_99" class="stufe"/>
-            <label for="pc_99">Geiz</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Gerechtigkeitswahn" id="pc_100" class="stufe"/>
-            <label for="pc_100">Gerechtigkeitswahn</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Gesucht" id="nachteil_39" class="spezifisch zusatz">
-            <label for="nachteil_39">Gesucht</label>
-            <input type="text"><span class="fl_rechts">
-              <input type="radio" name="temp[n][39]" value="I" id="nachteil_39_1">
-              <label for="nachteil_39_1">I</label>
-              <input type="radio" name="temp[n][39]" value="II" id="nachteil_39_2">
-              <label for="nachteil_39_2">II</label>
-              <input type="radio" name="temp[n][39]" value="III" id="nachteil_39_3">
-              <label for="nachteil_39_3">III</label></span>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Glasknochen" id="pc_101"/>
-            <label for="pc_101">Glasknochen</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Goldgier" id="pc_102" class="stufe"/>
-            <label for="pc_102">Goldgier</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Größenwahn" id="pc_103" class="stufe"/>
-            <label for="pc_103">Größenwahn</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Heimwehkrank" id="pc_104"/>
-            <label for="pc_104">Heimwehkrank</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Hitzeempfindlichkeit" id="pc_105"/>
-            <label for="pc_105">Hitzeempfindlichkeit</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Höhenangst" id="pc_106" class="stufe"/>
-            <label for="pc_106">Höhenangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Impulsiv" id="pc_107"/>
-            <label for="pc_107">Impulsiv</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Jähzorn" id="pc_108" class="stufe"/>
-            <label for="pc_108">Jähzorn</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kälteempfindlichkeit" id="pc_109"/>
-            <label for="pc_109">Kälteempfindlichkeit</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kältestarre" id="pc_110"/>
-            <label for="pc_110">Kältestarre</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kein Vertrauter" id="pc_111"/>
-            <label for="pc_111">Kein Vertrauter</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kleinwüchsig" id="pc_112"/>
-            <label for="pc_112">Kleinwüchsig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Körpergebundene Kraft" id="pc_113"/>
-            <label for="pc_113">Körpergebundene Kraft</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Krankhafte Reinlichkeit" id="pc_114" class="stufe"/>
-            <label for="pc_114">Krankhafte Reinlichkeit</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Krankheitsanfällig" id="pc_115"/>
-            <label for="pc_115">Krankheitsanfällig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kristallgebunden" id="pc_116"/>
-            <label for="pc_116">Kristallgebunden</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Kurzatmig" id="pc_117" class="stufe"/>
-            <label for="pc_117">Kurzatmig</label>
-            <input type="number" min="2" max="2" step="2"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Lahm" id="pc_118"/>
-            <label for="pc_118">Lahm</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Lästige Mindergeister" id="pc_119"/>
-            <label for="pc_119">Lästige Mindergeister</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Lichtempfindlich" id="pc_120"/>
-            <label for="pc_120">Lichtempfindlich</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Lichtscheu" id="pc_121"/>
-            <label for="pc_121">Lichtscheu</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Madas Fluch" id="nachteil_61" class="zusatz">
-            <label for="nachteil_61">Madas Fluch</label><span class="fl_rechts">
-              <input type="radio" name="temp[n][61]" value="I" id="nachteil_61_1">
-              <label for="nachteil_61_1">I</label>
-              <input type="radio" name="temp[n][61]" value="II" id="nachteil_61_2">
-              <label for="nachteil_61_2">II</label>
-              <input type="radio" name="temp[n][61]" value="III" id="nachteil_61_3">
-              <label for="nachteil_61_3">III</label></span>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Medium" id="pc_122"/>
-            <label for="pc_122">Medium</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Meeresangst" id="pc_123" class="stufe"/>
-            <label for="pc_123">Meeresangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Miserable Eigenschaft" id="nachteil_64" class="sammeln-eins">
-            <label for="nachteil_64">Miserable Eigenschaft</label>
-            <ul>
-              <li>
-                <input type="checkbox" value="MU" id="nachteil_64_1">
-                <label for="nachteil_64_1">Mut</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KL" id="nachteil_64_2">
-                <label for="nachteil_64_2">Klugheit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="IN" id="nachteil_64_3">
-                <label for="nachteil_64_3">Intuition</label>
-              </li>
-              <li> 
-                <input type="checkbox" value="CH" id="nachteil_64_4">
-                <label for="nachteil_64_4">Charisma</label>
-              </li>
-              <li>
-                <input type="checkbox" value="FF" id="nachteil_64_5">
-                <label for="nachteil_64_5">Fingerfertigkeit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="GE" id="nachteil_64_6">
-                <label for="nachteil_64_6">Gewandheit</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KO" id="nachteil_64_7">
-                <label for="nachteil_64_7">Konstitution</label>
-              </li>
-              <li>
-                <input type="checkbox" value="KK" id="nachteil_64_8">
-                <label for="nachteil_64_8">Körperkraft</label>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Mondsüchtig" id="pc_124"/>
-            <label for="pc_124">Mondsüchtig</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Moralkodex" id="nachteil_66" class="spezifisch stufe">
-            <label for="nachteil_66">Moralkodex</label>
-            <input type="text">
-            <input type="number" min="3" max="12" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Nachtblind" id="pc_125"/>
-            <label for="pc_125">Nachtblind</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Nahrungsrestriktion" id="nachteil_68" class="spezifisch">
-            <label for="nachteil_68">Nahrungsrestriktion</label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Neid" id="pc_126" class="stufe"/>
-            <label for="pc_126">Neid</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Neugier" id="pc_127" class="stufe"/>
-            <label for="pc_127">Neugier</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Niedrige Astralkraft" id="pc_128" class="stufe"/>
-            <label for="pc_128">Niedrige Astralkraft</label>
-            <input type="number" min="1" max="6" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Niedrige Lebenskraft" id="pc_129" class="stufe"/>
-            <label for="pc_129">Niedrige Lebenskraft</label>
-            <input type="number" min="1" max="6" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Niedrige Magieresistenz" id="pc_130" class="stufe"/>
-            <label for="pc_130">Niedrige Magieresistenz</label>
-            <input type="number" min="1" max="3" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Pechmagnet" id="pc_131"/>
-            <label for="pc_131">Pechmagnet</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Platzangst" id="pc_132" class="stufe"/>
-            <label for="pc_132">Platzangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Prinzipientreue" id="nachteil_76" class="spezifisch stufe">
-            <label for="nachteil_76">Prinzipientreue</label>
-            <input type="text">
-            <input type="number" min="3" max="12" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Rachsucht" id="pc_133" class="stufe"/>
-            <label for="pc_133">Rachsucht</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Randgruppe" id="nachteil_78" class="spezifisch">
-            <label for="nachteil_78">Randgruppe</label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Raubtiergeruch" id="pc_134"/>
-            <label for="pc_134">Raubtiergeruch</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Raumangst" id="pc_135" class="stufe"/>
-            <label for="pc_135">Raumangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Rückschlag" id="pc_136"/>
-            <label for="pc_136">Rückschlag</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schlaflosigkeit" id="pc_137"/>
-            <label for="pc_137">Schlaflosigkeit</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schlafstörungen" id="nachteil_83" class="zusatz">
-            <label for="nachteil_83">Schlafstörungen</label><span class="fl_rechts">
-              <input type="radio" name="temp[n][83]" value="I" id="nachteil_83_1">
-              <label for="nachteil_83_1">I</label>
-              <input type="radio" name="temp[n][83]" value="II" id="nachteil_83_2">
-              <label for="nachteil_83_2">II</label></span>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schlafwandler" id="pc_138"/>
-            <label for="pc_138">Schlafwandler</label>
-          </li>
-          <li> 
-            <input name="Nachteile" type="checkbox" id="nachteil_85" class="zusatz stufe">
-            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li> 
-            <input name="Nachteile" type="checkbox" id="nachteil_86" class="zusatz stufe">
-            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li> 
-            <input name="Nachteile" type="checkbox" id="nachteil_87" class="zusatz stufe">
-            <input type="text" placeholder="Schlechte Eigenschaft" size="21">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schlechte Regeneration" id="pc_139"/>
-            <label for="pc_139">Schlechte Regeneration</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schlechter Ruf" id="pc_140" class="stufe"/>
-            <label for="pc_140">Schlechter Ruf</label>
-            <input type="number" min="1" max="10" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schleichender Verfall" id="pc_141" class="stufe"/>
-            <label for="pc_141">Schleichender Verfall</label>
-            <input type="number" min="1" max="10" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schneller Alternd" id="pc_142"/>
-            <label for="pc_142">Schneller Alternd</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schulden" id="nachteil_92" class="stufe">
-            <label for="nachteil_92">Schulden (Dukaten)</label>
-            <input type="number" min="500" max="2000" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schwache Ausstrahlung" id="pc_143" class="stufe"/>
-            <label for="pc_143">Schwache Ausstrahlung</label>
-            <input type="number" min="1" max="5" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schwacher Astralkörper" id="pc_144"/>
-            <label for="pc_144">Schwacher Astralkörper</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Schwanzlos" id="pc_145"/>
-            <label for="pc_145">Schwanzlos</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Seffer Manich" id="pc_146"/>
-            <label for="pc_146">Seffer Manich</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Selbstgespräche" id="pc_147"/>
-            <label for="pc_147">Selbstgespräche</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Sensibler Geruchssinn" id="nachteil_98" class="stufe">
-            <label for="nachteil_98">Sensibler Geruchssinn</label>
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Sippenlosigkeit" id="pc_148"/>
-            <label for="pc_148">Sippenlosigkeit</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Sonnensucht" id="pc_149" class="stufe"/>
-            <label for="pc_149">Sonnensucht</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Speisegebote" id="nachteil_101" class="spezifisch">
-            <label for="nachteil_101">Speisegebote</label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Spielsucht" id="pc_150" class="stufe"/>
-            <label for="pc_150">Spielsucht</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Sprachfehler" id="pc_151"/>
-            <label for="pc_151">Sprachfehler</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Spruchhemmung" id="pc_152"/>
-            <label for="pc_152">Spruchhemmung</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Stigma" id="pc_153" class="stufe"/>
-            <label for="pc_153">Stigma</label>
-            <input type="number" min="1" max="12" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Streitsucht" id="pc_154" class="stufe"/>
-            <label for="pc_154">Streitsucht</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Stubenhocker" id="pc_155"/>
-            <label for="pc_155">Stubenhocker</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Sucht" id="nachteil_108" class="spezifisch stufe">
-            <label for="nachteil_108">Sucht</label>
-            <input type="text">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Thesisgebunden" id="nachteil_109" class="auswahl_text">
-            <label for="nachteil_109">Thesisgebunden</label>
-            <div class="fl_rechts">
-              <input type="text" title="Zauber"><br>
-              <input type="text" title="Zauber"><br>
-              <input type="text" title="Zauber"><br>
-              <input type="text" title="Zauber"><br>
-              <input type="text" title="Zauber">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Tollpatsch" id="pc_156"/>
-            <label for="pc_156">Tollpatsch</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Totenangst" id="pc_157" class="stufe"/>
-            <label for="pc_157">Totenangst</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Übler Geruch" id="pc_158"/>
-            <label for="pc_158">Übler Geruch</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unangenehme Stimme" id="pc_159"/>
-            <label for="pc_159">Unangenehme Stimme</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unansehnlich" id="pc_160"/>
-            <label for="pc_160">Unansehnlich</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unfähigkeit (Merkmal)" id="nachteil_115" class="auswahl_liste">
-            <label for="nachteil_115">Unfähigkeit für Merkmal</label><br>
-            <select size="5" multiple class="fl_rechts">
-              <option>Antimagie</option>
-              <option>Beschwörung</option>
-              <optgroup label="Dämonisch">
-                <option value="Dämonisch/gesamt">- gesamt</option>
-                <option value="Dämonisch/Blakharaz">- Blakharaz</option>
-                <option value="Dämonisch/Belhalhar">- Belhalhar</option>
-                <option value="Dämonisch/Charyptoroth">- Charyptoroth</option>
-                <option value="Dämonisch/Lolgramoth">- Lolgramoth</option>
-                <option value="Dämonisch/Thargunitoth">- Thargunitoth</option>
-                <option value="Dämonisch/Amazeroth">- Amazeroth</option>
-                <option value="Dämonisch/Belshirash">- Belshirash</option>
-                <option value="Dämonisch/Asfaloth">- Asfaloth</option>
-                <option value="Dämonisch/Tasfarelel">- Tasfarelel</option>
-                <option value="Dämonisch/Belzhorash">- Belzhorash</option>
-                <option value="Dämonisch/Agrimoth">- Agrimoth</option>
-                <option value="Dämonisch/Belkelel">- Belkelel</option>
-              </optgroup>
-              <optgroup label="Elementar">
-                <option value="Elementar/gesamt">- gesamt</option>
-                <option value="Elementar/Eis">- Eis</option>
-                <option value="Elementar/Erz">- Erz</option>
-                <option value="Elementar/Feuer">- Feuer</option>
-                <option value="Elementar/Humus">- Humus</option>
-                <option value="Elementar/Luft">- Luft</option>
-                <option value="Elementar/Wasser">- Wasser</option>
-              </optgroup>
-              <option>Eigenschaften</option>
-              <option>Einfluß</option>
-              <option>Form</option>
-              <option>Geisterwesen</option>
-              <option>Heilung</option>
-              <option>Hellsicht</option>
-              <option>Herbeirufung</option>
-              <option>Herrschaft</option>
-              <option>Illusion</option>
-              <option>Kraft</option>
-              <option>Limbus</option>
-              <option>Metamagie</option>
-              <option>Objekt</option>
-              <option>Schaden</option>
-              <option>Telekinese</option>
-              <option>Temporal</option>
-              <option>Umwelt</option>
-              <option>Verständigung</option>
-            </select>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talent)" id="nachteil_116" class="auswahl_text">
-            <label for="nachteil_116">Unfähigkeit für Talent</label>
-            <div class="fl_rechts">
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text"><br>
-              <input type="text">
-            </div>
-            <div class="clearfix"></div>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talentgruppe)" id="nachteil_117" class="auswahl_liste">
-            <label for="nachteil_117">Unfähigkeit für Talentgruppe</label><br>
-            <select size="5" id="nachteil__l" multiple class="fl_rechts">
-              <optgroup label="Kampftalente">
-                <option value="Kampf">gesamt</option>
-                <option>Nahkampf</option>
-                <option>Fernkampf</option>
-              </optgroup>
-              <option>Körperliche Talente</option>
-              <option>Gesellschaft</option>
-              <option>Natur</option>
-              <option>Wissen</option>
-              <option>Handwerk</option>
-              <option>Sprachen und Schriften</option>
-            </select>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unfrei" id="pc_161"/>
-            <label for="pc_161">Unfrei</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Ungebildet" id="pc_162" class="stufe"/>
-            <label for="pc_162">Ungebildet</label>
-            <input type="number" min="1" max="5" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unstet" id="pc_163"/>
-            <label for="pc_163">Unstet</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Unverträglichkeit mit verarbeitetem Metall" id="pc_164"/>
-            <label for="pc_164">Unverträglichkeit mit verarbeitetem Metall</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Vergesslichkeit" id="pc_165"/>
-            <label for="pc_165">Vergesslichkeit</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Verpflichtungen" id="nachteil_123" class="spezifisch stufe">
-            <label for="nachteil_123">Verpflichtungen gegenüber </label>
-            <input type="text">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Verschwendungssucht" id="pc_166" class="stufe"/>
-            <label for="pc_166">Verschwendungssucht</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Verwöhnt" id="pc_167" class="stufe"/>
-            <label for="pc_167">Verwöhnt</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Vorurteile" id="nachteil_126" class="spezifisch stufe">
-            <label for="nachteil_126">Vorurteile gegenüber </label>
-            <input type="text">
-            <input type="number" min="1" max="20" step="1">
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Wahnvorstellungen" id="pc_168"/>
-            <label for="pc_168">Wahnvorstellungen</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Wahrer Name" id="pc_169"/>
-            <label for="pc_169">Wahrer Name</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_170" class="stufe"/>
-            <label for="pc_170">Weltfremd</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_171" class="stufe"/>
-            <label for="pc_171">Weltfremd</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_172" class="stufe"/>
-            <label for="pc_172">Weltfremd</label>
-            <input type="number" min="1" max="20" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Widerwärtiges Aussehen" id="pc_173"/>
-            <label for="pc_173">Widerwärtiges Aussehen</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Wilde Magie" id="pc_174"/>
-            <label for="pc_174">Wilde Magie</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Zielschwierigkeiten" id="pc_175"/>
-            <label for="pc_175">Zielschwierigkeiten</label>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Zögerlicher Zauberer" id="pc_176" class="stufe"/>
-            <label for="pc_176">Zögerlicher Zauberer</label>
-            <input type="number" min="1" max="5" step="1"/>
-          </li>
-          <li>
-            <input name="Nachteile" type="checkbox" value="Zwergenwuchs" id="pc_177"/>
-            <label for="pc_177">Zwergenwuchs</label>
-          </li>
-        </ul>
-      </fieldset>
-      <fieldset class="mitte">
+        <table id="vnn" class="data-section">
+          <caption>Neue Vor- & Nachteile</caption>
+          <tr>
+            <td>
+              <ul class="vor-nach fl-links">
+                <li class="mitte"><strong>Vorteile</strong></li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Adlige Abstammung" id="pc_1"/>
+                  <label for="pc_1">Adlige Abstammung</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Adliges Erbe" id="pc_2"/>
+                  <label for="pc_2">Adliges Erbe</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Amtsadel" id="pc_3"/>
+                  <label for="pc_3">Amtsadel</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Affinität" id="vorteil_4" class="auswahl_liste">
+                  <label for="vorteil_4">Affinität zu</label>
+                  <select size="1" class="fl-rechts">
+                    <option value="Dämonen">Dämonen</option>
+                    <option value="Elementare">Elementaren</option>
+                    <option value="Geister">Geistern</option>
+                  </select>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Akademische Ausbildung" id="vorteil_5" class="auswahl_liste">
+                  <label for="vorteil_5">Akademische Ausbildung</label>
+                  <select size="1" class="fl-rechts">
+                    <option value="Gelehrter">Gelehrter</option>
+                    <option value="Krieger">Krieger</option>
+                    <option value="Magier">Magier</option>
+                  </select>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Altersresistenz" id="pc_4"/>
+                  <label for="pc_4">Altersresistenz</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Astrale Regeneration" id="vorteil_7" class="zusatz">
+                  <label for="vorteil_7">Astrale Regeneration</label><span class="fl-rechts">
+                    <input type="radio" name="temp[v][7]" value="I" id="vorteil_7_1">
+                    <label for="vorteil_7_1">I</label>
+                    <input type="radio" name="temp[v][7]" value="II" id="vorteil_7_2">
+                    <label for="vorteil_7_2">II</label>
+                    <input type="radio" name="temp[v][7]" value="III" id="vorteil_7_3">
+                    <label for="vorteil_7_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Astralmacht" id="pc_5" class="stufe"/>
+                  <label for="pc_5">Astralmacht</label>
+                  <input type="number" min="1" max="6" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Ausdauernd" id="pc_6" class="stufe"/>
+                  <label for="pc_6">Ausdauernd</label>
+                  <input type="number" min="2" max="6" step="2"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Ausdauernder Zauberer" id="pc_7"/>
+                  <label for="pc_7">Ausdauernder Zauberer</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Ausrüstungsvorteil" id="pc_8" class="stufe"/>
+                  <label for="pc_8">Ausrüstungsvorteil</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Balance" id="pc_9"/>
+                  <label for="pc_9">Balance</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Begabung (Merkmal)" id="vorteil_13" class="auswahl_liste">
+                  <label for="vorteil_13">Begabung für Merkmal</label>
+                  <select size="5" multiple class="fl-rechts">
+                    <option>Antimagie</option>
+                    <option>Beschwörung</option>
+                    <optgroup label="Dämonisch">
+                      <option value="Dämonisch/gesamt">- gesamt</option>
+                      <option value="Dämonisch/Blakharaz">- Blakharaz</option>
+                      <option value="Dämonisch/Belhalhar">- Belhalhar</option>
+                      <option value="Dämonisch/Charyptoroth">- Charyptoroth</option>
+                      <option value="Dämonisch/Lolgramoth">- Lolgramoth</option>
+                      <option value="Dämonisch/Thargunitoth">- Thargunitoth</option>
+                      <option value="Dämonisch/Amazeroth">- Amazeroth</option>
+                      <option value="Dämonisch/Belshirash">- Belshirash</option>
+                      <option value="Dämonisch/Asfaloth">- Asfaloth</option>
+                      <option value="Dämonisch/Tasfarelel">- Tasfarelel</option>
+                      <option value="Dämonisch/Belzhorash">- Belzhorash</option>
+                      <option value="Dämonisch/Agrimoth">- Agrimoth</option>
+                      <option value="Dämonisch/Belkelel">- Belkelel</option>
+                    </optgroup>
+                    <optgroup label="Elementar">
+                      <option value="Elementar/gesamt">- gesamt</option>
+                      <option value="Elementar/Eis">- Eis</option>
+                      <option value="Elementar/Erz">- Erz</option>
+                      <option value="Elementar/Feuer">- Feuer</option>
+                      <option value="Elementar/Humus">- Humus</option>
+                      <option value="Elementar/Luft">- Luft</option>
+                      <option value="Elementar/Wasser">- Wasser</option>
+                    </optgroup>
+                    <option>Eigenschaften</option>
+                    <option>Einfluß</option>
+                    <option>Form</option>
+                    <option>Geisterwesen</option>
+                    <option>Heilung</option>
+                    <option>Hellsicht</option>
+                    <option>Herbeirufung</option>
+                    <option>Herrschaft</option>
+                    <option>Illusion</option>
+                    <option>Kraft</option>
+                    <option>Limbus</option>
+                    <option>Metamagie</option>
+                    <option>Objekt</option>
+                    <option>Schaden</option>
+                    <option>Telekinese</option>
+                    <option>Temporal</option>
+                    <option>Umwelt</option>
+                    <option>Verständigung</option>
+                  </select>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Begabung (Ritual)" id="vorteil_14" class="auswahl_text">
+                  <label for="vorteil_14">Begabung für Ritual</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Begabung (Zauber)" id="vorteil_15" class="auswahl_text">
+                  <label for="vorteil_15">Begabung für Zauber</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Begabung (Talent)" id="vorteil_16" class="auswahl_text">
+                  <label for="vorteil_16">Begabung für Talent</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Begabung (Talentgruppe)" id="vorteil_17" class="auswahl_liste">
+                  <label for="vorteil_17">Begabung für Talentgruppe</label>
+                  <select size="5" multiple class="fl-rechts">
+                    <optgroup label="Kampftalente">
+                      <option value="Kampf">gesamt</option>
+                      <option>Nahkampf</option>
+                      <option>Fernkampf</option>
+                    </optgroup>
+                    <option>Körperliche Talente</option>
+                    <option>Gesellschaft</option>
+                    <option>Natur</option>
+                    <option>Wissen</option>
+                    <option>Handwerk</option>
+                    <option>Sprachen und Schriften</option>
+                  </select>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Beidhändig" id="pc_10"/>
+                  <label for="pc_10">Beidhändig</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Beseelte Knochenkeule" id="pc_11"/>
+                  <label for="pc_11">Beseelte Knochenkeule</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Besonderer Besitz" id="vorteil_20" class="spezifisch">
+                  <label for="vorteil_20">Besonderer Besitz</label>
+                  <input type="text" class="fl-rechts halfSize">
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Breitgefächerte Bildung" id="pc_12"/>
+                  <label for="pc_12">Breitgefächerte Bildung</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Dschinngeboren" id="pc_13"/>
+                  <label for="pc_13">Dschinngeboren</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Dämmerungssicht" id="pc_14"/>
+                  <label for="pc_14">Dämmerungssicht</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Eidetisches Gedächtnis" id="pc_15"/>
+                  <label for="pc_15">Eidetisches Gedächtnis</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Eigeboren" id="pc_16"/>
+                  <label for="pc_16">Eigeboren</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Eisenaffine Aura" id="pc_17"/>
+                  <label for="pc_17">Eisenaffine Aura</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Eisern" id="pc_18"/>
+                  <label for="pc_18">Eisern</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Empathie" id="pc_19"/>
+                  <label for="pc_19">Empathie</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Entfernungssinn" id="pc_20"/>
+                  <label for="pc_20">Entfernungssinn</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Ererbte Knochenkeule" id="pc_21"/>
+                  <label for="pc_21">Ererbte Knochenkeule</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Feenfreund" id="pc_22"/>
+                  <label for="pc_22">Feenfreund</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Feste Matrix" id="pc_23"/>
+                  <label for="pc_23">Feste Matrix</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Flink" id="pc_24"/>
+                  <label for="pc_24">Flink</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Früher Vertrauter" id="pc_25"/>
+                  <label for="pc_25">Früher Vertrauter</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Gebildet" id="pc_26" class="stufe"/>
+                  <label for="pc_26">Gebildet</label>
+                  <input type="number" min="1" max="5" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Gefahreninstinkt" id="pc_27"/>
+                  <label for="pc_27">Gefahreninstinkt</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Geräuschhexerei" id="pc_28"/>
+                  <label for="pc_28">Geräuschhexerei</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Geweiht" id="vorteil_38" class="auswahl_liste">
+                  <label for="vorteil_38">Geweiht</label>
+                  <select size="1" class="fl-rechts">
+                    <optgroup label="alveranische Gottheiten">
+                      <option>Boron</option>
+                      <option>Efferd</option>
+                      <option>Firun</option>
+                      <option>Hesinde</option>
+                      <option>Ingrimm</option>
+                      <option>Peraine</option>
+                      <option>Phex</option>
+                      <option>Praios</option>
+                      <option>Rahja</option>
+                      <option>Rondra</option>
+                      <option>Travia</option>
+                      <option>Tsa</option>
+                    </optgroup>
+                    <optgroup label="nicht-alveranische Gottheiten">
+                      <option>Aves</option>
+                      <option>Ifirn</option>
+                      <option>Nandus</option>
+                      <option>Swafnir</option>
+                      <!-- option Kamaluq-->
+                      <!-- option Himmelswölfe-->
+                    </optgroup>
+                    <optgroup label="echsiche Gottheiten">
+                      <option>H’Szint</option>
+                      <option>Zsahh</option>
+                    </optgroup>
+                    <optgroup label="orkische Gottheiten">
+                      <option>Gravesh</option>
+                    </optgroup>
+                    <optgroup label="zwergische Gottheiten">
+                      <option>Angrosch</option>
+                    </optgroup>
+                  </select>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Glück" id="pc_29"/>
+                  <label for="pc_29">Glück</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Glück im Spiel" id="pc_30"/>
+                  <label for="pc_30">Glück im Spiel</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Gut Aussehend" id="pc_31"/>
+                  <label for="pc_31">Gut Aussehend</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Guter Ruf" id="pc_32" class="stufe"/>
+                  <label for="pc_32">Guter Ruf</label>
+                  <input type="number" min="1" max="10" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Gutes Gedächtnis" id="pc_33"/>
+                  <label for="pc_33">Gutes Gedächtnis</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Halbzauberer" id="pc_34"/>
+                  <label for="pc_34">Halbzauberer</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Herausragende Balance" id="pc_35"/>
+                  <label for="pc_35">Herausragende Balance</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Herausragende Eigenschaft" id="vorteil_46" class="sammeln-alle">
+                  <label for="vorteil_46">Herausragende Eigenschaft</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="MU" id="vorteil_46_1" class="stufe">
+                      <label for="vorteil_46_1">Mut</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KL" id="vorteil_46_2" class="stufe">
+                      <label for="vorteil_46_2">Klugheit</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="IN" id="vorteil_46_3" class="stufe">
+                      <label for="vorteil_46_3">Intuition</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li> 
+                      <input type="checkbox" value="CH" id="vorteil_46_4" class="stufe">
+                      <label for="vorteil_46_4">Charisma</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="FF" id="vorteil_46_5" class="stufe">
+                      <label for="vorteil_46_5">Fingerfertigkeit</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="GE" id="vorteil_46_6" class="stufe">
+                      <label for="vorteil_46_6">Gewandheit</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KO" id="vorteil_46_7" class="stufe">
+                      <label for="vorteil_46_7">Konstitution</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KK" id="vorteil_46_8" class="stufe">
+                      <label for="vorteil_46_8">Körperkraft</label>
+                      <input type="number" min="1" step="1">
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Herausragender Sechster Sinn" id="pc_36"/>
+                  <label for="pc_36">Herausragender Sechster Sinn</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Herausragender Sinn" id="vorteil_48" class="sammeln-eins">
+                  <label for="vorteil_48">Herausragender Sinn</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="Sicht" id="vorteil_48_1">
+                      <label for="vorteil_48_1">Sicht</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Gehör" id="vorteil_48_2">
+                      <label for="vorteil_48_2">Gehör</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Geruch/Geschmack" id="vorteil_48_3">
+                      <label for="vorteil_48_3">Geruch/Geschmack</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Tastsinn" id="vorteil_48_4">
+                      <label for="vorteil_48_4">Tastsinn</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Herausragendes Aussehen" id="pc_37"/>
+                  <label for="pc_37">Herausragendes Aussehen</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Hitzeresistenz" id="pc_38"/>
+                  <label for="pc_38">Hitzeresistenz</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Hohe Lebenskraft" id="pc_39" class="stufe"/>
+                  <label for="pc_39">Hohe Lebenskraft</label>
+                  <input type="number" min="1" max="3" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Hohe Magieresistenz" id="pc_40" class="stufe"/>
+                  <label for="pc_40">Hohe Magieresistenz</label>
+                  <input type="number" min="1" max="3" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Immunität gegen Gift" id="vorteil_53" class="sammeln-nowrap">
+                  <label for="vorteil_53">Immunität gegen Gift</label>
+                  <ul>
+                    <li>
+                      <input type="radio" name="temp[v][53]" value="" id="vorteil_53_1" class="auswahl_text">
+                      <label for="vorteil_53_1">einzelnes Gift:</label>
+                      <input type="text" class="fl-rechts halfSize">
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][53]" value="" id="vorteil_53_2" class="auswahl_liste">
+                      <label for="vorteil_53_2">Giftgruppe:</label>
+                      <select size="5" multiple class="fl-rechts">
+                        <option>tierische Gifte</option>
+                        <option>mineralische Gifte</option>
+                        <option>pflanzliche Gifte</option>
+                        <option>alchimistische Gifte</option>
+                        <option>Atemgifte</option>
+                        <option>Einnahmegifte</option>
+                        <option>Kontaktgifte</option>
+                        <option>Blut-/Waffengifte</option>
+                      </select>
+                      <div class="fl-clear"></div>
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][53]" value="[alle Gifte]" id="vorteil_53_3">
+                      <label for="vorteil_53_3">alle Gifte</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Immunität gegen Krankheiten" id="vorteil_54" class="sammeln-nowrap">
+                  <label for="vorteil_54">Immunität gegen Krankheiten</label>
+                  <ul>
+                    <li>
+                      <input type="radio" name="temp[v][54]" value="" id="vorteil_54_1" class="auswahl_text">
+                      <label for="vorteil_54_1">einzelne Krankheit:</label>
+                      <input type="text" class="fl-rechts halfSize">
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][54]" value="[alle Krankheiten]" id="vorteil_54_3">
+                      <label for="vorteil_54_3">alle Krankheiten</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Innerer Kompass" id="pc_41"/>
+                  <label for="pc_41">Innerer Kompass</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Kälteresistenz" id="pc_42"/>
+                  <label for="pc_42">Kälteresistenz</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Kampfrausch" id="pc_43"/>
+                  <label for="pc_43">Kampfrausch</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Koboldfreund" id="pc_44"/>
+                  <label for="pc_44">Koboldfreund</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Kräfteschub" id="vorteil_59" class="sammeln-eins">
+                  <label for="vorteil_59">Kräfteschub</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="MU" id="vorteil_59_1">
+                      <label for="vorteil_59_1">Mut</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KL" id="vorteil_59_2">
+                      <label for="vorteil_59_2">Klugheit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="IN" id="vorteil_59_3">
+                      <label for="vorteil_59_3">Intuition</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="CH" id="vorteil_59_4">
+                      <label for="vorteil_59_4">Charisma</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="FF" id="vorteil_59_5">
+                      <label for="vorteil_59_5">Fingerfertigkeit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="GE" id="vorteil_59_6">
+                      <label for="vorteil_59_6">Gewandheit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KO" id="vorteil_59_7">
+                      <label for="vorteil_59_7">Konstitution</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KK" id="vorteil_59_8">
+                      <label for="vorteil_59_8">Körperkraft</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Linkshänder" id="pc_45"/>
+                  <label for="pc_45">Linkshänder</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Machtvoller Vertrauter" id="pc_46"/>
+                  <label for="pc_46">Machtvoller Vertrauter</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Magiegespür" id="pc_47"/>
+                  <label for="pc_47">Magiegespür</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Meisterhandwerk" id="vorteil_63" class="auswahl_text">
+                  <label for="vorteil_63">Meisterhandwerk</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Nachtsicht" id="pc_48"/>
+                  <label for="pc_48">Nachtsicht</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Natürliche Waffen" id="vorteil_65" class="sammeln-alle">
+                  <label for="vorteil_65">Natürliche Waffen</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="Gebiß" id="vorteil_65_1" class="auswahl_liste">
+                      <label for="vorteil_65_1">Gebiß</label>
+                      <select size="1" class="fl-rechts">
+                        <option>1W6 TP(A)</option>
+                        <option>1W6 TP</option>
+                        <option>1W6+1 TP</option>
+                        <option>1W6+2 TP</option>
+                        <option>1W6+3 TP</option>
+                        <option>1W6+4 TP</option>
+                        <option>1W6+5 TP</option>
+                        <option>1W6+6 TP</option>
+                      </select>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Krallen" id="vorteil_65_2" class="auswahl_liste">
+                      <label for="vorteil_65_2">Krallen</label>
+                      <select size="1" class="fl-rechts">
+                        <option>1W6 TP(A)</option>
+                        <option>1W6 TP</option>
+                        <option>1W6+1 TP</option>
+                        <option>1W6+2 TP</option>
+                        <option>1W6+3 TP</option>
+                        <option>1W6+4 TP</option>
+                        <option>1W6+5 TP</option>
+                        <option>1W6+6 TP</option>
+                      </select>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Schwanz" id="vorteil_65_3" class="auswahl_liste">
+                      <label for="vorteil_65_3">Schwanz</label>
+                      <select size="1" class="fl-rechts">
+                        <option>1W6 TP(A)</option>
+                        <option>1W6 TP</option>
+                        <option>1W6+1 TP</option>
+                        <option>1W6+2 TP</option>
+                        <option>1W6+3 TP</option>
+                        <option>1W6+4 TP</option>
+                        <option>1W6+5 TP</option>
+                        <option>1W6+6 TP</option>
+                      </select>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Natürlicher Rüstungsschutz" id="pc_49" class="stufe"/>
+                  <label for="pc_49">Natürlicher Rüstungsschutz</label>
+                  <input type="number" min="1" max="3" step="1"/>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Prophezeihen" id="pc_50"/>
+                  <label for="pc_50">Prophezeihen</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Resistenz gegen Gift" id="vorteil_68" class="sammeln-nowrap">
+                  <label for="vorteil_68">Resistenz gegen Gift</label>
+                  <ul>
+                    <li>
+                      <input type="radio" name="temp[v][68]" value="" id="vorteil_68_1" class="auswahl_text">
+                      <label for="vorteil_68_1">einzelnes Gift:</label>
+                      <input type="text" class="fl-rechts halfSize">
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][68]" value="" id="vorteil_68_2" class="auswahl_liste">
+                      <label for="vorteil_68_2">Giftgruppe:</label>
+                      <select size="5" multiple class="fl-rechts">
+                        <option>tierische Gifte</option>
+                        <option>mineralische Gifte</option>
+                        <option>pflanzliche Gifte</option>
+                        <option>alchimistische Gifte</option>
+                        <option>Atemgifte</option>
+                        <option>Einnahmegifte</option>
+                        <option>Kontaktgifte</option>
+                        <option>Blut-/Waffengifte</option>
+                      </select>
+                      <div class="fl-clear"></div>
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][68]" value="[alle Gifte]" id="vorteil_68_3">
+                      <label for="vorteil_68_3">alle Gifte</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Resistenz gegen Krankheiten" id="pc_51"/>
+                  <label for="pc_51">Resistenz gegen Krankheiten</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Richtungssinn" id="pc_52"/>
+                  <label for="pc_52">Richtungssinn</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Schlangenmensch" id="pc_53"/>
+                  <label for="pc_53">Schlangenmensch</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Schnelle Heilung" id="vorteil_72">
+                  <label for="vorteil_72">Schnelle Heilung</label><span class="fl-rechts">
+                    <input type="radio" name="temp[v][72]" value="I" id="vorteil_72_1">
+                    <label for="vorteil_72_1">I</label>
+                    <input type="radio" name="temp[v][72]" value="II" id="vorteil_72_2">
+                    <label for="vorteil_72_2">II</label>
+                    <input type="radio" name="temp[v][72]" value="III" id="vorteil_72_3">
+                    <label for="vorteil_72_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Schutzgeist" id="pc_54"/>
+                  <label for="pc_54">Schutzgeist</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Schwer zu verzaubern" id="pc_55"/>
+                  <label for="pc_55">Schwer zu verzaubern</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Soziale Anpassungsfähigkeit" id="pc_56"/>
+                  <label for="pc_56">Soziale Anpassungsfähigkeit</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Tierempathie" id="vorteil_76" class="sammeln-nowrap">
+                  <label for="vorteil_76">Tierempathie</label>
+                  <ul>
+                    <li>
+                      <input type="radio" name="temp[v][76]" value="[allgemein]" id="vorteil_76_1">
+                      <label for="vorteil_76_1">allgemein</label>
+                    </li>
+                    <li>
+                      <input type="radio" name="temp[v][76]" value="" id="vorteil_76_2" class="auswahl_text">
+                      <input type="text">
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Tierfreund" id="pc_57"/>
+                  <label for="pc_57">Tierfreund</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Übernatürliche Begabung" id="vorteil_78" class="auswahl_text">
+                  <label for="vorteil_78">Übernatürliche Begabung</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Unbeschwertes Zaubern" id="pc_58"/>
+                  <label for="pc_58">Unbeschwertes Zaubern</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Verbindungen" id="vorteil_80" class="stufe">
+                  <label for="vorteil_80">Verbindungen</label>
+                  <input type="number" min="1" step="1">
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Verhüllte Aura" id="pc_59"/>
+                  <label for="pc_59">Verhüllte Aura</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Veteran" id="pc_60"/>
+                  <label for="pc_60">Veteran</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Viertelzauberer" id="vorteil_83" class="zusatz">
+                  <label for="vorteil_83">Viertelzauberer</label><span class="fl-rechts">
+                    <input type="radio" name="temp[v][83]" value="" id="vorteil_83_1">
+                    <label for="vorteil_83_1">bewußt</label>
+                    <input type="radio" name="temp[v][83]" value="unbewußter " id="vorteil_83_2">
+                    <label for="vorteil_83_2">unbewußt</label></span>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Vollzauberer" id="pc_61"/>
+                  <label for="pc_61">Vollzauberer</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Vom Schicksal begünstigt" id="pc_62"/>
+                  <label for="pc_62">Vom Schicksal begünstigt</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Wesen der Nacht" id="vorteil_86" class="zusatz">
+                  <label for="vorteil_86">Wesen der Nacht</label><span class="fl-rechts">
+                    <input type="radio" name="temp[v][86]" value="I" id="vorteil_86_1">
+                    <label for="vorteil_86_1">I</label>
+                    <input type="radio" name="temp[v][86]" value="II" id="vorteil_86_2">
+                    <label for="vorteil_86_2">II</label>
+                    <input type="radio" name="temp[v][86]" value="III" id="vorteil_86_3">
+                    <label for="vorteil_86_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Wohlklang" id="pc_63"/>
+                  <label for="pc_63">Wohlklang</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Wolfskind" id="vorteil_87" class="zusatz">
+                  <label for="vorteil_87">Wolfskind</label><span class="fl-rechts">
+                    <input type="radio" name="temp[v][87]" value="" id="vorteil_87_1">
+                    <label for="vorteil_87_1">bewußt</label>
+                    <input type="radio" name="temp[v][87]" value="unbewußtes " id="vorteil_87_2">
+                    <label for="vorteil_87_2">unbewußt</label></span>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zäher Hund" id="pc_64"/>
+                  <label for="pc_64">Zäher Hund</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zauberhaar" id="pc_65"/>
+                  <label for="pc_65">Zauberhaar</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zeitgefühl" id="pc_66"/>
+                  <label for="pc_66">Zeitgefühl</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zusätzliche Gliedmaßen" id="vorteil_91" class="sammeln-alle">
+                  <label for="vorteil_91">Zusätzliche Gliedmaßen</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="Arme" id="vorteil_91_1">
+                      <label for="vorteil_91_1">Arme</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Schwanz" id="vorteil_91_2">
+                      <label for="vorteil_91_2">Schwanz</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Flügel" id="vorteil_91_3">
+                      <label for="vorteil_91_3">Flügel</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zweistimmiger Gesang" id="pc_67"/>
+                  <label for="pc_67">Zweistimmiger Gesang</label>
+                </li>
+                <li>
+                  <input name="Vorteile" type="checkbox" value="Zwergennase" id="pc_68"/>
+                  <label for="pc_68">Zwergennase</label>
+                </li>
+              </ul>
+              <ul class="vor-nach fl-rechts">
+                <li class="mitte"><strong>Nachteile</strong></li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Aberglaube" id="pc_69" class="stufe"/>
+                  <label for="pc_69">Aberglaube</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Albino" id="pc_70"/>
+                  <label for="pc_70">Albino</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor Insekten" id="pc_71" class="stufe"/>
+                  <label for="pc_71">Angst vor Insekten</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor Spinnen" id="pc_72" class="stufe"/>
+                  <label for="pc_72">Angst vor Spinnen</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor Reptilien" id="pc_73" class="stufe"/>
+                  <label for="pc_73">Angst vor Reptilien</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor Feuer" id="pc_74" class="stufe"/>
+                  <label for="pc_74">Angst vor Feuer</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor Wasser" id="pc_75" class="stufe"/>
+                  <label for="pc_75">Angst vor Wasser</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_8" class="zusatz stufe">
+                  <label for="nachteil_8">Angst vor </label>
+                  <input type="text">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_9" class="zusatz stufe">
+                  <label for="nachteil_9">Angst vor </label>
+                  <input type="text">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Angst vor " id="nachteil_10" class="zusatz stufe">
+                  <label for="nachteil_10">Angst vor </label>
+                  <input type="text">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Animalische Magie" id="pc_76"/>
+                  <label for="pc_76">Animalische Magie</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Arkanophobie" id="pc_77" class="stufe"/>
+                  <label for="pc_77">Arkanophobie</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Arroganz" id="pc_78" class="stufe"/>
+                  <label for="pc_78">Arroganz</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Artefaktgebunden" id="pc_79"/>
+                  <label for="pc_79">Artefaktgebunden</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Astraler Block" id="pc_80"/>
+                  <label for="pc_80">Astraler Block</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Autoritätsgläubig" id="pc_81" class="stufe"/>
+                  <label for="pc_81">Autoritätsgläubig</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Behäbig" id="pc_82"/>
+                  <label for="pc_82">Behäbig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Blutdurst" id="pc_83" class="stufe"/>
+                  <label for="pc_83">Blutdurst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Blutrausch" id="pc_84"/>
+                  <label for="pc_84">Blutrausch</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Brünstigkeit" id="pc_85" class="stufe"/>
+                  <label for="pc_85">Brünstigkeit</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Dunkelangst" id="pc_86" class="stufe"/>
+                  <label for="pc_86">Dunkelangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Einarmig" id="pc_87"/>
+                  <label for="pc_87">Einarmig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Einäugig" id="pc_88"/>
+                  <label for="pc_88">Einäugig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Einbeinig" id="pc_89"/>
+                  <label for="pc_89">Einbeinig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Einbildungen" id="pc_90"/>
+                  <label for="pc_90">Einbildungen</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Eingeschränkte Elementarnähe" id="pc_91"/>
+                  <label for="pc_91">Eingeschränkte Elementarnähe</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Eingeschränkter Sinn" id="nachteil_27" class="sammeln-eins">
+                  <label for="nachteil_27">Eingeschränkter Sinn</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="Sicht" id="nachteil_27_1">
+                      <label for="nachteil_27_1">Sicht</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Gehör" id="nachteil_27_2">
+                      <label for="nachteil_27_2">Gehör</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Geruch/Geschmack" id="nachteil_27_3">
+                      <label for="nachteil_27_3">Geruch/Geschmack</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="Tastsinn" id="nachteil_27_4">
+                      <label for="nachteil_27_4">Tastsinn</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Einhändig" id="pc_92"/>
+                  <label for="pc_92">Einhändig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Eitelkeit" id="pc_93" class="stufe"/>
+                  <label for="pc_93">Eitelkeit</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Elfische Weltsicht" id="pc_94"/>
+                  <label for="pc_94">Elfische Weltsicht</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Farbenblind" id="pc_95"/>
+                  <label for="pc_95">Farbenblind</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Feind" id="pc_96" class="stufe"/>
+                  <label for="pc_96">Feind</label>
+                  <input type="number" min="1" max="15" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Feste Gewohnheit" id="nachteil_33" class="spezifisch">
+                  <label for="nachteil_33">Feste Gewohnheit</label>
+                  <input type="text">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Festgefügtes Denken" id="pc_97" class="stufe"/>
+                  <label for="pc_97">Festgefügtes Denken</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Fettleibig" id="pc_98"/>
+                  <label for="pc_98">Fettleibig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Fluch der Finsternis" id="nachteil_36" class="zusatz">
+                  <label for="nachteil_36">Fluch der Finsternis</label><span class="fl-rechts">
+                    <input type="radio" name="temp[n][36]" value="I" id="nachteil_36_1">
+                    <label for="nachteil_36_1">I</label>
+                    <input type="radio" name="temp[n][36]" value="II" id="nachteil_36_2">
+                    <label for="nachteil_36_2">II</label>
+                    <input type="radio" name="temp[n][36]" value="III" id="nachteil_36_3">
+                    <label for="nachteil_36_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Geiz" id="pc_99" class="stufe"/>
+                  <label for="pc_99">Geiz</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Gerechtigkeitswahn" id="pc_100" class="stufe"/>
+                  <label for="pc_100">Gerechtigkeitswahn</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Gesucht" id="nachteil_39" class="spezifisch zusatz">
+                  <label for="nachteil_39">Gesucht</label>
+                  <input type="text"><span class="fl-rechts">
+                    <input type="radio" name="temp[n][39]" value="I" id="nachteil_39_1">
+                    <label for="nachteil_39_1">I</label>
+                    <input type="radio" name="temp[n][39]" value="II" id="nachteil_39_2">
+                    <label for="nachteil_39_2">II</label>
+                    <input type="radio" name="temp[n][39]" value="III" id="nachteil_39_3">
+                    <label for="nachteil_39_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Glasknochen" id="pc_101"/>
+                  <label for="pc_101">Glasknochen</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Goldgier" id="pc_102" class="stufe"/>
+                  <label for="pc_102">Goldgier</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Größenwahn" id="pc_103" class="stufe"/>
+                  <label for="pc_103">Größenwahn</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Heimwehkrank" id="pc_104"/>
+                  <label for="pc_104">Heimwehkrank</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Hitzeempfindlichkeit" id="pc_105"/>
+                  <label for="pc_105">Hitzeempfindlichkeit</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Höhenangst" id="pc_106" class="stufe"/>
+                  <label for="pc_106">Höhenangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Impulsiv" id="pc_107"/>
+                  <label for="pc_107">Impulsiv</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Jähzorn" id="pc_108" class="stufe"/>
+                  <label for="pc_108">Jähzorn</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kälteempfindlichkeit" id="pc_109"/>
+                  <label for="pc_109">Kälteempfindlichkeit</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kältestarre" id="pc_110"/>
+                  <label for="pc_110">Kältestarre</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kein Vertrauter" id="pc_111"/>
+                  <label for="pc_111">Kein Vertrauter</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kleinwüchsig" id="pc_112"/>
+                  <label for="pc_112">Kleinwüchsig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Körpergebundene Kraft" id="pc_113"/>
+                  <label for="pc_113">Körpergebundene Kraft</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Krankhafte Reinlichkeit" id="pc_114" class="stufe"/>
+                  <label for="pc_114">Krankhafte Reinlichkeit</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Krankheitsanfällig" id="pc_115"/>
+                  <label for="pc_115">Krankheitsanfällig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kristallgebunden" id="pc_116"/>
+                  <label for="pc_116">Kristallgebunden</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Kurzatmig" id="pc_117" class="stufe"/>
+                  <label for="pc_117">Kurzatmig</label>
+                  <input type="number" min="2" max="2" step="2"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Lahm" id="pc_118"/>
+                  <label for="pc_118">Lahm</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Lästige Mindergeister" id="pc_119"/>
+                  <label for="pc_119">Lästige Mindergeister</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Lichtempfindlich" id="pc_120"/>
+                  <label for="pc_120">Lichtempfindlich</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Lichtscheu" id="pc_121"/>
+                  <label for="pc_121">Lichtscheu</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Madas Fluch" id="nachteil_61" class="zusatz">
+                  <label for="nachteil_61">Madas Fluch</label><span class="fl-rechts">
+                    <input type="radio" name="temp[n][61]" value="I" id="nachteil_61_1">
+                    <label for="nachteil_61_1">I</label>
+                    <input type="radio" name="temp[n][61]" value="II" id="nachteil_61_2">
+                    <label for="nachteil_61_2">II</label>
+                    <input type="radio" name="temp[n][61]" value="III" id="nachteil_61_3">
+                    <label for="nachteil_61_3">III</label></span>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Medium" id="pc_122"/>
+                  <label for="pc_122">Medium</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Meeresangst" id="pc_123" class="stufe"/>
+                  <label for="pc_123">Meeresangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Miserable Eigenschaft" id="nachteil_64" class="sammeln-eins">
+                  <label for="nachteil_64">Miserable Eigenschaft</label>
+                  <ul>
+                    <li>
+                      <input type="checkbox" value="MU" id="nachteil_64_1">
+                      <label for="nachteil_64_1">Mut</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KL" id="nachteil_64_2">
+                      <label for="nachteil_64_2">Klugheit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="IN" id="nachteil_64_3">
+                      <label for="nachteil_64_3">Intuition</label>
+                    </li>
+                    <li> 
+                      <input type="checkbox" value="CH" id="nachteil_64_4">
+                      <label for="nachteil_64_4">Charisma</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="FF" id="nachteil_64_5">
+                      <label for="nachteil_64_5">Fingerfertigkeit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="GE" id="nachteil_64_6">
+                      <label for="nachteil_64_6">Gewandheit</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KO" id="nachteil_64_7">
+                      <label for="nachteil_64_7">Konstitution</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" value="KK" id="nachteil_64_8">
+                      <label for="nachteil_64_8">Körperkraft</label>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Mondsüchtig" id="pc_124"/>
+                  <label for="pc_124">Mondsüchtig</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Moralkodex" id="nachteil_66" class="spezifisch stufe">
+                  <label for="nachteil_66">Moralkodex</label>
+                  <input type="text">
+                  <input type="number" min="3" max="12" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Nachtblind" id="pc_125"/>
+                  <label for="pc_125">Nachtblind</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Nahrungsrestriktion" id="nachteil_68" class="spezifisch">
+                  <label for="nachteil_68">Nahrungsrestriktion</label>
+                  <input type="text" class="fl-rechts halfSize">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Neid" id="pc_126" class="stufe"/>
+                  <label for="pc_126">Neid</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Neugier" id="pc_127" class="stufe"/>
+                  <label for="pc_127">Neugier</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Niedrige Astralkraft" id="pc_128" class="stufe"/>
+                  <label for="pc_128">Niedrige Astralkraft</label>
+                  <input type="number" min="1" max="6" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Niedrige Lebenskraft" id="pc_129" class="stufe"/>
+                  <label for="pc_129">Niedrige Lebenskraft</label>
+                  <input type="number" min="1" max="6" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Niedrige Magieresistenz" id="pc_130" class="stufe"/>
+                  <label for="pc_130">Niedrige Magieresistenz</label>
+                  <input type="number" min="1" max="3" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Pechmagnet" id="pc_131"/>
+                  <label for="pc_131">Pechmagnet</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Platzangst" id="pc_132" class="stufe"/>
+                  <label for="pc_132">Platzangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Prinzipientreue" id="nachteil_76" class="spezifisch stufe">
+                  <label for="nachteil_76">Prinzipientreue</label>
+                  <input type="text">
+                  <input type="number" min="3" max="12" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Rachsucht" id="pc_133" class="stufe"/>
+                  <label for="pc_133">Rachsucht</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Randgruppe" id="nachteil_78" class="spezifisch">
+                  <label for="nachteil_78">Randgruppe</label>
+                  <input type="text" class="fl-rechts halfSize">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Raubtiergeruch" id="pc_134"/>
+                  <label for="pc_134">Raubtiergeruch</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Raumangst" id="pc_135" class="stufe"/>
+                  <label for="pc_135">Raumangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Rückschlag" id="pc_136"/>
+                  <label for="pc_136">Rückschlag</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schlaflosigkeit" id="pc_137"/>
+                  <label for="pc_137">Schlaflosigkeit</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schlafstörungen" id="nachteil_83" class="zusatz">
+                  <label for="nachteil_83">Schlafstörungen</label><span class="fl-rechts">
+                    <input type="radio" name="temp[n][83]" value="I" id="nachteil_83_1">
+                    <label for="nachteil_83_1">I</label>
+                    <input type="radio" name="temp[n][83]" value="II" id="nachteil_83_2">
+                    <label for="nachteil_83_2">II</label></span>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schlafwandler" id="pc_138"/>
+                  <label for="pc_138">Schlafwandler</label>
+                </li>
+                <li> 
+                  <input name="Nachteile" type="checkbox" id="nachteil_85" class="zusatz stufe">
+                  <input type="text" placeholder="Schlechte Eigenschaft" size="21">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li> 
+                  <input name="Nachteile" type="checkbox" id="nachteil_86" class="zusatz stufe">
+                  <input type="text" placeholder="Schlechte Eigenschaft" size="21">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li> 
+                  <input name="Nachteile" type="checkbox" id="nachteil_87" class="zusatz stufe">
+                  <input type="text" placeholder="Schlechte Eigenschaft" size="21">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schlechte Regeneration" id="pc_139"/>
+                  <label for="pc_139">Schlechte Regeneration</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schlechter Ruf" id="pc_140" class="stufe"/>
+                  <label for="pc_140">Schlechter Ruf</label>
+                  <input type="number" min="1" max="10" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schleichender Verfall" id="pc_141" class="stufe"/>
+                  <label for="pc_141">Schleichender Verfall</label>
+                  <input type="number" min="1" max="10" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schneller Alternd" id="pc_142"/>
+                  <label for="pc_142">Schneller Alternd</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schulden" id="nachteil_92" class="stufe">
+                  <label for="nachteil_92">Schulden (Dukaten)</label>
+                  <input type="number" min="500" max="2000" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schwache Ausstrahlung" id="pc_143" class="stufe"/>
+                  <label for="pc_143">Schwache Ausstrahlung</label>
+                  <input type="number" min="1" max="5" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schwacher Astralkörper" id="pc_144"/>
+                  <label for="pc_144">Schwacher Astralkörper</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Schwanzlos" id="pc_145"/>
+                  <label for="pc_145">Schwanzlos</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Seffer Manich" id="pc_146"/>
+                  <label for="pc_146">Seffer Manich</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Selbstgespräche" id="pc_147"/>
+                  <label for="pc_147">Selbstgespräche</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Sensibler Geruchssinn" id="nachteil_98" class="stufe">
+                  <label for="nachteil_98">Sensibler Geruchssinn</label>
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Sippenlosigkeit" id="pc_148"/>
+                  <label for="pc_148">Sippenlosigkeit</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Sonnensucht" id="pc_149" class="stufe"/>
+                  <label for="pc_149">Sonnensucht</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Speisegebote" id="nachteil_101" class="spezifisch">
+                  <label for="nachteil_101">Speisegebote</label>
+                  <input type="text">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Spielsucht" id="pc_150" class="stufe"/>
+                  <label for="pc_150">Spielsucht</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Sprachfehler" id="pc_151"/>
+                  <label for="pc_151">Sprachfehler</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Spruchhemmung" id="pc_152"/>
+                  <label for="pc_152">Spruchhemmung</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Stigma" id="pc_153" class="stufe"/>
+                  <label for="pc_153">Stigma</label>
+                  <input type="number" min="1" max="12" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Streitsucht" id="pc_154" class="stufe"/>
+                  <label for="pc_154">Streitsucht</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Stubenhocker" id="pc_155"/>
+                  <label for="pc_155">Stubenhocker</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Sucht" id="nachteil_108" class="spezifisch stufe">
+                  <label for="nachteil_108">Sucht</label>
+                  <input type="text">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Thesisgebunden" id="nachteil_109" class="auswahl_text">
+                  <label for="nachteil_109">Thesisgebunden</label>
+                  <div class="fl-rechts">
+                    <input type="text" title="Zauber"><br>
+                    <input type="text" title="Zauber"><br>
+                    <input type="text" title="Zauber"><br>
+                    <input type="text" title="Zauber"><br>
+                    <input type="text" title="Zauber">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Tollpatsch" id="pc_156"/>
+                  <label for="pc_156">Tollpatsch</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Totenangst" id="pc_157" class="stufe"/>
+                  <label for="pc_157">Totenangst</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Übler Geruch" id="pc_158"/>
+                  <label for="pc_158">Übler Geruch</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unangenehme Stimme" id="pc_159"/>
+                  <label for="pc_159">Unangenehme Stimme</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unansehnlich" id="pc_160"/>
+                  <label for="pc_160">Unansehnlich</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unfähigkeit (Merkmal)" id="nachteil_115" class="auswahl_liste">
+                  <label for="nachteil_115">Unfähigkeit für Merkmal</label><br>
+                  <select size="5" multiple class="fl-rechts">
+                    <option>Antimagie</option>
+                    <option>Beschwörung</option>
+                    <optgroup label="Dämonisch">
+                      <option value="Dämonisch/gesamt">- gesamt</option>
+                      <option value="Dämonisch/Blakharaz">- Blakharaz</option>
+                      <option value="Dämonisch/Belhalhar">- Belhalhar</option>
+                      <option value="Dämonisch/Charyptoroth">- Charyptoroth</option>
+                      <option value="Dämonisch/Lolgramoth">- Lolgramoth</option>
+                      <option value="Dämonisch/Thargunitoth">- Thargunitoth</option>
+                      <option value="Dämonisch/Amazeroth">- Amazeroth</option>
+                      <option value="Dämonisch/Belshirash">- Belshirash</option>
+                      <option value="Dämonisch/Asfaloth">- Asfaloth</option>
+                      <option value="Dämonisch/Tasfarelel">- Tasfarelel</option>
+                      <option value="Dämonisch/Belzhorash">- Belzhorash</option>
+                      <option value="Dämonisch/Agrimoth">- Agrimoth</option>
+                      <option value="Dämonisch/Belkelel">- Belkelel</option>
+                    </optgroup>
+                    <optgroup label="Elementar">
+                      <option value="Elementar/gesamt">- gesamt</option>
+                      <option value="Elementar/Eis">- Eis</option>
+                      <option value="Elementar/Erz">- Erz</option>
+                      <option value="Elementar/Feuer">- Feuer</option>
+                      <option value="Elementar/Humus">- Humus</option>
+                      <option value="Elementar/Luft">- Luft</option>
+                      <option value="Elementar/Wasser">- Wasser</option>
+                    </optgroup>
+                    <option>Eigenschaften</option>
+                    <option>Einfluß</option>
+                    <option>Form</option>
+                    <option>Geisterwesen</option>
+                    <option>Heilung</option>
+                    <option>Hellsicht</option>
+                    <option>Herbeirufung</option>
+                    <option>Herrschaft</option>
+                    <option>Illusion</option>
+                    <option>Kraft</option>
+                    <option>Limbus</option>
+                    <option>Metamagie</option>
+                    <option>Objekt</option>
+                    <option>Schaden</option>
+                    <option>Telekinese</option>
+                    <option>Temporal</option>
+                    <option>Umwelt</option>
+                    <option>Verständigung</option>
+                  </select>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talent)" id="nachteil_116" class="auswahl_text">
+                  <label for="nachteil_116">Unfähigkeit für Talent</label>
+                  <div class="fl-rechts">
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text"><br>
+                    <input type="text">
+                  </div>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unfähigkeit (Talentgruppe)" id="nachteil_117" class="auswahl_liste">
+                  <label for="nachteil_117">Unfähigkeit für Talentgruppe</label><br>
+                  <select size="5" id="nachteil__l" multiple class="fl-rechts">
+                    <optgroup label="Kampftalente">
+                      <option value="Kampf">gesamt</option>
+                      <option>Nahkampf</option>
+                      <option>Fernkampf</option>
+                    </optgroup>
+                    <option>Körperliche Talente</option>
+                    <option>Gesellschaft</option>
+                    <option>Natur</option>
+                    <option>Wissen</option>
+                    <option>Handwerk</option>
+                    <option>Sprachen und Schriften</option>
+                  </select>
+                  <div class="fl-clear"></div>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unfrei" id="pc_161"/>
+                  <label for="pc_161">Unfrei</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Ungebildet" id="pc_162" class="stufe"/>
+                  <label for="pc_162">Ungebildet</label>
+                  <input type="number" min="1" max="5" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unstet" id="pc_163"/>
+                  <label for="pc_163">Unstet</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Unverträglichkeit mit verarbeitetem Metall" id="pc_164"/>
+                  <label for="pc_164">Unverträglichkeit mit verarbeitetem Metall</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Vergesslichkeit" id="pc_165"/>
+                  <label for="pc_165">Vergesslichkeit</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Verpflichtungen" id="nachteil_123" class="spezifisch stufe">
+                  <label for="nachteil_123">Verpflichtungen gegenüber </label>
+                  <input type="text" class="fl-rechts halfSize">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Verschwendungssucht" id="pc_166" class="stufe"/>
+                  <label for="pc_166">Verschwendungssucht</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Verwöhnt" id="pc_167" class="stufe"/>
+                  <label for="pc_167">Verwöhnt</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Vorurteile" id="nachteil_126" class="spezifisch stufe">
+                  <label for="nachteil_126">Vorurteile gegenüber </label>
+                  <input type="text">
+                  <input type="number" min="1" max="20" step="1">
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Wahnvorstellungen" id="pc_168"/>
+                  <label for="pc_168">Wahnvorstellungen</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Wahrer Name" id="pc_169"/>
+                  <label for="pc_169">Wahrer Name</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_170" class="stufe"/>
+                  <label for="pc_170">Weltfremd</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_171" class="stufe"/>
+                  <label for="pc_171">Weltfremd</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Weltfremd" id="pc_172" class="stufe"/>
+                  <label for="pc_172">Weltfremd</label>
+                  <input type="number" min="1" max="20" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Widerwärtiges Aussehen" id="pc_173"/>
+                  <label for="pc_173">Widerwärtiges Aussehen</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Wilde Magie" id="pc_174"/>
+                  <label for="pc_174">Wilde Magie</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Zielschwierigkeiten" id="pc_175"/>
+                  <label for="pc_175">Zielschwierigkeiten</label>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Zögerlicher Zauberer" id="pc_176" class="stufe"/>
+                  <label for="pc_176">Zögerlicher Zauberer</label>
+                  <input type="number" min="1" max="5" step="1"/>
+                </li>
+                <li>
+                  <input name="Nachteile" type="checkbox" value="Zwergenwuchs" id="pc_177"/>
+                  <label for="pc_177">Zwergenwuchs</label>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </form>
+      <div id="save" class="mitte">
         <button type="submit" disabled>speichern</button>
-        <button type="reset"> reset</button>
-      </fieldset>
-    </form>
+        <button type="reset">zurücksetzen</button>
+      </div>
+    </main>
     <script type="text/javascript" src="/preprocess.vorteile.js"></script>
   </body>
 </html>

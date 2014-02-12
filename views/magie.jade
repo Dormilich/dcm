@@ -67,7 +67,7 @@ html(lang="de")
 		nav
 			ul#main-menu
 				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					a(title="springe zu Abschnitt ...") &#8681;
 					ul
 						li
 							a(href="#att") Attribute
@@ -87,11 +87,11 @@ html(lang="de")
 							li
 								a(href="/weihe/"+_id) ► Geweihtenbogen
 				li
-					a.mitte(href="/helden") [ Charakterliste ]
+					a(href="/helden") [ Charakterliste ]
 				li
-					a.mitte(href="/neu") [ Neuer Charakter ]
+					a(href="/neu") [ Neuer Charakter ]
 				li 
-					a.mitte #{Person.Name.split(' ')[0]} bearbeiten
+					a #{Person.Name.split(' ')[0]} bearbeiten
 					ul
 						li
 							a(href="/sf/"+_id) Sonderfertigkeiten
