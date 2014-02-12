@@ -35,14 +35,12 @@ mixin SFTableSection(__liste, __name)
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title= Person.Name
-		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
 		link(rel="stylesheet", type="text/css", href="/nav.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
-			.eigenschaften {
-				table-layout: fixed;
-			}
 			.meta td {
 				background-color: #eee;
 				color: gray;
@@ -65,12 +63,8 @@ html(lang="de")
 			.fett {
 				font-weight: bold;
 			}
-			h1 a {
-				text-decoration: none;
-				color: inherit;
-			}
 	body
-		nav#top
+		nav
 			ul#main-menu
 				li
 					a.mitte(title="springe zu Abschnitt ...") &#8681;
@@ -108,7 +102,7 @@ html(lang="de")
 						li
 							a(href="/ritual/"+_id+"#rituale") Rituale
 
-		header(style="clear: both;")
+		header#top
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
 			h2.mitte –Magiebogen–
@@ -128,20 +122,20 @@ html(lang="de")
 								strong Nachteile
 							each val in Nachteile
 								li= val
-			a#sf
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#sf
 				caption Sonderfertigkeiten
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-			a#bas
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#bas
 				caption Basiswerte
 				tbody
 					tr
 						each val in ["LeP", "AuP", "AsP", "MR"]
 							th= val
 							td= Basiswerte[val] || '—'
-			a#att
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#att
 				caption Attribute
 				thead
 					tr

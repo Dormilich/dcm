@@ -1,68 +1,132 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title #{Person.Name.split(' ')[0]} bearbeiten
-		link(rel="stylesheet", type="text/css", href="/neu.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
-	
+		style.
+			.setting tbody tr:nth-child(odd) {
+				background-color: #eee;
+			}
 	body
-		h1.mitte #{Person.Name.split(' ')[0]} bearbeiten
+		nav
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#bes") Beschreibung
+						li
+							a(href="#gen") Generierung
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
+						li
+							a(href="#vna") Vor- &amp; Nachteile
+						li
+							a(href="#vnn") neue Vor- &amp; Nachteile
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
 		
-		form(action=url, method="post", accept-charset="utf-8")
-			input(type="hidden", name="_method", value="put")
-		
-			fieldset
-				legend Beschreibung
-				ul.floatLabel
-					li
-						label(for="char_name") Name:
-						input(name="Person[Name]", id="char_name" type="text", placeholder="Name", value=Person.Name).halfSize
-					li
-						label(for="char_gender") Geschlecht:
-						select(name="Person[Geschlecht]", id="char_gender")
-							option männlich
-							option weiblich
-						script $('#char_gender').val('#{Person.Geschlecht}');
-					li
-						label(for="char_so") Sozialstatus:
-						input(name="Person[SO]", id="char_so", type="number", min="0", max="20", step="1", value=Person.SO, placeholder="Sozialstatus")
-					li
-						label(for="char_height") Größe:
-						input(name="Person[Größe]", id="char_height", type="number", min="25", max="250", step="1", value=Person.Größe) 
-						| &nbsp; Halbfinger
-					li
-						label(for="char_weight") Gewicht:
-						input(name="Person[Gewicht]", id="char_weight", type="number", min="20", max="300", step="1", value=Person.Gewicht) 
-						| &nbsp; Stein
-					li
-						label(for="char_alter") Alter:
-						input(name="Person[Alter]", id="char_alter", type="number", min="10", step="1", value=Person.Alter)
-					li
-						label Tsatag:
-						select#tt-tag(name="Person[Tsatag][tag]", size="1")
-							- for (var day = 1; day < 31; day++)
-								option(value=day)= day
-						select#tt-mon(name="Person[Tsatag][monat]", size="1")
-							each month, index in ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH", "(NLT)"]
-								option(value=index)= month
-						input(name="Person[Tsatag][jahr]", type="number", step="1", value=Person.Tsatag.jahr)
-						| &nbsp; BF
-						script.
-							$('#tt-tag').val('#{Person.Tsatag.tag}');
-							$('#tt-mon').val('#{Person.Tsatag.monat}'); 
-					li
-						label(for="char_hair") Haarfarbe:
-						input(name="Person[Haarfarbe]", id="char_hair" type="text", placeholder="Haarfarbe", value=Person.Haarfarbe)
-					li
-						label(for="char_eyes") Augenfarbe:
-						input(name="Person[Augenfarbe]", id="char_eyes" type="text", placeholder="Augenfarbe", value=Person.Augenfarbe)
-					li
-						label(for="char_looks") Aussehen:
-						textarea(name="Person[Aussehen]", id="char_looks", rows="5", placeholder="Aussehen").halfSize= Person.Aussehen
-					li
-						label(for="char_story") Hintergrund:
-						textarea(name="Person[Hintergrund]", id="char_story", rows="5", placeholder="Hintergrund").halfSize= Person.Hintergrund
+		main
+			form(action=url, method="post", accept-charset="utf-8")#newChar
+				input(type="hidden", name="_method", value="put")
+			
+				table.data-section.setting.links#bes
+					caption Beschreibung
+					colgroup
+						col(style="width: 20%")
+						col
+					tbody
+						tr
+							td 
+								label(for="char_name") Name:
+							td 
+								input.fullSize(name="Person[Name]", id="char_name" type="text", placeholder="Name", value=Person.Name)
+						tr
+							td
+								label(for="char_titel") Titel
+							td
+								input.halfSize(name="Person[Titel]", id="char_titel" type="text", placeholder="Titel", value=Person.Titel)
+						tr
+							td 
+								label(for="char_gender") Geschlecht:
+							td 
+								select(name="Person[Geschlecht]", id="char_gender")
+									option männlich
+									option weiblich
+								script $('#char_gender').val('#{Person.Geschlecht}');
+						tr
+							td 
+								label(for="char_so") Sozialstatus:
+							td 
+								input(name="Person[SO]", id="char_so", type="number", min="0", max="20", step="1", value=Person.SO, placeholder="Sozialstatus")
+						tr
+							td 
+								label(for="char_height") Größe:
+							td 
+								input(name="Person[Größe]", id="char_height", type="number", min="25", max="250", step="1", value=Person.Größe) 
+								| &nbsp; Halbfinger
 
-			fieldset.mitte
+						tr
+							td 
+								label(for="char_weight") Gewicht:
+							td 
+								input(name="Person[Gewicht]", id="char_weight", type="number", min="20", max="300", step="1", value=Person.Gewicht) 
+								| &nbsp; Stein
+						tr
+							td
+								label(for="char_alter") Alter:
+							td
+								input(name="Person[Alter]", id="char_alter", type="number", min="10", step="1", value=Person.Alter)
+						tr
+							td
+								label Tsatag:
+							td
+								select#tt-tag(name="Person[Tsatag][tag]", size="1")
+									- for (var day = 1; day < 31; day++)
+										option(value=day)= day
+								select#tt-mon(name="Person[Tsatag][monat]", size="1")
+									each month, index in ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH"]
+										option(value=index)= month
+									option(value=12, title="Namenlose Tage") (NLT)
+								input(name="Person[Tsatag][jahr]", type="number", step="1", value=Person.Tsatag.jahr)
+								| &nbsp; BF
+								script.
+									$('#tt-tag').val('#{Person.Tsatag.tag}');
+									$('#tt-mon').val('#{Person.Tsatag.monat}'); 
+						tr
+							td
+								label(for="char_hair") Haarfarbe:
+							td
+								input(name="Person[Haarfarbe]", id="char_hair" type="text", placeholder="Haarfarbe", value=Person.Haarfarbe)
+						tr
+							td
+								label(for="char_eyes") Augenfarbe:
+							td
+								input(name="Person[Augenfarbe]", id="char_eyes" type="text", placeholder="Augenfarbe", value=Person.Augenfarbe)
+						tr
+							td
+								label(for="char_looks") Aussehen:
+							td
+								textarea.fullSize(name="Person[Aussehen]", id="char_looks", rows="5", placeholder="Aussehen")= Person.Aussehen
+						tr
+							td
+								label(for="char_story") Hintergrund:
+							td
+								textarea.fullSize(name="Person[Hintergrund]", id="char_story", rows="5", placeholder="Hintergrund")= Person.Hintergrund
+				
+			a#save
+			.mitte
 				button(type="submit", disabled) speichern
-				button(type="reset")  reset
+				button(type="reset")  zurücksetzen

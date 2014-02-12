@@ -1,3 +1,4 @@
+/* table formatting */
 .data-section{
 	padding: 1em 2em;
 	border: 2px solid silver;
@@ -29,11 +30,13 @@
 .talente tbody td:first-child {
 	text-align: left;
 }
-/*
-.talente td:nth-child(4n-3) {
-	text-align: left;
+.eigenschaften th {
+	background-color: #eee;
 }
-*/
+.eigenschaften td {
+	border: 1px solid #eee;
+}
+/* common classes */
 .rechts {
 	text-align: right;
 }
@@ -52,52 +55,27 @@
 .fl-clear {
 	clear: both;
 }
+/* element styling */
 body {
 	padding: 0;
 	padding-bottom: 3em;
 	margin: 0;
 	font-family: Georgia, sans-serif;
 }
-table {
-	margin-top: 2em;
-        table-layout: fixed;
-}
-section {
-	padding: 0 3em;
-}
-button[type='submit'],
-button[type='reset'] { 
-	width: 20em; 
-	height: 2em; 
-	margin-top: 2em;
-}
 h1 {
 	font-size: 3em;
 }
-.eigenschaften th {
-	background-color: #eee;
-}
-.eigenschaften td {
-	border: 1px solid #eee;
-}
-.vor-nach {
-	width: 49%;
-	list-style-type: none;
-	padding: 0;
-}
-.vor-nach li {
-	padding: 0.5em 1em;
-}
-.vor-nach li:nth-child(odd) {
-	background-color: #eee;
-}
-.top-link {
-	float: right;
-	padding-right: 1em;
-	font-weight: bold;
-	color: white;
+h1 a {
 	text-decoration: none;
+	color: inherit;
 }
-.clearfix {
-	clear: both;
+table {
+	margin-top: 2em;
+	table-layout: fixed;
+}
+section, header, footer, main {
+	padding: 0 3em;
+}
+header {
+	padding-top: 3em;
 }

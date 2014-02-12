@@ -1,24 +1,68 @@
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title #{Person.Name.split(' ')[0]} bearbeiten
-		link(rel="stylesheet", type="text/css", href="/neu.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
-	
+		style.
+			.setting tbody tr:nth-child(odd) {
+				background-color: #eee;
+			}
 	body
-		h1.mitte #{Person.Name.split(' ')[0]} bearbeiten
-		
-		form(action=url, method="post", accept-charset="utf-8")
-			input(type="hidden", name="_method", value="put")
-		
-			fieldset
-				legend Generierung
-				ul.floatLabel
-					each val, key in ["Rasse", "Kultur", "Profession", "BgB"]
+		nav
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
 						li
-							label(for="rkp"+key, id="rkp"+key+"lab") #{val}:
-							input(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=Generierung[val].name).size15
-							input(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=Generierung[val].modifikation).size30
+							a(href="#bes") Beschreibung
+						li
+							a(href="#gen") Generierung
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
+						li
+							a(href="#vna") Vor- &amp; Nachteile
+						li
+							a(href="#vnn") neue Vor- &amp; Nachteile
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "? "+Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
+		
+		main
+			form(action=url, method="post", accept-charset="utf-8")#newChar
+				input(type="hidden", name="_method", value="put")
+			
+				table.data-section.talente.links#gen
+					caption Generierung
+					colgroup
+						col(style="width: 20%")
+						col
+						col
+					tbody
+						each val, key in ["Rasse", "Kultur", "Profession", "BgB"]
+							if Generierung[val]
+								- var __name = Generierung[val].name
+								- var __mod  = Generierung[val].modifikation
+							else
+								- var __name = ''
+								- var __mod  = ''
+							tr
+								td 
+									label(for="rkp"+key, id="rkp"+key+"lab") #{val}:
+								td 
+									input.fullSize(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=__name)
+								td
+									input.fullSize(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=__mod)
 				script.
 					(function() {
 						var $inputs = $('#rkp3, #rkp3mod');
@@ -29,7 +73,10 @@ html(lang="de")
 								$inputs.prop('disabled', !$inputs.prop('disabled') );
 							});
 					})();
-			
-			fieldset.mitte
+				
+			a#save
+			.mitte
 				button(type="submit", disabled) speichern
-				button(type="reset")  reset
+				button(type="reset")  zurücksetzen
+
+		script(type="text/javascript", src="/preprocess.vorteile.js")

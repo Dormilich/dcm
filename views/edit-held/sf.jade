@@ -21,63 +21,45 @@ unless SF.geweiht
 doctype 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Sonderfertigkeiten hinzufügen
-		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
-			h1 a {
-				text-decoration: none;
-				color: inherit;
-			}
-			.vor-nach ul li {
-				list-style-type: none;
-			}
-			.vor-nach ul li:nth-child(odd) {
-				background-color: transparent;
-			}
-			nav {
-				position: fixed;
-				top: 0;
-				background-color: #eee;
-				width: 100%;
-			}
-			nav a {
-				display: inline-block;
-				width: 9em;
-				text-decoration: none;
-				color: black;
-				text-align: center;
-				background-color: #eee;
-				padding: 0.3em 0.5em;
-				font-weight: bold;
-			}
-			nav a:hover {
-				color: #eee;
-				background-color: black;
-			}
 			li > select, li > input[type="text"] {
 				width: 35%;
 			}
 	body
-		a#top
 		nav
-			a(href="#top") [Seitenanfang]
-			a(href="#allg") allgemeine SF
-			a(href="#kampf") Kampf-SF
-			a(href="#wlk") Manöver
-			a(href="#gott") karmale SF
-			a(href="#mag") magische SF
-			a(href="#save") [speichern]
-			a(href="/held/"+_id)= "⇒ "+Person.Name.split(' ')[0]
-			
-		section
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#allg") allgemeine SF
+						li
+							a(href="#kampf") Kampf-SF
+						li
+							a(href="#wlk") Manöver
+						li
+							a(href="#gott") karmale SF
+						li
+							a(href="#mag") magische SF
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
+		main
 			form#newChar(action="/sf/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
-				a#allg
-				table.data-section
+				table.data-section#allg
 					caption allgemeine Sonderfertigkeiten
 					tr
 						td
@@ -116,13 +98,10 @@ html(lang="de")
 								li
 									input.spezifisch(type="checkbox", name="SF[allgemein][]", id="sf1b", value="Kulturkunde")
 									label(for="sf1b") Kulturkunde
-									input.fl-rechts(type="text", placeholder="sonstige Kulturkunde")
+									input.fl-rechts(type="text", placeholder="sonstige Kulturkunde", style="width: 49%;")
 									button.add.fl-rechts(type="button") +
-								
 
-				
-				a#kampf
-				table.data-section
+				table.data-section#kampf
 					caption Kampf-Sonderfertigkeiten
 					tr
 						td
@@ -163,8 +142,7 @@ html(lang="de")
 											input(type="checkbox", name="SF[Kampf][]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
 											label(for="sf3_"+y)= _data.Kampf[y]
 
-				a#wlk
-				table.data-section
+				table.data-section#wlk
 					caption Waffenlose Manöver
 					tr
 						td
@@ -179,8 +157,7 @@ html(lang="de")
 										input(type="checkbox", name="SF[Manöver][]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
 										label(for="sf8_"+y)= _data.Manöver[y]
 
-				a#gott
-				table.data-section
+				table.data-section#gott
 					caption Karmale Sonderfertigkeiten
 					tr
 						td.gods
@@ -223,8 +200,7 @@ html(lang="de")
 									$('.gods input[type="radio"]:checked').prop('checked', false);
 								});
 				
-				a#mag
-				table.data-section
+				table.data-section#mag
 					caption Magische Sonderfertigkeiten
 					tr
 						td
@@ -278,7 +254,7 @@ html(lang="de")
 								li
 									input.spezifisch(type="checkbox", name="SF[magisch][]", id="sf13b", value="Ritualkenntnis")
 									label(for="sf13b") Ritualkenntnis
-									input.fl-rechts(type="text", placeholder="sonstige Ritualkenntnis")
+									input.fl-rechts(type="text", placeholder="sonstige Ritualkenntnis", style="width: 49%;")
 									button.add.fl-rechts(type="button") +
 
 				a#save

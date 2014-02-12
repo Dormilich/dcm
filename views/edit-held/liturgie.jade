@@ -15,22 +15,13 @@ mixin print(__data)
 html(lang="de")
 	head
 		title Liturgien hinzufügen
-		link(rel="stylesheet", type="text/css", href="/show.css")
-		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
-			body {
-				font-family: Georgia;
-			}
-			nav a {
-				width: 10em;
-			}
 			#lit .selected label {
 				font-weight: bold;
 				font-variant: small-caps;
-			}
-			section {
-				padding: 0 5em;
 			}
 			tbody tr:hover {
 				background-color: silver;
@@ -42,127 +33,108 @@ html(lang="de")
 				display: none;
 			}
 	body
-		a#top
 		nav
-			a(href="#top") [Seitenanfang]
-			a(href="#save") [speichern]
-			a(href="/held/"+_id)= "⇒ "+Person.Name.split(' ')[0]
-		h1.mitte
-			a(href="/held/"+_id)= Person.Name
-		form(action="/liturgien/"+_id, method="post", accept-charset="utf-8")
-			input(type="hidden", name="_method", value="put")
-			a#liturgiekenntnis
-			section
-				table.data-section.eigenschaften#lkw
-					caption Liturgiekenntnis
-					colgroup
-						col(style="width: 2em;")
-						col
-						col(span="2", style="width: 15em;")
-					thead
-						tr
-							td
-							th Gottheit
-							th Lern
-							th TaW
-					tfoot
-						tr
-							td
-							td 
-								select#newlk(size="1", style="width: 25%;")
-									each __lk in _gottheiten
-										option(value=__lk.name, data-id=String(__lk._id).replace(/\W+/g, ''))=__lk.name
-							td.mitte(colspan="2")
-								button#addlk(type="button") neue Liturgiekenntnis
-					tbody#template
-						tr
-							td.mitte(style="padding: 0.2em;")
-								input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[{index}][_talent]", value="{id}")
-								input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[{index}][name]", value="{name}", id="lk{index}", checked)
-							td
-								label(for="lk{index}") {name}
-							td.mitte
-								select.unlock(size="1", name="Weihe.Liturgiekenntnis[{index}][Lernstufe]")
-									each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-										option= kat
-							td.mitte
-								input.unlock(type="number", name="Weihe.Liturgiekenntnis[{index}][wert]", min="3", max="35", step="1", value="3")
-					tbody#collection
-						each __lk, key in Weihe.Liturgiekenntnis
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#liturgiekenntnis") Liturgiekenntnis
+						li
+							a(href="#liturgien") Liturgien
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/weihe/"+_id, title="Geweihtenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
+		main
+			form(action="/liturgien/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				
+				section#liturgiekenntnis
+					table.data-section.eigenschaften#lkw
+						caption Liturgiekenntnis
+						colgroup
+							col(style="width: 2em;")
+							col
+							col(span="2", style="width: 15em;")
+						thead
+							tr
+								td
+								th Gottheit
+								th Lern
+								th TaW
+						tfoot
+							tr
+								td
+								td 
+									select#newlk(size="1", style="width: 25%;")
+										each __lk in _gottheiten
+											option(value=__lk.name, data-id=String(__lk._id).replace(/\W+/g, ''))=__lk.name
+								td.mitte(colspan="2")
+									button#addlk(type="button") neue Liturgiekenntnis
+						tbody#template
 							tr
 								td.mitte(style="padding: 0.2em;")
-									input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__lk._talent._id)
-									input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__lk.name, id="lk"+key, checked)
+									input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[{index}][_talent]", value="{id}")
+									input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[{index}][name]", value="{name}", id="lk{index}", checked)
 								td
-									label(for="lk"+key)= __lk.name
+									label(for="lk{index}") {name}
 								td.mitte
-									select.unlock(size="1", name="Weihe.Liturgiekenntnis[#{key}][Lernstufe]")
+									select.unlock(size="1", name="Weihe.Liturgiekenntnis[{index}][Lernstufe]")
 										each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-											option(selected=__lk.Lernstufe === kat)= kat
+											option= kat
 								td.mitte
-									input.unlock(type="number", name="Weihe.Liturgiekenntnis[#{key}][wert]", min="3", max="35", step="1", value=__lk.wert)
-			a#liturgien	
-			section
-				table.data-section.mitte.eigenschaften#lit
-					caption Liturgien
-					colgroup
-						col(style="width: 4em;")
-						col
-						col(style="width: 12em")
-						col(style="width: 6em;")
-						col(span="2", style="width: 12em")
-					thead
-						tr
-							td
-							th Liturgie
-							th Dauer
-							th Ziel
-							th Reichweite
-							th Wirkungsdauer
-					tbody
-						- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
-						each __lit, __idx in _liturgien
-							- var __isAvailable  = isAvailable(Weihe.Liturgien, __lit)
-							tr(class=__isAvailable?'selected':'')
+									input.unlock(type="number", name="Weihe.Liturgiekenntnis[{index}][wert]", min="3", max="35", step="1", value="3")
+						tbody#collection
+							each __lk, key in Weihe.Liturgiekenntnis
+								tr
+									td.mitte(style="padding: 0.2em;")
+										input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__lk._talent._id)
+										input.isactive(type="checkbox", name="Weihe.Liturgiekenntnis[#{key}][name]", value=__lk.name, id="lk"+key, checked)
+									td
+										label(for="lk"+key)= __lk.name
+									td.mitte
+										select.unlock(size="1", name="Weihe.Liturgiekenntnis[#{key}][Lernstufe]")
+											each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+												option(selected=__lk.Lernstufe === kat)= kat
+									td.mitte
+										input.unlock(type="number", name="Weihe.Liturgiekenntnis[#{key}][wert]", min="3", max="35", step="1", value=__lk.wert)
+				section#liturgien
+					table.data-section.mitte.eigenschaften#lit
+						caption Liturgien
+						colgroup
+							col(style="width: 4em;")
+							col
+							col(style="width: 12em")
+							col(style="width: 6em;")
+							col(span="2", style="width: 12em")
+						thead
+							tr
 								td
-									input.unlock(type="hidden", name="Weihe.Liturgien[#{__idx}]", value=__lit._id, disabled=!__isAvailable)
-									input.isactive(type="checkbox", id="Liturgie_"+__idx, checked=__isAvailable)
-								td.links
-									label(for="Liturgie_"+__idx)=__lit.name + " ("+__grad[__lit.grad]+")"
-								td=__lit.rd
-								td=__lit.ziel
-								td=__lit.rw
-								td=__lit.wd
-				a#save
-				.mitte
+								th Liturgie
+								th Dauer
+								th Ziel
+								th Reichweite
+								th Wirkungsdauer
+						tbody
+							- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
+							each __lit, __idx in _liturgien
+								- var __isAvailable  = isAvailable(Weihe.Liturgien, __lit)
+								tr(class=__isAvailable?'selected':'')
+									td
+										input.unlock(type="hidden", name="Weihe.Liturgien[#{__idx}]", value=__lit._id, disabled=!__isAvailable)
+										input.isactive(type="checkbox", id="Liturgie_"+__idx, checked=__isAvailable)
+									td.links
+										label(for="Liturgie_"+__idx)=__lit.name + " ("+__grad[__lit.grad]+")"
+									td=__lit.rd
+									td=__lit.ziel
+									td=__lit.rw
+									td=__lit.wd
+				section#save.mitte
 					button(type="submit") speichern
-		script.
-			$('table').on('click', 'label', function() {
-				// click is faster than label => checkbox
-				var $tr    = $(this).closest('tr');
-				var $check = $tr.find('.isactive');
-				if ($check.length) {
-					$tr.find('.unlock').prop('disabled', $check.prop('checked'));
-					$tr.toggleClass('selected');
-				}
-			});
-			$('form').on('submit', function() {
-				$('#template').remove();
-			});
-			$('#addlk').on('click', function() {
-				var $option = $('#newlk :selected');
-				var $row    = $('#template tr').clone();
-				var index   = $(this).closest('table').find('#collection tr').length;
-				var $sec = $row.find('input').eq(1);
-				$sec.val($option.val());
-				$sec.prop('id', $sec.prop('id').replace("{index}", index));
-				var $lab = $row.find('label');
-				$lab.text($option.val());
-				$lab.prop('for', $lab.prop('for').replace("{index}", index));
-				$row.find('input').eq(0).val($option.data('id'));
-				$row.find('select').val('E');
-				$row.find('*[name]').each(function() {
-					this.name = this.name.replace("{index}", index);
-				});
-				$('#collection').append($row);
-			});
+		script(src="/edit-liturgie.js")

@@ -2,9 +2,9 @@ nav {
 	background-color: #eee;
 	padding: 0;
 	margin:  0;
-        position: fixed;
-        top: 0;
-        width: 100%;
+	position: fixed;
+	top: 0;
+	width: 100%;
 }
 #main-menu {
 }
@@ -13,13 +13,21 @@ nav {
 	margin:  0;
 	list-style: none;
 }
-#main-menu li {
+#main-menu > li {
 	float: left;
-	width: 20em;
+	/*width: 20em;*/
+	width: 25%;
+}
+#main-menu > li > a {
+	text-align: center;
+}
+#main-menu li li {
+	float: left;
+	width: 100%;
 }
 #main-menu a {
 	display: block;
-	width: 14em;
+	/*width: 14em;*/
 	text-decoration: none;
 	color: black;
 	background-color: #eee;
@@ -34,7 +42,7 @@ nav {
 }
 #main-menu li ul {
 	position: absolute;
-	width:    20em;
+	width:    25%;		/* same as width (#main-menu > li) */
 	left:    -999em;
 }
 #main-menu li:hover ul {

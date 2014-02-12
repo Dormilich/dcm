@@ -106,58 +106,55 @@ mixin languagetable(_data_, _name_, _held_)
 doctype 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Talentwerte bearbeiten
-		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
 		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		script(src="/jquery-2.0.3.min.js")
 		style.
 			input[type="number"], .nk-taw {
 				text-align: center;
 			}
-			nav {
-				position: fixed;
-				top: 0;
-				background-color: #eee;
-				width: 100%;
-			}
-			nav a {
-				display: inline-block;
-				width: 12em;
-				text-decoration: none;
-				color: black;
-				text-align: center;
-				background-color: #eee;
-				padding: 0.3em 0.5em;
-				font-weight: bold;
-			}
-			nav a:hover {
-				color: #eee;
-				background-color: black;
-			}
-			h1 a {
-				text-decoration: none;
-				color: inherit;
-			}
 			main {
 				margin-top: 5em;
 			}
 	body
-		header
-			nav
-				a(href="#jNK") Nahkampf
-				a(href="#jFK") Fernkampf
-				a(href="#jKOR") Körper
-				a(href="#jGES") Gesellschaft
-				a(href="#jNAT") Natur
-				a(href="#jWIS") Wissen
-				a(href="#jHWK") Handwerk
-				a(href="#jSPR") Sprachen
-				a(href="#jSCR") Schriften
-				a(href="#jGAB") Gaben
-				a(href="#save") [speichern]
-		main
+		nav
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#jNK") Nahkampf
+						li
+							a(href="#jFK") Fernkampf
+						li
+							a(href="#jKOR") Körper
+						li
+							a(href="#jGES") Gesellschaft
+						li
+							a(href="#jNAT") Natur
+						li
+							a(href="#jWIS") Wissen
+						li
+							a(href="#jHWK") Handwerk
+						li
+							a(href="#jSPR") Sprachen
+						li
+							a(href="#jSCR") Schriften
+						li
+							a(href="#jGAB") Gaben
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_chardata._id, title="Heldenbogen")= "⇒ "+_chardata.Person.Name.split(' ')[0]
+		header#top
 			h1.mitte
-				a(href="/held/"+_chardata._id)= _chardata.Person.Name
+				a(href="/held/"+_id)=_chardata.Person.Name
+		main
 			form#edit(action="/talente/"+_chardata._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			

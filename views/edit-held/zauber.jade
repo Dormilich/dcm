@@ -4,20 +4,15 @@ mixin print(__data)
 !!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Zauber hinzufügen
-		link(rel="stylesheet", type="text/css", href="/show.css")
-		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		link(rel="stylesheet", type="text/css", href="/dropout.css")
 		link(rel="stylesheet", type="text/css", href="/tablesorter/tablesorter.css")
 		script(src="/jquery-2.0.3.min.js")
 		script(src="/tablesorter/jquery.tablesorter.min.js")
 		style.
-			body {
-				font-family: Georgia;
-			}
-			nav a {
-				width: 10em;
-			}
 			#spell_choice tbody td:first-child {
 				padding-left: 0;
 				padding-right: 0;
@@ -28,20 +23,28 @@ html(lang="de")
 	body
 		a#top
 		nav
-			a(href="#top") [Seitenanfang]
-			a(href="#save") [speichern]
-			a(href="#own") Zauber steigern
-			a(href="#spr") Zauber hinzufügen
-			a(href="/held/"+Held._id)= "⇒ "+Held.Person.Name.split(' ')[0]
-			
-		h1.mitte
-			a(href="/held/"+Held._id)= Held.Person.Name
+			ul#main-menu
+				li
+					a.mitte(title="springe zu Abschnitt ...") &#8681;
+					ul
+						li
+							a(href="#spell_choice") Zauber steigern
+						li
+							a(href="#spell_list") Zauber hinzufügen
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/magie/"+Held._id, title="Magiebogen")= "⇒ "+Held.Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+Held._id)= Held.Person.Name
 		
-		section
+		main
 			form#newSpell(action="/zauber/"+Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
-				a#own
 				table#spell_choice.data-section.eigenschaften.mitte.tablesorter
 					caption Zauber
 					colgroup
@@ -107,7 +110,6 @@ html(lang="de")
 				.mitte
 					button(type="submit", disabled) speichern
 		section
-			a#spr
 			table#spell_list.data-section.eigenschaften.mitte.tablesorter
 				caption Zauber hinzufügen
 				colgroup

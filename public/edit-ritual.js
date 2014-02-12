@@ -13,6 +13,14 @@ $('#tbl-rk').on("click", "input.isactive", function(evt) {
 	else {
 		$row.addClass("disabled");
 	}
+});//*/
+$('#newrit').on('click', 'label', function() {
+	// click is faster than label => checkbox
+	var $tr    = $(this).closest('tr');
+	var $check = $tr.find('input');
+	if ($check.length) {
+		$tr.toggleClass('selected');
+	}
 });
 function reIndex($obj, index) {
 	$obj.find('.unlock').each(function() {
