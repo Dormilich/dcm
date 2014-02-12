@@ -190,17 +190,13 @@ module.exports = {
 			_rituale: function (cb) {
 				Held
 					.findById(req.id)
-					.select("Magie")
 					.exec(function(err, doc) {
 						if (err) return cb(err);
 						var rk = doc.Magie.Ritualkenntnis || [];
 						var rk = rk.map(function (item) {
 							return item.short;
 						});
-						var elf = doc.Magie.Repräsentation.filter(function(item) {
-							return item.short === "Elf";
-						}).length;
-						if (elf) {
+						if (doc.Vorteile.indexOf("Zweistimmiger Gesang") > -1) {
 							rk.push("Elf");
 						}
 						Ritual
