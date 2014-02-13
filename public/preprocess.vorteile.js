@@ -108,4 +108,10 @@ $('form').on('submit', function(jqevt) {
 	$('.sammeln-nowrap:checked').each( wrapList('', '') );
 	// clean up
 	$('.vor-nach input[type="radio"]').prop('checked', false);
+	// remove empty inputs
+	$('#vna input').each(function() {
+		if (this.value.length === 0) {
+			$(this).remove();
+		}
+	});
 });

@@ -3,16 +3,22 @@ html(lang="de")
 	head
 		meta(charset="utf-8")
 		title AP vergeben
-		link(rel="stylesheet", type="text/css", href="/show.css")
-		link(rel="stylesheet", type="text/css", href="/nav-edit.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
 		style.
 			nav a {
 				width: 25%;
 			}
 	body
 		nav
-			a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
-		header
+			ul#main-menu
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
 		main
@@ -36,5 +42,5 @@ html(lang="de")
 								label(for="frei") frei:
 							td 
 								input#frei.mitte(type="number", name="AP[frei]", min="0", value=AP.frei)
-				.mitte
+				.mitte#save
 					button(type="submit") speichern
