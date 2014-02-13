@@ -15,3 +15,9 @@ $('#probe').on('click', function() {
 		return !chk;
 	});
 });
+$('#shm').on("click", function() {
+	var state = this.checked;
+	$(this).closest('li').find('li input').prop("checked", function() {
+		return state;
+	});
+});

@@ -28,7 +28,7 @@ html(lang="de")
 						each val, key in _ritual.Probe
 							script $('.probe').eq(#{key}).val('#{val}');
 					else
-						script $('#probe').trigger("click");
+						script $(function() { $('#probe').trigger("click"); });
 					
 				div
 					label(for="mod") Modifikator
