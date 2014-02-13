@@ -14,21 +14,6 @@ html(lang="de")
 		nav
 			ul#main-menu
 				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#bes") Beschreibung
-						li
-							a(href="#gen") Generierung
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#vna") Vor- &amp; Nachteile
-						li
-							a(href="#vnn") neue Vor- &amp; Nachteile
-				li
 					a(href="#top") [Seitenanfang]
 				li
 					a(href="#save") [speichern]
@@ -39,7 +24,7 @@ html(lang="de")
 				a(href="/held/"+_id)= Person.Name
 		
 		main
-			form(action=url, method="post", accept-charset="utf-8")#newChar
+			form(action="/person/"+_id, method="post", accept-charset="utf-8")#newChar
 				input(type="hidden", name="_method", value="put")
 			
 				table.data-section.setting.links#bes
@@ -126,7 +111,7 @@ html(lang="de")
 							td
 								textarea.fullSize(name="Person[Hintergrund]", id="char_story", rows="5", placeholder="Hintergrund")= Person.Hintergrund
 				
-			a#save
-			.mitte
-				button(type="submit", disabled) speichern
-				button(type="reset")  zurücksetzen
+				.mitte#save
+					button(type="submit", disabled) speichern
+					button(type="reset")  zurücksetzen
+		script $('button:disabled').prop('disabled', false);

@@ -1,19 +1,20 @@
+// only allow submit if JS is enabled
+$('button:disabled').prop('disabled', false);
+
 // auto-check boxes when child values are changed
-(function($) {
-	$('button:disabled').prop('disabled', false);
-	$('.vor_nach input[type="radio"]').on('click', function(jqevt) {
-		$(this.parentNode)
-			.prevAll('input[name*="teile"]')
-			.prop('checked', true);
-	});
-	$('.vor_nach input[type="number"]').on('change', function(jqevt) {
-		$(this)
-			.prevAll('input[name*="teile"]')
-			.prop('checked', true);
-	});
-})($);
+$('.vor-nach input[type="radio"]').on('click', function(jqevt) {
+	$(this.parentNode)
+		.prevAll('input[name*="teile"]')
+		.prop('checked', true);
+});
+$('.vor-nach input[type="number"]').on('change', function(jqevt) {
+	$(this)
+		.prevAll('input[name*="teile"]')
+		.prop('checked', true);
+});
+
 // modify values of checked fields
-$('#newChar').on('submit', function(jqevt) {
+$('form').on('submit', function(jqevt) {
 	function wrapValue(val) {
 		var open  = '', close = '';
 		if (arguments.length === 3) {
@@ -106,5 +107,5 @@ $('#newChar').on('submit', function(jqevt) {
 	$('.sammeln-eins:checked').each( wrapList('[', ']') );
 	$('.sammeln-nowrap:checked').each( wrapList('', '') );
 	// clean up
-	$('.vor_nach input[type="radio"]').prop('checked', false);
+	$('.vor-nach input[type="radio"]').prop('checked', false);
 });

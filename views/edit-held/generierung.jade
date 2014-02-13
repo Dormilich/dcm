@@ -14,69 +14,51 @@ html(lang="de")
 		nav
 			ul#main-menu
 				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#bes") Beschreibung
-						li
-							a(href="#gen") Generierung
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#vna") Vor- &amp; Nachteile
-						li
-							a(href="#vnn") neue Vor- &amp; Nachteile
-				li
 					a(href="#top") [Seitenanfang]
 				li
 					a(href="#save") [speichern]
 				li
-					a(href="/held/"+_id, title="Heldenbogen")= "? "+Person.Name.split(' ')[0]
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
 		header#top
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
 		
 		main
-			form(action=url, method="post", accept-charset="utf-8")#newChar
+			form(action="/generierung/"+_id, method="post", accept-charset="utf-8")#newChar
 				input(type="hidden", name="_method", value="put")
 			
 				table.data-section.talente.links#gen
 					caption Generierung
 					colgroup
 						col(style="width: 20%")
-						col
-						col
+						col(span="2")
 					tbody
-						each val, key in ["Rasse", "Kultur", "Profession", "BgB"]
-							if Generierung[val]
-								- var __name = Generierung[val].name
-								- var __mod  = Generierung[val].modifikation
+						each __val, __key in ["Rasse", "Kultur", "Profession", "BgB"]
+							if Generierung[__val]
+								- var __name = Generierung[__val].name
+								- var __mod  = Generierung[__val].modifikation
 							else
 								- var __name = ''
 								- var __mod  = ''
 							tr
 								td 
-									label(for="rkp"+key, id="rkp"+key+"lab") #{val}:
+									label(for="rkp"+__key, id="rkp#{__key}lab") #{__val}:
 								td 
-									input.fullSize(name="Generierung["+val+"][name]", id="rkp"+key, type="text", placeholder=val, value=__name)
+									input.fullSize(name="Generierung[#{__val}][name]", id="rkp"+__key, type="text", placeholder=__val, value=__name)
 								td
-									input.fullSize(name="Generierung["+val+"][modifikation]", id="rkp"+key+"mod", type="text", placeholder=val+"-Modifikaton(en)", value=__mod)
-				script.
-					(function() {
-						var $inputs = $('#rkp3, #rkp3mod');
-						$inputs.prop('disabled', true);
-						$('#rkp3lab')
-							.attr('title', 'Zum (De-)Aktivieren klicken')
-							.on("click", function() { 
-								$inputs.prop('disabled', !$inputs.prop('disabled') );
-							});
-					})();
-				
-			a#save
-			.mitte
-				button(type="submit", disabled) speichern
-				button(type="reset")  zur�cksetzen
+									input.fullSize(name="Generierung[#{__val}][modifikation]", id="rkp#{__key}mod", type="text", placeholder=__val+"-Modifikaton(en)", value=__mod)
+				.mitte#save
+					button(type="submit", disabled) speichern
+					button(type="reset")  zurücksetzen
 
-		script(type="text/javascript", src="/preprocess.vorteile.js")
+		script.
+			(function() {
+				var $inputs = $('#rkp3, #rkp3mod');
+				$inputs.prop('disabled', true);
+				$('#rkp3lab')
+					.attr('title', 'Zum (De-)Aktivieren klicken')
+					.on("click", function() { 
+						$inputs.prop('disabled', !$inputs.prop('disabled') );
+					});
+			})();
+			$('button:disabled').prop('disabled', false);

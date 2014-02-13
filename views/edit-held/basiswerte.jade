@@ -14,32 +14,17 @@ html(lang="de")
 		nav
 			ul#main-menu
 				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#bes") Beschreibung
-						li
-							a(href="#gen") Generierung
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#vna") Vor- &amp; Nachteile
-						li
-							a(href="#vnn") neue Vor- &amp; Nachteile
-				li
 					a(href="#top") [Seitenanfang]
 				li
 					a(href="#save") [speichern]
 				li
-					a(href="/held/"+_id, title="Heldenbogen")= "? "+Person.Name.split(' ')[0]
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
 		header#top
 			h1.mitte
 				a(href="/held/"+_id)= Person.Name
 		
 		main
-			form(action=url, method="post", accept-charset="utf-8")#newChar
+			form(action="/basiswerte/"+_id, method="post", accept-charset="utf-8")#newChar
 				input(type="hidden", name="_method", value="put")
 			
 				table.data-section.talente#bas
@@ -112,33 +97,19 @@ html(lang="de")
 							td
 								input(name="modifikatoren[GS]", type="number", step="1", value=modifikatoren.GS)
 							td(colspan="2")
-				script.
-					(function() {
-						$('#asp, #kap')
-							.on("click", function() {
-								var $inputs = $(this).closest('tr').find('input');
-								$inputs.prop('disabled', !$inputs.prop('disabled'));
-							})
-						;
-						if (#{!modifikatoren.AsP.max}) {
-							$('#asp')
-								.closest('tr')
-								.find('input')
-								.prop('disabled', true)
-							;
-						}
-						if (#{!modifikatoren.KaP.start}) {
-							$('#kap')
-								.closest('tr')
-								.find('input')
-								.prop('disabled', true)
-							;
-						}
-					})();
+				.mitte#save
+					button(type="submit", disabled) speichern
+					button(type="reset")  zurücksetzen
 				
-			a#save
-			.mitte
-				button(type="submit", disabled) speichern
-				button(type="reset")  zur�cksetzen
-
-		script(type="text/javascript", src="/preprocess.vorteile.js")
+		script.
+			$('#asp, #kap').on("click", function() {
+				var $inputs = $(this).closest('tr').find('input');
+				$inputs.prop('disabled', !$inputs.prop('disabled'));
+			});
+			if (#{!modifikatoren.AsP.max}) {
+				$('#asp').closest('tr').find('input').prop('disabled', true);
+			}
+			if (#{!modifikatoren.KaP.start}) {
+				$('#kap').closest('tr').find('input').prop('disabled', true);
+			}
+			$('button:disabled').prop('disabled', false);

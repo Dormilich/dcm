@@ -110,6 +110,16 @@ function mapMatch() {
 		next();
 	};
 }
+app.param('section', function(req, res, next, id) {
+	var sections = [
+		"ap", "attribute", "basiswerte", "char", "generierung", "person", "procon", "sf"
+	];
+	if (sections.indexOf(id) < 0) {
+		return next('route');
+	}
+	req.section = id;
+	next();
+});
 // pre-route request modification
 app.param('mongoid', function (req, res, next, id) {
 	if (!/^[0-9a-fA-F]+$/.test(id)) {
@@ -141,17 +151,18 @@ app.get('/weihe/:mongoid', routes.weihe.show);
 app.delete('/held/:mongoid', routes.held.disable);
 
 // edit character sheet sections
-app.get(/^\/(ap|sf|char)\/([0-9a-fA-F]+)$/, mapMatch('section', 'id'), routes.held.edit);
+app.get('/:section/:mongoid',  routes.held.edit);
 // edit CharSheet Talent section (needs to load data from system table)
-app.get('/talente/:mongoid', routes.edit.talente);
-app.get('/zauber/:mongoid',  routes.edit.zauber);
+app.get('/talente/:mongoid',   routes.edit.talente);
+app.get('/zauber/:mongoid',    routes.edit.zauber);
 app.get('/liturgien/:mongoid', routes.edit.liturgien);
-app.get('/ritual/:mongoid', routes.edit.rituale);
+app.get('/ritual/:mongoid',    routes.edit.rituale);
 // save changes
-// Liturgie preprocessing of Talent's Liturgiekenntnis section
-// app.put('/talente/:mongoid', routes.weihe.unset);
-app.put(/^\/(ap|sf|char|talente|zauber|liturgien|ritual)\/([0-9a-fA-F]+)$/, 
-	mapMatch('section', 'id'), routes.held.save);
+app.put('/:section/:mongoid',  routes.held.save);
+app.put('/talente/:mongoid',   routes.held.save);
+app.put('/zauber/:mongoid',    routes.held.save);
+app.put('/liturgien/:mongoid', routes.held.save);
+app.put('/ritual/:mongoid',    routes.held.save);
 
 /******************
  *  Start Server  *

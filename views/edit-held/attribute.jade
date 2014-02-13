@@ -14,21 +14,6 @@ html(lang="de")
 		nav
 			ul#main-menu
 				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#bes") Beschreibung
-						li
-							a(href="#gen") Generierung
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#vna") Vor- &amp; Nachteile
-						li
-							a(href="#vnn") neue Vor- &amp; Nachteile
-				li
 					a(href="#top") [Seitenanfang]
 				li
 					a(href="#save") [speichern]
@@ -39,14 +24,14 @@ html(lang="de")
 				a(href="/held/"+_id)= Person.Name
 		
 		main
-			form(action=url, method="post", accept-charset="utf-8")#newChar
+			form(action="/attribute/"+_id, method="post", accept-charset="utf-8")#newChar
 				input(type="hidden", name="_method", value="put")
 			
 				table.data-section.talente#att
 					caption Attribute
 					colgroup
 						col(style="width: 40%")
-						col(span="3" style="width: 20%")
+						col(span="3")
 					thead
 						tr
 							th Eigenschaft
@@ -54,19 +39,17 @@ html(lang="de")
 							th Startwert
 							th aktueller Wert
 					tbody
-						each val, key in {Mut:"MU", Klugheit:"KL", Intuition:"IN", Charisma:"CH", Fingerfertigkeit:"FF", Gewandheit:"GE", Konstitution:"KO", Körperkraft:"KK"}
+						each __val, __key in {Mut:"MU", Klugheit:"KL", Intuition:"IN", Charisma:"CH", Fingerfertigkeit:"FF", Gewandheit:"GE", Konstitution:"KO", Körperkraft:"KK"}
 							tr
-								td= key
+								td= __key
 								td 
-									input(name="Attribute["+val+"][mod]", type="number", min="-10", max="10", step="1", value=Attribute[val].mod)
+									input(name="Attribute[#{__val}][mod]", type="number", min="-10", max="10", step="1", value=Attribute[__val].mod)
 								td 
-									input(name="Attribute["+val+"][start]", type="number", min="0", step="1", value=Attribute[val].start)
+									input(name="Attribute[#{__val}][start]", type="number", min="0", step="1", value=Attribute[__val].start)
 								td 
-									input(name="Attribute["+val+"][wert]", type="number", min="0", step="1", value=Attribute[val].wert)
-								
-			a#save
-			.mitte
-				button(type="submit", disabled) speichern
-				button(type="reset")  zurücksetzen
+									input(name="Attribute[#{__val}][wert]", type="number", min="0", step="1", value=Attribute[__val].wert)
+				.mitte#save
+					button(type="submit", disabled) speichern
+					button(type="reset")  zurücksetzen
 
-		script(type="text/javascript", src="/preprocess.vorteile.js")
+		script $('button:disabled').prop('disabled', false);

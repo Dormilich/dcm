@@ -109,7 +109,7 @@ html(lang="de")
 	head
 		meta(charset="utf-8")
 		title= Person.Name
-		link(rel="stylesheet", type="text/css", href="/show.css")
+		link(rel="stylesheet", type="text/css", href="/edit.css")
 		link(rel="stylesheet", type="text/css", href="/nav.css")
 	body
 		nav#top
@@ -163,13 +163,21 @@ html(lang="de")
 					// edit section
 					ul
 						li
+							a(href="/person/"+_id) Beschreibung
+						li
+							a(href="/generierung/"+_id) Generierung
+						li
+							a(href="/attribute/"+_id) Attribute
+						li
+							a(href="/basiswerte/"+_id) Basiswerte
+						li
+							a(href="/procon/"+_id) Vor- &amp; Nachteile
+						li
 							a(href="/ap/"+_id) Abenteuerpunkte
 						li
-							a(href="/talente/"+_id) Talente
-						li
-							a(href="/char/"+_id) Eigenschaften
-						li
 							a(href="/sf/"+_id) Sonderfertigkeiten
+						li
+							a(href="/talente/"+_id) Talente
 		section(style="clear: both;")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
@@ -306,12 +314,12 @@ html(lang="de")
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		a#taw
-		section.clearfix#t_kam
+		section.fl-clear#t_kam
 			.vor-nach.fl-links
 				+KampfTable(Talente.Nahkampf, 'Nahkampf')
 			.vor-nach.fl-rechts
 				+KampfTable(Talente.Fernkampf, 'Fernkampf')
-		section.clearfix
+		section.fl-clear
 			.vor-nach.fl-links
 				if Talente.Gaben.length
 					+TalentTable(Talente.Gaben, 'Gaben')
@@ -321,9 +329,9 @@ html(lang="de")
 			.vor-nach.fl-rechts
 				+TalentTable(Talente.Wissen, 'Wissenstalente', "t_wis")
 				+TalentTable(Talente.Handwerk, 'Handwerkstalente', "t_han")
-		section.clearfix#t-spr
+		section.fl-clear#t-spr
 			.vor-nach.fl-links
 				+LanguageTable(Talente.Sprachen, 'Sprachen')
 			.vor-nach.fl-rechts
 				+LanguageTable(Talente.Schriften, 'Schriften')
-		section.clearfix
+		section.fl-clear
