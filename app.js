@@ -140,7 +140,7 @@ app.get('/helden', routes.held.list);
 app.get( '/neu', routes.neu.index);
 app.post('/neu', routes.neu.create);
 
-// display character sheet
+// display character sheet (mundane)
 app.get('/held/:mongoid', routes.held.show);
 // display character sheet (magic)
 app.get('/magie/:mongoid', routes.magie.show);
@@ -149,6 +149,8 @@ app.get('/weihe/:mongoid', routes.weihe.show);
 
 // delete character
 app.delete('/held/:mongoid', routes.held.disable);
+// restore character
+app.put('/held/:mongoid', routes.held.enable);
 
 // edit character sheet sections
 app.get('/:section/:mongoid',  routes.held.edit);

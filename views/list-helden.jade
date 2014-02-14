@@ -1,36 +1,32 @@
-doctype 5
+!!! 5
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title Charakter-Übersicht
+		link(rel="stylesheet", type="text/css", href="/list.css")
 		style.
-			body {
-				margin:  0;
-				padding: 0;
-				font-family: Georgia, sans-serif;
-			}
-			h1 {
-				text-align: center;
-				font-size: 3em;
-				color: black;
-				background-color: #eee;
-				padding: 0.25em;
-				margin: 0;
-			}
-			ul {
-				padding-left: 10em;
-			}
-			li {
-				font-size: 1.5em;
-				padding:   0.5em;
-				list-style-type: circle;
-			}
-			li a {
-				color: black;
-				text-decoration: none;
-			}
 	body
-		h1 Liste der Charaktere
-		ul
-			each val in Liste
-				li
-					a(href="/held/" + val._id)= val.Person.Name + " ( " + val.AP.frei + " / " + val.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
+		header
+			h1 Liste der Charaktere
+		main
+			if _disabled
+				h2 Gelöschte Charaktere wiederherstellen
+			if _liste.length === 0
+				p.mitte keine Charaktere in dieser Kategorie
+			else
+				ul
+					each __held in _liste
+						li
+							form(action="/held/"+__held._id, method="post", accept-charset="utf-8")
+								input(type="hidden", name="_method", value=_formData.method)
+								a(href="/held/" + __held._id)= __held.Person.Name + " ( " + __held.AP.frei + " / " + __held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
+								button(type="submit", class=_formData.class, title=_formData.title)!=_formData.sign
+		footer.mitte
+			hr
+			.nav
+				if _disabled
+					a.blend(href="/helden") Aktive Charaktere
+				else
+					a.blend(href="/helden?deleted") Gelöschte Charaktere
+				a.blend(href="/neu") Neuen Charakter anlegen
+			hr

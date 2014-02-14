@@ -30,14 +30,25 @@ var path    = require('path')
 module.exports = {
 	// show a list of all available Characters
 	list: function(req, res, next) {
+		var disabled = ("deleted" in req.query);
 		Held
-			.find({ disabled: !!req.query.deleted })
+			.find({ disabled: disabled })
 			.select('Person AP')
 			.sort('AP.alle')
 			.lean()
 			.exec(function(err, arr) {
 				if (err) return next(err);
-				res.render('list-helden', { Liste: arr });
+				var obj = {
+					_liste: arr,
+					_disabled: disabled,
+					_formData: {
+						method: disabled ? "put" : "delete",
+						sign:   disabled ? "\u2713" : "\u2717",
+						title:  disabled ? "wiederherstellen" : "löschen",
+						class:  disabled ? "restore" : "remove"
+					}
+				};
+				res.render('list-helden', obj);
 			})
 		;
 	},
@@ -64,6 +75,13 @@ module.exports = {
 	// remove Character from list
 	disable: function (req, res, next) {
 		Held.findByIdAndUpdate(req.id, { disabled: true }, function (err, doc) {
+			if (err) return next(err);
+			res.redirect('/helden');
+		});
+	},
+	// remove Character from list
+	enable: function (req, res, next) {
+		Held.findByIdAndUpdate(req.id, { disabled: false }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
 		});

@@ -1,0 +1,62 @@
+body {
+	margin:  0;
+	padding: 0;
+	font-family: Georgia, sans-serif;
+	font-size: 1.5em;
+	color: black;
+}
+main, footer {
+	padding: 0 7em;
+}
+footer {
+	color: silver;
+}
+h1 {
+	text-align: center;
+	font-size:  2em;
+	background-color: #eee;
+	padding: 0.25em;
+	margin:  0;
+}
+h2 {
+	text-align: center;
+}
+li {
+	padding:   0.5em;
+	list-style-type: circle;
+}
+li a {
+	color: inherit;
+	text-decoration: none;
+}
+button {
+	float: right;
+	padding: 0;
+	width: 1.5em;
+	font-size: 1em;
+}
+hr {
+	margin: 1em 0;
+}
+.nav a {
+	padding-left: 1em;
+	padding-right: 1em;
+	border-right: 1px solid;
+}
+.nav a:first-child {
+	border-left: 1px solid;
+}
+
+.remove {
+	color: red;
+}
+.restore {
+	color: green;
+}
+.blend {
+	text-decoration: none;
+	color: inherit;
+}
+.mitte {
+	text-align: center;
+}
