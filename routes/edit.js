@@ -104,15 +104,8 @@ module.exports = {
 					.select('Person Magie')
 					.populate('Magie.Zauber._zauber')
 					.exec(function(err, doc) {
-						if (err) {
-							cb(err);
-						}
-						else if (!doc) {
-							cb(new Error("Kein Datensatz gefunden."));
-						}
-						else {
-							cb(null, doc);
-						}
+						if (err) return cb(err);
+						cb(null, doc);
 					})
 				;
 			}
