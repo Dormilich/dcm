@@ -47,10 +47,10 @@ html(lang="de")
 				li
 					a(href="#save") [speichern]
 				li
-					a(href="/weihe/"+_id, title="Geweihtenbogen")= "⇒ "+Person.Name.split(' ')[0]
+					a(href="/weihe/"+_held._id, title="Geweihtenbogen")= "⇒ "+_held.Person.Name.split(' ')[0]
 		header#top
 			h1.mitte
-				a(href="/held/"+_id)= Person.Name
+				a(href="/held/"+_id)= _held.Person.Name
 		main
 			form(action="/liturgien/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
@@ -91,7 +91,7 @@ html(lang="de")
 								td.mitte
 									input.unlock(type="number", name="Weihe.Liturgiekenntnis[{index}][wert]", min="3", max="35", step="1", value="3")
 						tbody#collection
-							each __lk, key in Weihe.Liturgiekenntnis
+							each __lk, key in _held.Weihe.Liturgiekenntnis
 								tr
 									td.mitte(style="padding: 0.2em;")
 										input.unlock(type="hidden", name="Weihe.Liturgiekenntnis[#{key}][_talent]", value=__lk._talent._id)
@@ -124,7 +124,7 @@ html(lang="de")
 						tbody
 							- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
 							each __lit, __idx in _liturgien
-								- var __isAvailable  = isAvailable(Weihe.Liturgien, __lit)
+								- var __isAvailable  = isAvailable(_held.Weihe.Liturgien, __lit)
 								tr(class=__isAvailable?'selected':'')
 									td
 										input.unlock(type="hidden", name="Weihe.Liturgien[#{__idx}]", value=__lit._id, disabled=!__isAvailable)

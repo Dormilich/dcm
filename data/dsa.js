@@ -322,6 +322,8 @@ module.exports = {
 			"Derwische",
 			"Seher",
 			"Petromantie",
+			"Zauberzeichen",
+			"Runenkunde",
 			"Tulamidische Sharisad",
 			"Novadische Sharisad",
 			"Hazaqi",
@@ -503,6 +505,8 @@ module.exports = {
 			Der: "Derwische",
 			God: "Seher",
 			Pet: "Petromantie",
+			Gly: "Zauberzeichen",
+			Run: "Runenkunde",
 			Zaubertänzer: {
 				Tul: "Tulamidische Sharisad",
 				Nov: "Novadische Sharisad",

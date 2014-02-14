@@ -70,13 +70,13 @@ html(lang="de")
 					a(title="springe zu Abschnitt ...") &#8681;
 					ul
 						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
 							a(href="#vnt") Vor- & Nachteile
 						li
 							a(href="#sf") Sonderfertigkeiten
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
 						li
 							a(href="#spr") Zauber
 						li
@@ -107,8 +107,8 @@ html(lang="de")
 				a(href="/held/"+_id)= Person.Name
 			h2.mitte –Magiebogen–
 			
-		section#vnt
-			table.data-section
+		section
+			table.data-section#vnt
 				caption Vor- und Nachteile
 				tr
 					td
@@ -127,14 +127,6 @@ html(lang="de")
 				caption Sonderfertigkeiten
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 			
-			table.data-section.mitte.eigenschaften#bas
-				caption Basiswerte
-				tbody
-					tr
-						each val in ["LeP", "AuP", "AsP", "MR"]
-							th= val
-							td= Basiswerte[val] || '—'
-			
 			table.data-section.mitte.eigenschaften#att
 				caption Attribute
 				thead
@@ -146,6 +138,14 @@ html(lang="de")
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
 							td= Attribute[val].wert
 		
+			table.data-section.mitte.eigenschaften#bas
+				caption Basiswerte
+				tbody
+					tr
+						each val in ["LeP", "AuP", "AsP", "MR"]
+							th= val
+							td= Basiswerte[val] || '—'
+			
 		section#spr
 			if Array.isArray(Magie.Zauber) && Magie.Zauber.length > 0
 				table.data-section.eigenschaften.mitte.zauber

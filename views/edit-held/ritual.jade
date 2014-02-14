@@ -99,7 +99,7 @@ html(lang="de")
 							tr
 								td
 								td.links
-									select#rk(size="1", title="Allgemeine Ritualkenntnisse")
+									select#rk.fullSize(size="1", title="Allgemeine Ritualkenntnisse")
 										optgroup(label="Allgemeine RK")
 											each __long, __short in _data.Ritualkenntnis
 												if typeof __long === "string"
@@ -111,7 +111,7 @@ html(lang="de")
 								td
 								td.links Zaubertänzer
 								td
-									select#rkz(size="1", title="Zaubertänzer")
+									select#rkz.fullSize(size="1", title="Zaubertänzer")
 										optgroup(label="Zaubertänzer")
 											each __long, __short in _data.Ritualkenntnis.Zaubertänzer
 												option(data-long="Zaubertänzer", data-short="Ztz", data-rep-short=__short, data-rep-long=__long)=__long
@@ -121,7 +121,7 @@ html(lang="de")
 								td
 								td.links Schamane
 								td
-									select#rks(size="1", title="Schamanen")
+									select#rks.fullSize(size="1", title="Schamanen")
 										optgroup(label="Schamanen")
 											each __long, __short in _data.Ritualkenntnis.Schamane
 												option(data-long="Schamane", data-short="Shm", data-rep-short=__short, data-rep-long=__long)=__long

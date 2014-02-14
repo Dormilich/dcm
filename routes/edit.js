@@ -47,18 +47,14 @@ function merge(target, source) {
 }
 
 function getTalentType(tname) {
-	return function(cb) {
+	return function (cb) {
 		Talent
 			.find({ typ: tname })
 			.sort('name')
 			.lean()
-			.exec(function(err, objs) {
-				if (err) { 
-					cb(err);
-				}
-				else {
-					cb(null, objs);
-				}
+			.exec(function (err, objs) {
+				if (err) return cb(err);
+				cb(null, objs);
 			})
 		;
 	};
@@ -67,38 +63,31 @@ function getTalentType(tname) {
 module.exports = {
 	talente : function(req, res, next) {
 		async.parallel({
-			Nahkampf:     getTalentType("Nahkampf"),
-			Fernkampf:    getTalentType("Fernkampf"),
-			körperlich:   getTalentType("Körperliche Talente"),
-			Gesellschaft: getTalentType("Gesellschaftliche Talente"),
-			Natur:        getTalentType("Naturtalente"),
-			Wissen:       getTalentType("Wissenstalente"),
-			Handwerk:     getTalentType("Handwerkstalente"),
-			Sprachen:     getTalentType("Sprachen"),
-			Schriften:    getTalentType("Schriften"),
-			Gaben:        getTalentType("Gaben"),
-			_chardata: function(cb) {
+			_Nahkampf:     getTalentType("Nahkampf"),
+			_Fernkampf:    getTalentType("Fernkampf"),
+			_körperlich:   getTalentType("Körperliche Talente"),
+			_Gesellschaft: getTalentType("Gesellschaftliche Talente"),
+			_Natur:        getTalentType("Naturtalente"),
+			_Wissen:       getTalentType("Wissenstalente"),
+			_Handwerk:     getTalentType("Handwerkstalente"),
+			_Sprachen:     getTalentType("Sprachen"),
+			_Schriften:    getTalentType("Schriften"),
+			_Gaben:        getTalentType("Gaben"),
+			_held: function (cb) {// _chardata
 				Held.findById(req.id, function(err, doc) {
-					if (err) {
-						cb(err);
-					}
-					else if (!doc) {
-						cb(new Error("Kein Datensatz gefunden."));
-					}
-					else {
-						cb(null, doc);
-					}
+					if (err) return cb(err);
+					cb(null, doc);
 				});
 			}
 		},
-		function(err, obj) {
+		function (err, obj) {
 			if (err) return next(err);
 			res.render('edit-held/taw', obj);
 		});
 	},
 	zauber : function(req, res, next) {
 		async.parallel({
-			Zauber: function(cb) {
+			_zauber: function (cb) {
 				Zauber
 					.find()
 					.sort('Name')
@@ -109,7 +98,7 @@ module.exports = {
 					})
 				;
 			},
-			Held: function(cb) {
+			_held: function (cb) {
 				Held
 					.findById(req.id)
 					.select('Person Magie')
@@ -134,36 +123,58 @@ module.exports = {
 		});
 	},
 	liturgien : function(req, res, next) {
-		// I could un-nest one level at most, but get it m.o.l. back through async
-		Talent
-			.find({ typ: "Liturgiekenntnis" })
-			.sort('name')
-			.exec(function(err, lks) {
-				if (err)  return next(err);
+		async.parallel({
+			_held: function (cb) {
 				Held
 					.findById(req.id)
 					.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
-					.select('Person Weihe')
-					.exec(function(err, obj) {
-						if (err)  return next(err);
-						obj._gottheiten = lks;
-						obj._götter = obj.Weihe.Liturgiekenntnis.map(function(item) {
+					.select("Person Weihe")
+					.exec(function(err, doc) {
+						if (err) return cb(err);
+						cb(null, doc);
+					})
+				;
+			},
+			_gottheiten: function (cb) {
+				Talent
+					.find({ typ: "Liturgiekenntnis" })
+					.sort('name')
+					.exec(function(err, docs) {
+						if (err) return cb(err);
+						cb(null, docs);
+					})
+				;
+			},
+			_liturgien: function (cb) {
+				Held
+					.findById(req.id)
+					.populate('Weihe.Liturgiekenntnis._talent')
+					.select('Weihe')
+					.exec()
+					.then(function(held) {
+						var götter = held.Weihe.Liturgiekenntnis.map(function(item) {
 							return item._talent.name;
 						});
-						Liturgie
+						return Liturgie
 							.find()
-							.in('typ', obj._götter)
+							.in('typ', götter)
 							.sort('name grad')
-							.exec(function(err, docs) {
-								if (err) return next(err);
-								obj._liturgien = docs;
-								res.render('edit-held/liturgie', obj);
-							})
+							.exec()
 						;
 					})
-				;	
-			})
-		;
+					.then(function (docs) {
+						cb(null, docs);
+					})
+					.then(null, function (err) {
+						cb(err);
+					})
+				;
+			}
+		},
+		function (err, obj) {
+			if (err) return next(err);
+			res.render('edit-held/liturgie', obj);
+		})
 	},
 	rituale : function(req, res, next) {
 		async.parallel({
@@ -212,26 +223,10 @@ module.exports = {
 				;
 			}
 		},
-		function(err, obj) {
+		function (err, obj) {
 			if (err) return next(err);
 			obj._data = data.ritual;
 			res.render('edit-held/ritual', obj);
 		});
-		/*Talent
-			.find({ typ: "Schamanismus" })
-			.exec(function(err, objs) {
-				if (err)  return next(err);
-				Held
-					.findById(req.id)
-					.populate("Magie.Ritualkenntnis._talent")
-					.exec(function(err, obj) {
-						if (err)  return next(err);
-						obj._data    = data.ritual;
-						obj._talente = objs;
-						res.render('edit-held/ritual', obj);
-					})
-				;
-			})
-		;//*/
 	}
 };

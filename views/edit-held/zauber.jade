@@ -21,7 +21,6 @@ html(lang="de")
 				color: #ddd;
 			}
 	body
-		a#top
 		nav
 			ul#main-menu
 				li
@@ -36,13 +35,13 @@ html(lang="de")
 				li
 					a(href="#save") [speichern]
 				li
-					a(href="/magie/"+Held._id, title="Magiebogen")= "⇒ "+Held.Person.Name.split(' ')[0]
+					a(href="/magie/"+_held._id, title="Magiebogen")= "⇒ "+_held.Person.Name.split(' ')[0]
 		header#top
 			h1.mitte
-				a(href="/held/"+Held._id)= Held.Person.Name
+				a(href="/held/"+_held._id)= _held.Person.Name
 		
 		main
-			form#newSpell(action="/zauber/"+Held._id, method="post", accept-charset="utf-8")
+			form#newSpell(action="/zauber/"+_held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
 				table#spell_choice.data-section.eigenschaften.mitte.tablesorter
@@ -81,8 +80,8 @@ html(lang="de")
 								input.mitte(type="number", name="Magie.Zauber[{index}][ZfW]", value="0", min="0", max="35" step="1")
 								
 					tbody
-						if Array.isArray(Held.Magie.Zauber)
-							each __spell, __idx in Held.Magie.Zauber
+						if Array.isArray(_held.Magie.Zauber)
+							each __spell, __idx in _held.Magie.Zauber
 								tr(data-name="Magie.Zauber[#{__idx}][Spezialisierung][]", data-options=__spell._zauber.SpoMod.concat(__spell._zauber.Varianten.filter(function(item) { return (item.Repräsentationen.indexOf(__spell.Repräsentation) > -1) }).map(function(item) { return item.Name})).join('|'))
 									td
 										input(type="hidden", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
@@ -127,9 +126,9 @@ html(lang="de")
 						td
 				tbody
 					- var __heldReps = ["Mag"]
-					if Array.isArray(Held.Magie.Repräsentation) && Held.Magie.Repräsentation.length
-						- __heldReps = Held.Magie.Repräsentation.map(function(item) { return item.short; })
-					each __stdSpell in Zauber
+					if Array.isArray(_held.Magie.Repräsentation) && _held.Magie.Repräsentation.length
+						- __heldReps = _held.Magie.Repräsentation.map(function(item) { return item.short; })
+					each __stdSpell in _zauber
 						tr
 							td.links
 								span.name=__stdSpell.Name
@@ -143,102 +142,4 @@ html(lang="de")
 										option(value=__rep, selected=(__heldReps.indexOf(__rep) > -1))=__rep
 							td
 								button.add(type="button") neu
-		script.
-			$('#spell_list')
-				.tablesorter({
-					headers: {
-						4: { sorter: false },
-						5: { sorter: false }
-					}
-				})
-				.on("click", 'button', function(evt) {
-					var $row = $(this).closest('tr');
-					var rep  = $row.find('select').val();
-					var name = $row.find('.name').text();
-					var id   = $row.find('.id').val();
-					var kompl = $row.find('.kompl').text();
-					var index = $('#spell_choice tbody tr').length;
-					var $new = $('#spell_template').clone().removeAttr('id');
-					
-					$new.find('input.id').val(id);
-					$new.find('label.name').text(name);
-					$new.find('input.rep').val(rep).next().text(rep);
-					// $new.find('label.rep').text(rep);
-					$new.find('td.kompl').text(kompl);
-					$new.find('select.lern').val(kompl);
-					
-					$new.find('*[name]').each(function() {
-						this.name = this.name.replace("{index}", index);
-					});
-					
-					$new.appendTo('#spell_choice');
-					$row.find("option[value='" + rep + "']").remove();
-				})
-			;
-			$('#spell_choice')
-				.tablesorter({
-					headers: {
-						2: { sorter: false },
-						4: { sorter: false },
-						5: { sorter: false }
-					}
-				})
-				.on("click", "input.lock", function(evt) {
-					var $row = $(this).closest('tr');
-					$row.find("*[name]").prop("disabled", !this.checked);
-					if (this.checked) {
-						$row.removeClass("disabled");
-					}
-					else {
-						$row.addClass("disabled");
-					}
-				})
-			;
-			$("button[type='submit']").prop("disabled", false);
-			$("#newSpell").on("submit", function() {
-				$('#spell_template').remove();
-				$('#spell_choice').trigger("sorton", [[[0,0], [1,0]]]);
-				$('.isactive:not(:checked)').each(function() {
-					$(this).closest('tr').find('select, input').prop('disabled', true);
-				});
-			});
-			$('#spell_choice').on('click', '.addspez', function() {
-				var $datasrc = $(this).closest('tr');
-				var options  = $datasrc.data('options');
-				var $wrapper = $('<div/>').addClass('wrapper');
-				var $text = $('<input type="text"/>').prop('name', $datasrc.data('name'));
-				var $rem  = $('<button type="button"/>')
-					.text("\u2717")
-					.addClass('del')
-					.on('click', function() {
-						$wrapper.remove();
-					})
-				;
-				if (options && options.length) {
-					var $ul   = $('<ul/>').addClass('options');
-					var $down = $('<button type="button">▼</button>');
-					options.split('|').forEach(function(item) {
-						$('<li/>').text(item).appendTo($ul);
-					});
-					$down.on('click', function() {
-						$ul.toggle();
-					});    
-					$ul.on('click', 'li', function() {
-						$text.val(this.textContent);
-						$ul.hide();
-					});
-					$wrapper.append($rem, $ul, $text, $down);
-					$wrapper.insertBefore(this);
-					var style   = $text.offset();
-					style.top  += $text.outerHeight();
-					style.width = $text.outerWidth() - 2;
-					$ul.css(style);
-				}
-				else {
-					$wrapper.append($rem, $text);
-					$wrapper.insertBefore(this);
-				}
-			});
-			$('#spell_choice').on('click', 'button.del', function() {
-				$(this.parentNode).remove();
-			});
+		script(src="/edit-zauber.js")

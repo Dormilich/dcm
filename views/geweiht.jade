@@ -36,20 +36,19 @@ html(lang="de")
 		link(rel="stylesheet", type="text/css", href="/nav.css")
 		style.
 	body
-		a#top
 		nav
 			ul#main-menu
 				li
 					a(title="springe zu Abschnitt ...") &#8681;
 					ul
 						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
 							a(href="#vnt") Vor- & Nachteile
 						li
 							a(href="#sf") Sonderfertigkeiten
+						li
+							a(href="#att") Attribute
+						li
+							a(href="#bas") Basiswerte
 						li
 							a(href="#lkw") Liturgiekenntnis
 						li
@@ -73,12 +72,12 @@ html(lang="de")
 						li
 							a(href="/liturgien/"+_id+"#liturgiekenntnis") Liturgiekenntnis
 
-		section(style="clear: both;")
-			h1.mitte= Person.Name
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
 			h2.mitte –Geweihtenbogen–
-			
-			a#vnt
-			table.data-section
+		main
+			table.data-section#vnt
 				caption Vor- und Nachteile
 				tr
 					td
@@ -92,20 +91,12 @@ html(lang="de")
 								strong Nachteile
 							each val in Nachteile
 								li= val
-			a#sf
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#sf
 				caption Sonderfertigkeiten
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
-			a#bas
-			table.data-section.mitte.eigenschaften
-				caption Basiswerte
-				tbody
-					tr
-						each val in ["LeP", "AuP", "KaP", "MR"]
-							th= val
-							td= Basiswerte[val] || '—'
-			a#att
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#att
 				caption Attribute
 				thead
 					tr
@@ -115,8 +106,16 @@ html(lang="de")
 					tr
 						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
 							td= Attribute[val].wert
-			a#lkw
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#bas
+				caption Basiswerte
+				tbody
+					tr
+						each val in ["LeP", "AuP", "KaP", "MR"]
+							th= val
+							td= Basiswerte[val] || '—'
+			
+			table.data-section.mitte.eigenschaften#lkw
 				caption Liturgiekenntnis
 				colgroup
 					col
@@ -136,8 +135,8 @@ html(lang="de")
 							td(title=__lk._talent.probe.join(' · '))= __lk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
 							td.mitte= __lk.Lernstufe
 							td.mitte= __lk.wert.toString().replace('-', '–')
-			a#lit
-			table.data-section.eigenschaften
+			
+			table.data-section.eigenschaften#lit
 				caption Liturgien
 				colgroup
 					col(style="width: 30%;")
