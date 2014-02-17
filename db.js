@@ -86,34 +86,11 @@ process.on('SIGINT', function() {
  ************************/
 
 var routes = {
-	  talent:   require('./routes/system/talent'),
-	  zauber:   require('./routes/system/zauber'),
-	  ritual:   require('./routes/system/ritual'),
-	  liturgie: require('./routes/system/liturgie')
-    }
-  , Talent = require('./models/talent');
-
-// pre-route request modification
-app.param('talent', function (req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next('route');
-	}
-	Talent
-		.findById(id)
-		.exec(function(error, doc) {
-			if (error) {
-				next(error);
-			}
-			else if (doc) {
-				req.talent = doc;
-				next();
-			}
-			else {
-				res.statusCode = 404;
-				next(new Error("Kein Datensatz gefunden."));
-			}
-		});
-});
+	talent:   require('./routes/system/talent'),
+	zauber:   require('./routes/system/zauber'),
+	ritual:   require('./routes/system/ritual'),
+	liturgie: require('./routes/system/liturgie')
+};
 
 app.get('/', function(req, res, next) {
 	res.render('system/nav');
@@ -123,7 +100,7 @@ app.get('/', function(req, res, next) {
 app.get('/talent/liste',   routes.talent.list);
 app.get('/talent/neu',     routes.talent.create);
 app.post('/talent/neu',    routes.talent.save);
-app.get('/talent/:talent', routes.talent.edit);
+app.get('/talent/:tid',    routes.talent.edit);
 app.put('/talent/:tid',    routes.talent.update);
 app.delete('/talent/:tid', routes.talent.remove);
 

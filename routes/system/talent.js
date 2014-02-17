@@ -41,12 +41,17 @@ module.exports = {
 	},
 	edit: function(req, res, next) {
 		Talent
-			.find()
-			.lean()
-			.distinct('typ', function(err, docs) {
-				if (err) return next(err);
-				req.talent.kategorie = docs;
-				res.render('system/edit-talent', req.talent);
+			.findById(req.params.tid)
+			.exec(function(err, doc) {
+				Talent
+					.find()
+					.lean()
+					.distinct('typ', function(err, docs) {
+						if (err) return next(err);
+						doc.kategorie = docs;
+						res.render('system/edit-talent', doc);
+					})
+				;
 			})
 		;
 	},
