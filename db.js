@@ -89,7 +89,8 @@ var routes = {
 	talent:   require('./routes/system/talent'),
 	zauber:   require('./routes/system/zauber'),
 	ritual:   require('./routes/system/ritual'),
-	liturgie: require('./routes/system/liturgie')
+	liturgie: require('./routes/system/liturgie'),
+	db:       require('./routes/system/db')
 };
 
 app.get('/', function(req, res, next) {
@@ -134,6 +135,10 @@ app.post('/liturgie/neu',    routes.liturgie.save);
 app.get('/liturgie/:lid',    routes.liturgie.edit);
 app.put('/liturgie/:lid',    routes.liturgie.update);
 app.delete('/liturgie/:lid', routes.liturgie.remove);
+
+// get DB contents
+app.get('/dump/:table.json', routes.db.dump);
+// insert DB data
 
 /******************
  *  Start Server  *
