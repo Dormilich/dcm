@@ -1,0 +1,32 @@
+!!! 5
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title DB-Upload
+		link(rel="stylesheet", type="text/css", href="/system-upload.css")
+	body
+		h2 DB-Daten (JSON) laden
+		ul
+			li
+				label(for="upl1") DB "Talente":
+				input#upl1(type="file", data-url="/insert/talent")
+				button.sbm in DB speichern
+				progress.hide(max="100")
+			li
+				label(for="upl2") DB "Zauber":
+				input#upl2(type="file", data-url="/insert/zauber")
+				button.sbm in DB speichern
+				progress.hide(max="100")
+			li
+				label(for="upl3") DB "Rituale":
+				input#upl3(type="file", data-url="/insert/ritual")
+				button.sbm in DB speichern
+				progress.hide(max="100")
+			li
+				label(for="upl4") DB "Liturgien":
+				input#upl4(type="file", data-url="/insert/liturgie")
+				button.sbm in DB speichern
+				progress.hide(max="100")
+		p#success
+		p#error
+		script(src="/system-upload.js")

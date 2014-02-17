@@ -41,7 +41,6 @@ app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.compress());              // gzip/deflate
-//app.use(express.bodyParser());            // parse POST data into req.body
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.methodOverride());        // use PUT/DELETE
@@ -93,6 +92,14 @@ var routes = {
 	db:       require('./routes/system/db')
 };
 
+app.param('table', function(req, res, next, id) {
+	if (["talent", "zauber", "ritual", "liturgie"].indexOf(id) < 0) {
+		return next(new Error("Keine solche Tabelle in der Datenbank."));
+	}
+	req.tableName = id;
+	next();
+});
+
 app.get('/', function(req, res, next) {
 	res.render('system/nav');
 });
@@ -139,6 +146,8 @@ app.delete('/liturgie/:lid', routes.liturgie.remove);
 // get DB contents
 app.get('/dump/:table.json', routes.db.dump);
 // insert DB data
+app.get('/insert',         routes.db.show);
+app.post('/insert/:table', routes.db.save);
 
 /******************
  *  Start Server  *

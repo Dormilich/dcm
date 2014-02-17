@@ -23,7 +23,6 @@
  */
 
 var path    = require('path')
-  , async   = require('async')
   , appRoot = path.dirname(require.main.filename)
   , tables  = {
 	  talent:   require( path.join(appRoot, 'models/talent') ),
@@ -34,11 +33,8 @@ var path    = require('path')
   ;
 
 module.exports = {
-	dump : function(req, res, next) {
+	dump : function (req, res, next) {
 		var tableName = req.params.table;
-		if (!(tableName in tables)) {
-			return next(new Error("Keine solche Tabelle in der Datenbank."));
-		}
 		tables[tableName]
 			.find()
 			.select("-__v -_id")
@@ -50,5 +46,15 @@ module.exports = {
 				res.json(objs);
 			})
 		;
+	},
+	show : function (req, res, next) {
+		res.render('system/db-upload');
+	},
+	save : function (req, res, next) {
+		// don't want to test on my working DBs yet ...
+		tables[req.params.table].create(req.body, function(err, docs) {
+			if (err) return next(err);
+			res.end(docs.length+" Datensätze gespeichert.")
+		});
 	}
 };
