@@ -22,28 +22,36 @@
  * THE SOFTWARE.
  */
 
-/***********************
- *  Load Dependencies  *
- ***********************/
+/**************************************
+ ***       Load Dependencies        ***
+ **************************************/
+
 var express  = require('express')
   , app      = express()
   , path     = require('path')
   , http     = require('http')
   , mongoose = require('mongoose')
+  , passport = require('passport')
+  , flash    = require('connect-flash')
   ;
-/***********************************
- *  Configure Express Application  *
- ***********************************/
+/**************************************
+ *** Configure Express Application  ***
+ **************************************/
 
-app.set('port', process.env.PORT || 8080);  // ENV values from the Windows ENV
+app.set('port', process.env.PORT || 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.compress());              // gzip/deflate
+app.use(express.compress()); 
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(express.methodOverride());        // use PUT/DELETE
+app.use(express.methodOverride());
+app.use(express.cookieParser());
+app.use(express.session({ secret: "d6b4a9296830ed4864ecdd4e5847f93d732cf71f0c67b3dd49f4ff0cb690c533" }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 // Handle 404
@@ -63,9 +71,9 @@ app.use(function(error, req, res, next) {
 });
 app.locals.pretty = true;
 
-/**********************************
- *  Connect to and Watch MongoDB  *
- **********************************/
+/**************************************
+ ***  Connect to and Watch MongoDB  ***
+ **************************************/
 
 mongoose.connect('localhost', 'dsa'); 
 // watch DB events
@@ -80,14 +88,11 @@ process.on('SIGINT', function() {
 	});
 });
 
-/************************
- *  Define HTTP Routes  *
- ************************/
+/**************************************
+ ***       Define HTTP Routes       ***
+ **************************************/
 
-// main navigation
-app.get('/', function(req, res, next) {
-	res.render('system/nav');
-});
+require('./routes/system/login')(app, passport);
 // Talente
 require('./routes/system/talent')(app);
 // Zauber + Varianten
@@ -99,9 +104,9 @@ require("./routes/system/liturgie")(app);
 // get/insert DB contents
 require("./routes/system/db")(app);
 
-/******************
- *  Start Server  *
- ******************/
+/**************************************
+ ***          Start Server          ***
+ **************************************/
 
 app.listen(app.get('port'), function(){
 	console.log("Express %s server listening on port %d", app.get('env'), app.get('port'));

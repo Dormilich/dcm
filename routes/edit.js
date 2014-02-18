@@ -59,7 +59,7 @@ module.exports = function (app) {
 	app.param('section', function(req, res, next, id) {
 		var sections = [
 			"ap", "attribute", "basiswerte", "char", "generierung", "person", 
-			"procon", "sf"//, "talente", "zauber", "rituale", "liturgien"
+			"procon", "sf", "talente", "zauber", "rituale", "liturgien"
 		];
 		if (sections.indexOf(id) < 0) {
 			return next('route');
@@ -68,18 +68,6 @@ module.exports = function (app) {
 		next();
 	});
 	
-	// edit character sheet sections
-	app.get('/:section/:mongoid', function(req, res, next) {
-		Held
-			.findById(req.id)
-			.lean()
-			.exec(function(err, obj) {
-				if (err) next(err);
-				obj._data = data[req.section];
-				res.render('edit-held/' + req.section, obj);
-			})
-		;
-	});
 	// Character's skills edit form
 	app.get('/talente/:mongoid', function(req, res, next) {
 		async.parallel({
@@ -244,6 +232,18 @@ module.exports = function (app) {
 			if (err) return next(err);
 			res.render('edit-held/liturgien', obj);
 		})
+	});
+	// edit other character sheet sections
+	app.get('/:section/:mongoid', function(req, res, next) {
+		Held
+			.findById(req.id)
+			.lean()
+			.exec(function(err, obj) {
+				if (err) next(err);
+				obj._data = data[req.section];
+				res.render('edit-held/' + req.section, obj);
+			})
+		;
 	});
 	// save changes
 	app.put('/:section/:mongoid',  function (req, res, next) {

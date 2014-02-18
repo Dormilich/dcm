@@ -30,6 +30,8 @@ var express  = require('express')
   , path     = require('path')
   , http     = require('http')
   , mongoose = require('mongoose')
+  , passport = require('passport')
+  , flash    = require('connect-flash')
   ;
 
 /**************************************
@@ -42,10 +44,14 @@ app.set('view engine', 'jade');
 app.use(express.favicon(__dirname + '/public/Favicon_Chromatrix.png'));
 app.use(express.logger('dev'));
 app.use(express.compress());              // gzip/deflate
-//app.use(express.bodyParser());            // parse POST data into req.body
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.methodOverride());        // use PUT/DELETE
+app.use(express.cookieParser());
+app.use(express.session({ secret: "d6b4a9296830ed4864ecdd4e5847f93d732cf71f0c67b3dd49f4ff0cb690c533" }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 /* Handle 404
