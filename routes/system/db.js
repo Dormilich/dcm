@@ -35,7 +35,7 @@ var path    = require('path')
 module.exports = function (app) {
 	// check table existence
 	app.param('table', function(req, res, next, id) {
-		if (typeof tables[id] === "object") {
+		if (tables[id] instanceof Object) {
 			req.tableName = id;
 			next();
 		}
@@ -63,10 +63,9 @@ module.exports = function (app) {
 		res.render('system/db-upload');
 	});
 	app.post('/insert/:table', function (req, res, next) {
-		// don't want to test on my working DBs yet ...
-		tables[req.tableName].create(req.body, function(err, docs) {
+		tables[req.tableName].create(req.body, function(err) {
 			if (err) return next(err);
-			res.end(docs.length+" Datensätze gespeichert.");
+			res.end(arguments.length-1 + " Datensätze gespeichert.");
 		});
 	});
 };
