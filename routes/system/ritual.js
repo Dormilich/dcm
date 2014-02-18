@@ -29,8 +29,9 @@ var path    = require('path')
   , data    = require( path.join(appRoot, '/data/dsa') )
   ;
 
-module.exports = {
-	list: function (req, res, next) {
+module.exports = function (app) {
+	// list rituals
+	app.get('/ritual/liste', function (req, res, next) {
 		Ritual
 			.find()
 			.sort('Name')
@@ -40,8 +41,25 @@ module.exports = {
 				res.render('system/table-of-rituals', { Rituale: objs });
 			})
 		;
-	},
-	edit: function(req, res, next) {
+	});
+	// new ritual form
+	app.get('/ritual/neu', function(req, res, next) {
+		var obj = {
+			_merkmal: data.magie.Merkmal,
+			_rkListe: data.ritual.Ritualkenntnis,
+			_rkTypen: data.magie.Ritualkenntnis
+		};
+		res.render('system/new-ritual', obj);
+	});
+	// save new ritual
+	app.post('/ritual/neu', function(req, res, next) {
+		Ritual.create(req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/ritual/liste');
+		});
+	});
+	// ritual edit form
+	app.get('/ritual/:rid', function(req, res, next) {
 		Ritual.findById(req.params.rid, function(err, doc) {
 			if (err)  return next(err);
 			if (!doc) return next('route');
@@ -53,31 +71,19 @@ module.exports = {
 			};
 			res.render('system/edit-ritual', obj);
 		});
-	},
-	update: function(req, res, next) {
+	});
+	// save edited ritual
+	app.put('/ritual/:rid', function(req, res, next) {
 		Ritual.findByIdAndUpdate(req.params.rid, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/ritual/liste');
 		});
-	},
-	remove: function(req, res, next) {
+	});
+	// delete ritual
+	app.delete('/ritual/:rid', function(req, res, next) {
 		Ritual.findByIdAndRemove(req.params.rid, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/ritual/liste');
 		});
-	},
-	create: function(req, res, next) {
-		var obj = {
-			_merkmal: data.magie.Merkmal,
-			_rkListe: data.ritual.Ritualkenntnis,
-			_rkTypen: data.magie.Ritualkenntnis
-		};
-		res.render('system/new-ritual', obj);
-	},
-	save: function(req, res, next) {
-		Ritual.create(req.body, function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/ritual/liste');
-		});
-	}
+	});
 };

@@ -27,9 +27,19 @@ var path    = require('path')
   , Held    = require( path.join(appRoot, 'models/person') )
   , data    = require( path.join(appRoot, 'data/dsa') )
   ;
-module.exports = {
-	// show a list of all available Characters
-	list: function(req, res, next) {
+
+module.exports = function (app) {
+	// pre-route request modification
+	app.param('mongoid', function (req, res, next, id) {
+		if (!/^[0-9a-fA-F]+$/.test(id)) {
+			return next('route');
+		}
+		req.id = id;
+		next();
+	});
+	// list all characters
+	// subject to change, active and deleted Chars need different layout
+	app.get('/helden', function(req, res, next) {
 		var disabled = ("deleted" in req.query);
 		Held
 			.find({ disabled: disabled })
@@ -51,9 +61,47 @@ module.exports = {
 				res.render('list-helden', obj);
 			})
 		;
-	},
-	// show the Character's data (aka Character Sheet)
-	show: function (req, res, next) {
+	});
+	/**********************************
+	 ***     Character creation     ***
+	 **********************************/
+	// create and save a character
+	app.get('/neu', function (req, res, next) {
+		if (req.query.force === "jade") {
+			res.render('new-char');
+		}
+		else {
+			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
+		}
+	});
+	app.post('/neu', function(req, res, next) {
+		var key
+		  , mod = req.body.modifikatoren
+		  ;
+		// array => value
+		/* faster by factor 2-3 against Object.keys().filter().forEach() */
+		for (key in mod) {
+			if (Array.isArray(mod[key])) {
+				mod[key] = mod[key].reduce(function (prev, curr) {
+					return (+prev) + (+curr);
+				}, 0);
+			}
+		}
+		req.body.AP = {
+			frei: 0,
+			alle: ((+req.body.Attribute.KL.wert) + (+req.body.Attribute.IN.wert)) * 20
+		};
+		Held.create(req.body, function(error, doc) {
+			if (error) return next(error);
+			res.redirect('/held/' + doc._id);
+		});
+	});
+	/**********************************
+	 ***     Character display      ***
+	 **********************************/
+
+	// display character sheet (mundane)
+	app.get('/held/:mongoid', function (req, res, next) {
 		Held.findById(req.id, function(err, doc) {
 			if (err)  return next(err);
 			if (!doc) return next();
@@ -71,24 +119,53 @@ module.exports = {
 				res.render('held', doc);
 			});
 		});
-	},
-	// remove Character from list
-	disable: function (req, res, next) {
+	});
+	// display character sheet (magic)
+	app.get('/magie/:mongoid', function(req, res, next) {
+		Held
+			.findById(req.id)
+			.populate('Magie.Zauber._zauber Magie.Ritualkenntnis._talent Magie.Rituale')
+			.exec(function(err, doc) {
+				if (err)  return next(err);
+				if (!doc) return next();
+				res.render('magie', doc);
+			})
+		;
+	});
+	// display character sheet (ordained)
+	app.get('/weihe/:mongoid', function(req, res, next) {
+		Held
+			.findById(req.id)
+			.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
+			.exec(function(err, doc) {
+				if (err)  return next(err);
+				if (!doc) return next();
+				res.render('geweiht', doc);
+			})
+		;
+	});
+	/**********************************
+	 ***  delete/restore Character  ***
+	 **********************************/
+	// delete character
+	app.delete('/held/:mongoid', function (req, res, next) {
 		Held.findByIdAndUpdate(req.id, { disabled: true }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
 		});
-	},
-	// remove Character from list
-	enable: function (req, res, next) {
+	});
+	// restore character
+	app.put('/held/:mongoid', function (req, res, next) {
 		Held.findByIdAndUpdate(req.id, { disabled: false }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
 		});
-	},
-	// show the edit list of a Character's data's section
-	// useful with sections that do not need to import data
-	edit: function(req, res, next) {
+	});
+	/**********************************
+	 ***     Character editing      ***
+	 **********************************
+	// edit character sheet sections
+	app.get('/:section/:mongoid', function(req, res, next) {
 		Held
 			.findById(req.id)
 			.lean()
@@ -98,13 +175,14 @@ module.exports = {
 				res.render('edit-held/' + req.section, obj);
 			})
 		;
-	},
+	});
 	// save changes
-	save: function (req, res, next) {
+	app.put('/:section/:mongoid',  function (req, res, next) {
 		req.body.modified = new Date();
 		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/held/' + req.id);
 		});
-	}
+	});//*/
+
 };

@@ -155,7 +155,7 @@ html(lang="de")
 					a(href="/held/"+_held._id, title="Heldenbogen")= "⇒ "+_held.Person.Name.split(' ')[0]
 		header#top
 			h1.mitte
-				a(href="/held/"+_id)=_held.Person.Name
+				a(href="/held/"+_held._id)=_held.Person.Name
 		main
 			form#edit(action="/talente/"+_held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")

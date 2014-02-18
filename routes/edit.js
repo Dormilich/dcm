@@ -33,19 +33,6 @@ var path    = require('path')
   , Liturgie = require( path.join(appRoot, 'models/liturgie') )
   ;
 
-function merge(target, source) {
-	Object.keys(source).forEach(function(key) {
-		if (!(key in target)) {
-			target[key] = source[key];
-		}
-	});
-	if (arguments.length > 2) {
-		var argv = Array.prototype.splice.call(arguments, 1, 1);
-		return merge.apply(this, argv);
-	}
-	return target;
-}
-
 function getTalentType(tname) {
 	return function (cb) {
 		Talent
@@ -60,8 +47,41 @@ function getTalentType(tname) {
 	};
 }
 
-module.exports = {
-	talente : function(req, res, next) {
+module.exports = function (app) {
+	// pre-route request modifications
+	app.param('mongoid', function (req, res, next, id) {
+		if (!/^[0-9a-fA-F]+$/.test(id)) {
+			return next('route');
+		}
+		req.id = id;
+		next();
+	});
+	app.param('section', function(req, res, next, id) {
+		var sections = [
+			"ap", "attribute", "basiswerte", "char", "generierung", "person", 
+			"procon", "sf"//, "talente", "zauber", "rituale", "liturgien"
+		];
+		if (sections.indexOf(id) < 0) {
+			return next('route');
+		}
+		req.section = id;
+		next();
+	});
+	
+	// edit character sheet sections
+	app.get('/:section/:mongoid', function(req, res, next) {
+		Held
+			.findById(req.id)
+			.lean()
+			.exec(function(err, obj) {
+				if (err) next(err);
+				obj._data = data[req.section];
+				res.render('edit-held/' + req.section, obj);
+			})
+		;
+	});
+	// Character's skills edit form
+	app.get('/talente/:mongoid', function(req, res, next) {
 		async.parallel({
 			_Nahkampf:     getTalentType("Nahkampf"),
 			_Fernkampf:    getTalentType("Fernkampf"),
@@ -81,11 +101,12 @@ module.exports = {
 			}
 		},
 		function (err, obj) {
-			if (err) return next(err);
-			res.render('edit-held/taw', obj);
+			if (err) return next(err); 
+			res.render('edit-held/talente', obj);
 		});
-	},
-	zauber : function(req, res, next) {
+	});
+	// Character's spells edit form
+	app.get('/zauber/:mongoid', function(req, res, next) {
 		async.parallel({
 			_zauber: function (cb) {
 				Zauber
@@ -114,8 +135,63 @@ module.exports = {
 			if (err) return next(err);
 			res.render('edit-held/zauber', obj);
 		});
-	},
-	liturgien : function(req, res, next) {
+	});
+	// Character's rituals edit form
+	app.get('/rituale/:mongoid', function(req, res, next) {
+		async.parallel({
+			_talente: function (cb) {
+				Talent
+					.find({ typ: "Schamanismus" })
+					.exec(function(err, docs) {
+						if (err) return cb(err);
+						cb(null, docs);
+					})
+				;
+			},
+			_held: function (cb) {
+				Held
+					.findById(req.id)
+					.populate("Magie.Ritualkenntnis._talent Magie.Rituale")
+					.select("Person Magie")
+					.exec(function(err, doc) {
+						if (err) return cb(err);
+						cb(null, doc);
+					})
+				;
+			},
+			_rituale: function (cb) {
+				Held
+					.findById(req.id)
+					.exec(function(err, doc) {
+						if (err) return cb(err);
+						var rk = doc.Magie.Ritualkenntnis || [];
+						var rk = rk.map(function (item) {
+							return item.short;
+						});
+						if (doc.Vorteile.indexOf("Zweistimmiger Gesang") > -1) {
+							rk.push("Elf");
+						}
+						Ritual
+							.find()
+							.in("Repräsentationen", rk)
+							.sort("Name")
+							.exec(function(err, doc) {
+								if (err) return cb(err);
+								cb(null, doc);
+							})
+						;
+					})
+				;
+			}
+		},
+		function (err, obj) {
+			if (err) return next(err);
+			obj._data = data.ritual;
+			res.render('edit-held/rituale', obj);
+		});
+	});
+	// Character's liturgies edit form
+	app.get('/liturgien/:mongoid', function(req, res, next) {
 		async.parallel({
 			_held: function (cb) {
 				Held
@@ -166,60 +242,15 @@ module.exports = {
 		},
 		function (err, obj) {
 			if (err) return next(err);
-			res.render('edit-held/liturgie', obj);
+			res.render('edit-held/liturgien', obj);
 		})
-	},
-	rituale : function(req, res, next) {
-		async.parallel({
-			_talente: function (cb) {
-				Talent
-					.find({ typ: "Schamanismus" })
-					.exec(function(err, docs) {
-						if (err) return cb(err);
-						cb(null, docs);
-					})
-				;
-			},
-			_held: function (cb) {
-				Held
-					.findById(req.id)
-					.populate("Magie.Ritualkenntnis._talent Magie.Rituale")
-					.select("Person Magie")
-					.exec(function(err, doc) {
-						if (err) return cb(err);
-						cb(null, doc);
-					})
-				;
-			},
-			_rituale: function (cb) {
-				Held
-					.findById(req.id)
-					.exec(function(err, doc) {
-						if (err) return cb(err);
-						var rk = doc.Magie.Ritualkenntnis || [];
-						var rk = rk.map(function (item) {
-							return item.short;
-						});
-						if (doc.Vorteile.indexOf("Zweistimmiger Gesang") > -1) {
-							rk.push("Elf");
-						}
-						Ritual
-							.find()
-							.in("Repräsentationen", rk)
-							.sort("Name")
-							.exec(function(err, doc) {
-								if (err) return cb(err);
-								cb(null, doc);
-							})
-						;
-					})
-				;
-			}
-		},
-		function (err, obj) {
+	});
+	// save changes
+	app.put('/:section/:mongoid',  function (req, res, next) {
+		req.body.modified = new Date();
+		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
 			if (err) return next(err);
-			obj._data = data.ritual;
-			res.render('edit-held/ritual', obj);
+			res.redirect('/held/' + req.id);
 		});
-	}
+	});
 };

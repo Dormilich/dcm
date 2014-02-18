@@ -28,8 +28,12 @@ var path    = require('path')
   , data    = require( path.join(appRoot, '/data/dsa') )
   ;
 
-module.exports = {
-	list: function(req, res, next) {
+module.exports = function (app) {
+	// ==========================================
+	// === Spells ===============================
+	// ==========================================
+	// list of spells
+	app.get('/zauber/liste', function(req, res, next) {
 		Zauber
 			.find()
 			.sort('Name')
@@ -39,107 +43,119 @@ module.exports = {
 				res.render('system/table-of-spells', { Zauber: docs });
 			})
 		;
-	},
-	create: function(req, res, next) {
+	});
+	// new spell form
+	app.get('/zauber/neu', function(req, res, next) {
 		res.render('system/new-zauber', data.magie);
-	}, 
-	save: function(req, res, next) {
+	});
+	// save new spell
+	app.post('/zauber/neu', function(req, res, next) {
 		Zauber.create(req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/zauber/liste');
 		});
-	},
-	edit: function(req, res, next) {
+	});
+	// spell edit form
+	app.get('/zauber/:zid', function(req, res, next) {
 		Zauber.findById(req.params.zid, function(err, doc) {
 			if (err)  return next(err);
 			if (!doc) return next('route');
 			data.magie._Zauber = doc;
 			res.render('system/edit-zauber', data.magie);
 		});
-	},
-	update: function(req, res, next) {
+	});
+	// save edited spell
+	app.put('/zauber/:zid', function(req, res, next) {
 		Zauber.findByIdAndUpdate(req.params.zid, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/zauber/liste');
 		});
-	},
-	remove: function(req, res, next) {
+	});
+	// delete spell
+	app.delete('/zauber/:zid', function(req, res, next) {
 		Zauber.findByIdAndRemove(req.params.zid, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/zauber/liste');
 		});
-	},
-	variante: {
-		create: function(req, res, next) {
-			Zauber
-				.find()
-				.sort('Name')
-				.select('Name _id')
-				.lean()
-				.exec(function(err, objs) {
-					if (err) return next(err);
-					data.magie.Zauber = objs;
-					res.render('system/new-variant', data.magie);
-				})
-			;
-		},
-		save: function(req, res, next) {
-			Zauber.findById(req.body.zauber, function(err, doc) {
+	});
+	// ==========================================
+	// === Spell variants =======================
+	// ==========================================
+	// add variant to spell form
+	app.get('/variante/neu', function(req, res, next) {
+		Zauber
+			.find()
+			.sort('Name')
+			.select('Name _id')
+			.lean()
+			.exec(function(err, objs) {
 				if (err) return next(err);
-				doc.Varianten.push(req.body);
-				doc.save(function(err, doc) {
-					if (err) return next(err);
-					res.redirect('/zauber/liste');
-				});
-			});
-		},
-		edit: function(req, res, next) {
-			Zauber.findById(
-				req.params.zid, 
-				{ 
-					"Varianten": { $elemMatch: { "_id": req.params.vid } },
-					_id:  true,
-					Name: true
-				}, 
-				function(err, doc) {
-					if (err) return next(err);
-					data.magie._Zauber = {
-						Name: doc.Name,
-						_id : doc._id
-					};
-					if (Array.isArray(doc.Varianten) && doc.Varianten.length > 0) {
-						data.magie._Variante = doc.Varianten[0];
-						res.render('system/edit-variant', data.magie);
-					}
-					else {
-						next("Keine solche Variante vorhanden.");
-					}
-				}
-			);
-		},
-		update: function(req, res, next) {
-			Zauber.update(
-				{ "_id": req.params.zid, "Varianten._id": req.params.vid },
-				{ $set: { "Varianten.$": req.body } },
-				function(err, numAffected) {
-					if (err) return next(err);
-					console.log("%d Variante geändert", numAffected);
-					res.redirect('/zauber/liste');
-				}
-			);
-		},
-		remove: function(req, res, next) {
-			Zauber.findById(req.param.zid, function(err, doc) {
+				data.magie.Zauber = objs;
+				res.render('system/new-variant', data.magie);
+			})
+		;
+	});
+	// save variant
+	app.post('/variante/neu', function(req, res, next) {
+		Zauber.findById(req.body.zauber, function(err, doc) {
+			if (err) return next(err);
+			doc.Varianten.push(req.body);
+			doc.save(function(err, doc) {
 				if (err) return next(err);
-				doc.Varianten.pull(req.params.vid);
-				doc.save(function(err, doc, num) {
-					console.log("%d Variante gelöscht.", num);
-					res.redirect('/zauber/liste');
-				});
+				res.redirect('/zauber/liste');
 			});
-		}
-	}
+		});
+	});
+	// variant of spell edit form
+	app.get('/zauber/:zid/variante/:vid', function(req, res, next) {
+		Zauber.findById(
+			req.params.zid, 
+			{ 
+				"Varianten": { $elemMatch: { "_id": req.params.vid } },
+				_id:  true,
+				Name: true
+			}, 
+			function(err, doc) {
+				if (err) return next(err);
+				data.magie._Zauber = {
+					Name: doc.Name,
+					_id : doc._id
+				};
+				if (Array.isArray(doc.Varianten) && doc.Varianten.length > 0) {
+					data.magie._Variante = doc.Varianten[0];
+					res.render('system/edit-variant', data.magie);
+				}
+				else {
+					next(new Error("Keine solche Variante vorhanden."));
+				}
+			}
+		);
+	});
+	// save edited variant
+	app.put('/zauber/:zid/variante/:vid', function(req, res, next) {
+		Zauber.update(
+			{ "_id": req.params.zid, "Varianten._id": req.params.vid },
+			{ $set: { "Varianten.$": req.body } },
+			function(err, numAffected) {
+				if (err) return next(err);
+				console.log("%d Variante geändert", numAffected);
+				res.redirect('/zauber/liste');
+			}
+		);
+	});
+	// delete variant
+	app.delete('/zauber/:zid/variante/:vid', function(req, res, next) {
+		Zauber.findById(req.param.zid, function(err, doc) {
+			if (err) return next(err);
+			doc.Varianten.pull(req.params.vid);
+			doc.save(function(err, doc, num) {
+				console.log("%d Variante gelöscht.", num);
+				res.redirect('/zauber/liste');
+			});
+		});
+	});
 };
+
 /* keep it as info how to [remove a nested element] with a $pull operator
 Zauber.findByIdAndUpdate(
 	req.params.zid,

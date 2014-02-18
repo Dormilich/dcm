@@ -84,70 +84,20 @@ process.on('SIGINT', function() {
  *  Define HTTP Routes  *
  ************************/
 
-var routes = {
-	talent:   require('./routes/system/talent'),
-	zauber:   require('./routes/system/zauber'),
-	ritual:   require('./routes/system/ritual'),
-	liturgie: require('./routes/system/liturgie'),
-	db:       require('./routes/system/db')
-};
-
-app.param('table', function(req, res, next, id) {
-	if (["talent", "zauber", "ritual", "liturgie"].indexOf(id) < 0) {
-		return next(new Error("Keine solche Tabelle in der Datenbank."));
-	}
-	req.tableName = id;
-	next();
-});
-
+// main navigation
 app.get('/', function(req, res, next) {
 	res.render('system/nav');
 });
-
 // Talente
-app.get('/talent/liste',   routes.talent.list);
-app.get('/talent/neu',     routes.talent.create);
-app.post('/talent/neu',    routes.talent.save);
-app.get('/talent/:tid',    routes.talent.edit);
-app.put('/talent/:tid',    routes.talent.update);
-app.delete('/talent/:tid', routes.talent.remove);
-
-// Zauber
-app.get('/zauber/liste',   routes.zauber.list);
-app.get('/zauber/neu',     routes.zauber.create);
-app.post('/zauber/neu',    routes.zauber.save);
-app.get('/zauber/:zid',    routes.zauber.edit);
-app.put('/zauber/:zid',    routes.zauber.update);
-app.delete('/zauber/:zid', routes.zauber.remove);
-
-// Zauber-Varianten
-app.get('/variante/neu',  routes.zauber.variante.create);
-app.post('/variante/neu', routes.zauber.variante.save);
-app.get('/zauber/:zid/variante/:vid',    routes.zauber.variante.edit);
-app.put('/zauber/:zid/variante/:vid',    routes.zauber.variante.update);
-app.delete('/zauber/:zid/variante/:vid', routes.zauber.variante.remove);
-
+require('./routes/system/talent')(app);
+// Zauber + Varianten
+require('./routes/system/zauber')(app);
 // Rituale
-app.get('/ritual/liste',   routes.ritual.list);
-app.get('/ritual/neu',     routes.ritual.create);
-app.post('/ritual/neu',    routes.ritual.save);
-app.get('/ritual/:rid',    routes.ritual.edit);
-app.put('/ritual/:rid',    routes.ritual.update);
-app.delete('/ritual/:rid', routes.ritual.remove);
-
+require('./routes/system/ritual')(app);
 // Liturgien
-app.get('/liturgie/liste',   routes.liturgie.list);
-app.get('/liturgie/neu',     routes.liturgie.create);
-app.post('/liturgie/neu',    routes.liturgie.save);
-app.get('/liturgie/:lid',    routes.liturgie.edit);
-app.put('/liturgie/:lid',    routes.liturgie.update);
-app.delete('/liturgie/:lid', routes.liturgie.remove);
-
-// get DB contents
-app.get('/dump/:table.json', routes.db.dump);
-// insert DB data
-app.get('/insert',         routes.db.show);
-app.post('/insert/:table', routes.db.save);
+require("./routes/system/liturgie")(app);
+// get/insert DB contents
+require("./routes/system/db")(app);
 
 /******************
  *  Start Server  *

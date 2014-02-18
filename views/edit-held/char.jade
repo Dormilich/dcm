@@ -54,7 +54,7 @@ html(lang="de")
 				a(href="/held/"+_id)= Person.Name
 		
 		main
-			form(action=url, method="post", accept-charset="utf-8")#newChar
+			form#newChar(action="/char/"+_id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 			
 				table.data-section.setting.links#bes

@@ -22,18 +22,19 @@
  * THE SOFTWARE.
  */
 
-/***********************
- *  Load Dependencies  *
- ***********************/
+/**************************************
+ ***       Load Dependencies        ***
+ **************************************/
 var express  = require('express')
   , app      = express()
   , path     = require('path')
   , http     = require('http')
   , mongoose = require('mongoose')
   ;
-/***********************************
- *  Configure Express Application  *
- ***********************************/
+
+/**************************************
+ *** Configure Express Application  ***
+ **************************************/
 
 app.set('port', process.env.PORT || 80);  // ENV values from the Windows ENV
 app.set('views', __dirname + '/views');
@@ -68,9 +69,9 @@ app.use(function(error, req, res, next) {
 });
 app.locals.pretty = true;
 
-/**********************************
- *  Connect to and Watch MongoDB  *
- **********************************/
+/**************************************
+ ***  Connect to and Watch MongoDB  ***
+ **************************************/
 
 mongoose.connect('mongodb://localhost/dsa'); 
 // watch DB events
@@ -91,84 +92,27 @@ process.on('SIGINT', function() {
 	});
 });
 
-/************************
- *  Define HTTP Routes  *
- ************************/
+/**************************************
+ ***       Define HTTP Routes       ***
+ **************************************/
 
-var routes = {};
-// set up routes
-["neu", "held", "edit", "magie", "weihe"].forEach(function(file) {
-	routes[file] = require('./routes/'+file);
-});
-
-function mapMatch() {
-	var args = arguments;
-	return function(req, res, next) {
-		for (var i=0, l=args.length; i < l; i++) {
-			req[args[i]] = req.params[i];
-		}
-		next();
-	};
-}
-app.param('section', function(req, res, next, id) {
-	var sections = [
-		"ap", "attribute", "basiswerte", "char", "generierung", "person", "procon", "sf"
-	];
-	if (sections.indexOf(id) < 0) {
-		return next('route');
-	}
-	req.section = id;
-	next();
-});
-// pre-route request modification
-app.param('mongoid', function (req, res, next, id) {
-	if (!/^[0-9a-fA-F]+$/.test(id)) {
-		return next('route');
-	}
-	req.id = id;
-	next();
-});
-
-// demo
+// forward to listing
 app.get('/', function (req, res) {
 	res.redirect('/helden');
 });
 // list all characters
-app.get('/helden', routes.held.list);
-
 // create and save a character
-app.get( '/neu', routes.neu.index);
-app.post('/neu', routes.neu.create);
+// display character sheet (mundane, magic ordained)
+// delete/restore character
+require("./routes/held")(app);
 
-// display character sheet (mundane)
-app.get('/held/:mongoid', routes.held.show);
-// display character sheet (magic)
-app.get('/magie/:mongoid', routes.magie.show);
-// display character sheet (ordained)
-app.get('/weihe/:mongoid', routes.weihe.show);
-
-// delete character
-app.delete('/held/:mongoid', routes.held.disable);
-// restore character
-app.put('/held/:mongoid', routes.held.enable);
-
-// edit character sheet sections
-app.get('/:section/:mongoid',  routes.held.edit);
+// edit/save character sheet sections
 // edit CharSheet Talent section (needs to load data from system table)
-app.get('/talente/:mongoid',   routes.edit.talente);
-app.get('/zauber/:mongoid',    routes.edit.zauber);
-app.get('/liturgien/:mongoid', routes.edit.liturgien);
-app.get('/ritual/:mongoid',    routes.edit.rituale);
-// save changes
-app.put('/:section/:mongoid',  routes.held.save);
-app.put('/talente/:mongoid',   routes.held.save);
-app.put('/zauber/:mongoid',    routes.held.save);
-app.put('/liturgien/:mongoid', routes.held.save);
-app.put('/ritual/:mongoid',    routes.held.save);
+require("./routes/edit")(app);
 
-/******************
- *  Start Server  *
- ******************/
+/**************************************
+ ***          Start Server          ***
+ **************************************/
 
 app.listen(app.get('port'), function(){
 	console.log("Express %s server listening on port %d", app.get('env'), app.get('port'));

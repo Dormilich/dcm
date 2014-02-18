@@ -32,9 +32,20 @@ var path    = require('path')
   }
   ;
 
-module.exports = {
-	dump : function (req, res, next) {
-		var tableName = req.params.table;
+module.exports = function (app) {
+	// check table existence
+	app.param('table', function(req, res, next, id) {
+		if (typeof tables[id] === "object") {
+			req.tableName = id;
+			next();
+		}
+		else {
+			next(new Error("Keine solche Tabelle in der Datenbank."));
+		}
+	});
+	// get DB contents
+	app.get('/dump/:table.json', function (req, res, next) {
+		var tableName = req.tableName;
 		tables[tableName]
 			.find()
 			.select("-__v -_id")
@@ -46,15 +57,16 @@ module.exports = {
 				res.json(objs);
 			})
 		;
-	},
-	show : function (req, res, next) {
+	});
+	// insert DB data
+	app.get('/insert', function (req, res, next) {
 		res.render('system/db-upload');
-	},
-	save : function (req, res, next) {
+	});
+	app.post('/insert/:table', function (req, res, next) {
 		// don't want to test on my working DBs yet ...
-		tables[req.params.table].create(req.body, function(err, docs) {
+		tables[req.tableName].create(req.body, function(err, docs) {
 			if (err) return next(err);
-			res.end(docs.length+" Datensätze gespeichert.")
+			res.end(docs.length+" Datensätze gespeichert.");
 		});
-	}
+	});
 };

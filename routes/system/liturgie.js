@@ -28,8 +28,9 @@ var path     = require('path')
   , data     = require( path.join(appRoot, '/data/dsa') )
   ;
 
-module.exports = {
-	list: function (req, res, next) {
+module.exports = function (app) {
+	// list all liturgies
+	app.get('/liturgie/liste', function (req, res, next) {
 		Liturgie
 			.find()
 			.sort('name grad')
@@ -39,34 +40,39 @@ module.exports = {
 				res.render('system/table-of-miracles', { "$Liste": objs });
 			})
 		;
-	},
-	create: function(req, res, next) {
+	});
+	// new liturgy form
+	app.get('/liturgie/neu', function(req, res, next) {
 		res.render('system/new-liturgie', { "$Liste": data.sf.Götter });
-	},
-	save: function(req, res, next) {
+	});
+	// save new liturgy
+	app.post('/liturgie/neu', function(req, res, next) {
 		Liturgie.create(req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/liturgie/liste');
 		});
-	},
-	edit: function(req, res, next) {
+	});
+	// liturgy edit form
+	app.get('/liturgie/:lid', function(req, res, next) {
 		Liturgie.findById(req.params.lid, function(err, doc) {
 			if (err)  return next(err);
 			if (!doc) return next('route');
-			doc._Götter = data.sf.Götter
+			doc._Götter = data.sf.Götter;
 			res.render('system/edit-liturgie', doc);
 		});
-	},
-	update: function(req, res, next) {
+	});
+	// save edited liturgy
+	app.put('/liturgie/:lid', function(req, res, next) {
 		Liturgie.findByIdAndUpdate(req.params.lid, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/liturgie/liste');
 		});
-	},
-	remove: function(req, res, next) {
+	});
+	// delete liturgy
+	app.delete('/liturgie/:lid', function(req, res, next) {
 		Liturgie.findByIdAndRemove(req.params.lid, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/liturgie/liste');
 		});
-	}
+	});
 };

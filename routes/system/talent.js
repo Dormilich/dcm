@@ -27,8 +27,9 @@ var path    = require('path')
   , Talent  = require( path.join(appRoot, 'models/talent') )
   ;
 
-module.exports = {
-	list: function (req, res, next) {
+module.exports = function (app) {
+	// list skills
+	app.get('/talent/liste', function (req, res, next) {
 		Talent
 			.find()
 			.sort('typ name')
@@ -38,8 +39,27 @@ module.exports = {
 				res.render('system/table-of-talents', { Liste: docs });
 			})
 		;
-	},
-	edit: function(req, res, next) {
+	});
+	// new skill form
+	app.get('/talent/neu', function(req, res, next) {
+		Talent
+			.find()
+			.lean()
+			.distinct('typ', function(err, arr) {
+				if (err) return next(err);
+				res.render('system/new-talent', { kategorie: arr });
+			})
+		;
+	});
+	// save new skill
+	app.post('/talent/neu', function(req, res, next) {
+		Talent.create(req.body, function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/talent/liste');
+		});
+	});
+	// skill edit form
+	app.get('/talent/:tid', function(req, res, next) {
 		Talent
 			.findById(req.params.tid)
 			.exec(function(err, doc) {
@@ -54,33 +74,19 @@ module.exports = {
 				;
 			})
 		;
-	},
-	update: function(req, res, next) {
+	});
+	// save edited skill
+	app.put('/talent/:tid', function(req, res, next) {
 		Talent.findByIdAndUpdate(req.params.tid, req.body, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/talent/liste');
 		});
-	},
-	remove: function(req, res, next) {
+	});
+	// delete skill
+	app.delete('/talent/:tid', function(req, res, next) {
 		Talent.findByIdAndRemove(req.params.tid, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/talent/liste');
 		});
-	},
-	create: function(req, res, next) {
-		Talent
-			.find()
-			.lean()
-			.distinct('typ', function(err, arr) {
-				if (err) return next(err);
-				res.render('system/new-talent', { kategorie: arr });
-			})
-		;
-	},
-	save: function(req, res, next) {
-		Talent.create(req.body, function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/talent/liste');
-		});
-	}
+	});
 };
