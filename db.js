@@ -99,6 +99,7 @@ process.on('SIGINT', function() {
  ***       Define HTTP Routes       ***
  **************************************/
 
+// setup login paths
 require('./routes/system/login')(app, passport);
 // protect following paths
 app.all(/.+/, function isLoggedIn(req, res, next) {
@@ -106,6 +107,9 @@ app.all(/.+/, function isLoggedIn(req, res, next) {
 		return next();
 	}
 	res.redirect('/');
+});
+app.get('/navigation', function (req, res, next) {
+	res.render('system/nav', { user: req.user });
 });
 // Talente
 require('./routes/system/talent')(app);

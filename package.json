@@ -13,16 +13,18 @@
 		{ "type": "git", "url": "https://github.com/Dormilich/dcm" }
 	],
 	"dependencies": {
-		"express"    : "3.x.x",
-		"jade"       : "0.x.x",
-		"mongoose"   : "3.x.x",
-		"sprintf.js" : "0.1.x",
-		"async"      : ">=0.2.9",
-		"passport"   : "0.2.x",
-		"passport-local"    : "~0.1.6",
-		"passport-facebook" : "~1.0.2",
+		"express"       : "3.x.x",
+		"jade"          : "0.x.x",
+		"mongoose"      : "3.x.x",
+		"sprintf.js"    : "0.1.x",
+		"async"         : ">=0.2.9",
 		"connect-flash" : "0.1.x",
-		"bcrypt-nodejs" : "latest"
+		"bcrypt-nodejs" : "latest",
+		"passport"      : "0.2.x",
+		"passport-local"        : "~0.1.6",
+		"passport-google-oauth" : "~0.1.5",
+		"passport-facebook"     : "~1.0.2",
+		"passport-openid"       : "~0.3.1"
 	},
 	"engines": [
 		"node",

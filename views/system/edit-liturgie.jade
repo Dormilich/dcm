@@ -12,7 +12,7 @@ html
 			}
 	body
 		#logout
-			a(href="/logout") #{user.local.name} abmelden
+			a(href="/logout") abmelden
 		form#new(action="/liturgie/"+_id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			fieldset

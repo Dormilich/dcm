@@ -15,7 +15,7 @@ html
 	body
 		nav
 			#logout
-				a(href="/logout") #{user.local.name} abmelden
+				a(href="/logout") abmelden
 			a(href="/talent/liste") Talentliste
 		form(action="/talent/"+_id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")

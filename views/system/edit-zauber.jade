@@ -14,7 +14,7 @@ html(lang="de")
 	body
 		nav
 			#logout
-				a(href="/logout") #{user.local.name} abmelden
+				a(href="/logout") abmelden
 			a(href="/zauber/liste") Zauberliste
 		form#nesp(action="/zauber/"+_Zauber._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")

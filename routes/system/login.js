@@ -22,39 +22,43 @@
  * THE SOFTWARE.
  */
 
-function isLoggedIn(req, res, next) 
-{
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	res.redirect('/');
-}
 module.exports = function (app, passport) {
 	// splash screen, login links
 	app.get('/', function (req, res, next) {
 		res.render('system/splash');
 	});
+	app.get('/logout', function (req, res, next) {
+		req.logout();
+		res.redirect('/');
+	});
+	
+	// LOCAL LOGIN (email/password)
+	
 	app.get('/login', function (req, res, next) {
 		res.render('system/login', { message: req.flash('loginMessage') });
 	});
 	app.get('/signup', function (req, res, next) {
 		res.render('system/signup', { message: req.flash('signupMessage') });
 	});
-	app.get('/navigation', isLoggedIn, function (req, res, next) {
-		res.render('system/nav', { user: req.user });
-	});
-	app.get('/logout', function (req, res, next) {
-		req.logout();
-		res.redirect('/');
-	});
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/navigation',
-		failureRedirect : '/signup',
+		successRedirect : "/navigation",
+		failureRedirect : "/signup",
 		failureFlash    : true
 	}));
 	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : '/navigation',
-		failureRedirect : '/login',
+		successRedirect : "/navigation",
+		failureRedirect : "/login",
 		failureFlash    : true
+	}));
+	
+	// GOOGLE
+	
+	app.get('/auth/google', passport.authenticate("google", { 
+		scope: ["profile", "email"] 
+	}));
+	
+	app.get('/auth/google/callback', passport.authenticate("google", {
+		successRedirect : "/navigation",
+		failureRedirect : "/"
 	}));
 };

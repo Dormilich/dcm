@@ -22,10 +22,12 @@
  * THE SOFTWARE.
  */
 
-var path          = require('path')
-  , appRoot       = path.dirname(require.main.filename)
-  , User          = require( path.join(appRoot, 'models/user') )
-  , LocalStrategy = require("passport-local").Strategy
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , User    = require( path.join(appRoot, 'models/user') )
+  , LocalStrategy  = require("passport-local").Strategy
+  , GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
+  , configAuth     = require( path.join(appRoot, 'config/auth') )
   ;
 
 module.exports = function (passport) {
@@ -91,4 +93,35 @@ module.exports = function (passport) {
 			});
 		})
 	);
+	
+	// GOOGLE LOGIN
+	
+	passport.use(new GoogleStrategy({
+		clientID     : configAuth.googleAuth.clientID,
+		clientSecret : configAuth.googleAuth.clientSecret,
+		callbackURL  : configAuth.googleAuth.callbackURL
+	}, function(token, refreshToken, profile, done) {
+		process.nextTick(function() {
+			User.findOne({ "google.id": profile.id }, function(err, user) {
+				if (err) {
+					return done(err);
+				}
+				if (user) {
+					return done(null, user);
+				}
+				else {
+					var newUser          = new User();
+					newUser.google.token = token
+					newUser.google.id    = profile.id;
+					newUser.google.name  = profile.displayName;
+					newUser.google.email = profile.emails[0].value;
+					
+					newUser.save(function(err) {
+						if (err) throw err;
+						return done(null, newUser);
+					});
+				}
+			});
+		});
+	}));
 };

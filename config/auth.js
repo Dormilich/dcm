@@ -22,21 +22,10 @@
  * THE SOFTWARE.
  */
 
-var path    = require('path')
-  , appRoot = path.dirname(require.main.filename)
-  , Held    = require( path.join(appRoot, 'models/person') )
-  , data    = require( path.join(appRoot, 'data/dsa') )
-  ;
 module.exports = {
-	show: function(req, res, next) {
-		Held
-			.findById(req.id)
-			.populate('Magie.Zauber._zauber Magie.Ritualkenntnis._talent Magie.Rituale')
-			.exec(function(err, doc) {
-				if (err)  return next(err);
-				if (!doc) return next();
-				res.render('magie', doc);
-			})
-		;
+	"googleAuth" : {
+		"clientID"     : "361380832375-tfsa42irp0hctus1n0l4d869e5q1kan6.apps.googleusercontent.com",
+		"clientSecret" : "uG3QocLHcL4CmxGBUAdmB4ER",
+		"callbackURL"  : "http://localhost:8080/auth/google/callback"
 	}
 };

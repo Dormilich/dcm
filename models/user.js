@@ -49,7 +49,7 @@ var userSchema = mongoose.Schema({
 		id       : String,
 		email    : String,
 		name     : String
-	}
+	},
 	friends : [mongoose.Schema.Types.ObjectId]
 });
 
