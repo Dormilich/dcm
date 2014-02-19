@@ -22,6 +22,7 @@
 /* elements */
 body {
 	font-family: Georgia, sans-serif;
+	padding-top: 1em;
 }
 *[title] {
 	cursor: help;
@@ -56,3 +57,18 @@ li {
 	padding-bottom: 0.2em;
 }
 
+#logout {
+	float: right;
+}
+#logout a {
+	text-decoration: none;
+	color: white;
+	background-color: silver;
+	border: 1px solid gray;
+	border-radius: 0.5em;
+	padding: 0.5em;
+	font-weight: bold;
+}
+#logout a:hover {
+	background-color: black;
+}

@@ -22,39 +22,43 @@
  * THE SOFTWARE.
  */
 
-function isLoggedIn(req, res, next) 
-{
-	if (req.isAuthenticated()) {
-		return next();
+var mongoose = require("mongoose")
+  , bcrypt   = require("bcrypt-nodejs")
+  ;
+
+var userSchema = mongoose.Schema({
+	isAdmin : { type: Boolean, default: false },
+	local   : {
+		email    : String,
+		password : String,
+		name     : String
+	},
+	facebook : {
+		id       : String,
+		token    : String,
+		email    : String,
+		name     : String
+	},
+	google : {
+		id       : String,
+		token    : String,
+		email    : String,
+		name     : String
+	},
+	openid : {
+		id       : String,
+		email    : String,
+		name     : String
 	}
-	res.redirect('/');
-}
-module.exports = function (app, passport) {
-	// splash screen, login links
-	app.get('/', function (req, res, next) {
-		res.render('system/splash');
-	});
-	app.get('/login', function (req, res, next) {
-		res.render('system/login', { message: req.flash('loginMessage') });
-	});
-	app.get('/signup', function (req, res, next) {
-		res.render('system/signup', { message: req.flash('signupMessage') });
-	});
-	app.get('/navigation', isLoggedIn, function (req, res, next) {
-		res.render('system/nav', { user: req.user });
-	});
-	app.get('/logout', function (req, res, next) {
-		req.logout();
-		res.redirect('/');
-	});
-	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/navigation',
-		failureRedirect : '/signup',
-		failureFlash    : true
-	}));
-	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : '/navigation',
-		failureRedirect : '/login',
-		failureFlash    : true
-	}));
+	friends : [mongoose.Schema.Types.ObjectId]
+});
+
+userSchema.methods.generateHash = function (password) {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
+
+userSchema.methods.validPassword = function (password) {
+	return bcrypt.compareSync(password, this.local.password);
+};
+
+module.exports = mongoose.model('User', userSchema);

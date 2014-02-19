@@ -13,6 +13,8 @@ html(lang="de")
 		script(type="text/javascript", src="/jquery-2.0.3.min.js")
 	body
 		nav
+			#logout
+				a(href="/logout") #{user.local.name} abmelden
 			a(href="/zauber/liste") Zauberliste
 		form#nesp(action="/zauber/"+_Zauber._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")

@@ -11,6 +11,8 @@ html
 				width: 15em;
 			}
 	body
+		#logout
+			a(href="/logout") #{user.local.name} abmelden
 		form#new(action="/liturgie/"+_id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			fieldset

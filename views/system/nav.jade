@@ -3,18 +3,10 @@ html(lang="de")
 	head
 		meta(charset="utf-8")
 		title Startseite
-		style.
-			body {
-				font-family: Georgia, sans-serif;
-			}
-			ul {
-				list-style-type: none;
-			}
-			li {
-				padding-top: 0.2em;
-				padding-bottom: 0.2em;
-			}
+		link(rel="stylesheet", type="text/css", href="/system-upload.css")
 	body
+		#logout
+			a(href="/logout") #{user.local.name} abmelden
 		h1 Mach was in der Datenbank …
 		ul
 			li Talente

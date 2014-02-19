@@ -34,8 +34,9 @@ var express  = require('express')
   , passport = require('passport')
   , flash    = require('connect-flash')
   ;
+
 /**************************************
- *** Configure Express Application  ***
+ ***       Configure Express        ***
  **************************************/
 
 app.set('port', process.env.PORT || 8080);
@@ -72,6 +73,12 @@ app.use(function(error, req, res, next) {
 app.locals.pretty = true;
 
 /**************************************
+ ***       Configure Passport       ***
+ **************************************/
+
+require('./config/passport-db')(passport);
+
+/**************************************
  ***  Connect to and Watch MongoDB  ***
  **************************************/
 
@@ -93,6 +100,13 @@ process.on('SIGINT', function() {
  **************************************/
 
 require('./routes/system/login')(app, passport);
+// protect following paths
+app.all(/.+/, function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	res.redirect('/');
+});
 // Talente
 require('./routes/system/talent')(app);
 // Zauber + Varianten

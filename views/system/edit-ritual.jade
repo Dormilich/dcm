@@ -13,6 +13,8 @@ html(lang="de")
 		link(rel="stylesheet", type="text/css", href="/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
 	body
+		#logout
+			a(href="/logout") #{user.local.name} abmelden
 		form#nerit(action="/ritual/"+_ritual._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="put")
 			fieldset
