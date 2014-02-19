@@ -41,12 +41,12 @@ module.exports = function (app, passport) {
 		res.render('system/signup', { message: req.flash('signupMessage') });
 	});
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : "/navigation",
+		successRedirect : "/profil",
 		failureRedirect : "/signup",
 		failureFlash    : true
 	}));
 	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : "/navigation",
+		successRedirect : "/profil",
 		failureRedirect : "/login",
 		failureFlash    : true
 	}));
@@ -58,7 +58,26 @@ module.exports = function (app, passport) {
 	}));
 	
 	app.get('/auth/google/callback', passport.authenticate("google", {
-		successRedirect : "/navigation",
+		successRedirect : "/profil",
+		failureRedirect : "/"
+	}));
+	
+	// AUTHORIZE
+	
+	app.get('/connect/local', function(req, res) {
+		res.render('system/connect-local', { message: req.flash("loginMessage") });
+	});
+	app.post('/connect/local', passport.authenticate('local-signup', {
+		successRedirect : "profil",
+		failureRedirect : "/connect/local",
+		failureFlash    : true
+	}));
+	
+	app.get('/connect/google', passport.authorize("google", {
+		scope: ["profile", "email"] 
+	}));
+	app.get('/connect/google/callback', passport.authorize("google", {
+		successRedirect : "/profil",
 		failureRedirect : "/"
 	}));
 };

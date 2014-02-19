@@ -109,7 +109,10 @@ app.all(/.+/, function isLoggedIn(req, res, next) {
 	res.redirect('/');
 });
 app.get('/navigation', function (req, res, next) {
-	res.render('system/nav', { user: req.user });
+	res.render('system/nav');
+});
+app.get('/profil', function(req, res, next) {
+	res.render('system/profil', { _User: req.user });
 });
 // Talente
 require('./routes/system/talent')(app);
