@@ -13,11 +13,11 @@ html(lang="de")
 		.container
 			.col-sm-6.col-sm-offset-3
 				h1
-					span.fa.fa-sign-in &nbsp;
-					| Registrierung
+					span.fa.fa-user &nbsp;
+					| Lokales Konto hinzufügen
 				if (message.length > 0)
 					.alert.alert-danger=message
-				form(action="/signup", method="post")
+				form(action="/connect/local", method="post")
 					.form-group
 						label(for="un") Name
 						input#un(type="text", name="display_name").form-control
@@ -27,11 +27,9 @@ html(lang="de")
 					.form-group
 						label(for="pass") Passwort
 						input#pass(type="password", name="password", required).form-control
-					button(type="submit").btn.btn-warning.btn-lg registrieren
+					button(type="submit").btn.btn-warning.btn-lg hinzufügen
 				hr
-				p Bereits registriert?&nbsp;
-					a(href="/login") Anmelden!
 				p Zurück zum 
-					a(href="/") Anfang
+					a(href="/profil") Nutzerprofil
 			
 				

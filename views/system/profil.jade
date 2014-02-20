@@ -42,7 +42,23 @@ html(lang="de")
 							a(href="/connect/local").btn.btn-default Verbinden
 				.col-sm-6
 					.well
-						h3.text-primary OpenID
+						h3.text-warning OpenID
+						if (_User.openid.token)
+							p
+								strong ID
+								| : #{_User.openid.id}
+							p
+								strong Token
+								| : #{_User.openid.token}
+							p
+								strong E-Mail
+								| : #{_User.openid.email}
+							p
+								strong Name
+								| : #{_User.openid.name}
+							a(href="/unlink/openid").btn.btn-warning Lösen
+						else
+							a(href="/connect/openid").btn.btn-warning OpenID hinzufügen
 			.row
 				.col-sm-6
 					.well
@@ -64,7 +80,7 @@ html(lang="de")
 								| : #{_User.facebook.name}
 							a(href="/unlink/facebook").btn.btn-primary Lösen
 						else
-							a(href="/connect/facebook").btn.btn-primary Verbinden
+							a(href="/connect/facebook").btn.btn-primary Facebook hinzufügen
 				.col-sm-6
 					.well
 						h3.text-danger
@@ -85,4 +101,4 @@ html(lang="de")
 								| : #{_User.google.name}
 							a(href="/unlink/google").btn.btn-danger Lösen
 						else
-							a(href="/connect/google").btn.btn-danger Verbinden
+							a(href="/connect/google").btn.btn-danger Google hinzufügen

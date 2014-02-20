@@ -68,7 +68,7 @@ module.exports = function (app, passport) {
 		res.render('system/connect-local', { message: req.flash("loginMessage") });
 	});
 	app.post('/connect/local', passport.authenticate('local-signup', {
-		successRedirect : "profil",
+		successRedirect : "/profil",
 		failureRedirect : "/connect/local",
 		failureFlash    : true
 	}));
@@ -80,4 +80,23 @@ module.exports = function (app, passport) {
 		successRedirect : "/profil",
 		failureRedirect : "/"
 	}));
+	
+	// UNLINK
+	
+	app.get('/unlink/local', function(req, res) {
+		var user            = req.user;
+		user.local.email    = undefined;
+		user.local.password = undefined;
+		user.save(function(err) {
+			res.redirect('/profil');
+		});
+	});
+	
+	app.get('/unlink/google', function(req, res) {
+		var user          = req.user;
+		user.google.token = undefined;
+		user.save(function(err) {
+			res.redirect('/profil');
+		});
+	});
 };

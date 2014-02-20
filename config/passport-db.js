@@ -50,26 +50,39 @@ module.exports = function (passport) {
 			passReqToCallback : true
 		}, function(req, email, password, done) {
 			process.nextTick(function() {
-				User.findOne({ "local.email": email }, function(err, user) {
-					if (err) {
-						return done(err);
-					}
-					if (user) {
-						return done(null, false, req.flash("signupMessage", "Diese E-Mail existiert bereits"));
-					}
-					else {
-						var newUser            = new User();
-						newUser.local.email    = email;
-						newUser.local.password = newUser.generateHash(password);
-						newUser.local.name     = req.body.display_name || "Administrator";
-						newUser.isAdmin        = true;
-						
-						newUser.save(function(err) {
-							if (err) throw err;
-							return done(null, newUser);
-						});
-					}
-				});
+				if (!req.user) {
+					User.findOne({ "local.email": email }, function(err, user) {
+						if (err) {
+							return done(err);
+						}
+						if (user) {
+							return done(null, false, req.flash("signupMessage", "Diese E-Mail existiert bereits"));
+						}
+						else {
+							var newUser            = new User();
+							newUser.local.email    = email;
+							newUser.local.password = newUser.generateHash(password);
+							newUser.local.name     = req.body.display_name || "Administrator";
+							newUser.isAdmin        = true;
+
+							newUser.save(function(err) {
+								if (err) throw err;
+								return done(null, newUser);
+							});
+						}
+					});
+				}
+				else {
+					var user            = req.user;
+					user.local.email    = email;
+					user.local.password = user.generateHash(password);
+					user.local.name     = req.body.display_name || "Administrator";
+					
+					user.save(function(err) {
+						if (err) throw err;
+						return done(null, user);
+					});
+				}
 			});
 		})
 	);
@@ -111,11 +124,20 @@ module.exports = function (passport) {
 						return done(err);
 					}
 					if (user) {
-						return done(null, user);
+						if (!user.google.token) {
+							user.google.token = token;
+							user.google.name  = profile.displayName;
+							user.google.email = profile.emails[0].value;
+							
+							user.save(function(err) {
+								if (err) throw err;
+								return done(null, user);
+							});
+						}
 					}
 					else {
 						var newUser          = new User();
-						newUser.google.token = token
+						newUser.google.token = token;
 						newUser.google.id    = profile.id;
 						newUser.google.name  = profile.displayName;
 						newUser.google.email = profile.emails[0].value;
@@ -129,14 +151,14 @@ module.exports = function (passport) {
 			}
 			else {
 				var user          = req.user;
-				user.google.token = token
+				user.google.token = token;
 				user.google.id    = profile.id;
 				user.google.name  = profile.displayName;
 				user.google.email = profile.emails[0].value;
 
 				user.save(function(err) {
 					if (err) throw err;
-					return done(null, newUser);
+					return done(null, user);
 				});
 			}
 		});
