@@ -63,7 +63,7 @@ mixin talenttable(__titel, __data, __name)
 					td.mitte
 						select.unlock(size="1", name="Talente[#{__name}][#{key}][Lernstufe]", disabled=!__isAvailable)
 							each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
+								option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 					td.mitte
 						input.unlock(type="number", name="Talente[#{__name}][#{key}][wert]", min="-3", max="35", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
@@ -205,7 +205,7 @@ html(lang="de")
 								td.mitte
 									select.unlock(size="1", name="Talente[Nahkampf][#{key}][Lernstufe]", disabled=!__isAvailable)
 										each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-											option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
+											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 								td.mitte
 									input.nk-at.unlock(type="number", name="Talente[Nahkampf][#{key}][AT]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 								td.mitte
@@ -254,7 +254,7 @@ html(lang="de")
 								td.mitte
 									select.unlock(size="1", name="Talente[Fernkampf][#{key}][Lernstufe]", disabled=!__isAvailable)
 										each kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-											option(selected=__isAvailable ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
+											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === kat : __stdTalent.stufe === kat)= kat
 								td.mitte
 									input.unlock(type="number", name="Talente[Fernkampf][#{key}][AT]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 				a#jKOR
