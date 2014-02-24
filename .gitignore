@@ -10,10 +10,6 @@ comments.js
 # Node Modules
 node_modules/
 
-# jQuery and JS map files
-jquery*.js
-*.map
-
 # GitHub default .gitignore for Node projects
 lib-cov
 *.seed
