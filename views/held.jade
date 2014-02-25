@@ -104,7 +104,7 @@ mixin KampfTable(__liste, __name)
 						td
 					td= __talent.TaW
 
-!!! 5
+doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
@@ -319,6 +319,219 @@ html(lang="de")
 				+KampfTable(Talente.Nahkampf, 'Nahkampf')
 			.vor-nach.fl-rechts
 				+KampfTable(Talente.Fernkampf, 'Fernkampf')
+		.fl-clear
+		section.fl-clear
+			table.data-section.eigenschaften.mitte
+				caption INI & Kampfzauber
+				thead
+					tr
+						th
+							label(for="k_ini") INI
+						th
+							label(for="k_be") BE
+						th
+							input#k_axx(type="checkbox")
+							label(for="k_axx") Axxeleratus
+						th
+							input#k_att(type="checkbox")
+							label(for="k_att") Attributo
+				tbody
+					tr
+						td
+							input#k_ini(type="number", value=Kampfwerte.INI, step="1")
+						td
+							//input#k_be(type="number", value="0", min="0", step="1")
+							select#k_be(size="1")
+								option(value="0") ohne RG
+								option(value="-1") RG I
+								option(value="-1") RG II
+								option(value="-2") RG III
+						td
+						td
+							select#sel_att(size="1")
+								option MU
+								option IN
+								option KL
+								option CH
+								option FF
+								option GE
+								option KO
+								option(selected) KK
+							input#val_att(type="number", value=Attribute.KK.wert)
+			table.data-section.eigenschaften.mitte
+				caption Nahkampfwaffen
+				colgroup
+					col(style="width: 20%;")
+					col(style="width: 8em;")
+					col(span="6")
+					col(span="2", style="width: 7em;")
+				thead
+					tr
+						th Waffe
+						th Talent
+						th DK
+						th AT
+						th PA
+						th TP
+						th BF
+						th INI
+						td
+							select(size="1", title="Hauptwaffe")
+								option rechts
+								option BHK I
+								option BHK II
+						td
+							select(size="1", title="Nebenwaffe")
+								option(title="SF Linkhand") links
+								option BHK I
+								option BHK II
+				tbody
+					tr
+						td.links Helal al’Shamâl
+						td Hi / BE–4
+						td N
+						td 22
+						td 16
+						td(title="1W+6") 1W+7
+						td 1
+						td 0
+						td
+							input#k_hw(type="radio", name="haupthand")
+						td
+							input#k_nw(type="radio", name="nebenhand")
+					tr
+						td.links Krakonspieß
+						td In / BE–4
+						td NS
+						td 19
+						td 17
+						td(title="2W+3") 2W+4
+						td —
+						td 0
+						td
+							input#k_hw(type="radio", name="haupthand")
+						td
+							input#k_nw(type="radio", name="nebenhand")
+					tr
+						td.links Reitersäbel
+						td Sä / BE–2
+						td N
+						td 9
+						td 9
+						td(title="1W+4") 1W+5
+						td 3
+						td +1
+						td
+							input#k_hw(type="radio", name="haupthand")
+						td
+							input#k_nw(type="radio", name="nebenhand")
+			table.data-section.eigenschaften.mitte
+				caption Parierwaffen & Schilde
+				colgroup
+					col(style="width: 20%;")
+					col(style="width: 8em;")
+					col(span="6")
+					col(span="2", style="width: 7em;")
+				thead
+					tr
+						th Waffe
+						th Typ
+						td
+						td AT
+						td PA
+						td
+						th BF
+						th INI
+						td
+						td
+							select(size="1", title="Nebenwaffe")
+								option(title="SF Linkhand") links
+								option SK I
+								option SK II
+								option PW I
+								option PW II
+				tbody
+					tr
+						td.links Holzschild
+						td Schild
+						td
+						td –1
+						td +3
+						td
+						td 3
+						td –1
+						td
+						td
+							input(type="radio", name="nebenhand")
+					tr
+						td.links Vollmetallbuckler
+						td Schild / PW
+						td
+						td 0
+						td +2
+						td
+						td –2
+						td 0
+						td
+						td
+							input(type="radio", name="nebenhand")
+			table.data-section.eigenschaften.mitte
+				caption Fernkampfwaffen
+				colgroup
+					col(style="width: 20%;")
+					col(span="2", style="width: 8em;")
+					col(span="2")
+					col(style="width: 8em;")
+				thead
+					tr
+						th Waffe
+						th Talent
+						th FKW
+						th DK
+						th TP
+						th Ladezeit
+				tbody
+					tr
+						td.links Kriegsbogen
+						td Bo / BE–3
+						td 22
+						td 10 / 20 / 40 / 80 / 160
+						td 3 / 2 / 1 / 0 / 0
+						td 4 A
+			table.data-section.eigenschaften.mitte
+				caption Rüstungen
+				colgroup
+					col(style="width: 20%")
+					col(span="11")
+				thead
+					tr
+						th Name
+						th Ko
+						th Br
+						th Rü
+						th Ba
+						th LA
+						th RA
+						th LB
+						th RB
+						th RS
+						th BE
+						td
+				tbody
+					tr
+						td.links Håkons Kettenkombi
+						td 3
+						td 5
+						td 5
+						td 5
+						td 4
+						td 4
+						td 4
+						td 4
+						td 4,5
+						td 1,35
+						td
+							input(type="radio")
 		section.fl-clear
 			.vor-nach.fl-links
 				if Talente.Gaben.length

@@ -82,6 +82,73 @@ heldZauberSchema.virtual('Varianten').get(function() {
 	});
 });
 
+var heldWaffenNKSchema = new Schema({
+	Name:    String,
+	_talent: IDREF,
+	spez:  { type: Boolean, default: false },
+	BE:    { type: Number,  max: 0 },
+	DK:      String,
+	BF:      Number,
+	INI:     Number,
+	WM: {
+		AT:  Number,
+		PA:  Number
+	},
+	TP: {
+		roll:    String,
+		rollMod: Number,
+		kk:    { type: Number, min: 0 },
+		kkMod: { type: Number, min: 0 }
+	}
+});
+
+var heldWaffenLHSchema = new Schema({
+	Name:   String,
+	BF:     Number,
+	INI:    Number,
+	WM: {
+		AT: Number,
+		PA: Number
+	},
+	isSchild:    Boolean,
+	sk1: { type: Boolean, default: false },
+	sk2: { type: Boolean, default: false },
+	pw1: { type: Boolean, default: false },
+	pw2: { type: Boolean, default: false }
+});
+
+var heldWaffenFKSchema = new Schema({
+	Name:    String,
+	_talent: IDREF,
+	spez:  { type: Boolean, default: false },
+	BE:    { type: Number,  max: 0 },
+	WM: {
+		AT:  Number
+	},
+	TP: {
+		roll:    String,
+		rollMod: Number,
+		kk:    { type: Number, min: 0 },
+		kkMod: { type: Number, min: 0 },
+		dk:      String,
+		dkMod:   String
+	}
+});
+
+var heldRüstungSchema = new Schema({
+	Name: String,
+	Ko: { type: Number, min: 0 },
+	Br: { type: Number, min: 0 },
+	Rü: { type: Number, min: 0 },
+	Ba: { type: Number, min: 0 },
+	LA: { type: Number, min: 0 },
+	RA: { type: Number, min: 0 },
+	LB: { type: Number, min: 0 },
+	RB: { type: Number, min: 0 },
+	BE: { type: Number, min: 0 },
+	RS: { type: Number, min: 0 }
+});
+
 var heldSchema = new Schema({
 	disabled: { type: Boolean, default: false },
 	modified: { type: Date,    default: new Date() },
@@ -239,6 +306,16 @@ var heldSchema = new Schema({
 			tradition:   String // Ork, Wdm, Haz, Tul
 		}],
 		Rituale: [{ type: IDREF, ref: 'Ritual' }]
+	},
+	Ausrüstung : {
+		Nahkampf  : [heldWaffenNKSchema],
+		LinkeHand : [heldWaffenLHSchema],
+		Rüstung   : [heldRüstungSchema],
+		Rucksack  : [{
+			Name  : { type: String, required: true },
+			Anzahl: { type: Number, min: 0, default: 1 },
+			Kommentar: String
+		}]
 	}
 });
 heldSchema.virtual('Basiswerte.LeP').get(function() {

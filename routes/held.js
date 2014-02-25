@@ -162,27 +162,8 @@ module.exports = function (app) {
 		});
 	});
 	/**********************************
-	 ***     Character editing      ***
-	 **********************************
-	// edit character sheet sections
-	app.get('/:section/:mongoid', function(req, res, next) {
-		Held
-			.findById(req.id)
-			.lean()
-			.exec(function(err, obj) {
-				if (err) next(err);
-				obj._data = data[req.section];
-				res.render('edit-held/' + req.section, obj);
-			})
-		;
-	});
-	// save changes
-	app.put('/:section/:mongoid',  function (req, res, next) {
-		req.body.modified = new Date();
-		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/held/' + req.id);
-		});
-	});//*/
+	 ***         Equipment          ***
+	 **********************************/
+	
 
 };
