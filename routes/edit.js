@@ -22,15 +22,16 @@
  * THE SOFTWARE.
  */
 
-var path    = require('path')
-  , async   = require('async')
-  , appRoot = path.dirname(require.main.filename)
-  , data    = require( path.join(appRoot, 'data/dsa') )
-  , Held     = require( path.join(appRoot, 'models/person') )
-  , Talent   = require( path.join(appRoot, 'models/talent') )
-  , Zauber   = require( path.join(appRoot, 'models/zauber') )
-  , Ritual   = require( path.join(appRoot, 'models/ritual') )
-  , Liturgie = require( path.join(appRoot, 'models/liturgie') )
+var path     = require('path')
+  , fs       = require('fs')
+  , async    = require('async')
+  , appRoot  = path.dirname(require.main.filename)
+  , data     = require( realpath('data/dsa') )
+  , Held     = require( realpath('models/person') )
+  , Talent   = require( realpath('models/talent') )
+  , Zauber   = require( realpath('models/zauber') )
+  , Ritual   = require( realpath('models/ritual') )
+  , Liturgie = require( realpath('models/liturgie') )
   ;
 
 function getTalentType(tname) {
@@ -47,24 +48,27 @@ function getTalentType(tname) {
 	};
 }
 
+function realpath(relativePath) {
+	return path.join(appRoot, relativePath);
+}
+
 module.exports = function (app) {
+	var editDirFileNames = fs.readdirSync( realpath('views/edit-held') ).map(function(item) {
+		return item.split('.')[0];
+	});
 	// pre-route request modifications
+	app.param('section', function(req, res, next, id) {
+		if (editDirFileNames.indexOf(id) < 0) {
+			return next('route');
+		}
+		req.section = id;
+		next();
+	});
 	app.param('mongoid', function (req, res, next, id) {
 		if (!/^[0-9a-fA-F]+$/.test(id)) {
 			return next('route');
 		}
 		req.id = id;
-		next();
-	});
-	app.param('section', function(req, res, next, id) {
-		var sections = [
-			"ap", "attribute", "basiswerte", "char", "generierung", "person", 
-			"procon", "sf", "talente", "zauber", "rituale", "liturgien"
-		];
-		if (sections.indexOf(id) < 0) {
-			return next('route');
-		}
-		req.section = id;
 		next();
 	});
 	
@@ -232,6 +236,24 @@ module.exports = function (app) {
 			if (err) return next(err);
 			res.render('edit-held/liturgien', obj);
 		})
+	});
+	// Character's weapons
+	app.get('/waffen/:mongoid', function(req, res, next) {
+		async.parallel({
+			_Nahkampf:     getTalentType("Nahkampf"),
+			_Fernkampf:    getTalentType("Fernkampf"),
+			_held: function (cb) {// _chardata
+				Held.findById(req.id, function(err, doc) {
+					if (err) return cb(err);
+					cb(null, doc);
+				});
+			}
+		},
+		function (err, obj) {
+			if (err) return next(err); 
+		//	obj._data = data.waffen;
+			res.render('edit-held/waffen', obj);
+		});
 	});
 	// edit other character sheet sections
 	app.get('/:section/:mongoid', function(req, res, next) {

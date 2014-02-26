@@ -32,7 +32,10 @@ function lernstufeValidator(val) {
 	return (["A+", "A", "B", "C", "D", "E", "F", "G", "H"].indexOf(val) > -1);
 }
 
-var heldTalentSchema = new Schema({
+/*************************************
+ ***            Talente            ***
+ *************************************/
+var TalentSchema = new Schema({
 	_talent:   { type: IDREF,  ref: 'Talent' },
 	wert:      { type: Number, min: -3, max: 35 },
 	Lernstufe: { type: String, validator: lernstufeValidator },
@@ -42,7 +45,7 @@ var heldTalentSchema = new Schema({
 	PA:   { type: Number, min: 0 },
 	Komplexität: { type: Number, min: 5, max: 30 }
 });
-heldTalentSchema.virtual('TaW').get(function() {
+TalentSchema.virtual('TaW').get(function() {
 	if (typeof this.AT === "number") {
 		if (typeof this.PA === "number") {
 			return this.AT + this.PA;
@@ -56,18 +59,21 @@ heldTalentSchema.virtual('TaW').get(function() {
 		return "—";
 	}
 });
-heldTalentSchema.virtual('TaW').set(function(value) {
+TalentSchema.virtual('TaW').set(function(value) {
 	this.wert = value;
 });
 
-var heldZauberSchema = new Schema({
+/*************************************
+ ***            Zauber             ***
+ *************************************/
+var ZauberSchema = new Schema({
 	_zauber:        { type: IDREF, ref: 'Zauber', required: true },
 	ZfW:            { type: Number, min: 0, max: 35, default: 0 },
 	Lernstufe:      { type: String, validator: lernstufeValidator },
 	Spezialisierung: [String],
 	Repräsentation: { type: String, required: true }
 });
-heldZauberSchema.virtual('Varianten').get(function() {
+ZauberSchema.virtual('Varianten').get(function() {
 	var _variants = this._zauber.Varianten
 	  , _rep      = this.Repräsentation
 	  ;
@@ -82,7 +88,10 @@ heldZauberSchema.virtual('Varianten').get(function() {
 	});
 });
 
-var heldWaffenNKSchema = new Schema({
+/*************************************
+ ***        Nahkampfwaffen         ***
+ *************************************/
+var WaffenNKSchema = new Schema({
 	Name:    String,
 	_talent: IDREF,
 	spez:  { type: Boolean, default: false },
@@ -102,23 +111,26 @@ var heldWaffenNKSchema = new Schema({
 	}
 });
 
-var heldWaffenLHSchema = new Schema({
+/*************************************
+ ***    Schilde & Parierwaffen     ***
+ *************************************/
+var WaffenLHSchema = new Schema({
 	Name:   String,
+	typ:    String,
 	BF:     Number,
 	INI:    Number,
 	WM: {
 		AT: Number,
 		PA: Number
-	},
-	isSchild:    Boolean,
-	sk1: { type: Boolean, default: false },
-	sk2: { type: Boolean, default: false },
-	pw1: { type: Boolean, default: false },
-	pw2: { type: Boolean, default: false }
+	}
 });
 
-var heldWaffenFKSchema = new Schema({
+/*************************************
+ ***        Fernkampfwaffen        ***
+ *************************************/
+var WaffenFKSchema = new Schema({
 	Name:    String,
+	Laden:   String,
 	_talent: IDREF,
 	spez:  { type: Boolean, default: false },
 	BE:    { type: Number,  max: 0 },
@@ -130,12 +142,16 @@ var heldWaffenFKSchema = new Schema({
 		rollMod: Number,
 		kk:    { type: Number, min: 0 },
 		kkMod: { type: Number, min: 0 },
+		kkAtt: { type: String, default: "KK" },
 		dk:      String,
 		dkMod:   String
 	}
 });
 
-var heldRüstungSchema = new Schema({
+/*************************************
+ ***           Rüstungen           ***
+ *************************************/
+var RüstungSchema = new Schema({
 	Name: String,
 	Ko: { type: Number, min: 0 },
 	Br: { type: Number, min: 0 },
@@ -149,6 +165,9 @@ var heldRüstungSchema = new Schema({
 	RS: { type: Number, min: 0 }
 });
 
+/*************************************
+ ***             Held              ***
+ *************************************/
 var heldSchema = new Schema({
 	disabled: { type: Boolean, default: false },
 	modified: { type: Date,    default: new Date() },
@@ -274,23 +293,23 @@ var heldSchema = new Schema({
 		frei: { type: Number, default: 0 }
 	},
 	Talente: {
-		Nahkampf:     [heldTalentSchema],
-		Fernkampf:    [heldTalentSchema],
-		körperlich:   [heldTalentSchema],
-		Gesellschaft: [heldTalentSchema],
-		Natur:        [heldTalentSchema],
-		Wissen:       [heldTalentSchema],
-		Handwerk:     [heldTalentSchema],
-		Sprachen:     [heldTalentSchema],
-		Schriften:    [heldTalentSchema],
-		Gaben:        [heldTalentSchema]
+		Nahkampf:     [TalentSchema],
+		Fernkampf:    [TalentSchema],
+		körperlich:   [TalentSchema],
+		Gesellschaft: [TalentSchema],
+		Natur:        [TalentSchema],
+		Wissen:       [TalentSchema],
+		Handwerk:     [TalentSchema],
+		Sprachen:     [TalentSchema],
+		Schriften:    [TalentSchema],
+		Gaben:        [TalentSchema]
 	},
 	Weihe : {
-		Liturgiekenntnis: [heldTalentSchema],
+		Liturgiekenntnis: [TalentSchema],
 		Liturgien: [{ type: IDREF, ref: 'Liturgie' }]
 	},
 	Magie : {
-		Zauber: [heldZauberSchema],
+		Zauber: [ZauberSchema],
 		Repräsentation: [{
 			short: { type: String, required: true },
 			long:  { type: String, required: true }
@@ -308,9 +327,10 @@ var heldSchema = new Schema({
 		Rituale: [{ type: IDREF, ref: 'Ritual' }]
 	},
 	Ausrüstung : {
-		Nahkampf  : [heldWaffenNKSchema],
-		LinkeHand : [heldWaffenLHSchema],
-		Rüstung   : [heldRüstungSchema],
+		Nahkampf  : [WaffenNKSchema],
+		LinkeHand : [WaffenLHSchema],
+		Fernkampf : [WaffenFKSchema],
+		Rüstung   : [RüstungSchema],
 		Rucksack  : [{
 			Name  : { type: String, required: true },
 			Anzahl: { type: Number, min: 0, default: 1 },
@@ -411,6 +431,9 @@ heldSchema.virtual('Kampfwerte.WS').get(function() {
 	return Math.round( KO/2 + mod );
 });
 
+/*************************************
+ ***           DB-Events           ***
+ *************************************/
 heldSchema.post('update', function (doc) {
   console.log('%s has been updated', doc.Person.Name);
 });
@@ -418,4 +441,7 @@ heldSchema.post('save', function (doc) {
   console.log('%s has been saved', doc.Person.Name);
 });
 
+/*************************************
+ ***            Export             ***
+ *************************************/
 module.exports = mongoose.model('Held', heldSchema);

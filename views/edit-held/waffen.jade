@@ -1,0 +1,215 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title Waffenschmiede
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		style.
+			nav a {
+				width: 25%;
+			}
+			.selection td:first-child {
+				width: 2em;
+				padding: 0;
+				text-align: center;
+			}
+			input[type='number'] {
+				width: 3em;
+				text-align: center;
+			}
+			table {
+				table-layout: auto;
+			}
+			th {
+				vertical-align: middle !important;
+			}
+	body
+		nav
+			ul#main-menu
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_held._id, title="Heldenbogen")= "⇒ "+_held.Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_held._id)= _held.Person.Name
+		main
+			form(action="/waffen/"+_held._id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+
+				table#nkw.data-section.eigenschaften.mitte.selection
+					caption Nahkampfwaffen
+					colgroup
+						col(span="3")
+						col(style="width: 7em;")
+						col(style="width: 14em;")
+						col(span="2", style="width: 7em;")
+					thead
+						tr
+							td(rowspan="2")
+							th(rowspan="2") Name
+							th(rowspan="2") Talent
+							th DK
+							th WM
+							th BF
+							th INI
+						tr
+							th eBE
+							th TP
+							th(colspan="2") TP/KK
+					tfoot
+						tr
+							td
+							td(colspan="6")
+								button#addNKW(type="button") mehr Waffen !!!
+					tbody
+						tr
+							td(rowspan="2")
+								input.isactive(type="checkbox", checked)
+							td(rowspan="2")
+								input(type="text", name="Ausrüstung.Nahkampf[][Name]", style="width: 100%;")
+							td
+								select(size="1", name="Ausrüstung.Nahkampf[][_talent]")
+									each __nk in _Nahkampf
+										option(value=__nk._id)=__nk.name
+							td
+								input.mitte(type="text", name="[DK]", value="N", placeholder="HNSP", size="4", maxlength="4")
+							td
+								input(type="number", name="Ausrüstung.Nahkampf[][WM][AT]", step="1", min="-5", max="5", value="0")
+								| &nbsp;/
+								input(type="number", name="Ausrüstung.Nahkampf[][WM][PA]", step="1", min="-5", max="5", value="0")
+							td
+								input#bf(type="number", name="Ausrüstung.Nahkampf[][BF]", step="1", value="2")
+							td
+								input(type="number", name="Ausrüstung.Nahkampf[][INI]", step="1", value="0")
+						tr
+							td
+								input#spez(type="checkbox", name="Ausrüstung.Nahkampf[][spez]", value="1")
+								label(for="spez") mit Spezialisierung
+							td 
+								input(type="number", name="Ausrüstung.Nahkampf[][BE]", max="0", step="1", value="-2")
+							td
+								input(type="text", name="Ausrüstung.Nahkampf[][TP][roll]", value="1W6", size="3", maxlength="5", placeholder="n × W6", title="Anzahl Würfel")
+								| &nbsp;+
+								input(type="number", name="Ausrüstung.Nahkampf[][TP][rollMod]", step="1", value="2")
+							td(colspan="2")
+								input(type="number", name="Ausrüstung.Nahkampf[][TP][kk]", step="1", min="5", value="11")
+								| &nbsp;/
+								input(type="number", name="Ausrüstung.Nahkampf[][TP][kkMod]", step="1", min="1", max="10", value="3")
+				
+				table#pws.data-section.eigenschaften.mitte.selection
+					caption Parierwaffen & Schilde
+					colgroup
+						col(span="3")
+						col(style="width: 7em;")
+						col(style="width: 14em;")
+						col(span="2", style="width: 7em;")
+					thead
+						tr
+							td
+							th Name
+							th Talent
+							td
+							th WM
+							th BF
+							th INI
+					tfoot
+						tr
+							td
+							td(colspan="6")
+								button#addPWS(type="button") noch mehr Waffen !!!
+					tbody
+						tr
+							td
+								input.isactive(type="checkbox", checked)
+							td
+								input(type="text", name="Ausrüstung.LinkeHand[][Name]", style="width: 100%;")
+							td
+								select(size="1", name="Ausrüstung.LinkeHand[][typ]")
+									option Schild
+									option Parierwaffe
+									option Schild / PW
+							td
+							td
+								input(type="number", name="Ausrüstung.LinkeHand[][WM][AT]", step="1", min="-10", max="3", value="-1")
+								| &nbsp;/
+								input(type="number", name="Ausrüstung.LinkeHand[][WM][PA]", step="1", min="0", max="5", value="2")
+							td
+								input#bf(type="number", name="Ausrüstung.LinkeHand[][BF]", step="1", value="2")
+							td
+								input(type="number", name="Ausrüstung.LinkeHand[][INI]", step="1", value="0")
+
+				table#fkw.data-section.eigenschaften.mitte.selection
+					caption Fernkampfwaffen
+					colgroup
+						col(span="4")
+						col(style="width: 21em;")
+						col(style="width: 14em;")
+					thead
+						tr
+							td(rowspan="2")
+							th(rowspan="2") Name
+							th(rowspan="2") Talent
+							th BE
+							th DK
+							th(rowspan="2", title="nur bei Wurfwaffen und Blasrohren") TP/KK
+						tr
+							th Ladezeit
+							th TP+
+
+					tfoot
+						tr
+							td
+							td(colspan="5")
+								button#addFKW(type="button") viel mehr Waffen !!!
+					tbody
+						tr
+							td(rowspan="2")
+								input.isactive(type="checkbox", checked)
+							td(rowspan="2")
+								input(type="text", name="Ausrüstung.Fernkampf[][Name]", style="width: 100%;")
+							td
+								select(size="1", name="Ausrüstung.Fernkampf[][_talent]")
+									each __fk in _Fernkampf
+										option(value=__fk._id)=__fk.name
+							td 
+								input(type="number", name="Ausrüstung.Fernkampf[][BE]", max="0", step="1", value="-2")
+							td
+								input(type="number", min="0", step="1", value="2")
+								| &nbsp;/
+								input(type="number", min="0", step="1", value="5")
+								| &nbsp;/
+								input(type="number", min="0", step="1", value="10")
+								| &nbsp;/
+								input(type="number", min="0", step="1", value="20")
+								| &nbsp;/
+								input(type="number", min="0", step="1", value="40")
+							td(rowspan="2")
+								input.wurf(type="checkbox")
+								select(size="1", name="Ausrüstung.Fernkampf[][TP][kkAtt]", disabled)
+									option KO
+									option(selected) KK
+								input(type="number", name="Ausrüstung.Fernkampf[][TP][kk]", step="1", min="5", value="11", disabled)
+								| &nbsp;/
+								input(type="number", name="Ausrüstung.Fernkampf[][TP][kkMod]", step="1", min="1", max="10", value="3", disabled)
+						tr
+							td
+								input#spez(type="checkbox", name="Ausrüstung.Fernkampf[][spez]", value="1")
+								label(for="spez") mit Spezialisierung
+							td
+								input.mitte(type="text", name="Ausrüstung.Fernkampf[][Laden]", placeholder="Ladezeit", value="4 A", size="5")
+							td
+								input(type="number", min="-1", max="5", step="1", value="0", title="–1 ⇒ unterhalb Mindestreichweite")
+								| &nbsp;/
+								input(type="number", min="-5", max="5", step="1", value="0")
+								| &nbsp;/
+								input(type="number", min="-5", max="5", step="1", value="0")
+								| &nbsp;/
+								input(type="number", min="-5", max="5", step="1", value="0")
+								| &nbsp;/
+								input(type="number", min="-5", max="5", step="1", value="0")
+				.mitte
+					button(type="submit", disabled) speichern

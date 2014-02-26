@@ -56,6 +56,9 @@
 	clear: both;
 }
 /* element styling */
+*[title] {
+	cursor: help;
+}
 body {
 	padding: 0;
 	padding-bottom: 3em;

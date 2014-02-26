@@ -133,6 +133,8 @@ html(lang="de")
 						li
 							a(href="#sf") Sonderfertigkeiten
 						li
+							a(href="#waf") Waffen &amp; Rüstungen
+						li
 							a(href="#taw") Talentwerte
 						li 
 							a(href="#t_kam") – Kampf-Talente
@@ -148,6 +150,8 @@ html(lang="de")
 							a(href="#t_han") – Handwerkstalente
 						li 
 							a(href="#t_spr") – Sprachen &amp; Schriften
+						li
+							a(href="#eqp") Ausrüstung
 						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
 							li
 								a(href="/magie/"+_id) ► Magiebogen
@@ -178,6 +182,10 @@ html(lang="de")
 							a(href="/sf/"+_id) Sonderfertigkeiten
 						li
 							a(href="/talente/"+_id) Talente
+						li
+							a(href="/waffen/"+_id) Waffen
+						li
+							a(id="/rüstungen/"+_id) Rüstungen
 		section(style="clear: both;")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
@@ -313,13 +321,7 @@ html(lang="de")
 				+SFTableSection(SF.Manöver, 'Waffenlose Manöver')
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-		a#taw
-		section.fl-clear#t_kam
-			.vor-nach.fl-links
-				+KampfTable(Talente.Nahkampf, 'Nahkampf')
-			.vor-nach.fl-rechts
-				+KampfTable(Talente.Fernkampf, 'Fernkampf')
-		.fl-clear
+		a#waf
 		section.fl-clear
 			table.data-section.eigenschaften.mitte
 				caption INI & Kampfzauber
@@ -506,16 +508,16 @@ html(lang="de")
 				thead
 					tr
 						th Name
-						th Ko
-						th Br
-						th Rü
-						th Ba
-						th LA
-						th RA
-						th LB
-						th RB
-						th RS
-						th BE
+						th(title="Kopf") Ko
+						th(title="Brust") Br
+						th(title="Rücken") Rü
+						th(title="Bauch") Ba
+						th(title="Linker Arm") LA
+						th(title="Rechter Arm") RA
+						th(title="Linkes Bein") LB
+						th(title="Rechtes Bein") RB
+						th(title="Rüstungsschutz") RS
+						th(title="Behinderung (ohne RG)") BE
 						td
 				tbody
 					tr
@@ -532,6 +534,12 @@ html(lang="de")
 						td 1,35
 						td
 							input(type="radio")
+		a#taw
+		section.fl-clear#t_kam
+			.vor-nach.fl-links
+				+KampfTable(Talente.Nahkampf, 'Nahkampf')
+			.vor-nach.fl-rechts
+				+KampfTable(Talente.Fernkampf, 'Fernkampf')
 		section.fl-clear
 			.vor-nach.fl-links
 				if Talente.Gaben.length
