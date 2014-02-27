@@ -12,6 +12,18 @@ mixin print(__data)
 -		}
 -		return false;
 -	}
+- function getTalent(__list, __waffe) { 
+- 	var l = __list ? __list.length : 0; 
+- 	while (l--) { 
+- 		if (__list[l].name === __waffe.talent) {
+- 			return __list[l];
+- 		}
+- 	} 
+- 	return { wert: 0, AT: 0, PA: 0 }; 
+- }
+- function beautifyNumber(num) {
+- 	return (num > 0 ? "+" : num < 0 ? "–" : "") + Math.abs(num);
+- }
 
 mixin SFTableSection(__liste, __name)
 	if __liste.length
@@ -360,146 +372,120 @@ html(lang="de")
 								option KO
 								option(selected) KK
 							input#val_att(type="number", value=Attribute.KK.wert)
-			table.data-section.eigenschaften.mitte
-				caption Nahkampfwaffen
-				colgroup
-					col(style="width: 20%;")
-					col(style="width: 8em;")
-					col(span="6")
-					col(span="2", style="width: 7em;")
-				thead
-					tr
-						th Waffe
-						th Talent
-						th DK
-						th AT
-						th PA
-						th TP
-						th BF
-						th INI
-						td
-							select(size="1", title="Hauptwaffe")
-								option rechts
-								option BHK I
-								option BHK II
-						td
-							select(size="1", title="Nebenwaffe")
-								option(title="SF Linkhand") links
-								option BHK I
-								option BHK II
-				tbody
-					tr
-						td.links Helal al’Shamâl
-						td Hi / BE–4
-						td N
-						td 22
-						td 16
-						td(title="1W+6") 1W+7
-						td 1
-						td 0
-						td
-							input#k_hw(type="radio", name="haupthand")
-						td
-							input#k_nw(type="radio", name="nebenhand")
-					tr
-						td.links Krakonspieß
-						td In / BE–4
-						td NS
-						td 19
-						td 17
-						td(title="2W+3") 2W+4
-						td —
-						td 0
-						td
-							input#k_hw(type="radio", name="haupthand")
-						td
-							input#k_nw(type="radio", name="nebenhand")
-					tr
-						td.links Reitersäbel
-						td Sä / BE–2
-						td N
-						td 9
-						td 9
-						td(title="1W+4") 1W+5
-						td 3
-						td +1
-						td
-							input#k_hw(type="radio", name="haupthand")
-						td
-							input#k_nw(type="radio", name="nebenhand")
-			table.data-section.eigenschaften.mitte
-				caption Parierwaffen & Schilde
-				colgroup
-					col(style="width: 20%;")
-					col(style="width: 8em;")
-					col(span="6")
-					col(span="2", style="width: 7em;")
-				thead
-					tr
-						th Waffe
-						th Typ
-						td
-						td AT
-						td PA
-						td
-						th BF
-						th INI
-						td
-						td
-							select(size="1", title="Nebenwaffe")
-								option(title="SF Linkhand") links
-								option SK I
-								option SK II
-								option PW I
-								option PW II
-				tbody
-					tr
-						td.links Holzschild
-						td Schild
-						td
-						td –1
-						td +3
-						td
-						td 3
-						td –1
-						td
-						td
-							input(type="radio", name="nebenhand")
-					tr
-						td.links Vollmetallbuckler
-						td Schild / PW
-						td
-						td 0
-						td +2
-						td
-						td –2
-						td 0
-						td
-						td
-							input(type="radio", name="nebenhand")
-			table.data-section.eigenschaften.mitte
-				caption Fernkampfwaffen
-				colgroup
-					col(style="width: 20%;")
-					col(span="2", style="width: 8em;")
-					col(span="2")
-					col(style="width: 8em;")
-				thead
-					tr
-						th Waffe
-						th Talent
-						th FKW
-						th DK
-						th TP
-						th Ladezeit
-				tbody
-					tr
-						td.links Kriegsbogen
-						td Bo / BE–3
-						td 22
-						td 10 / 20 / 40 / 80 / 160
-						td 3 / 2 / 1 / 0 / 0
-						td 4 A
+			if Ausrüstung && Ausrüstung.Nahkampf && Ausrüstung.Nahkampf.length > 0
+				table.data-section.eigenschaften.mitte
+					caption Nahkampfwaffen
+					colgroup
+						col(style="width: 20%;")
+						col(style="width: 8em;")
+						col(span="6")
+						col(span="2", style="width: 7em;")
+					thead
+						tr
+							th Waffe
+							th eBE
+							th DK
+							th AT
+							th PA
+							th TP
+							th BF
+							th INI
+							td
+								select(size="1", title="Hauptwaffe")
+									option rechts
+									option BHK I
+									option BHK II
+							td
+								select(size="1", title="Nebenwaffe")
+									option(title="SF Linkhand") links
+									option BHK I
+									option BHK II
+					tbody
+						each __waffe in Ausrüstung.Nahkampf
+							- var __talent = getTalent(Talente.Nahkampf, __waffe);
+							tr
+								td.links=__waffe.Name
+								td(title=__waffe.talent)="BE"+__waffe.BE
+								td=__waffe.DK
+								td=Kampfwerte.AT+__talent.AT+__waffe.WM.AT+(__waffe.spez?1:0)
+								td=Kampfwerte.PA+__talent.PA+__waffe.WM.PA+(__waffe.spez?1:0)
+								td(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
+								td=__waffe.BF
+								td=beautifyNumber(__waffe.INI)
+								td
+									input#k_hw(type="radio", name="haupthand")
+								td
+									input#k_nw(type="radio", name="nebenhand")
+			if Ausrüstung && Ausrüstung.LinkeHand && Ausrüstung.LinkeHand.length > 0
+				table.data-section.eigenschaften.mitte
+					caption Parierwaffen & Schilde
+					colgroup
+						col(style="width: 20%;")
+						col(style="width: 8em;")
+						col(span="6")
+						col(span="2", style="width: 7em;")
+					thead
+						tr
+							th Waffe
+							th Typ
+							td
+							td AT
+							td PA
+							td
+							th BF
+							th INI
+							td
+								button#unselectLH(type="button", style="text-decoration: line-through;") &nbsp; Waffe &nbsp;
+							td
+								select(size="1", title="Nebenwaffe")
+									option(title="SF Linkhand") links
+									option SK I
+									option SK II
+									option PW I
+									option PW II
+					tbody
+						each __waffe in Ausrüstung.LinkeHand
+							tr
+								td.links=__waffe.Name
+								td=__waffe.talent
+								td
+								td(data-at=__waffe.WM.AT)=beautifyNumber(__waffe.WM.AT)
+								td(data-pa=__waffe.WM.PA)=beautifyNumber(__waffe.WM.PA)
+								td
+								td=__waffe.BF
+								td=beautifyNumber(__waffe.INI)
+								td
+								td
+									input(type="radio", name="nebenhand")
+			if Ausrüstung && Ausrüstung.Fernkampf && Ausrüstung.Fernkampf.length > 0
+				table.data-section.eigenschaften.mitte
+					caption Fernkampfwaffen
+					colgroup
+						col(style="width: 20%;")
+						col(span="3", style="width: 8em;")
+						col(span="2")
+						col(style="width: 8em;")
+					thead
+						tr
+							th Waffe
+							th Talent
+							th FKW
+							th TP
+							th DK
+							th TP
+							th Ladezeit
+					tbody
+						each __waffe in Ausrüstung.Fernkampf
+							- var __talent = getTalent(Talente.Fernkampf, __waffe);
+							- var __tpPlus = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod) : 0
+							tr
+								td.links=__waffe.Name
+								td(title=__waffe.talent)="BE"+__waffe.BE
+								td=Kampfwerte.FK+__talent.AT+__waffe.WM.AT+(__waffe.spez?2:0)
+								td=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
+								td=__waffe.TP.dk.join(" / ")
+								td=__waffe.TP.dkMod.join(" / ")
+								td=__waffe.Laden
 			table.data-section.eigenschaften.mitte
 				caption Rüstungen
 				colgroup

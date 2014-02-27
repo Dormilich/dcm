@@ -93,9 +93,9 @@ ZauberSchema.virtual('Varianten').get(function() {
  *************************************/
 var WaffenNKSchema = new Schema({
 	Name:    String,
-	_talent: IDREF,
-	spez:  { type: Boolean, default: false },
-	BE:    { type: Number,  max: 0 },
+	talent:  String,
+	spez:    { type: Boolean, default: false },
+	BE:      { type: Number,  max: 0 },
 	DK:      String,
 	BF:      Number,
 	INI:     Number,
@@ -116,7 +116,7 @@ var WaffenNKSchema = new Schema({
  *************************************/
 var WaffenLHSchema = new Schema({
 	Name:   String,
-	typ:    String,
+	talent: String,
 	BF:     Number,
 	INI:    Number,
 	WM: {
@@ -131,9 +131,9 @@ var WaffenLHSchema = new Schema({
 var WaffenFKSchema = new Schema({
 	Name:    String,
 	Laden:   String,
-	_talent: IDREF,
-	spez:  { type: Boolean, default: false },
-	BE:    { type: Number,  max: 0 },
+	talent:  String,
+	spez:    { type: Boolean, default: false },
+	BE:      { type: Number,  max: 0 },
 	WM: {
 		AT:  Number
 	},
@@ -143,8 +143,8 @@ var WaffenFKSchema = new Schema({
 		kk:    { type: Number, min: 0 },
 		kkMod: { type: Number, min: 0 },
 		kkAtt: { type: String, default: "KK" },
-		dk:      String,
-		dkMod:   String
+		dk:      [Number],
+		dkMod:   [String]
 	}
 });
 
