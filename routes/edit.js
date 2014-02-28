@@ -255,6 +255,21 @@ module.exports = function (app) {
 			res.render('edit-held/waffen', obj);
 		});
 	});
+	app.delete('/waffen/:typ/:mongoid', function(req, res, next) {
+		Held.findById(req.id, function(err, doc) {
+			if (err) return next(err);
+			if (doc && doc.Ausrüstung[req.params.typ]) {
+				doc.Ausrüstung[req.params.typ] = undefined;
+				doc.save(function(err, doc) {
+					if (err) return next(err);
+					res.redirect('/held/' + req.id);
+				});
+			}
+			else {
+				res.redirect('/waffen/' + req.id);
+			}
+		});
+	});
 	// edit other character sheet sections
 	app.get('/:section/:mongoid', function(req, res, next) {
 		Held
