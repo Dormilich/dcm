@@ -197,7 +197,7 @@ html(lang="de")
 						li
 							a(href="/waffen/"+_id) Waffen
 						li
-							a(id="/rüstungen/"+_id) Rüstungen
+							a(href="/kleidung/"+_id) Rüstungen
 		section(style="clear: both;")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
@@ -486,40 +486,42 @@ html(lang="de")
 								td=__waffe.TP.dk.join(" / ")
 								td=__waffe.TP.dkMod.join(" / ")
 								td=__waffe.Laden
-			table.data-section.eigenschaften.mitte
-				caption Rüstungen
-				colgroup
-					col(style="width: 20%")
-					col(span="11")
-				thead
-					tr
-						th Name
-						th(title="Kopf") Ko
-						th(title="Brust") Br
-						th(title="Rücken") Rü
-						th(title="Bauch") Ba
-						th(title="Linker Arm") LA
-						th(title="Rechter Arm") RA
-						th(title="Linkes Bein") LB
-						th(title="Rechtes Bein") RB
-						th(title="Rüstungsschutz") RS
-						th(title="Behinderung (ohne RG)") BE
-						td
-				tbody
-					tr
-						td.links Håkons Kettenkombi
-						td 3
-						td 5
-						td 5
-						td 5
-						td 4
-						td 4
-						td 4
-						td 4
-						td 4,5
-						td 1,35
-						td
-							input(type="radio")
+			if Ausrüstung && Ausrüstung.Kleidung && Ausrüstung.Kleidung.length > 0
+				table.data-section.eigenschaften.mitte
+					caption Rüstungen
+					colgroup
+						col(style="width: 20%")
+						col(span="11")
+					thead
+						tr
+							th Name
+							th(title="Kopf") Ko
+							th(title="Brust") Br
+							th(title="Rücken") Rü
+							th(title="Bauch") Ba
+							th(title="Linker Arm") LA
+							th(title="Rechter Arm") RA
+							th(title="Linkes Bein") LB
+							th(title="Rechtes Bein") RB
+							th(title="Rüstungsschutz") RS
+							th(title="Behinderung (ohne RG)") BE
+							td
+					tbody
+						each __panzer in Ausrüstung.Kleidung
+							tr
+								td.links=__panzer.Name
+								td=__panzer.Ko
+								td=__panzer.Br
+								td=__panzer.Rü
+								td=__panzer.Ba
+								td=__panzer.LA
+								td=__panzer.RA
+								td=__panzer.LB
+								td=__panzer.RB
+								td=__panzer.RS
+								td=__panzer.BE
+								td
+									input(type="radio")
 		a#taw
 		section.fl-clear#t_kam
 			.vor-nach.fl-links

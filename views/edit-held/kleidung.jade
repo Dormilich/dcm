@@ -1,0 +1,144 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title Rüstkammer
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		script(src="/jquery-2.0.3.min.js")
+		style.
+			#liste {
+				list-style-type: none;
+				padding: 1em 5em;
+			}
+			#liste li {
+				float: left;
+				width: 33%;
+				padding: 0.2em 0;
+			}
+			#liste li:nth-child(6n+1), #liste li:nth-child(6n+2), #liste li:nth-child(6n+3) {
+				background-color: silver;
+			}
+			input[type='number'] {
+				width: 3em;
+			}
+			tfoot .isactive {
+				display: none;
+			}
+			tbody td:first-child {
+				padding: 0 !important;
+				text-align: center;
+			}
+	body
+		nav
+			ul#main-menu
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
+		main
+			form(action="/kleidung/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+
+				table.data-section.eigenschaften
+					caption Rüstungen
+					colgroup
+						col(style="width: 2em;")
+						col(style="width: 20%;")
+						col(span="10")
+						col(style="width: 5em;")
+					thead
+						tr
+							td
+							th Name
+							th Ko
+							th Br
+							th Rü
+							th Ba
+							th RA
+							th LA
+							th RB
+							th LB
+							th RS
+							th BE
+							td
+					tfoot
+						tr
+							td
+								input.isactive(type="checkbox", checked)
+							td
+								input#nm.fullSize(type="text", name="Name", placeholder="Bezeichnung")
+							td
+								input#ko(type="number", name="Ko", min="0", step="1", value="0")
+							td
+								input#br(type="number", name="Br", min="0", step="1", value="0")
+							td
+								input#ru(type="number", name="Rü", min="0", step="1", value="0")
+							td
+								input#ba(type="number", name="Ba", min="0", step="1", value="0")
+							td
+								input#ra(type="number", name="RA", min="0", step="1", value="0")
+							td
+								input#la(type="number", name="LA", min="0", step="1", value="0")
+							td
+								input#rb(type="number", name="RB", min="0", step="1", value="0")
+							td
+								input#lb(type="number", name="LB", min="0", step="1", value="0")
+							td
+								input#rs(type="number", name="RS", min="0", value="0")
+							td
+								input#be(type="number", name="BE", min="0", value="0")
+							td
+								button#add(type="button") neu
+					tbody
+						if Ausrüstung && Ausrüstung.Rüstung
+							each __rst in Ausrüstung.Rüstung
+								tr
+									td
+										input.isactive(type="checkbox", checked)
+									td
+										input.fullSize(type="text", name="Name", placeholder="Bezeichnung", value=__rst.Name)
+									td
+										input(type="number", name="Ko", min="0", step="1", value=__rst.Ko)
+									td
+										input(type="number", name="Br", min="0", step="1", value=__rst.Br)
+									td
+										input(type="number", name="Rü", min="0", step="1", value=__rst.Rü)
+									td
+										input(type="number", name="Ba", min="0", step="1", value=__rst.Ba)
+									td
+										input(type="number", name="RA", min="0", step="1", value=__rst.RA)
+									td
+										input(type="number", name="LA", min="0", step="1", value=__rst.LA)
+									td
+										input(type="number", name="RB", min="0", step="1", value=__rst.RB)
+									td
+										input(type="number", name="LB", min="0", step="1", value=__rst.LB)
+									td
+										input(type="number", name="RS", min="0", value=__rst.RS)
+									td
+										input(type="number", name="BE", min="0", value=__rst.BE)
+									td
+
+				.mitte
+					button(type="submit", disabled) speichern
+
+			form(action="/waffen/Kleidung/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="delete")
+				.mitte
+					button(type="submit", disabled) alle Rüstungen löschen
+
+			ul#liste
+				- var counter = 0;
+				each __rs, __name in _data
+					li
+						input(type="checkbox", id="rs_"+counter, value=__name, data-ko=__rs[0], data-br=__rs[1], data-ru=__rs[2], data-ba=__rs[3], data-ra=__rs[4], data-la=__rs[5], data-rb=__rs[6], data-lb=__rs[7], data-rs=__rs[8], data-be=__rs[9])
+						label(for="rs_"+counter)=__name
+						- counter += 1;
+			.fl-clear
+			script(src="/edit-kleidung.js")

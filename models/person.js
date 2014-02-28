@@ -330,7 +330,7 @@ var heldSchema = new Schema({
 		Nahkampf  : [WaffenNKSchema],
 		LinkeHand : [WaffenLHSchema],
 		Fernkampf : [WaffenFKSchema],
-		Rüstung   : [RüstungSchema],
+		Kleidung  : [RüstungSchema],
 		Rucksack  : [{
 			Name  : { type: String, required: true },
 			Anzahl: { type: Number, min: 0, default: 1 },

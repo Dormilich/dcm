@@ -274,7 +274,6 @@ module.exports = function (app) {
 	app.get('/:section/:mongoid', function(req, res, next) {
 		Held
 			.findById(req.id)
-			.lean()
 			.exec(function(err, obj) {
 				if (err) next(err);
 				obj._data = data[req.section];
