@@ -123,6 +123,7 @@ html(lang="de")
 		title= Person.Name
 		link(rel="stylesheet", type="text/css", href="/edit.css")
 		link(rel="stylesheet", type="text/css", href="/nav.css")
+		script(src="/jquery-2.0.3.min.js")
 	body
 		nav#top
 			ul#main-menu
@@ -204,8 +205,7 @@ html(lang="de")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
 			
-			a#bes
-			table.data-section.links.eigenschaften
+			table.data-section.links.eigenschaften#bes
 				caption Beschreibung
 				colgroup
 					col(style="width: 15%")
@@ -244,8 +244,7 @@ html(lang="de")
 						each line in Person.Hintergrund.split('\n')
 							p= line
 			
-			a#gen
-			table.data-section.links.eigenschaften
+			table.data-section.links.eigenschaften#gen
 				caption Generierung
 				colgroup
 					col(style="width: 15%")
@@ -264,8 +263,8 @@ html(lang="de")
 						td= Generierung.BgB.name
 						th Modifikationen:
 						td= Generierung.BgB.modifikation
-			a#att
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#att
 				caption Attribute
 				colgroup
 					col(span="10", style="width: 10%;")
@@ -281,8 +280,8 @@ html(lang="de")
 							td= Attribute[val].wert
 						td
 						td= Basiswerte.GS
-			a#bas
-			table.data-section.mitte.eigenschaften
+			
+			table.data-section.mitte.eigenschaften#bas
 				caption Basiswerte
 				colgroup
 					col(span="10", style="width: 10%;")
@@ -296,8 +295,8 @@ html(lang="de")
 							td= Basiswerte[val] || '—'
 						each val in ["INI", "AT", "PA", "FK", "WS"]
 							td= Kampfwerte[val]
-			a#vnt
-			table.data-section
+			
+			table.data-section#vnt
 				caption Vor- und Nachteile
 				tr
 					td
@@ -311,8 +310,7 @@ html(lang="de")
 								strong Nachteile
 							each val in Nachteile
 								li= val
-		a#ap
-		section
+		section#ap
 			table.data-section.mitte.eigenschaften
 				caption Abenteuerpunkte
 				colgroup
@@ -326,8 +324,7 @@ html(lang="de")
 						td= AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 						th frei
 						td= AP.frei
-		a#sf
-		section
+		section#sf
 			table.data-section.mitte.eigenschaften
 				caption Sonderfertigkeiten
 				+SFTableSection(SF.allgemein, 'Allgemeine Sonderfertigkeiten')
@@ -335,9 +332,8 @@ html(lang="de")
 				+SFTableSection(SF.Manöver, 'Waffenlose Manöver')
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-		a#waf
-		section.fl-clear
-			table.data-section.eigenschaften.mitte
+		section#waf
+			table.data-section.eigenschaften.mitte(data-held=_id)
 				caption INI & Kampfzauber
 				thead
 					tr
@@ -345,25 +341,42 @@ html(lang="de")
 							label(for="k_ini") INI
 						th
 							label(for="k_be") BE
+						th Ausweichen
 						th
-							input#k_axx(type="checkbox")
 							label(for="k_axx") Axxeleratus
 						th
-							input#k_att(type="checkbox")
 							label(for="k_att") Attributo
 				tbody
 					tr
+						- var __akrob, __ausw = 0
+						- __ausw += contains(SF.Kampf, "Ausweichen I")   ?  2 : 0;
+						- __ausw += contains(SF.Kampf, "Ausweichen II")  ?  2 : 0;
+						- __ausw += contains(SF.Kampf, "Ausweichen III") ?  2 : 0;
+						- __ausw += contains(Nachteile, "Zwergenwuchs")  ?  1 : 0;
+						- __ausw += contains(Vorteile, "Flink")          ?  1 : 0;
+						- __ausw += contains(Nachteile, "Behäbig")       ? -1 : 0;
+						- __akrob = getTalent(Talente.körperlich, { talent: "Akrobatik" }).wert;
+						- __akrob = Math.floor((akrob - 12) / 3 + 0.1);
+						- __ausw += __akrob > 0 ? __akrob : 0;
+						td#k_ini_out=Kampfwerte.INI + " + W6"
 						td
-							input#k_ini(type="number", value=Kampfwerte.INI, step="1")
-						td
-							//input#k_be(type="number", value="0", min="0", step="1")
 							select#k_be(size="1")
 								option(value="0") ohne RG
 								option(value="-1") RG I
 								option(value="-1") RG II
 								option(value="-2") RG III
+						td#k_ausw_out=Kampfwerte.PA + __ausw
 						td
+							input#k_axx(type="checkbox")
+							input#iniAtt(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
+							input#iniAxx(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
+							input#iniMod(type="hidden", value=modifikatoren.INI)
+							input#atBasis(type="hidden", value=Kampfwerte.AT)
+							input#paBasis(type="hidden", value=Kampfwerte.PA)
+							input#fkBasis(type="hidden", value=Kampfwerte.FK)
+							input#auswMod(type="hidden", value=__ausw)
 						td
+							input#k_att(type="checkbox")
 							select#sel_att(size="1")
 								option MU
 								option IN
@@ -405,15 +418,17 @@ html(lang="de")
 					tbody
 						each __waffe in Ausrüstung.Nahkampf
 							- var __talent = getTalent(Talente.Nahkampf, __waffe);
-							tr
+							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
+							- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
+							tr(data-be=Math.abs(__waffe.BE), data-ini=__waffe.INI, data-at=__at, data-pa=__pa, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)
 								td.links=__waffe.Name
-								td(title=__waffe.talent)="BE"+__waffe.BE
+								td(title=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td=__waffe.DK
-								td=Kampfwerte.AT+__talent.AT+__waffe.WM.AT+(__waffe.spez?1:0)
-								td=Kampfwerte.PA+__talent.PA+__waffe.WM.PA+(__waffe.spez?1:0)
+								td.at=Kampfwerte.AT + __at
+								td.pa=Kampfwerte.PA + __pa
 								td(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
 								td=__waffe.BF
-								td=beautifyNumber(__waffe.INI)
+								td.ini=beautifyNumber(__waffe.INI)
 								td
 									input#k_hw(type="radio", name="haupthand")
 								td
@@ -447,7 +462,7 @@ html(lang="de")
 									option PW II
 					tbody
 						each __waffe in Ausrüstung.LinkeHand
-							tr
+							tr(data-ini=__waffe.INI, data-at=__waffe.WM.AT, data-pa=__waffe.WM.PA)
 								td.links=__waffe.Name
 								td=__waffe.talent
 								td
@@ -483,7 +498,7 @@ html(lang="de")
 							tr
 								td.links=__waffe.Name
 								td(title=__waffe.talent)="BE"+__waffe.BE
-								td=Kampfwerte.FK+__talent.AT+__waffe.WM.AT+(__waffe.spez?2:0)
+								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
 								td=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
 								td=__waffe.TP.dk.join(" / ")
 								td=__waffe.TP.dkMod.join(" / ")
@@ -523,14 +538,15 @@ html(lang="de")
 								td=__panzer.RS
 								td=__panzer.BE
 								td
-									input(type="radio")
+									input(type="radio", name="panzerung", value=Math.round(__panzer.BE))
 		a#taw
-		section.fl-clear#t_kam
+		section#t_kam
 			.vor-nach.fl-links
 				+KampfTable(Talente.Nahkampf, 'Nahkampf')
 			.vor-nach.fl-rechts
 				+KampfTable(Talente.Fernkampf, 'Fernkampf')
-		section.fl-clear
+			.fl-clear
+		section
 			.vor-nach.fl-links
 				if Talente.Gaben.length
 					+TalentTable(Talente.Gaben, 'Gaben')
@@ -540,13 +556,14 @@ html(lang="de")
 			.vor-nach.fl-rechts
 				+TalentTable(Talente.Wissen, 'Wissenstalente', "t_wis")
 				+TalentTable(Talente.Handwerk, 'Handwerkstalente', "t_han")
-		section.fl-clear#t_spr
+			.fl-clear
+		section#t_spr
 			.vor-nach.fl-links
 				+LanguageTable(Talente.Sprachen, 'Sprachen')
 			.vor-nach.fl-rechts
 				+LanguageTable(Talente.Schriften, 'Schriften')
-		section.fl-clear#eqp
-			div &nbsp;
+			.fl-clear
+		section#eqp
 			if Ausrüstung && Ausrüstung.Rucksack && Ausrüstung.Rucksack.length > 0
 				table.data-section.talente.links
 					caption Gegenstände
@@ -564,3 +581,5 @@ html(lang="de")
 								td.rechts=__item.Anzahl
 								td=__item.Name
 								td=__item.Kommentar
+		script(src="/held.js")
+			

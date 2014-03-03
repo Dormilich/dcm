@@ -99,7 +99,6 @@ module.exports = function (app) {
 	/**********************************
 	 ***     Character display      ***
 	 **********************************/
-
 	// display character sheet (mundane)
 	app.get('/held/:mongoid', function (req, res, next) {
 		Held.findById(req.id, function(err, doc) {
@@ -159,6 +158,43 @@ module.exports = function (app) {
 		Held.findByIdAndUpdate(req.id, { disabled: false }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
+		});
+	});
+	/**********************************
+	 ***    AJAX requested data     ***
+	 **********************************/
+	// re-evaluate Kampfwerte after application of the Spell "Attributo"
+	app.get('/attributo/:mongoid', function (req, res, next) {
+		Held.findById(req.id, function (err, doc) {
+			if (err) {
+				return res.json(500, { error: err });
+			}
+			try {
+				var attr = req.query.attribut.toUpperCase();
+				var wert = Math.abs(req.query.wert);
+				// check for validaty
+				if (!(attr in doc.Attribute)) {
+					throw new Error("Ungültiges Attribut.");
+				}
+				if (isNaN(wert)) {
+					throw new Error("Üngültiger Attributwert.");
+				}
+				// adjust attribute value
+				doc.Attribute[attr].wert = wert;
+				// get new derived values
+				var _ini = Math.round( (doc.Attribute.MU.wert * 2 + doc.Attribute.IN.wert + doc.Attribute.GE.wert) / 5 )
+				res.json({
+					iniBasis : _ini,
+					iniMod   : doc.modifikatoren.INI,
+					AT : doc.Kampfwerte.AT,
+					PA : doc.Kampfwerte.PA,
+					FK : doc.Kampfwerte.FK,
+					WS : doc.Kampfwerte.WS
+				});
+			}
+			catch (e) {
+				res.json(400, { error: e });
+			}
 		});
 	});
 };
