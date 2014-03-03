@@ -609,5 +609,6 @@ module.exports = {
 		Sturmhaube:             [3, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.15],
 		Tellerhelm:             [2, 0, 0, 0, 0, 0, 0, 0, 0.2, 0.2],
 		Topfhelm:               [5, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.5]
-	}
+	},
+	rucksack: {}
 };

@@ -198,6 +198,8 @@ html(lang="de")
 							a(href="/waffen/"+_id) Waffen
 						li
 							a(href="/kleidung/"+_id) Rüstungen
+						li
+							a(href="/rucksack/"+_id) Gegenstände
 		section(style="clear: both;")
 			h1.mitte= Person.Name
 			h2.mitte –Heldenbogen–
@@ -543,4 +545,22 @@ html(lang="de")
 				+LanguageTable(Talente.Sprachen, 'Sprachen')
 			.vor-nach.fl-rechts
 				+LanguageTable(Talente.Schriften, 'Schriften')
-		section.fl-clear
+		section.fl-clear#eqp
+			div &nbsp;
+			if Ausrüstung && Ausrüstung.Rucksack && Ausrüstung.Rucksack.length > 0
+				table.data-section.talente.links
+					caption Gegenstände
+					colgroup
+						col(style="width: 5em;")
+						col(span="2")
+					thead
+						tr.mitte
+							th Anzahl
+							th Bezeichnung
+							th Kommentar
+					tbody
+						each __item in Ausrüstung.Rucksack
+							tr
+								td.rechts=__item.Anzahl
+								td=__item.Name
+								td=__item.Kommentar

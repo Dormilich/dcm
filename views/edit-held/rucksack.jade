@@ -1,0 +1,65 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title Ausrüstung
+		link(rel="stylesheet", type="text/css", href="/edit.css")
+		link(rel="stylesheet", type="text/css", href="/nav.css")
+		script(src="/jquery-2.0.3.min.js")
+	body
+		nav
+			ul#main-menu
+				li
+					a(href="#top") [Seitenanfang]
+				li
+					a(href="#save") [speichern]
+				li
+					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
+		header#top
+			h1.mitte
+				a(href="/held/"+_id)= Person.Name
+		main
+			form(action="/rucksack/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				
+				table.data-section.talente
+					caption Gegenstände
+					colgroup
+						col(style="width: 8em")
+						col(span="2")
+						col(style="width: 5em;")
+					thead
+						tr
+							th Anzahl
+							th Bezeichnung
+							th Kommentar
+							td
+					tfoot
+						tr
+							td
+								input(type="number", name="Ausrüstung.Rucksack[{index}][Anzahl]", value="1", min="0", step="1")
+							td
+								input.fullSize(type="text", name="Ausrüstung.Rucksack[{index}][Name]", placeholder="Bezeichnung")
+							td
+								input.fullSize(type="text", name="Ausrüstung.Rucksack[{index}][Kommentar]", placeholder="Kommentar")
+							td
+								button#add(type="button") neu
+					tbody
+						if Ausrüstung && Ausrüstung.Rucksack
+							each __item, __idx in Ausrüstung.Rucksack
+								tr
+									td
+										input(type="number", name="Ausrüstung.Rucksack[#{__idx}][Anzahl]", value=__item.Anzahl, min="0", step="1")
+									td
+										input.fullSize(type="text", name="Ausrüstung.Rucksack[#{__idx}][Name]", placeholder="Bezeichnung", value=__item.Name)
+									td
+										input.fullSize(type="text", name="Ausrüstung.Rucksack[#{__idx}][Kommentar]", placeholder="Kommentar", value=__item.Kommentar)
+									td
+				.mitte
+					button(type="submit", disabled) speichern
+					
+			form(action="/waffen/Rucksack/"+_id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="delete")
+				.mitte
+					button(type="submit", disabled) alle Gegenstände löschen
+		script(src="/edit-rucksack.js")

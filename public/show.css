@@ -24,12 +24,14 @@
 .talente tbody tr:nth-child(odd) {
 	background-color: #eee;
 }
+/*
 .talente tbody td {
 	text-align: center;
 }
 .talente tbody td:first-child {
 	text-align: left;
 }
+*/
 .eigenschaften th {
 	background-color: #eee;
 }
