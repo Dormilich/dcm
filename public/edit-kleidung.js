@@ -5,9 +5,13 @@ $('table').on("click", '.isactive', function() {
 	$(this).closest('tr').find('*[name]').prop("disabled", !this.checked);
 });
 $('#add').on("click", function() {
-	var $row = $(this).closest("tr");
+	var idx  = $(this).closest('table').find('tbody tr').length;
+	var $row = $(this).closest('tr');
 	var $tr  = $row.clone();
 	$tr.find('button').remove();
+	$tr.find('*[name]').each(function() {
+		this.name = this.name.replace("{index}", idx);
+	});
 	$(this).closest('table').append($tr);
 	$row.find('input').each(function() {
 		this.value = this.defaultValue;
