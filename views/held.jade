@@ -349,9 +349,9 @@ html(lang="de")
 				tbody
 					tr
 						- var __akrob, __ausw = 0
-						- __ausw += contains(SF.Kampf, "Ausweichen I")   ?  2 : 0;
-						- __ausw += contains(SF.Kampf, "Ausweichen II")  ?  2 : 0;
-						- __ausw += contains(SF.Kampf, "Ausweichen III") ?  2 : 0;
+						- __ausw += contains(SF.Kampf, "Ausweichen I")   ?  3 : 0;
+						- __ausw += contains(SF.Kampf, "Ausweichen II")  ?  3 : 0;
+						- __ausw += contains(SF.Kampf, "Ausweichen III") ?  3 : 0;
 						- __ausw += contains(Nachteile, "Zwergenwuchs")  ?  1 : 0;
 						- __ausw += contains(Vorteile, "Flink")          ?  1 : 0;
 						- __ausw += contains(Nachteile, "Behäbig")       ? -1 : 0;
@@ -368,7 +368,7 @@ html(lang="de")
 						td#k_ausw_out=Kampfwerte.PA + __ausw
 						td
 							input#k_axx(type="checkbox")
-							input#iniAtt(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
+							input#iniBasis(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
 							input#iniAxx(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
 							input#iniMod(type="hidden", value=modifikatoren.INI)
 							input#atBasis(type="hidden", value=Kampfwerte.AT)
@@ -405,34 +405,30 @@ html(lang="de")
 							th TP
 							th BF
 							th INI
+							td rechts
 							td
-								select(size="1", title="Hauptwaffe")
-									option rechts
-									option BHK I
-									option BHK II
-							td
-								select(size="1", title="Nebenwaffe")
-									option(title="SF Linkhand") links
-									option BHK I
-									option BHK II
+								select#bhk_typ(size="1", title="Nebenwaffe")
+									option(value="6", title="SF Linkhand") links
+									option(value="3") BHK I
+									option(value="0") BHK II
 					tbody
 						each __waffe in Ausrüstung.Nahkampf
 							- var __talent = getTalent(Talente.Nahkampf, __waffe);
 							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
 							- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
-							tr(data-be=Math.abs(__waffe.BE), data-ini=__waffe.INI, data-at=__at, data-pa=__pa, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)
-								td.links=__waffe.Name
-								td(title=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
+							tr
+								td.links.name=__waffe.Name
+								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td=__waffe.DK
-								td.at=Kampfwerte.AT + __at
-								td.pa=Kampfwerte.PA + __pa
-								td(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
+								td.at(data-at=__at, data-wm=__waffe.WM.AT)=Kampfwerte.AT + __at
+								td.pa(data-pa=__pa, data-wm=__waffe.WM.PA)=Kampfwerte.PA + __pa
+								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
 								td=__waffe.BF
-								td.ini=beautifyNumber(__waffe.INI)
+								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
 								td
-									input#k_hw(type="radio", name="haupthand")
+									input(type="radio", name="haupthand")
 								td
-									input#k_nw(type="radio", name="nebenhand")
+									input.bhk(type="radio", name="nebenhand")
 			if Ausrüstung && Ausrüstung.LinkeHand && Ausrüstung.LinkeHand.length > 0
 				table.data-section.eigenschaften.mitte
 					caption Parierwaffen & Schilde
@@ -454,26 +450,25 @@ html(lang="de")
 							td
 								button#unselectLH(type="button", style="text-decoration: line-through;") &nbsp; Waffe &nbsp;
 							td
-								select(size="1", title="Nebenwaffe")
-									option(title="SF Linkhand") links
+								select#pws_typ(size="1", title="Nebenwaffe")
 									option SK I
 									option SK II
 									option PW I
 									option PW II
 					tbody
 						each __waffe in Ausrüstung.LinkeHand
-							tr(data-ini=__waffe.INI, data-at=__waffe.WM.AT, data-pa=__waffe.WM.PA)
+							tr
 								td.links=__waffe.Name
 								td=__waffe.talent
 								td
-								td(data-at=__waffe.WM.AT)=beautifyNumber(__waffe.WM.AT)
-								td(data-pa=__waffe.WM.PA)=beautifyNumber(__waffe.WM.PA)
+								td.at(data-wm=__waffe.WM.AT)=beautifyNumber(__waffe.WM.AT)
+								td.pa(data-wm=__waffe.WM.PA)=beautifyNumber(__waffe.WM.PA)
 								td
 								td=__waffe.BF
-								td=beautifyNumber(__waffe.INI)
+								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
 								td
 								td
-									input(type="radio", name="nebenhand")
+									input.pws(type="radio", name="nebenhand")
 			if Ausrüstung && Ausrüstung.Fernkampf && Ausrüstung.Fernkampf.length > 0
 				table.data-section.eigenschaften.mitte
 					caption Fernkampfwaffen
