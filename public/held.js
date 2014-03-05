@@ -97,20 +97,27 @@ var kampfwerte = {
 		kampfwerte.auswOut.textContent = ausw;
 	},
 	setWaffenAT : function ($row, $pws) {
-		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW
+		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW - BE-Mod
 		var $at = $row.find('td.at');
 		// AT-TaW + Spez + WM (Hauptwaffe)
-		var at  = $at.data("at");
+		var AT  = $at.data("at");
 		// + AT-Basis
-		at     += +kampfwerte.atBasis.value;
+		AT     += +kampfwerte.atBasis.value;
+		// BE
+		var eBE = kampfwerte.getBE() - $row.find('td.be').data("be");
+		if (eBE > 0) {
+			AT -= Math.floor(eBE/2);
+		}
 		// WM (Parierwaffe), if selected
 		if ($row.find("input[name='haupthand']:checked").length === 1 && $pws.length === 1) {
-			at += +$pws.closest('tr').find('td.at').data("wm");
+			AT += +$pws.closest('tr').find('td.at').data("wm");
 		}
-		$at.text(at);
+		$at.text(AT);
 	},
 	setPA : function () {
-
+		// PA = PA-Basis (Attributo) + PA-TaW (BHK/PW) + Spez + WM (Hauptwaffe) + 
+		//      WM (Parierwaffe) + Axxeleratus + INI-PA-Mod - BE +
+		//      SF PW / SF SK / SF BHK
 	},
 	setWaffenTP : function ($row) {
 		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
