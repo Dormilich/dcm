@@ -362,30 +362,30 @@ html(lang="de")
 						td
 							select#k_be(size="1")
 								option(value="0") ohne RG
-								option(value="-1") RG I
-								option(value="-1") RG II
-								option(value="-2") RG III
+								option(value="1") RG I
+								option(value="1") RG II
+								option(value="2") RG III
 						td#k_ausw_out=Kampfwerte.PA + __ausw
 						td
 							input#k_axx(type="checkbox")
-							input#iniBasis(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
+							input#iniBasis(type="hidden", value=Kampfwerte.INI - modifikatoren.INI, data-default=Kampfwerte.INI - modifikatoren.INI)
 							input#iniAxx(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
 							input#iniMod(type="hidden", value=modifikatoren.INI)
-							input#atBasis(type="hidden", value=Kampfwerte.AT)
-							input#paBasis(type="hidden", value=Kampfwerte.PA)
-							input#fkBasis(type="hidden", value=Kampfwerte.FK)
+							input#atBasis(type="hidden", value=Kampfwerte.AT, data-default=Kampfwerte.AT)
+							input#paBasis(type="hidden", value=Kampfwerte.PA, data-default=Kampfwerte.PA)
+							input#fkBasis(type="hidden", value=Kampfwerte.FK, data-default=Kampfwerte.FK)
 							input#auswMod(type="hidden", value=__ausw)
 						td
 							input#k_att(type="checkbox")
 							select#sel_att(size="1")
-								option MU
-								option IN
-								option KL
-								option CH
-								option FF
-								option GE
-								option KO
-								option(selected) KK
+								option(data-wert=Attribute.MU.wert) MU
+								option(data-wert=Attribute.IN.wert) IN
+								option(data-wert=Attribute.KL.wert) KL
+								option(data-wert=Attribute.CH.wert) CH
+								option(data-wert=Attribute.FF.wert) FF
+								option(data-wert=Attribute.GE.wert) GE
+								option(data-wert=Attribute.KO.wert) KO
+								option#val_att_kk(data-wert=Attribute.KK.wert, selected) KK
 							input#val_att(type="number", value=Attribute.KK.wert)
 			if Ausrüstung && Ausrüstung.Nahkampf && Ausrüstung.Nahkampf.length > 0
 				table.data-section.eigenschaften.mitte
@@ -411,7 +411,7 @@ html(lang="de")
 									option(value="6", title="SF Linkhand") links
 									option(value="3") BHK I
 									option(value="0") BHK II
-					tbody
+					tbody#nahkampf-waffen
 						each __waffe in Ausrüstung.Nahkampf
 							- var __talent = getTalent(Talente.Nahkampf, __waffe);
 							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
@@ -422,7 +422,7 @@ html(lang="de")
 								td=__waffe.DK
 								td.at(data-at=__at, data-wm=__waffe.WM.AT)=Kampfwerte.AT + __at
 								td.pa(data-pa=__pa, data-wm=__waffe.WM.PA)=Kampfwerte.PA + __pa
-								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
+								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-w6=__waffe.TP.roll)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
 								td=__waffe.BF
 								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
 								td

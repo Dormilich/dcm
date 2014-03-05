@@ -27,6 +27,10 @@ var kampfwerte = {
 	auswOut   : ID('k_ausw_out'),
 	SFpws     : ID('pws_typ'),
 	SFbhk     : ID('bhk_typ'),
+	NKWaffen  : ID('nahkampf-waffen'),
+	attrName  : ID('sel_att'),
+	attrWert  : ID('val_att'),
+	attrKK    : ID('val_att_kk'),
 	// helper methods
 	getBE : function () {
 		var effBE  = 0
@@ -49,10 +53,145 @@ var kampfwerte = {
 		return Math.floor( (ini - 11) / 10 + 0.01 )
 	},
 	hasSameRow : function ($elem1, $elem2) {
-		return $elem1.closest('tr').find($elem2).length === 1;
-
+		if ($elem1.length === 1 && $elem2.length === 1) {
+			return $elem1.closest('tr').find($elem2).length === 1;
+		}
+		return false;
 	},
 	// methods
+	setINI : function () {
+		function getWaffenINI($input) {
+			if ($input.length === 1) {
+				return +$input.closest('tr').find('td.ini').data("ini");
+			}
+			return 0;
+		}
+		var bonus = 0;
+		// INI-Mod of Weapon(s)
+		bonus  += getWaffenINI( $("input[name='haupthand']:checked") );
+		bonus  += getWaffenINI( $("input[name='nebenhand']:checked") );
+		// INI-Mod through Armour
+		bonus  -= kampfwerte.getBE();
+		// Axxeleratus and Attributo update the INI-Basis elsewhere
+		// get final INI
+		var ini = +kampfwerte.iniAxx.value + +kampfwerte.iniMod.value + bonus;
+		kampfwerte.iniOut.textContent = ini + " + W6";
+
+		return ini;
+	},
+	setAusweichen : function (bonus) {
+		// INI modifies PA-Basis
+		// Attributo modifies PA-Basis
+		var ausw  = +kampfwerte.paBasis.value
+		// PA-Mod through INI
+		if (typeof bonus === "number") {
+			ausw += bonus;
+		}
+		// Ausweichen-Mod through Axxeleratus
+		ausw     +=  kampfwerte.axxel.checked ? 2 : 0;
+		// Ausweichen-Mod through Armour
+		ausw     -=  kampfwerte.getBE();
+		// Ausweichen-Mod through SFs
+		ausw     += +kampfwerte.auswMod.value
+		// display
+		kampfwerte.auswOut.textContent = ausw;
+	},
+	setWaffenAT : function ($row, $pws) {
+		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW
+		var $at = $row.find('td.at');
+		// AT-TaW + Spez + WM (Hauptwaffe)
+		var at  = $at.data("at");
+		// + AT-Basis
+		at     += +kampfwerte.atBasis.value;
+		// WM (Parierwaffe), if selected
+		if ($row.find("input[name='haupthand']:checked").length === 1 && $pws.length === 1) {
+			at += +$pws.closest('tr').find('td.at').data("wm");
+		}
+		$at.text(at);
+	},
+	setPA : function () {
+
+	},
+	setWaffenTP : function ($row) {
+		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
+		var $tp = $row.find('td.tp');
+		// TP-Basis
+		var tp  = +$tp.data("tp");
+		// Axxeleratus
+		if (kampfwerte.axxel.checked) {
+			tp += 2;
+		}
+		// natural KK
+		var kk  = +kampfwerte.attrKK.dataset.wert;
+		// Attributo-KK
+		if (kampfwerte.attrName.value === "KK") {
+			kk  = +kampfwerte.attrWert.value;
+		}
+		// TP/KK
+		tp     += Math.floor( (kk - $tp.data("kk")) / $tp.data("tpkk") + 0.05 );
+		// display
+		$tp.text( $tp.data("w6") + " + " + tp );
+	},
+	axxeleratus : function () {
+		// set INI-Basis
+		// copy the INI-Basis and modify it according whether the spell is active
+		if (kampfwerte.axxel.checked) {
+			kampfwerte.iniAxx.value  =  kampfwerte.iniBasis.value * 2;
+			kampfwerte.paBasis.value = +kampfwerte.paBasis.value  + 2;
+			kampfwerte.axxel.parentNode.style.backgroundColor = "red";
+		}
+		else {
+			kampfwerte.iniAxx.value   = kampfwerte.iniBasis.value;
+			kampfwerte.paBasis.value -= 2;
+			kampfwerte.axxel.parentNode.style.backgroundColor = "";
+		}
+		kampfwerte.calculate();
+	},
+	attributo : function () {
+		if (!kampfwerte.attributo.checked) {
+			kampfwerte.iniBasis.value = ID('iniAtt').defaultValue; // buggy in Chrome !!!
+			
+		}
+		else {
+			$.ajax({});
+		}
+	},
+	calculate : function () {
+		var ini = kampfwerte.setINI();
+		// INI => PA => Ausweichen
+		kampfwerte.setAusweichen( kampfwerte.getPABonus(ini) );
+		var $pws = $("input[name='nebenhand'].pws:checked");
+		$('#nahkampf-waffen tr').each(function() {
+			kampfwerte.setWaffenAT( $(this), $pws );
+			kampfwerte.setWaffenTP( $(this) );
+		});
+	}
+};
+
+ 
+$('#k_axx').on("click", kampfwerte.axxeleratus);
+
+$('#waf').on("click", 'input[type="radio"]', function() {
+	var $haupt = $("input[name='haupthand']:checked");
+	var $neben = $("input[name='nebenhand']:checked");
+	if (kampfwerte.hasSameRow($haupt, $neben)) {
+		$neben.prop("checked", false);
+		return null;
+	}
+	kampfwerte.calculate();
+});
+
+$('#unselectLH').on("click", function() {
+	$("input[name='nebenhand']:checked").prop("checked", false);
+	kampfwerte.calculate();
+});
+
+// Attributo
+$('#sel_att').on("change", function() {
+	var wert = $(this).find('option:selected').data("wert");
+	$('#val_att').val(wert);
+});
+/*
 	setINIWaffe : function () {
 		var $haupt = $("input[name='haupthand']:checked");
 		var $neben = $("input[name='nebenhand']:checked");
@@ -79,28 +218,6 @@ var kampfwerte = {
 				beautifyNumber( +$iniHW.data("ini") )
 			);
 		}
-	},
-	setINI : function () {
-		var $haupt = $("input[name='haupthand']:checked");
-		var bonus  = 0;
-		// INI-Mod of Weapon(s)
-		if ($haupt.length === 1) {
-			var zahl = +$haupt.closest('tr').find('td.ini').text().replace("–", "-");
-			if (isFinite(zahl)) {
-				bonus += zahl;
-			}
-			else {
-				console.log("Ungültige Waffen-INI.");
-			}
-		}
-		// INI-Mod through Armour
-		bonus  -= kampfwerte.getBE();
-		// Axxeleratus and Attributo update the INI-Basis elsewhere
-		// get final INI
-		var ini = +kampfwerte.iniAxx.value + +kampfwerte.iniMod.value + bonus;
-		kampfwerte.iniOut.textContent = ini + " + W6";
-
-		return ini;
 	},
 	setAT : function () { // reset left weapon !
 		var $haupt = $("input[name='haupthand']:checked")
@@ -168,76 +285,4 @@ var kampfwerte = {
 		}
 		
 	},
-	setPA : function () {
-
-	},
-	setFK : function () {
-
-	},
-	setAusweichen : function (bonus) {
-		// INI modifies PA-Basis
-		// Attributo modifies PA-Basis
-		var ausw  = +kampfwerte.paBasis.value
-		// PA-Mod through INI
-		if (typeof bonus === "number") {
-			ausw += bonus;
-		}
-		// Ausweichen-Mod through Axxeleratus
-		ausw     +=  kampfwerte.axxel.checked ? 2 : 0;
-		// Ausweichen-Mod through Armour
-		ausw     -=  kampfwerte.getBE();
-		// Ausweichen-Mod through SFs
-		ausw     += +kampfwerte.auswMod.value
-		// display
-		kampfwerte.auswOut.textContent = ausw;
-	},
-	setTP : function () {
-
-	},
-	axxeleratus : function () {
-		// set INI-Basis
-		// copy the INI-Basis and modify it according whether the spell is active
-		if (kampfwerte.axxel.checked) {
-			kampfwerte.iniAxx.value  =  kampfwerte.iniBasis.value * 2;
-			kampfwerte.paBasis.value = +kampfwerte.paBasis.value  + 2;
-			kampfwerte.axxel.parentNode.style.backgroundColor = "red";
-		}
-		else {
-			kampfwerte.iniAxx.value   = kampfwerte.iniBasis.value;
-			kampfwerte.paBasis.value -= 2;
-			kampfwerte.axxel.parentNode.style.backgroundColor = "";
-		}
-		kampfwerte.calculate();
-	},
-	attributo : function () {
-		if (!kampfwerte.attributo.checked) {
-			kampfwerte.iniBasis.value = ID('iniAtt').defaultValue; // buggy in Chrome !!!
-			
-		}
-		else {
-			$.ajax({});
-		}
-	},
-	calculate : function () {
-		var ini = kampfwerte.setINI();
-		// INI => PA => Ausweichen
-		kampfwerte.setAusweichen( kampfwerte.getPABonus(ini) );
-
-	}
-};
-
- 
-$('#k_axx').on("click", kampfwerte.axxeleratus);
-
-$('#waf').on("click", 'input[type="radio"]', function() {
-	kampfwerte.setINIWaffe();
-	kampfwerte.setAT();
-	kampfwerte.setPA();
-});
-
-$('#unselectLH').on("click", function() {
-	$("input[name='nebenhand']:checked").prop("checked", false);
-	kampfwerte.setINIWaffe();
-	kampfwerte.setAT();
-	kampfwerte.setPA();
-});
+*/
