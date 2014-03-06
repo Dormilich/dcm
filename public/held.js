@@ -52,6 +52,21 @@ var kampfwerte = {
 	getPABonus : function (ini) {
 		return Math.floor( (ini - 11) / 10 + 0.01 )
 	},
+	getBHKMod : function($rechts, $links) {
+		if ($rechts.length === 1 && $links.length === 1) {
+			var $rowR = $rechts.closest('tr');
+			var $rowL = $links.closest('tr');
+			// different skills
+			if ($rowR.find('td.be').data("talent") !== $rowL.find('td.be').data("talent")) {
+				return -2;
+			}
+			// same skill, different weapons
+			if ($rowR.find('td.name').text().intersect($rowL.find('td.name').text()).length === 0) {
+				return -1;
+			}
+		}
+		return 0;
+	},
 	hasSameRow : function ($elem1, $elem2) {
 		if ($elem1.length === 1 && $elem2.length === 1) {
 			return $elem1.closest('tr').find($elem2).length === 1;
@@ -96,7 +111,7 @@ var kampfwerte = {
 		// display
 		kampfwerte.auswOut.textContent = ausw;
 	},
-	setWaffenAT : function ($row, $pws) {
+	setWaffenAT : function ($row, opt) {
 		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW - BE-Mod
 		var $at = $row.find('td.at');
 		// AT-TaW + Spez + WM (Hauptwaffe)
@@ -110,14 +125,44 @@ var kampfwerte = {
 		}
 		// WM (Parierwaffe), if selected
 		if ($row.find("input[name='haupthand']:checked").length === 1 && $pws.length === 1) {
-			AT += +$pws.closest('tr').find('td.at').data("wm");
+			AT += +opt.pws.closest('tr').find('td.at').data("wm");
 		}
+		AT     += kampfwerte.getBHKMod(opt.haupt, opt.bhk);
 		$at.text(AT);
 	},
-	setPA : function () {
+	setWaffenPA : function ($row, radio, bonus) {
 		// PA = PA-Basis (Attributo) + PA-TaW (BHK/PW) + Spez + WM (Hauptwaffe) + 
 		//      WM (Parierwaffe) + Axxeleratus + INI-PA-Mod - BE +
 		//      SF PW / SF SK / SF BHK
+		var $pa = $row.find('td.pa');
+		// PA-Basis
+		var PA  = +kampfwerte.paBasis.value;
+		var eBE =  kampfwerte.getBE() - $row.find('td.be').data("be");
+		if (eBE > 0) {
+			eBE = Math.floor( (eBE + 1) / 2 );
+		}
+		// BHK-Mod, if any
+		PA     += kampfwerte.getBHKMod(radio.haupt, radio.bhk);
+		// INI-Mod
+		PA     += bonus;
+		// BE-Mod
+		PA     -= eBE;
+		// if selected main-weapon
+		if ($row.find(radio.haupt).length === 1) {
+			// PA-WM (Parierwaffe)
+			if (radio.pws.length) {
+				PA += +radio.pws.closest('tr').find('td.pa').data("wm");
+			}
+			// diff between PW & SK
+		}
+		// BHK 2nd-weapon
+		else if ($row.find(radio.bhk).length === 1) {
+			// get BHK-SF
+		}
+		// regular value (reset)
+		else {
+			PA += +$pa.data("pa");
+		}
 	},
 	setWaffenTP : function ($row) {
 		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
@@ -164,12 +209,18 @@ var kampfwerte = {
 		}
 	},
 	calculate : function () {
-		var ini = kampfwerte.setINI();
+		var ini    = kampfwerte.setINI();
+		var iniPa  = kampfwerte.getPABonus(ini);
 		// INI => PA => Ausweichen
-		kampfwerte.setAusweichen( kampfwerte.getPABonus(ini) );
-		var $pws = $("input[name='nebenhand'].pws:checked");
+		kampfwerte.setAusweichen( iniPa );
+		var radios = {
+			pws:   $("input[name='nebenhand'].pws:checked"),
+			bhk:   $("input[name='nebenhand'].bhk:checked"),
+			haupt: $("input[name='haupthand']:checked")
+		};
 		$('#nahkampf-waffen tr').each(function() {
-			kampfwerte.setWaffenAT( $(this), $pws );
+			kampfwerte.setWaffenAT( $(this), radios );
+			kampfwerte.setWaffenPA( $(this), radios, iniPa );
 			kampfwerte.setWaffenTP( $(this) );
 		});
 	}

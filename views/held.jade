@@ -420,8 +420,8 @@ html(lang="de")
 								td.links.name=__waffe.Name
 								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td=__waffe.DK
-								td.at(data-at=__at, data-wm=__waffe.WM.AT)=Kampfwerte.AT + __at
-								td.pa(data-pa=__pa, data-wm=__waffe.WM.PA)=Kampfwerte.PA + __pa
+								td.at(data-at=__at)=Kampfwerte.AT + __at
+								td.pa(data-pa=__pa, data-paw=Kampfwerte.PA + __pa)=Kampfwerte.PA + __pa
 								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-w6=__waffe.TP.roll)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
 								td=__waffe.BF
 								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
