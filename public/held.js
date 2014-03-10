@@ -14,7 +14,7 @@ var ID = document.getElementById.bind(document);
 var kampfwerte = {
 	// DOM Elements
 	axxel     : ID('k_axx'),
-	attributo : ID('k_att'),
+	attro     : ID('k_att'),
 	iniAxx    : ID('iniAxx'),
 	iniBasis  : ID('iniBasis'),
 	iniMod    : ID('iniMod'),
@@ -32,6 +32,7 @@ var kampfwerte = {
 	attrWert  : ID('val_att'),
 	attrKK    : ID('val_att_kk'),
 	attribute : $('#att').data("attribute"),
+	held      : ID('held'),
 	// helper methods
 	getBE : function () {
 		var effBE  = 0
@@ -90,7 +91,7 @@ var kampfwerte = {
 		bonus  -= kampfwerte.getBE();
 		// Axxeleratus and Attributo update the INI-Basis elsewhere
 		// get final INI
-		var ini = +kampfwerte.iniBasis.value + +kampfwerte.iniMod.value + bonus;
+		var ini = kampfwerte.getAxxeleratusValue().INI + +kampfwerte.iniMod.value + bonus;
 		kampfwerte.iniOut.textContent = ini + " + W6";
 
 		return ini;
@@ -98,7 +99,7 @@ var kampfwerte = {
 	setAusweichen : function (bonus) {
 		// INI modifies PA-Basis
 		// Attributo modifies PA-Basis
-		var ausw  = +kampfwerte.paBasis.value
+		var ausw  = kampfwerte.getAxxeleratusValue().PA;
 		// PA-Mod through INI
 		if (typeof bonus === "number") {
 			ausw += bonus;
@@ -137,7 +138,7 @@ var kampfwerte = {
 		//      SF PW / SF SK / SF BHK
 		var $pa    = $row.find('td.pa');
 		// PA-Basis
-		var PA     = +kampfwerte.paBasis.value;
+		var PA     = kampfwerte.getAxxeleratusValue().PA;
 		// TaW
 		var tawMod = +$pa.data("pa");
 		// BE-Mod
@@ -231,33 +232,57 @@ var kampfwerte = {
 		}
 		$tp.text(mod.w6 + " + " + tp);
 	},
-	axxeleratus : function () {
-		// set INI-Basis
-		// copy the INI-Basis and modify it according whether the spell is active
+	getAxxeleratusValue : function () {
+		// return INI- and PA-Val
 		if (kampfwerte.axxel.checked) {
-			kampfwerte.iniBasis.value *= 2;
-			kampfwerte.paBasis.value   = +kampfwerte.paBasis.value  + 2; // damn you, operator overloading!
 			kampfwerte.axxel.parentNode.style.backgroundColor = "red";
+			return {
+				INI: +kampfwerte.iniBasis.value * 2,
+				PA : +kampfwerte.paBasis.value  + 2
+			};
 		}
 		else {
-			kampfwerte.iniBasis.value /= 2;
-			kampfwerte.paBasis.value  -= 2;
 			kampfwerte.axxel.parentNode.style.backgroundColor = "";
+			return {
+				INI: +kampfwerte.iniBasis.value,
+				PA : +kampfwerte.paBasis.value
+			};
 		}
-		kampfwerte.calculate();
 	},
 	attributo : function () {
-		if (!kampfwerte.attributo.checked) {
+		if (kampfwerte.attro.checked) {
+			kampfwerte.attro.parentNode.style.backgroundColor = "orange";
+			$.ajax({
+				data: {
+					attribut: kampfwerte.attrName.value,
+					wert:     kampfwerte.attrWert.value
+				},
+				dataType: "json",
+				type:     "GET",
+				url:      "/attributo/"+kampfwerte.held.value
+			}).done(function(json) {
+				kampfwerte.iniBasis.value = json.iniBasis;
+				kampfwerte.atBasis.value  = json.AT;
+				kampfwerte.paBasis.value  = json.PA;
+				kampfwerte.fkBasis.value  = json.FK;
+				kampfwerte.attro.parentNode.style.backgroundColor = "red";
+				// apply changes
+				kampfwerte.calculate();
+			}).fail(function(jqXHR, type, text) { // jqXHR, error type, HTTP message (statusText)
+				console.log(type + " " + jqXHR.status + ": " + text);
+				kampfwerte.attro.parentNode.style.backgroundColor = "";
+			});
+		}
+		else {
 			kampfwerte.iniBasis.value = kampfwerte.iniBasis.dataset.default;
 			kampfwerte.atBasis.value  = kampfwerte.atBasis.dataset.default;
 			kampfwerte.paBasis.value  = kampfwerte.paBasis.dataset.default;
 			kampfwerte.fkBasis.value  = kampfwerte.fkBasis.dataset.default;
-			kampfwerte.axxeleratus();
+			kampfwerte.attrWert.value = $('#sel_att option:selected').data("wert");
+			kampfwerte.attro.parentNode.style.backgroundColor = "";
+			// apply changes
+			kampfwerte.calculate();
 		}
-		else {
-			$.ajax({});
-		}
-		// finally call axxeleratus()
 	},
 	calculate : function () {
 		var ini    = kampfwerte.setINI();
@@ -281,7 +306,8 @@ var kampfwerte = {
 };
 
  
-$('#k_axx').on("click", kampfwerte.axxeleratus);
+$('#k_axx').on("click", kampfwerte.calculate);
+$('#k_att').on("click", kampfwerte.attributo);
 
 $('#waf').on("click", 'input[type="radio"]', function() {
 	var $haupt = $("input[name='haupthand']:checked");

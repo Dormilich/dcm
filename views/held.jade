@@ -22,6 +22,7 @@ mixin print(__data)
 - 	return { wert: 0, AT: 0, PA: 0 }; 
 - }
 - function beautifyNumber(num) {
+- 	if (isNaN(num)) return num;
 - 	return (num > 0 ? "+" : num < 0 ? "–" : "") + Math.abs(num);
 - }
 
@@ -333,7 +334,7 @@ html(lang="de")
 				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
 				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
 		section#waf
-			table.data-section.eigenschaften.mitte(data-held=_id)
+			table.data-section.eigenschaften.mitte
 				caption INI & Kampfzauber
 				thead
 					tr
@@ -369,12 +370,12 @@ html(lang="de")
 						td
 							input#k_axx(type="checkbox")
 							input#iniBasis(type="hidden", value=Kampfwerte.INI - modifikatoren.INI, data-default=Kampfwerte.INI - modifikatoren.INI)
-							input#iniAxx(type="hidden", value=Kampfwerte.INI - modifikatoren.INI)
 							input#iniMod(type="hidden", value=modifikatoren.INI)
 							input#atBasis(type="hidden", value=Kampfwerte.AT, data-default=Kampfwerte.AT)
 							input#paBasis(type="hidden", value=Kampfwerte.PA, data-default=Kampfwerte.PA)
 							input#fkBasis(type="hidden", value=Kampfwerte.FK, data-default=Kampfwerte.FK)
 							input#auswMod(type="hidden", value=__ausw)
+							input#held(type="hidden", value=_id)
 						td
 							input#k_att(type="checkbox")
 							select#sel_att(size="1")
@@ -492,11 +493,11 @@ html(lang="de")
 							- var __tpPlus = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod) : 0
 							tr
 								td.links=__waffe.Name
-								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE"+__waffe.BE
+								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
 								td.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
 								td=__waffe.TP.dk.join(" / ")
-								td=__waffe.TP.dkMod.join(" / ")
+								td=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
 								td=__waffe.Laden
 			if Ausrüstung && Ausrüstung.Kleidung && Ausrüstung.Kleidung.length > 0
 				table.data-section.eigenschaften.mitte
