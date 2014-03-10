@@ -270,7 +270,10 @@ var kampfwerte = {
 				kampfwerte.calculate();
 			}).fail(function(jqXHR, type, text) { // jqXHR, error type, HTTP message (statusText)
 				console.log(type + " " + jqXHR.status + ": " + text);
+				// reset the changes
 				kampfwerte.attro.parentNode.style.backgroundColor = "";
+				kampfwerte.attro.checked  = false;
+				kampfwerte.attrWert.value = $('#sel_att option:selected').data("wert");
 			});
 		}
 		else {
