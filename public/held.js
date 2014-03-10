@@ -31,6 +31,7 @@ var kampfwerte = {
 	attrName  : ID('sel_att'),
 	attrWert  : ID('val_att'),
 	attrKK    : ID('val_att_kk'),
+	attribute : $('#att').data("attribute"),
 	// helper methods
 	getBE : function () {
 		var effBE  = 0
@@ -196,8 +197,9 @@ var kampfwerte = {
 	setWaffenTP : function ($row) {
 		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
 		var $tp = $row.find('td.tp');
+		var mod = $tp.data();
 		// TP-Basis
-		var tp  = +$tp.data("tp");
+		var tp  = +mod.tp;
 		// Axxeleratus
 		if (kampfwerte.axxel.checked) {
 			tp += 2;
@@ -209,12 +211,25 @@ var kampfwerte = {
 			kk  = +kampfwerte.attrWert.value;
 		}
 		// TP/KK
-		tp     += Math.floor( (kk - $tp.data("kk")) / $tp.data("tpkk") + 0.05 );
+		tp     += Math.floor( (kk - mod.kk) / mod.tpkk + 0.05 );
 		// display
-		$tp.text( $tp.data("w6") + " + " + tp );
+		$tp.text( mod.w6 + " + " + tp );
 	},
 	setFK : function($row) {
-		
+		// set FKW
+		var $fk = $row.find('td.at');
+		$fk.text( +kampfwerte.fkBasis.value + +$fk.data("taw") );
+
+		// set TP
+		var $tp = $row.find('td.tp');
+		var mod = $tp.data();
+		var tp  = mod.tp;
+		// if TP/KK is set at all
+		// (data-kk & data-tpkk are not set if not present in the DB)
+		if (mod.kk && mod.tpkk) {
+			tp += Math.floor( (kampfwerte.attribute[mod.attr].wert - mod.kk) / mod.tpkk + 0.05 );
+		}
+		$tp.text(mod.w6 + " + " + tp);
 	},
 	axxeleratus : function () {
 		// set INI-Basis
@@ -258,6 +273,9 @@ var kampfwerte = {
 			kampfwerte.setWaffenAT( $(this), radios );
 			kampfwerte.setWaffenPA( $(this), radios, iniPa );
 			kampfwerte.setWaffenTP( $(this) );
+		});
+		$('#fernkampf-waffen tr').each(function() {
+			kampfwerte.setFK( $(this) );
 		});
 	}
 };

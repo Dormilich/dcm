@@ -264,7 +264,7 @@ html(lang="de")
 						th Modifikationen:
 						td= Generierung.BgB.modifikation
 			
-			table.data-section.mitte.eigenschaften#att
+			table.data-section.mitte.eigenschaften#att(data-attribute=JSON.stringify(Attribute))
 				caption Attribute
 				colgroup
 					col(span="10", style="width: 10%;")
@@ -422,7 +422,7 @@ html(lang="de")
 								td=__waffe.DK
 								td.at(data-at=__at)=Kampfwerte.AT + __at
 								td.pa(data-pa=__pa, data-paw=Kampfwerte.PA + __pa)=Kampfwerte.PA + __pa
-								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-w6=__waffe.TP.roll)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
+								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
 								td=__waffe.BF
 								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
 								td
@@ -492,9 +492,9 @@ html(lang="de")
 							- var __tpPlus = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod) : 0
 							tr
 								td.links=__waffe.Name
-								td(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE"+__waffe.BE
+								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE"+__waffe.BE
 								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
-								td=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
+								td.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
 								td=__waffe.TP.dk.join(" / ")
 								td=__waffe.TP.dkMod.join(" / ")
 								td=__waffe.Laden

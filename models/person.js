@@ -135,7 +135,7 @@ var WaffenFKSchema = new Schema({
 	spez:    { type: Boolean, default: false },
 	BE:      { type: Number,  max: 0 },
 	WM: {
-		AT:  Number
+		AT:  { type: Number, default: 0 }
 	},
 	TP: {
 		roll:    String,
