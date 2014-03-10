@@ -1,0 +1,104 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title DCM Database Manager
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+	body
+		.container
+			.page-header.text-center
+				h1
+					span.fa.fa-user &nbsp;
+					| Nutzerprofil
+				a(href="/logout").btn.btn-default.btn-sm
+					span.fa.fa-sign-out
+					| Abmelden
+			.text-center
+				h2
+					span.fa.fa-hdd-o &nbsp;
+					| zur DB
+			.row
+				.col-sm-6
+					.well
+						h3
+							span.fa.fa-user &nbsp;
+							| E-Mail / Passwort
+						if (_User.local.email)
+							p
+								strong ID
+								| : #{_User._id}
+							p
+								strong E-Mail
+								| : #{_User.local.email}
+							p
+								strong Passwort-Hash
+								| : #{_User.local.password}
+							p
+								strong Name
+								| : #{_User.local.name}
+							a(href="/unlink/local").btn.btn-default Lösen
+						else
+							a(href="/connect/local").btn.btn-default Verbinden
+				.col-sm-6
+					.well
+						h3.text-warning OpenID
+						if (_User.openid.token)
+							p
+								strong ID
+								| : #{_User.openid.id}
+							p
+								strong Token
+								| : #{_User.openid.token}
+							p
+								strong E-Mail
+								| : #{_User.openid.email}
+							p
+								strong Name
+								| : #{_User.openid.name}
+							a(href="/unlink/openid").btn.btn-warning Lösen
+						else
+							a(href="/connect/openid").btn.btn-warning OpenID hinzufügen
+			.row
+				.col-sm-6
+					.well
+						h3.text-primary
+							span.fa.fa-facebook &nbsp;
+							| Facebook
+						if (_User.facebook.token)
+							p
+								strong ID
+								| : #{_User.facebook.id}
+							p
+								strong Token
+								| : #{_User.facebook.token}
+							p
+								strong E-Mail
+								| : #{_User.facebook.email}
+							p
+								strong Name
+								| : #{_User.facebook.name}
+							a(href="/unlink/facebook").btn.btn-primary Lösen
+						else
+							a(href="/connect/facebook").btn.btn-primary Facebook hinzufügen
+				.col-sm-6
+					.well
+						h3.text-danger
+							span.fa.fa-google-plus &nbsp;
+							| Google+
+						if (_User.google.token)
+							p
+								strong ID
+								| : #{_User.google.id}
+							p
+								strong Token
+								| : #{_User.google.token}
+							p
+								strong E-Mail
+								| : #{_User.google.email}
+							p
+								strong Name
+								| : #{_User.google.name}
+							a(href="/unlink/google").btn.btn-danger Lösen
+						else
+							a(href="/connect/google").btn.btn-danger Google hinzufügen

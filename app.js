@@ -76,6 +76,12 @@ app.use(function(error, req, res, next) {
 app.locals.pretty = true;
 
 /**************************************
+ ***       Configure Passport       ***
+ **************************************/
+
+require('./config/passport-dcm')(passport);
+
+/**************************************
  ***  Connect to and Watch MongoDB  ***
  **************************************/
 
@@ -102,10 +108,19 @@ process.on('SIGINT', function() {
  ***       Define HTTP Routes       ***
  **************************************/
 
-// forward to listing
-app.get('/', function (req, res) {
-	res.redirect('/helden');
+// setup login paths
+require('./routes/login')(app, passport);
+/*/ protect following paths
+app.all(/.+/, function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	res.redirect('/login');
 });
+app.get('/profil', function(req, res, next) {
+	res.render('profil', { _User: req.user });
+});//*/
+
 // list all characters
 // create and save a character
 // display character sheet (mundane, magic ordained)

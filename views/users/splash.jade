@@ -1,0 +1,45 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title DSA Charakter Manager
+		link(rel="stylesheet", href="show.css")
+		style.
+			.frame {
+				background-color: #eee;
+				border: 1px solid #ddd;
+				border-radius: 1em;
+				padding: 3em 5em;
+				width: 40em;
+				margin: auto;
+			}
+			a {
+				text-decoration: none;
+			}
+			#login {
+				display: inline-block;
+				text-align: center;
+				width: 12em;
+				padding: 1em;
+				background-color: #66f;
+				color: white;
+				font-weight: bold;
+				border: 1px solid gray;
+				border-radius: 0.5em;
+				margin: 1em;
+			}
+			#login:active {
+				background-color: #33f;
+			}
+			#signup {
+				color: blue;
+			}
+	body
+		header
+			h1.mitte DCM – DSA Charakter Manager
+		section
+			div.frame.mitte
+				a#login(href="/login") Anmelden
+				br
+				| oder &nbsp;
+				a#signup(href="/signup") Registrieren
