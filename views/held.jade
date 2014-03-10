@@ -486,13 +486,13 @@ html(lang="de")
 							th DK
 							th TP
 							th Ladezeit
-					tbody
+					tbody#fernkampf-waffen
 						each __waffe in Ausrüstung.Fernkampf
 							- var __talent = getTalent(Talente.Fernkampf, __waffe);
 							- var __tpPlus = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod) : 0
 							tr
 								td.links=__waffe.Name
-								td(title=__waffe.talent)="BE"+__waffe.BE
+								td(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE"+__waffe.BE
 								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
 								td=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
 								td=__waffe.TP.dk.join(" / ")

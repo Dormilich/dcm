@@ -89,7 +89,7 @@ var kampfwerte = {
 		bonus  -= kampfwerte.getBE();
 		// Axxeleratus and Attributo update the INI-Basis elsewhere
 		// get final INI
-		var ini = +kampfwerte.iniAxx.value + +kampfwerte.iniMod.value + bonus;
+		var ini = +kampfwerte.iniBasis.value + +kampfwerte.iniMod.value + bonus;
 		kampfwerte.iniOut.textContent = ini + " + W6";
 
 		return ini;
@@ -111,7 +111,7 @@ var kampfwerte = {
 		// display
 		kampfwerte.auswOut.textContent = ausw;
 	},
-	setWaffenAT : function ($row, opt) {
+	setWaffenAT : function ($row, radio) {
 		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW - BE-Mod
 		var $at = $row.find('td.at');
 		// AT-TaW + Spez + WM (Hauptwaffe)
@@ -124,45 +124,74 @@ var kampfwerte = {
 			AT -= Math.floor(eBE/2);
 		}
 		// WM (Parierwaffe), if selected
-		if ($row.find("input[name='haupthand']:checked").length === 1 && $pws.length === 1) {
-			AT += +opt.pws.closest('tr').find('td.at').data("wm");
+		if ($row.find(radio.haupt).length === 1 && radio.pws.length === 1) {
+			AT += +radio.pws.closest('tr').find('td.at').data("wm");
 		}
-		AT     += kampfwerte.getBHKMod(opt.haupt, opt.bhk);
+		AT     += kampfwerte.getBHKMod(radio.haupt, radio.bhk);
 		$at.text(AT);
 	},
-	setWaffenPA : function ($row, radio, bonus) {
+	setWaffenPA : function ($row, radio, iniMod) {
 		// PA = PA-Basis (Attributo) + PA-TaW (BHK/PW) + Spez + WM (Hauptwaffe) + 
 		//      WM (Parierwaffe) + Axxeleratus + INI-PA-Mod - BE +
 		//      SF PW / SF SK / SF BHK
-		var $pa = $row.find('td.pa');
+		var $pa    = $row.find('td.pa');
 		// PA-Basis
-		var PA  = +kampfwerte.paBasis.value;
-		var eBE =  kampfwerte.getBE() - $row.find('td.be').data("be");
-		if (eBE > 0) {
-			eBE = Math.floor( (eBE + 1) / 2 );
-		}
-		// BHK-Mod, if any
-		PA     += kampfwerte.getBHKMod(radio.haupt, radio.bhk);
-		// INI-Mod
-		PA     += bonus;
+		var PA     = +kampfwerte.paBasis.value;
+		// TaW
+		var tawMod = +$pa.data("pa");
 		// BE-Mod
-		PA     -= eBE;
-		// if selected main-weapon
+		var eBE    =  kampfwerte.getBE() - $row.find('td.be').data("be");
+		var beMod  = 0;
+		if (eBE > 0) {
+			beMod  = Math.floor( (eBE + 1) / 2 );
+		}
+		// BHK-Mod
+		var bhkMod = kampfwerte.getBHKMod(radio.haupt, radio.bhk);
+		// PA-Bonus for shields
+		var skMod  = Math.floor( (PA + tawMod - beMod + iniMod - 12) / 3 + 0.01 )
+		// main-weapon
 		if ($row.find(radio.haupt).length === 1) {
-			// PA-WM (Parierwaffe)
+			// main-weapon with parray-weapon
 			if (radio.pws.length) {
+				// PA-WM (Parierwaffe)
 				PA += +radio.pws.closest('tr').find('td.pa').data("wm");
+				// PA-Mod depending on used SF
+				switch (kampfwerte.SFpws.value) {
+					case "SK I":
+						PA += 3; 
+						PA += skMod;
+						$pa.text(PA);
+						return null;
+					case "SK II":
+						PA += 5; 
+						PA += skMod;
+						$pa.text(PA);
+						return null;
+					case "PW I":
+						PA -= 1;
+						break;
+					case "PW II":
+						PA += 2;
+						break;
+				}
 			}
-			// diff between PW & SK
+			// BHK mode
+			else if (radio.bhk.length === 1) {
+				// equal-ness of weapons
+				PA += bhkMod;
+			}
 		}
 		// BHK 2nd-weapon
 		else if ($row.find(radio.bhk).length === 1) {
-			// get BHK-SF
+			// equal-ness of weapons
+			PA += bhkMod;
+			// BHK I / BHK II
+			PA -= kampfwerte.SFbhk.value;
 		}
-		// regular value (reset)
-		else {
-			PA += +$pa.data("pa");
-		}
+		PA -= beMod;
+		PA += iniMod;
+		PA += tawMod;
+		$pa.text(PA);
 	},
 	setWaffenTP : function ($row) {
 		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
@@ -184,35 +213,42 @@ var kampfwerte = {
 		// display
 		$tp.text( $tp.data("w6") + " + " + tp );
 	},
+	setFK : function($row) {
+		
+	},
 	axxeleratus : function () {
 		// set INI-Basis
 		// copy the INI-Basis and modify it according whether the spell is active
 		if (kampfwerte.axxel.checked) {
-			kampfwerte.iniAxx.value  =  kampfwerte.iniBasis.value * 2;
-			kampfwerte.paBasis.value = +kampfwerte.paBasis.value  + 2;
+			kampfwerte.iniBasis.value *= 2;
+			kampfwerte.paBasis.value   = +kampfwerte.paBasis.value  + 2; // damn you, operator overloading!
 			kampfwerte.axxel.parentNode.style.backgroundColor = "red";
 		}
 		else {
-			kampfwerte.iniAxx.value   = kampfwerte.iniBasis.value;
-			kampfwerte.paBasis.value -= 2;
+			kampfwerte.iniBasis.value /= 2;
+			kampfwerte.paBasis.value  -= 2;
 			kampfwerte.axxel.parentNode.style.backgroundColor = "";
 		}
 		kampfwerte.calculate();
 	},
 	attributo : function () {
 		if (!kampfwerte.attributo.checked) {
-			kampfwerte.iniBasis.value = ID('iniAtt').defaultValue; // buggy in Chrome !!!
-			
+			kampfwerte.iniBasis.value = kampfwerte.iniBasis.dataset.default;
+			kampfwerte.atBasis.value  = kampfwerte.atBasis.dataset.default;
+			kampfwerte.paBasis.value  = kampfwerte.paBasis.dataset.default;
+			kampfwerte.fkBasis.value  = kampfwerte.fkBasis.dataset.default;
+			kampfwerte.axxeleratus();
 		}
 		else {
 			$.ajax({});
 		}
+		// finally call axxeleratus()
 	},
 	calculate : function () {
 		var ini    = kampfwerte.setINI();
 		var iniPa  = kampfwerte.getPABonus(ini);
 		// INI => PA => Ausweichen
-		kampfwerte.setAusweichen( iniPa );
+		kampfwerte.setAusweichen(iniPa);
 		var radios = {
 			pws:   $("input[name='nebenhand'].pws:checked"),
 			bhk:   $("input[name='nebenhand'].bhk:checked"),
@@ -249,98 +285,3 @@ $('#sel_att').on("change", function() {
 	var wert = $(this).find('option:selected').data("wert");
 	$('#val_att').val(wert);
 });
-/*
-	setINIWaffe : function () {
-		var $haupt = $("input[name='haupthand']:checked");
-		var $neben = $("input[name='nebenhand']:checked");
-				// add INI from secondary weapon
-		if ($haupt.length === 1 && $neben.length === 1) {
-			if (kampfwerte.hasSameRow($haupt, $neben)) {
-				$neben.prop("checked", false);
-				return null;
-			}
-			// get ini <td>s
-			var $iniHW = $haupt.closest('tr').find('td.ini');
-			var $iniNW = $neben.closest('tr').find('td.ini');
-			// set combined values
-			$iniHW.text(
-				beautifyNumber( +$iniHW.data("ini") + +$iniNW.data("ini") )
-			);
-		}
-		// reset original values
-		if ($haupt.length === 1 && $neben.length === 0) {
-			// get ini <td>
-			var $iniHW = $haupt.closest('tr').find('td.ini');
-			// (re)set to original values
-			$iniHW.text(
-				beautifyNumber( +$iniHW.data("ini") )
-			);
-		}
-	},
-	setAT : function () { // reset left weapon !
-		var $haupt = $("input[name='haupthand']:checked")
-		  , $bhk   = $("input[name='nebenhand'].bhk:checked")
-		  , $pws   = $("input[name='nebenhand'].pws:checked") // PWS => Parierwaffen & Schilde
-		  ;
-		if ($haupt.length === 1) {
-			var $rowR  = $haupt.closest("tr")
-			  , rechts = {
-					$at  : $rowR.find("td.at"),
-					$be  : $rowR.find("td.be"),
-					name : $rowR.find("td.name").text(),
-					AT   : +kampfwerte.atBasis.value
-				}
-			  ;
-			rechts.eBE    = kampfwerte.getBE() - rechts.$be.data("be");
-			rechts.talent = rechts.$be.data("talent");
-			// main-weapon WM + TaW-AT + Spez
-			rechts.AT += +rechts.$at.data("at")
-			// armour BE
-			if (rechts.eBE > 0) {
-				rechts.AT -= Math.floor(rechts.eBE/2);
-			}
-			// side-weapon (parry/shield)
-			if ($pws.length === 1) {
-				// side-weapon WM
-				rechts.AT += +$pws.closest("tr").find("td.at").data("wm");
-			}
-			// sec-weapon (2-handed)
-			else if ($bhk.length === 1) {
-				var $rowL = $bhk.closest("tr")
-				  , links = {
-						$at  : $rowL.find("td.at"),
-						$be  : $rowL.find("td.be"),
-						name : $rowL.find("td.name").text(),
-						AT   : +kampfwerte.atBasis.value
-					}
-				  ;
-				links.eBE    = kampfwerte.getBE() - links.$be.data("be");
-				links.talent = links.$be.data("talent");
-				// different weapon skills
-				if (rechts.talent !== links.talent) {
-					rechts.AT -= 2;
-					links.AT  -= 2;
-				}
-				// same skill, different weapons
-				else if (rechts.name.intersect(links.name).length === 0) {
-					rechts.AT -= 1;
-					links.AT  -= 1;
-				}
-				// modify sec-weapon
-				// sec-weapon TaW-AT + WM + Spez
-				links.AT      += +links.$at.data("at");
-				// Mod according to SF Linkhand/BHK I/BHK II
-				links.AT      -= kampfwerte.SFbhk.value;
-				// armour BE
-				if (links.eBE > 0) {
-					links.AT  -= Math.floor(links.eBE/2);
-				}
-				// display sec-weapon
-				links.$at.text(links.AT);
-			}
-			// display
-			rechts.$at.text(rechts.AT);
-		}
-		
-	},
-*/
