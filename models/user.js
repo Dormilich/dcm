@@ -24,6 +24,7 @@
 
 var mongoose = require("mongoose")
   , bcrypt   = require("bcrypt-nodejs")
+  , IDREF    = mongoose.Schema.Types.ObjectId
   ;
 
 var userSchema = mongoose.Schema({
@@ -50,7 +51,8 @@ var userSchema = mongoose.Schema({
 		email    : String,
 		name     : String
 	},
-	friends : [mongoose.Schema.Types.ObjectId]
+	friends : [IDREF],
+	chars   : [IDREF]
 });
 
 userSchema.methods.generateHash = function (password) {

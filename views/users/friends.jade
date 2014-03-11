@@ -1,0 +1,46 @@
+doctype html
+html(lang="de")
+	head
+		meta(charset="utf-8")
+		title DCM – DSA Charakter Manager
+		//link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		//script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+	body
+		nav.navbar.navbar-default(role="navigation")
+			.container
+				ul.nav.navbar-nav
+					li
+						a(href="/helden") Charaktere
+					li.active
+						a Freunde
+					li
+						a(href="/profil") Konten
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href="/about") Impressum
+					li
+						a(href="/logout")
+							span.fa.fa-sign-out
+							| Abmelden
+		.container
+			.page-header.text-center
+				h1
+					span.fa.fa-user &nbsp;
+					|  Freunde
+			.row
+				.col-sm-6
+					.panel.panel-default
+						.panel-heading
+							h4
+								span.fa.fa-users &nbsp;
+								| Meine Freunde
+						.panel-body
+				.col-sm-6
+					.panel.panel-default
+						.panel-heading
+							h4
+								span.fa.fa-search &nbsp;
+								| Freunde finden
+						.panel-body

@@ -22,44 +22,52 @@
  * THE SOFTWARE.
  */
 
-module.exports = function (app, passport) {
-	// splash screen, login links
-	app.get('/', function (req, res, next) {
-		res.render('splash');
+module.exports = function (app) {
+	// Account Panel
+	app.get('/profil', function(req, res, next) {
+		res.render('users/profil', { _User: req.user });
 	});
-	app.get('/logout', function (req, res, next) {
-		req.logout();
-		res.redirect('/');
+	// Character list	
+	app.get('/helden', function(req, res, next) {
+		res.render('users/chars', { _User: req.user });
 	});
-	
-	// LOCAL LOGIN (email/password)
-	
-	app.get('/login', function (req, res, next) {
-		res.render('login', { message: req.flash('loginMessage') });
+/*
+	app.get('/helden', function(req, res, next) {
+		var disabled = ("deleted" in req.query);
+		Held
+			.find({ disabled: disabled })
+			.select('Person AP')
+			.sort('AP.alle')
+			.lean()
+			.exec(function(err, arr) {
+				if (err) return next(err);
+				var obj = {
+					_liste: arr,
+					_disabled: disabled,
+					_formData: {
+						method: disabled ? "put" : "delete",
+						sign:   disabled ? "\u2713" : "\u2717",
+						title:  disabled ? "wiederherstellen" : "löschen",
+						class:  disabled ? "restore" : "remove"
+					}
+				};
+				res.render('list-helden', obj);
+			})
+		;
 	});
-	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : "/profil",
-		failureRedirect : "/login",
-		failureFlash    : true
-	}));
-	
-	app.get('/signup', function (req, res, next) {
-		res.render('signup', { message: req.flash('signupMessage') });
+*/
+	// Friend list
+	app.get('/freunde', function(req, res, next) {
+		User.find(function(err, docs) {
+			if (err) return next(err);
+			res.render('users/friends', { 
+				_User: req.user,
+				_People: // name & _id
+			});
+		});
 	});
-	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : "/profil",
-		failureRedirect : "/signup",
-		failureFlash    : true
-	}));
-	
-	// GOOGLE
-	
-	// Facebook
-
-	// OpenID
-	
-	// AUTHORIZE
-	
-	// UNLINK
-	
+	// About page
+	app.get('/about', function(req, res, next) {
+		res.render('about', { _User: req.user });
+	});
 };

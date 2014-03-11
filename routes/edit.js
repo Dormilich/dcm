@@ -68,6 +68,9 @@ module.exports = function (app) {
 		if (!/^[0-9a-fA-F]+$/.test(id)) {
 			return next('route');
 		}
+		if (req.user.chars.indexOf(id) < 0) {
+			next(new Error("Du darfst diesen Charakter nicht editieren."));
+		}
 		req.id = id;
 		next();
 	});

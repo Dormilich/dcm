@@ -30,6 +30,7 @@ var path    = require('path')
 
 module.exports = function (app) {
 	// pre-route request modification
+	// ### TODO ### make available only to users and friends
 	app.param('mongoid', function (req, res, next, id) {
 		if (!/^[0-9a-fA-F]+$/.test(id)) {
 			return next('route');
@@ -38,7 +39,8 @@ module.exports = function (app) {
 		next();
 	});
 	// list all characters
-	// subject to change, active and deleted Chars need different layout
+	// ### TODO ### active and deleted Chars need different layout
+	// ### TODO ### move to user route
 	app.get('/helden', function(req, res, next) {
 		var disabled = ("deleted" in req.query);
 		Held
@@ -68,7 +70,7 @@ module.exports = function (app) {
 	// create and save a character
 	app.get('/neu', function (req, res, next) {
 		if (req.query.force === "jade") {
-			res.render('new-char');
+			res.render('held/new-char');
 		}
 		else {
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
@@ -115,7 +117,7 @@ module.exports = function (app) {
 			;
 			Held.populate(doc, talentTypes, function(err, doc) {
 				if (err) return next(err);
-				res.render('held', doc);
+				res.render('held/held', doc);
 			});
 		});
 	});
@@ -127,7 +129,7 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
-				res.render('magie', doc);
+				res.render('held/magie', doc);
 			})
 		;
 	});
@@ -139,7 +141,7 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
-				res.render('geweiht', doc);
+				res.render('held/geweiht', doc);
 			})
 		;
 	});

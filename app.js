@@ -118,11 +118,8 @@ app.all(/.+/, function isLoggedIn(req, res, next) {
 	res.redirect('/login');
 });
 // User Control Panel
-app.get('/profil', function(req, res, next) {
-	res.render('users/profil', { _User: req.user });
-});
+require("./routes/user")(app);
 
-// list all characters
 // create and save a character
 // display character sheet (mundane, magic ordained)
 // delete/restore character
