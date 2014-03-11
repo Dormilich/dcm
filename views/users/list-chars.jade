@@ -37,7 +37,7 @@ html(lang="de")
 						.panel-heading
 							h4
 								span.fa.fa-user &nbsp;
-								strong E-Mail / Passwort
+								| E-Mail / Passwort
 						.panel-body
 							if (_User.local.email)
 								p
@@ -46,16 +46,13 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.local.name}
-								a(href="/unlink/local").btn.btn-sm.btn-default Trennen
-								| &nbsp;
-								a(href="/setup/local").btn.btn-sm.btn-default Daten ändern
+								a(href="/unlink/local").btn.btn-default Trennen
 							else
-								a(href="/connect/local").btn.btn-sm.btn-default Verbinden
+								a(href="/connect/local").btn.btn-default Verbinden
 				.col-sm-6
 					.panel.panel-default
 						.panel-heading
-							h4.text-warning 
-								strong OpenID
+							h4.text-warning OpenID
 						.panel-body
 							if (_User.openid.token)
 								p
@@ -64,16 +61,16 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.openid.name}
-								a(href="/unlink/openid").btn.btn-sm.btn-warning Trennen
+								a(href="/unlink/openid").btn.btn-warning Trennen
 							else
-								a(href="/connect/openid").btn.btn-sm.btn-warning OpenID hinzufügen
+								a(href="/connect/openid").btn.btn-warning OpenID hinzufügen
 			.row
 				.col-sm-6
 					.panel.panel-default
 						.panel-heading
 							h4.text-primary
 								span.fa.fa-facebook &nbsp;
-								strong Facebook
+								| Facebook
 						.panel-body
 							if (_User.facebook.token)
 								p
@@ -82,15 +79,15 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.facebook.name}
-								a(href="/unlink/facebook").btn.btn-sm.btn-primary Trennen
+								a(href="/unlink/facebook").btn.btn-primary Trennen
 							else
-								a(href="/connect/facebook").btn.btn-sm.btn-primary Facebook hinzufügen
+								a(href="/connect/facebook").btn.btn-primary Facebook hinzufügen
 				.col-sm-6
 					.panel.panel-default
 						.panel-heading
 							h4.text-danger
 								span.fa.fa-google-plus &nbsp;
-								strong Google+
+								| Google+
 						.panel-body
 							if (_User.google.token)
 								p
@@ -99,6 +96,6 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.google.name}
-								a(href="/unlink/google").btn.btn-sm.btn-danger Trennen
+								a(href="/unlink/google").btn.btn-danger Trennen
 							else
-								a(href="/connect/google").btn.btn-sm.btn-danger Google hinzufügen
+								a(href="/connect/google").btn.btn-danger Google hinzufügen

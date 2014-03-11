@@ -2,44 +2,27 @@ doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title DSA Charakter Manager
-		link(rel="stylesheet", href="show.css")
+		title DCM – DSA Charakter Manager
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
 		style.
-			.frame {
-				background-color: #eee;
-				border: 1px solid #ddd;
-				border-radius: 1em;
-				padding: 3em 5em;
-				width: 40em;
-				margin: auto;
+			body {
+				padding: 5em;
 			}
 			a {
-				text-decoration: none;
-			}
-			#login {
-				display: inline-block;
-				text-align: center;
-				width: 12em;
-				padding: 1em;
-				background-color: #66f;
-				color: white;
-				font-weight: bold;
-				border: 1px solid gray;
-				border-radius: 0.5em;
-				margin: 1em;
-			}
-			#login:active {
-				background-color: #33f;
-			}
-			#signup {
-				color: blue;
+				width: 9em;
 			}
 	body
-		header
-			h1.mitte DCM – DSA Charakter Manager
-		section
-			div.frame.mitte
-				a#login(href="/login") Anmelden
-				br
-				| oder &nbsp;
-				a#signup(href="/signup") Registrieren
+		.container
+			.jumbotron.text-center
+				h1 
+					span.fa.fa-lock &nbsp;
+					| DSA Charakter Manager
+				a(href="/login").btn.btn-default
+					span.fa.fa-user &nbsp;
+					| Anmelden
+				| &nbsp;
+				a(href="/signup").btn.btn-default
+					span.fa.fa-user &nbsp;
+					| Registrieren
+				

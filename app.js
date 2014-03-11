@@ -110,16 +110,17 @@ process.on('SIGINT', function() {
 
 // setup login paths
 require('./routes/login')(app, passport);
-/*/ protect following paths
+// protect following paths
 app.all(/.+/, function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
 	res.redirect('/login');
 });
+// User Control Panel
 app.get('/profil', function(req, res, next) {
-	res.render('profil', { _User: req.user });
-});//*/
+	res.render('users/profil', { _User: req.user });
+});
 
 // list all characters
 // create and save a character
