@@ -22,6 +22,11 @@
  * THE SOFTWARE.
  */
 
+var path    = require('path')
+  , appRoot = path.dirname(require.main.filename)
+  , User    = require( path.join(appRoot, 'models/user') )
+  ;
+
 module.exports = function (app) {
 	// Account Panel
 	app.get('/profil', function(req, res, next) {
@@ -58,13 +63,38 @@ module.exports = function (app) {
 */
 	// Friend list
 	app.get('/freunde', function(req, res, next) {
-		User.find(function(err, docs) {
-			if (err) return next(err);
-			res.render('users/friends', { 
-				_User: req.user,
-				_People: // name & _id
-			});
-		});
+		User
+			.find()
+			.in("_id", req.user.friends)
+			.exec(function(err, docs) {
+				if (err) return next(err);
+				res.render('users/friends', { 
+					_User:    req.user,
+					_Friends: docs
+				});
+			})
+		;
+	});
+	app.get('/userlist', function(req, res, next) {
+		var query = null;
+		if ("name" in req.query) {
+			query = User.find({ "local.name": new RegExp("^"+req.query.name, "i") });
+		}
+		else if ("id" in req.query) {
+			query = User.findById(req.query.id);
+		}
+		else {
+			res.json(404);
+			return null;
+		}
+		query
+			.select("local.name _id friends chars")
+			.lean()
+			.exec(function(err, arr) {
+				if (err) return next(err);
+				res.json(arr);
+			})
+		;
 	});
 	// About page
 	app.get('/about', function(req, res, next) {
