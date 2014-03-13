@@ -6,9 +6,19 @@ html(lang="de")
 		//link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-		//script(src="/jquery-2.0.3.min.js")
+		script(src="//code.jquery.com/jquery.min.js")
 		//script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
-		//script(src="/jquery-ui-1.10.4.custom.min.js")
+		script(src="/typeahead.bundle.min.js")
+		style.
+			.tt-dropdown-menu {
+				padding: 0.5em 0;
+				background-color: white;
+				border: 1px solid gray;
+				border-radius: 0.5em;
+				margin-top: 0.2em;
+				width: 200px;
+				text-indent: 1em;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container
@@ -42,6 +52,9 @@ html(lang="de")
 							ul
 								each __friend in _Friends
 									li
+										label.checkbox-inline
+											input(type="checkbox", checked)
+											|  #{__friend.local.name}
 
 				.col-sm-6
 					.panel.panel-default
@@ -50,9 +63,26 @@ html(lang="de")
 								span.fa.fa-search &nbsp;
 								| Freunde finden
 						.panel-body
-							.input-group
+							.form-group
 								input#username-search.form-control(type="text", placeholder="Suche nach Namen")
-								span.input-group-btn
-									button.btn.btn-default(type="button")
-										span.fa.fa-plus
+								button.btn.btn-default(type="button")
+									span.fa.fa-plus
 		script.
+			function dropdownItem(obj) {
+				return '<p><div>'+obj.local.name+'</div><div><small>'+obj.local.email+'</small></div></p>';
+			}
+			$('#username-search').typeahead({
+				hint:      true,
+				highlight: true,
+				minLength: 1
+			}, {
+				name:       "usernames",
+				displayKey: "name",
+				templates: {
+					empty: '<div>—kein Name gefunden—</div>',
+					suggestion: dropdownItem,
+				},
+				source: function (q, cb) {
+					$.getJSON("/userlist", { name: q }, cb);
+				}
+			});
