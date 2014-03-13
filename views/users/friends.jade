@@ -19,6 +19,9 @@ html(lang="de")
 				width: 200px;
 				text-indent: 1em;
 			}
+			.tt-cursor {
+				background-color: silver;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container
@@ -47,13 +50,14 @@ html(lang="de")
 						.panel-heading
 							h4
 								span.fa.fa-users &nbsp;
-								| Meine Freunde
+								span Meine Freunde
+								span#friend-count.badge.pull-right=_User.friends.length
 						.panel-body
-							ul
+							ul#friend-list.list-group
 								each __friend in _Friends
-									li
+									li.list-group-item
 										label.checkbox-inline
-											input(type="checkbox", checked)
+											input(type="checkbox", name="friends[]", value=__friend._id, checked)
 											|  #{__friend.local.name}
 
 				.col-sm-6
@@ -61,22 +65,22 @@ html(lang="de")
 						.panel-heading
 							h4
 								span.fa.fa-search &nbsp;
-								| Freunde finden
+								|  Freunde finden
 						.panel-body
 							.form-group
 								input#username-search.form-control(type="text", placeholder="Suche nach Namen")
-								button.btn.btn-default(type="button")
-									span.fa.fa-plus
+								button#empty.btn.btn-default
+									span.fa.fa-times
 		script.
 			function dropdownItem(obj) {
-				return '<p><div>'+obj.local.name+'</div><div><small>'+obj.local.email+'</small></div></p>';
+				return '<p><div>'+obj.name+'</div><div><small>'+obj.email+'</small></div></p>';
 			}
 			$('#username-search').typeahead({
 				hint:      true,
 				highlight: true,
 				minLength: 1
 			}, {
-				name:       "usernames",
+				name:      "usernames",
 				displayKey: "name",
 				templates: {
 					empty: '<div>—kein Name gefunden—</div>',
@@ -85,4 +89,23 @@ html(lang="de")
 				source: function (q, cb) {
 					$.getJSON("/userlist", { name: q }, cb);
 				}
+			}).on("typeahead:selected", function(evt, selection, datasetName) {
+				var $li = $('<li class="list-group-item"/>');
+				var $label = $('<label class="checkbox-inline"/>');
+				var $cbox = $('<input type="checkbox" name="friends[]"/>');
+				$cbox.val(selection.id);
+				$label.append($cbox).append(selection.name);
+				$li.append($label);
+				$('#friend-list').append($li);
+			});
+			$('#empty').on("click", function() {
+				$('#username-search').val("");
+			});
+			$('#friend-list').on("click", 'input', function() {
+				$.post( 
+					"/freunde", 
+					$('#friend-list').find(':checked').serialize() 
+				).done(function(data) {
+					$('#friend-count').text(data.count);
+				});
 			});

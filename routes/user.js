@@ -75,6 +75,15 @@ module.exports = function (app) {
 			})
 		;
 	});
+	// save friend list via AJAX
+	app.post('/freunde', function(req, res, next) {
+		req.user.friends = req.body.friends;
+		req.user.save(function(err) {
+			if (err) return next(err);
+			res.json({ count: req.user.friends.length });
+		});
+	});
+	// get list of users matching a name string
 	app.get('/userlist', function(req, res, next) {
 		var query = null;
 		if ("name" in req.query) {
@@ -87,14 +96,16 @@ module.exports = function (app) {
 			res.json(404);
 			return null;
 		}
-		query
-			.select("local.name local.email _id friends chars")
-			.lean()
-			.exec(function(err, arr) {
-				if (err) return next(err);
-				res.json(arr);
-			})
-		;
+		query.exec(function(err, arr) {
+			if (err) return next(err);
+			res.json(arr.map(function(user) {
+				return {
+					id:    user._id,
+					name:  user.local.name,
+					email: user.local.email
+				};
+			}));
+		});
 	});
 	// About page
 	app.get('/about', function(req, res, next) {
