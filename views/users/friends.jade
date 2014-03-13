@@ -16,11 +16,14 @@ html(lang="de")
 				border: 1px solid gray;
 				border-radius: 0.5em;
 				margin-top: 0.2em;
-				width: 200px;
+				min-width: 200px;
 				text-indent: 1em;
 			}
 			.tt-cursor {
 				background-color: silver;
+			}
+			.twitter-typeahead {
+				width: 100%;
 			}
 	body
 		nav.navbar.navbar-default(role="navigation")
@@ -69,8 +72,8 @@ html(lang="de")
 						.panel-body
 							.form-group
 								input#username-search.form-control(type="text", placeholder="Suche nach Namen")
-								button#empty.btn.btn-default
-									span.fa.fa-times
+							.form-group.text-center
+								button#empty.btn.btn-default Neue Suche
 		script.
 			function dropdownItem(obj) {
 				return '<p><div>'+obj.name+'</div><div><small>'+obj.email+'</small></div></p>';

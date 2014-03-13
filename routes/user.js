@@ -87,7 +87,9 @@ module.exports = function (app) {
 	app.get('/userlist', function(req, res, next) {
 		var query = null;
 		if ("name" in req.query) {
-			query = User.find({ "local.name": new RegExp(req.query.name, "i") }).nin("_id", [req.user._id]);
+			query = User
+				.find({ "local.name": new RegExp(req.query.name, "i") })
+				.nin("_id", [req.user._id].concat(req.user.friends));
 		}
 		else if ("id" in req.query) {
 			query = User.findById(req.query.id);
