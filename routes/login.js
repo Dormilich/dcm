@@ -38,7 +38,7 @@ module.exports = function (app, passport) {
 		res.render('login', { message: req.flash('loginMessage') });
 	});
 	app.post('/login', passport.authenticate('local-login', {
-		successRedirect : "/profil",
+		successRedirect : "/freunde",
 		failureRedirect : "/login",
 		failureFlash    : true
 	}));
@@ -47,7 +47,7 @@ module.exports = function (app, passport) {
 		res.render('signup', { message: req.flash('signupMessage') });
 	});
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : "/profil",
+		successRedirect : "/freunde",
 		failureRedirect : "/signup",
 		failureFlash    : true
 	}));

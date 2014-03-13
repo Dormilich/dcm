@@ -30,9 +30,9 @@ var mongoose = require("mongoose")
 var userSchema = mongoose.Schema({
 	isAdmin : { type: Boolean, default: false },
 	local   : {
-		email    : String,
+		email    : { type: String, unique: true },
 		password : String,
-		name     : String
+		name     : { type: String, unique: false }
 	},
 	facebook : {
 		id       : String,

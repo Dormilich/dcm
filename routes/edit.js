@@ -48,35 +48,9 @@ function getTalentType(tname) {
 	};
 }
 
-function realpath(relativePath) {
-	return path.join(appRoot, relativePath);
-}
-
 module.exports = function (app) {
-	var editDirFileNames = fs.readdirSync( realpath('views/edit-held') ).map(function(item) {
-		return item.split('.')[0];
-	});
-	// pre-route request modifications
-	app.param('section', function(req, res, next, id) {
-		if (editDirFileNames.indexOf(id) < 0) {
-			return next('route');
-		}
-		req.section = id;
-		next();
-	});
-	app.param('mongoid', function (req, res, next, id) {
-		if (!/^[0-9a-fA-F]+$/.test(id)) {
-			return next('route');
-		}
-		if (req.user.chars.indexOf(id) < 0) {
-			next(new Error("Du darfst diesen Charakter nicht editieren."));
-		}
-		req.id = id;
-		next();
-	});
-	
 	// Character's skills edit form
-	app.get('/talente/:mongoid', function(req, res, next) {
+	app.get('/talente/:mdbwrite', function(req, res, next) {
 		async.parallel({
 			_Nahkampf:     getTalentType("Nahkampf"),
 			_Fernkampf:    getTalentType("Fernkampf"),
@@ -101,7 +75,7 @@ module.exports = function (app) {
 		});
 	});
 	// Character's spells edit form
-	app.get('/zauber/:mongoid', function(req, res, next) {
+	app.get('/zauber/:mdbwrite', function(req, res, next) {
 		async.parallel({
 			_zauber: function (cb) {
 				Zauber
@@ -132,7 +106,7 @@ module.exports = function (app) {
 		});
 	});
 	// Character's rituals edit form
-	app.get('/rituale/:mongoid', function(req, res, next) {
+	app.get('/rituale/:mdbwrite', function(req, res, next) {
 		async.parallel({
 			_talente: function (cb) {
 				Talent
@@ -186,7 +160,7 @@ module.exports = function (app) {
 		});
 	});
 	// Character's liturgies edit form
-	app.get('/liturgien/:mongoid', function(req, res, next) {
+	app.get('/liturgien/:mdbwrite', function(req, res, next) {
 		async.parallel({
 			_held: function (cb) {
 				Held
@@ -241,7 +215,7 @@ module.exports = function (app) {
 		})
 	});
 	// Character's weapons
-	app.get('/waffen/:mongoid', function(req, res, next) {
+	app.get('/waffen/:mdbwrite', function(req, res, next) {
 		async.parallel({
 			_Nahkampf:     getTalentType("Nahkampf"),
 			_Fernkampf:    getTalentType("Fernkampf"),
@@ -258,7 +232,7 @@ module.exports = function (app) {
 			res.render('edit-held/waffen', obj);
 		});
 	});
-	app.delete('/waffen/:typ/:mongoid', function(req, res, next) {
+	app.delete('/waffen/:typ/:mdbwrite', function(req, res, next) {
 		Held.findById(req.id, function(err, doc) {
 			if (err) return next(err);
 			if (doc && doc.Ausrüstung[req.params.typ]) {
@@ -274,7 +248,7 @@ module.exports = function (app) {
 		});
 	});
 	// edit other character sheet sections
-	app.get('/:section/:mongoid', function(req, res, next) {
+	app.get('/:section/:mdbwrite', function(req, res, next) {
 		Held
 			.findById(req.id)
 			.exec(function(err, obj) {
@@ -285,7 +259,7 @@ module.exports = function (app) {
 		;
 	});
 	// save changes
-	app.put('/:section/:mongoid',  function (req, res, next) {
+	app.put('/:section/:mdbwrite',  function (req, res, next) {
 		req.body.modified = new Date();
 		Held.findByIdAndUpdate(req.id, req.body, function(err, doc) {
 			if (err) return next(err);

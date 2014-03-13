@@ -108,8 +108,12 @@ process.on('SIGINT', function() {
  ***       Define HTTP Routes       ***
  **************************************/
 
+// load app params
+require('./config/param')(app);
+
 // setup login paths
 require('./routes/login')(app, passport);
+
 // protect following paths
 app.all(/.+/, function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
@@ -117,6 +121,7 @@ app.all(/.+/, function isLoggedIn(req, res, next) {
 	}
 	res.redirect('/login');
 });
+
 // User Control Panel
 require("./routes/user")(app);
 

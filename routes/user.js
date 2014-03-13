@@ -34,8 +34,24 @@ module.exports = function (app) {
 	});
 	// Character list	
 	app.get('/helden', function(req, res, next) {
-		res.render('users/chars', { _User: req.user });
+		Held
+			.find({ disabled: false })
+			.in("_id", req.user.chars)
+			.select('Person AP')
+			.sort('AP.alle')
+			.exec(function(err, arr) {
+				res.render('users/chars', { 
+					_User:  req.user,
+					_Chars: arr
+				});
+			})
+		;
 	});
+	// deleted Characters' list	
+	app.get('/papierkorb', function(req, res, next) {
+		res.render('users/deleted', { _User: req.user });
+	});
+
 /*
 	app.get('/helden', function(req, res, next) {
 		var disabled = ("deleted" in req.query);

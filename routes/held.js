@@ -29,15 +29,6 @@ var path    = require('path')
   ;
 
 module.exports = function (app) {
-	// pre-route request modification
-	// ### TODO ### make available only to users and friends
-	app.param('mongoid', function (req, res, next, id) {
-		if (!/^[0-9a-fA-F]+$/.test(id)) {
-			return next('route');
-		}
-		req.id = id;
-		next();
-	});
 	// list all characters
 	// ### TODO ### active and deleted Chars need different layout
 	// ### TODO ### move to user route
@@ -67,7 +58,7 @@ module.exports = function (app) {
 	/**********************************
 	 ***     Character creation     ***
 	 **********************************/
-	// create and save a character
+	// create a character
 	app.get('/neu', function (req, res, next) {
 		if (req.query.force === "jade") {
 			res.render('held/new-char');
@@ -76,6 +67,7 @@ module.exports = function (app) {
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
 		}
 	});
+	// save a character and its association
 	app.post('/neu', function(req, res, next) {
 		var key
 		  , mod = req.body.modifikatoren
@@ -93,16 +85,20 @@ module.exports = function (app) {
 			frei: 0,
 			alle: ((+req.body.Attribute.KL.wert) + (+req.body.Attribute.IN.wert)) * 20
 		};
-		Held.create(req.body, function(error, doc) {
-			if (error) return next(error);
-			res.redirect('/held/' + doc._id);
+		Held.create(req.body, function(err, doc) {
+			if (err) return next(err);
+			req.user.chars.push(doc._id);
+			req.user.save(function(err) {
+				if (err) return next(err);
+				res.redirect('/held/' + doc._id);
+			});
 		});
 	});
 	/**********************************
 	 ***     Character display      ***
 	 **********************************/
 	// display character sheet (mundane)
-	app.get('/held/:mongoid', function (req, res, next) {
+	app.get('/held/:mdbread', function (req, res, next) {
 		Held.findById(req.id, function(err, doc) {
 			if (err)  return next(err);
 			if (!doc) return next();
@@ -122,7 +118,7 @@ module.exports = function (app) {
 		});
 	});
 	// display character sheet (magic)
-	app.get('/magie/:mongoid', function(req, res, next) {
+	app.get('/magie/:mdbread', function(req, res, next) {
 		Held
 			.findById(req.id)
 			.populate('Magie.Zauber._zauber Magie.Ritualkenntnis._talent Magie.Rituale')
@@ -134,7 +130,7 @@ module.exports = function (app) {
 		;
 	});
 	// display character sheet (ordained)
-	app.get('/weihe/:mongoid', function(req, res, next) {
+	app.get('/weihe/:mdbread', function(req, res, next) {
 		Held
 			.findById(req.id)
 			.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
@@ -149,14 +145,14 @@ module.exports = function (app) {
 	 ***  delete/restore Character  ***
 	 **********************************/
 	// delete character
-	app.delete('/held/:mongoid', function (req, res, next) {
+	app.delete('/held/:mdbwrite', function (req, res, next) {
 		Held.findByIdAndUpdate(req.id, { disabled: true }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
 		});
 	});
 	// restore character
-	app.put('/held/:mongoid', function (req, res, next) {
+	app.put('/held/:mdbwrite', function (req, res, next) {
 		Held.findByIdAndUpdate(req.id, { disabled: false }, function (err, doc) {
 			if (err) return next(err);
 			res.redirect('/helden');
