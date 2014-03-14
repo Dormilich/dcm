@@ -52,7 +52,7 @@ var userSchema = mongoose.Schema({
 		name     : String
 	},
 	friends : [IDREF],
-	chars   : [IDREF]
+	chars   : [{ type: IDREF, ref: "Held" }]
 });
 
 userSchema.methods.generateHash = function (password) {

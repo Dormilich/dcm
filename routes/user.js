@@ -24,8 +24,14 @@
 
 var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
-  , User    = require( path.join(appRoot, 'models/user') )
+  , async   = require('async')
+  , Held    = require( realpath('models/person') )
+  , User    = require( realpath('models/user') )
   ;
+
+function realpath(relativePath) {
+	return path.join(appRoot, relativePath);
+}
 
 module.exports = function (app) {
 	// Account Panel
@@ -34,18 +40,43 @@ module.exports = function (app) {
 	});
 	// Character list	
 	app.get('/helden', function(req, res, next) {
-		Held
-			.find({ disabled: false })
-			.in("_id", req.user.chars)
-			.select('Person AP')
-			.sort('AP.alle')
-			.exec(function(err, arr) {
-				res.render('users/chars', { 
-					_User:  req.user,
-					_Chars: arr
-				});
-			})
-		;
+		async.parallel({
+			_Own: function (cb) {
+				Held
+					.find({ disabled: false })
+					.in("_id", req.user.chars)
+					.select('Person AP')
+					.sort('AP.alle')
+					.exec(function(err, arr) {
+						if (err) return cb(err);
+						cb(null, arr);
+					})
+				;
+			},
+			_Group: function (cb) {
+				User
+					.find()
+					.in("_id", req.user.friends)
+					.populate({ 
+						path:   "chars",
+						match:  { disabled: false },
+						select: "Person AP",
+						options: {
+							sort: "AP.alle"
+						}
+					})
+					.exec(function(err, arr) {
+						if (err) return cb(err);
+						cb(null, arr);
+					})
+				;
+			}
+		},
+		function (err, obj) {
+			if (err) return next(err); 
+			obj._User = req.user;
+			res.render('users/chars', obj);
+		});
 	});
 	// deleted Characters' list	
 	app.get('/papierkorb', function(req, res, next) {

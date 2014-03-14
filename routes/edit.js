@@ -23,7 +23,6 @@
  */
 
 var path     = require('path')
-  , fs       = require('fs')
   , async    = require('async')
   , appRoot  = path.dirname(require.main.filename)
   , data     = require( realpath('data/dsa') )
@@ -46,6 +45,10 @@ function getTalentType(tname) {
 			})
 		;
 	};
+}
+
+function realpath(relativePath) {
+	return path.join(appRoot, relativePath);
 }
 
 module.exports = function (app) {

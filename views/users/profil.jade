@@ -12,18 +12,25 @@ html(lang="de")
 			.container
 				ul.nav.navbar-nav
 					li
-						a(href="/helden") Charaktere
+						a(href="/helden") Helden
 					li
 						a(href="/freunde") Freunde
 					li.active
-						a Konten
+						a
+							span.fa.fa-warning &nbsp;
+							span Konten
+					li
+						a(href="/nachrichten")
+							span.fa.fa-warning &nbsp;
+							span Nachrichten &nbsp;
+							span.badge 0
 				ul.nav.navbar-nav.navbar-right
 					li
-						a(href="/about") Impressum
+						a(href="/about", title="Info")
+							span.fa.fa-info-circle
 					li
-						a(href="/logout")
+						a(href="/logout", title="Abmelden")
 							span.fa.fa-sign-out
-							| &nbsp;Abmelden
 		.container
 			.page-header.text-center
 				h1

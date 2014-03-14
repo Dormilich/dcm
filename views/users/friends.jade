@@ -27,21 +27,42 @@ html(lang="de")
 			}
 	body
 		nav.navbar.navbar-default(role="navigation")
-			.container
-				ul.nav.navbar-nav
-					li
-						a(href="/helden") Charaktere
-					li.active
-						a Freunde
-					//-li
-						a(href="/profil") Konten
-				ul.nav.navbar-nav.navbar-right
-					li
-						a(href="/about") Impressum
-					li
-						a(href="/logout")
-							span.fa.fa-sign-out
-							| Abmelden
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						li
+							a(href="/helden") Helden
+						li.active
+							a Freunde
+						li
+							a(href="/profil") 
+								span.fa.fa-warning.text-danger &nbsp;
+								span Konten
+						li
+							a(href="/nachrichten")
+								span.fa.fa-warning.text-danger &nbsp;
+								span Nachrichten &nbsp;
+								span.badge 0
+					ul.nav.navbar-nav.navbar-right
+						li
+							a(href="/about", title="Info")
+								span.hidden-xs.fa.fa-info-circle.text-info &nbsp;
+								span.visible-xs Info
+						li
+							a(href="/rss", title="Update feed")
+								span.hidden-xs.fa.fa-rss-square.text-warning &nbsp;
+								span.visible-xs Update-Feed
+						li
+							a(href="/logout", title="Abmelden")
+								span.hidden-xs.fa.fa-sign-out &nbsp;
+								span.visible-xs Abmelden
 		.container
 			.page-header.text-center
 				h1
@@ -68,20 +89,43 @@ html(lang="de")
 						.panel-heading
 							h4
 								span.fa.fa-search &nbsp;
-								|  Freunde finden
+								span Freunde suchen
 						.panel-body
 							.form-group
-								input#username-search.form-control(type="text", placeholder="Suche nach Namen")
+								input#friend-add.username-search.form-control(type="text", placeholder="Suche nach Namen")
 							.form-group.text-center
 								button#empty.btn.btn-default Neue Suche
+					.panel.panel-default
+						.panel-heading
+							h4
+								span.fa.fa-bullhorn &nbsp;
+								span Freundschaftsanfrage senden
+								span.fa.fa-warning.text-danger
+						.panel-body
+							.form-group
+								input#friend-ask.username-search.form-control(type="text", placeholder="Suche nach Namen", data-id)
+							.form-group.text-center
+								button#ask.btn.btn-default senden
+					.panel.panel-default
+						.panel-heading
+							h4
+								span.fa.fa-bell-o &nbsp;
+								span Freundschaft bestätigen
+								span.fa.fa-warning.text-danger
+						.panel-body
+							ul.list-group
+								li.list-group-item
+									label.checkbox-inline
+										input(type="checkbox", value="ObjectID")
+										span Max Mustermann
 		script.
 			function dropdownItem(obj) {
 				return '<p><div>'+obj.name+'</div><div><small>'+obj.email+'</small></div></p>';
 			}
-			$('#username-search').typeahead({
+			$('.username-search').typeahead({
 				hint:      true,
 				highlight: true,
-				minLength: 1
+				minLength: 2
 			}, {
 				name:      "usernames",
 				displayKey: "name",
@@ -92,7 +136,8 @@ html(lang="de")
 				source: function (q, cb) {
 					$.getJSON("/userlist", { name: q }, cb);
 				}
-			}).on("typeahead:selected", function(evt, selection, datasetName) {
+			});
+			$('#friend-add').on("typeahead:selected", function(evt, selection, datasetName) {
 				var $li = $('<li class="list-group-item"/>');
 				var $label = $('<label class="checkbox-inline"/>');
 				var $cbox = $('<input type="checkbox" name="friends[]"/>');

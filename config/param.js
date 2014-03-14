@@ -1,13 +1,14 @@
 var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
-  , User    = require( path.join(appRoot, 'models/user') )
+  , fs      = require('fs')
+  , User    = require( realpath('models/user') )
   ;
 
-module.exports = function (app) {
+function realpath(relativePath) {
+	return path.join(appRoot, relativePath);
+}
 
-	function realpath(relativePath) {
-		return path.join(appRoot, relativePath);
-	}
+module.exports = function (app) {
 
 	var editDirFileNames = fs.readdirSync( realpath('views/edit-held') ).map(function(item) {
 		return item.split('.')[0];
