@@ -4,6 +4,9 @@ comments.js
 # Notepad++ backup files
 *.bak
 
+# Mac OS X file preview
+.DS_Store
+
 # temp files
 *~
 

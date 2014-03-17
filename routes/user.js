@@ -27,6 +27,7 @@ var path    = require('path')
   , async   = require('async')
   , Held    = require( realpath('models/person') )
   , User    = require( realpath('models/user') )
+  , menu    = require( realpath('data/menu') )
   ;
 
 function realpath(relativePath) {
@@ -75,6 +76,8 @@ module.exports = function (app) {
 		function (err, obj) {
 			if (err) return next(err); 
 			obj._User = req.user;
+			obj._Menu = menu.profil;
+			obj._Menu.currentURL = req.path;
 			res.render('users/chars', obj);
 		});
 	});
@@ -115,9 +118,12 @@ module.exports = function (app) {
 			.in("_id", req.user.friends)
 			.exec(function(err, docs) {
 				if (err) return next(err);
+				var nav = menu.profil;
+				nav.currentURL = req.path;
 				res.render('users/friends', { 
 					_User:    req.user,
-					_Friends: docs
+					_Friends: docs,
+					_Menu:    nav
 				});
 			})
 		;

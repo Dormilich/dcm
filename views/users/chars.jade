@@ -19,32 +19,21 @@ html(lang="de")
 					a.navbar-brand DCM
 				#navbar-collapse-chars.collapse.navbar-collapse
 					ul.nav.navbar-nav
-						li.active
-							a Helden
-						li
-							a(href="/freunde") Freunde
-						li
-							a(href="/profil") 
-								span.fa.fa-warning.text-danger &nbsp;
-								span Konten
-						li
-							a(href="/nachrichten")
-								span.fa.fa-warning.text-danger &nbsp;
-								span Nachrichten &nbsp;
-								span.badge 0
+						each __link in _Menu.left
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							if __isCurrent
+								li.active
+									a=__link.title
+							else
+								li
+									a(href=__link.url)=__link.title
 					ul.nav.navbar-nav.navbar-right
-						li
-							a(href="/about", title="Info")
-								span.hidden-xs.fa.fa-info-circle.text-info &nbsp;
-								span.visible-xs Info
-						li
-							a(href="/rss", title="Update feed")
-								span.hidden-xs.fa.fa-rss-square.text-warning &nbsp;
-								span.visible-xs Update-Feed
-						li
-							a(href="/logout", title="Abmelden")
-								span.hidden-xs.fa.fa-sign-out &nbsp;
-								span.visible-xs Abmelden
+						each __link in _Menu.right
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							li
+								a(href=__isCurrent ? null : __link.url, title=__link.title)
+									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
+									span.visible-xs=__link.title
 		.container
 			.page-header.text-center
 				h1

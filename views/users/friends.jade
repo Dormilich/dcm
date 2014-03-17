@@ -37,37 +37,33 @@ html(lang="de")
 					a.navbar-brand DCM
 				#navbar-collapse-chars.collapse.navbar-collapse
 					ul.nav.navbar-nav
-						li
-							a(href="/helden") Helden
-						li.active
-							a Freunde
-						li
-							a(href="/profil") 
-								span.fa.fa-warning.text-danger &nbsp;
-								span Konten
-						li
-							a(href="/nachrichten")
-								span.fa.fa-warning.text-danger &nbsp;
-								span Nachrichten &nbsp;
-								span.badge 0
+						each __link in _Menu.left
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							if __isCurrent
+								li.active
+									a=__link.title
+							else
+								li
+									a(href=__link.url)=__link.title
 					ul.nav.navbar-nav.navbar-right
-						li
-							a(href="/about", title="Info")
-								span.hidden-xs.fa.fa-info-circle.text-info &nbsp;
-								span.visible-xs Info
-						li
-							a(href="/rss", title="Update feed")
-								span.hidden-xs.fa.fa-rss-square.text-warning &nbsp;
-								span.visible-xs Update-Feed
-						li
-							a(href="/logout", title="Abmelden")
-								span.hidden-xs.fa.fa-sign-out &nbsp;
-								span.visible-xs Abmelden
+						each __link in _Menu.right
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							li
+								a(href=__isCurrent ? null : __link.url, title=__link.title)
+									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
+									span.visible-xs=__link.title
 		.container
 			.page-header.text-center
 				h1
 					span.fa.fa-users &nbsp;
 					|  Freunde
+			.container
+				h4 
+					span.fa.fa-share-square-o
+					|  Teile deine Helden mit anderen
+				p Freunde können sich alle deine aktiven Helden anschauen. Das ist besonders dann nützlich, wenn ihr alle zusammen in einer Gruppe spielt – ein Browser, alle Helden.
+				p Natürlich bleibst du der einzige, der seine Helden editieren darf.
+				p &nbsp;
 			.row
 				.col-sm-6
 					.panel.panel-default
@@ -109,7 +105,7 @@ html(lang="de")
 					.panel.panel-default
 						.panel-heading
 							h4
-								span.fa.fa-bell-o &nbsp;
+								span.fa.fa-thumbs-o-up &nbsp;
 								span Freundschaft bestätigen
 								span.fa.fa-warning.text-danger
 						.panel-body
