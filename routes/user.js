@@ -81,10 +81,24 @@ module.exports = function (app) {
 			res.render('users/chars', obj);
 		});
 	});
-	// ### TODO ###
 	// deleted Characters' list	
 	app.get('/papierkorb', function(req, res, next) {
-		res.render('users/deleted', { _User: req.user });
+		Held
+			.find({ disabled: true })
+			.in("_id", req.user.chars)
+			.sort('AP.alle')
+			.exec(function(err, arr) {
+				if (err) return next(err);
+				var nav = menu.profil,
+				nav.currentURL = req.path;
+				res.render('users/deleted', {  
+					_User:  req.user,
+					_Menu:  nav,
+					_Chars: arr
+				});
+			})
+		;
+		
 	});
 	// Friend list
 	app.get('/freunde', function(req, res, next) {

@@ -28,11 +28,15 @@ module.exports = function (app) {
 		if (!/^[0-9a-fA-F]+$/.test(id)) {
 			return next('route');
 		}
-		if (req.user.chars.indexOf(id) < 0) {
+		// if inside own Character list
+		if (req.user.chars.indexOf(id) > -1) {
+			req.id = id;
+			next();
+		}
+		else {
 			next(new Error("Du darfst diesen Charakter nicht editieren."));
 		}
-		req.id = id;
-		next();
+		
 	});
 
 	// read permission only for self and friends
@@ -49,7 +53,7 @@ module.exports = function (app) {
 		// if the owner of the Character is in your Friends list
 		User.findOne({ chars: id }, function(err, doc) {
 			if (err) return next(err);
-			if (req.user.friends.indexOf(doc._id)) {
+			if (req.user.friends.indexOf(doc._id) > -1) {
 				next();
 			}
 			else {
