@@ -25,6 +25,12 @@ html(lang="de")
 			.twitter-typeahead {
 				width: 100%;
 			}
+			.gap-bottom-1 {
+				padding-bottom: 1em;
+			}
+			.gap-bottom-21 {
+				padding-bottom: 2em;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container-fluid
@@ -50,20 +56,24 @@ html(lang="de")
 							- var __isCurrent = __link.url === _Menu.currentURL;
 							li
 								a(href=__isCurrent ? null : __link.url, title=__link.title)
-									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
+									span.hidden-xs(class=__link.sign.join(" "))
 									span.visible-xs=__link.title
+						if _User.isAdmin
+							li
+								a(href="/navigation", title="Manage DB")
+									span.hidden-xs.fa.fa-hdd-o
+									span.visible-xs Manage DB
 		.container
 			.page-header.text-center
 				h1
 					span.fa.fa-users &nbsp;
 					|  Freunde
-			.container
+			.container.gap-bottom-2
 				h4 
 					span.fa.fa-share-square-o
 					|  Teile deine Helden mit anderen
 				p Freunde können sich alle deine aktiven Helden anschauen. Das ist besonders dann nützlich, wenn ihr alle zusammen in einer Gruppe spielt – ein Browser, alle Helden.
 				p Natürlich bleibst du der einzige, der seine Helden editieren darf.
-				p &nbsp;
 			.row
 				.col-sm-6
 					.panel.panel-default

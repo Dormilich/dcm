@@ -531,8 +531,8 @@ html(lang="de")
 								td=__panzer.RA
 								td=__panzer.LB
 								td=__panzer.RB
-								td=__panzer.RS
-								td=__panzer.BE
+								td=__panzer.RS.toFixed(1)
+								td=__panzer.BE.toFixed(1)
 								td
 									input(type="radio", name="panzerung", value=Math.round(__panzer.BE))
 		a#taw
@@ -578,4 +578,3 @@ html(lang="de")
 								td=__item.Name
 								td=__item.Kommentar
 		script(src="/held.js")
-			

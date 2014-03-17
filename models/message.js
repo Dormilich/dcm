@@ -23,44 +23,18 @@
  */
 
 var mongoose = require("mongoose")
-  , bcrypt   = require("bcrypt-nodejs")
   , IDREF    = mongoose.Schema.Types.ObjectId
   ;
 
-var userSchema = mongoose.Schema({
-	isAdmin : { type: Boolean, default: false },
-	local   : {
-		email    : { type: String, unique: true },
-		password : String,
-		name     : { type: String, unique: false }
-	},
-	facebook : {
-		id       : String,
-		token    : String,
-		email    : String,
-		name     : String
-	},
-	google : {
-		id       : String,
-		token    : String,
-		email    : String,
-		name     : String
-	},
-	openid : {
-		id       : String,
-		email    : String,
-		name     : String
-	},
-	friends : [{ type: IDREF, ref: "User" }],
-	chars   : [{ type: IDREF, ref: "Held" }]
+var messageSchema = mongoose.Schema({
+	sender:    { type: IDREF, ref: "User" },
+	recipient: { type: IDREF, ref: "User" },
+	topic:     { type: String, required: true },
+	title:     String,
+	message:   String,
+	created:   { type: Date,    default: Date.now },
+	read:      { type: Boolean, default: false },
+	deleted:   { type: Boolean, default: false }
 });
 
-userSchema.methods.generateHash = function (password) {
-	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
-
-userSchema.methods.validPassword = function (password) {
-	return bcrypt.compareSync(password, this.local.password);
-};
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Message', messageSchema);

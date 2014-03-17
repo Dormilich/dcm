@@ -7,6 +7,13 @@ html(lang="de")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
 		script(src="//code.jquery.com/jquery.min.js")
 		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+		style.
+			.gap-bottom-1 {
+				padding-bottom: 1em;
+			}
+			.gap-bottom-2 {
+				padding-bottom: 2em;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container-fluid
@@ -34,11 +41,30 @@ html(lang="de")
 								a(href=__isCurrent ? null : __link.url, title=__link.title)
 									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
 									span.visible-xs=__link.title
+						if _User.isAdmin
+							li
+								a(href="/navigation", title="Manage DB")
+									span.hidden-xs.fa.fa-hdd-o
+									span.visible-xs Manage DB
 		.container
 			.page-header.text-center
 				h1
 					span.fa.fa-file-text-o &nbsp;
 					span Helden &nbsp;
+			ul.nav.nav-pills.nav-justified.gap-bottom-2
+				li
+					a(href="/neu") 
+						span.fa.fa-edit
+						|  Neuen Helden erstellen
+				li
+					a(title="Helden-Software XML")
+						span.fa.fa-upload
+						|  Helden importieren
+				li
+					a(href="/papierkorb")
+						span.fa.fa-trash-o
+						|  gelöschte Helden
+					
 			.panel.panel-default
 				.panel-heading
 					h4 Meine Charaktere
@@ -47,6 +73,7 @@ html(lang="de")
 						each __held in _Own
 							li.list-group-item
 								a(href="/held/"+__held._id)= __held.Person.Name + " ( " + __held.AP.frei + " / " + __held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
+								input.pull-right(type="checkbox", name="id", value=__held._id)
 				.panel-footer.text-right
 					button.btn.btn-warning.btn-xs(type="button") Helden löschen
 			each __friend in _Group

@@ -81,36 +81,11 @@ module.exports = function (app) {
 			res.render('users/chars', obj);
 		});
 	});
+	// ### TODO ###
 	// deleted Characters' list	
 	app.get('/papierkorb', function(req, res, next) {
 		res.render('users/deleted', { _User: req.user });
 	});
-
-/*
-	app.get('/helden', function(req, res, next) {
-		var disabled = ("deleted" in req.query);
-		Held
-			.find({ disabled: disabled })
-			.select('Person AP')
-			.sort('AP.alle')
-			.lean()
-			.exec(function(err, arr) {
-				if (err) return next(err);
-				var obj = {
-					_liste: arr,
-					_disabled: disabled,
-					_formData: {
-						method: disabled ? "put" : "delete",
-						sign:   disabled ? "\u2713" : "\u2717",
-						title:  disabled ? "wiederherstellen" : "löschen",
-						class:  disabled ? "restore" : "remove"
-					}
-				};
-				res.render('list-helden', obj);
-			})
-		;
-	});
-*/
 	// Friend list
 	app.get('/freunde', function(req, res, next) {
 		User
@@ -162,6 +137,7 @@ module.exports = function (app) {
 			}));
 		});
 	});
+	// ### TODO ###
 	// About page
 	app.get('/about', function(req, res, next) {
 		res.render('about', { _User: req.user });

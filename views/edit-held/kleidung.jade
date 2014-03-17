@@ -90,9 +90,9 @@ html(lang="de")
 							td
 								input#lb(type="number", name="Ausrüstung.Kleidung[{index}][LB]", min="0", step="1", value="0")
 							td
-								input#rs(type="number", name="Ausrüstung.Kleidung[{index}][RS]", min="0", value="0")
+								input#rs(type="number", name="Ausrüstung.Kleidung[{index}][RS]", min="0", step="0.1", value="0")
 							td
-								input#be(type="number", name="Ausrüstung.Kleidung[{index}][BE]", min="0", value="0")
+								input#be(type="number", name="Ausrüstung.Kleidung[{index}][BE]", min="0", step="0.05", value="0")
 							td
 								button#add(type="button") neu
 					tbody
@@ -120,9 +120,9 @@ html(lang="de")
 									td
 										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][LB]", min="0", step="1", value=__rst.LB)
 									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][RS]", min="0", value=__rst.RS)
+										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][RS]", min="0", step="0.1", value=__rst.RS)
 									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][BE]", min="0", value=__rst.BE)
+										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][BE]", min="0", step="0.05", value=__rst.BE)
 									td
 
 				.mitte
