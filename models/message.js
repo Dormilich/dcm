@@ -27,8 +27,8 @@ var mongoose = require("mongoose")
   ;
 
 var messageSchema = mongoose.Schema({
-	sender:    { type: IDREF, ref: "User" },
-	recipient: { type: IDREF, ref: "User" },
+	sender:    { type: IDREF, ref: "User", required: true },
+	recipient: { type: IDREF, ref: "User", required: true },
 	topic:     { type: String, required: true },
 	title:     String,
 	message:   String,

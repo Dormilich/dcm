@@ -27,6 +27,7 @@ var path    = require('path')
   , async   = require('async')
   , Held    = require( realpath('models/person') )
   , User    = require( realpath('models/user') )
+  , Message = require( realpath('models/message') )
   , menu    = require( realpath('data/menu') )
   ;
 
@@ -89,7 +90,7 @@ module.exports = function (app) {
 			.sort('AP.alle')
 			.exec(function(err, arr) {
 				if (err) return next(err);
-				var nav = menu.profil,
+				var nav = menu.profil;
 				nav.currentURL = req.path;
 				res.render('users/deleted', {  
 					_User:  req.user,
@@ -98,11 +99,10 @@ module.exports = function (app) {
 				});
 			})
 		;
-		
 	});
 	// Friend list
 	app.get('/freunde', function(req, res, next) {
-		User
+		/*User
 			.find()
 			.in("_id", req.user.friends)
 			.exec(function(err, docs) {
@@ -115,7 +115,37 @@ module.exports = function (app) {
 					_Menu:    nav
 				});
 			})
-		;
+		;//*/
+		async.parallel({
+			_Friends: function (cb) {
+				User
+					.find()
+					.in("_id", req.user.friends)
+					.exec(function(err, docs) {
+						if (err) return cb(err);
+						cb(null, docs);
+					})
+				;
+			},
+			_Notices: function (cb) {
+				Message.find({  
+					recipient: req.user.id,
+					topic:     "friendship request",
+					read:      false,
+					deleted:   false
+				}, function(err, arr) {
+					if (err) return cb(err);
+					cb(null, docs);
+				});
+			}
+		}, 
+		function(err, obj) {
+			if (err) return next(err);
+			obj._User = req.user;
+			obj._Menu = menu.profil;
+			obj._Menu.currentURL = req.path;
+			res.render('users/friends', obj);
+		});
 	});
 	// save friend list via AJAX
 	app.post('/freunde', function(req, res, next) {
@@ -149,6 +179,24 @@ module.exports = function (app) {
 					email: user.local.email
 				};
 			}));
+		});
+	});
+	app.post('/friendship', function(req, res, next) {
+		if (!("id" in req.query)) {
+			res.status(400);
+			return null;
+		}
+		Message.create({
+			sender:    req.user._id,
+			recipient: req.query.id,
+			topic:     "friendship request"
+		}, function(err, doc) {
+			if (err) {
+				res.status(500);
+			}
+			else {
+				res.status(204);
+			}
 		});
 	});
 	// ### TODO ###
