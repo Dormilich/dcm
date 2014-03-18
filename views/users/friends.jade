@@ -68,12 +68,6 @@ html(lang="de")
 				h1
 					span.fa.fa-users &nbsp;
 					|  Freunde
-			.container.gap-bottom-2
-				h4 
-					span.fa.fa-share-square-o
-					|  Teile deine Helden mit anderen
-				p Freunde können sich alle deine aktiven Helden anschauen. Das ist besonders dann nützlich, wenn ihr alle zusammen in einer Gruppe spielt – ein Browser, alle Helden.
-				p Natürlich bleibst du der einzige, der seine Helden editieren darf.
 			.row
 				.col-sm-6
 					.panel.panel-default
@@ -83,21 +77,27 @@ html(lang="de")
 								span Meine Freunde
 								span#friend-count.badge.pull-right=_User.friends.length
 						.panel-body
-							ul#friend-list.list-group
-								each __friend in _Friends
-									li.list-group-item
-										label.checkbox-inline
-											input(type="checkbox", name="friends[]", value=__friend._id, checked)
-											|  #{__friend.local.name}
+							p Freunde können sich alle deine aktiven Helden anschauen. Das ist besonders dann nützlich, wenn ihr alle zusammen in einer Gruppe spielt – ein Browser, alle Helden.
+							p Natürlich bleibst du der einzige, der seine Helden editieren darf.
+						ul#friend-list.list-group
+							each __friend in _Friends
+								li.list-group-item
+									label.checkbox-inline
+										input(type="checkbox", name="friends[]", value=__friend._id, checked)
+										|  #{__friend.local.name}
+				.col-sm-6
 					.panel.panel-default
 						.panel-heading
 							h4
 								span.fa.fa-users &nbsp;
 								span Freund von
 						.panel-body
-							ul.list-group
-								each __friend in _Group
-									li.list-group-item=__friend.local.name
+							p Du kannst dir auch die Helden von anderen Nutzern anschauen, sofern sie dich als Freund hinzugefügt haben. 
+							p Damit ein anderer weiß, dass du seine Helden sehen möchtest, schicke ihm (oder ihr) eine Freundschaftsanfrage.
+						ul.list-group
+							each __friend in _Group
+								li.list-group-item=__friend.local.name
+			.row
 				.col-sm-6
 					.panel.panel-default
 						.panel-heading
@@ -109,6 +109,7 @@ html(lang="de")
 								input#friend-add.username-search.form-control(type="text", placeholder="Suche nach Namen")
 							.form-group.text-center
 								button#empty.btn.btn-default Neue Suche
+				.col-sm-6
 					.panel.panel-default
 						.panel-heading
 							h4
@@ -119,11 +120,9 @@ html(lang="de")
 								input#friend-ask.username-search.form-control(type="text", placeholder="Suche nach Namen")
 							.form-group.text-center
 								button#ask.btn.btn-default senden
-							hr
-							h5 Laufende Anfragen:
-							ul.list-group
-								each __msg in _Outbox
-									li.list-group-item=__msg.recipient.local.name
+						ul.list-group
+							each __msg in _Outbox
+								li.list-group-item=__msg.recipient.local.name
 					.panel.panel-default
 						.panel-heading
 							h4
@@ -140,128 +139,4 @@ html(lang="de")
 										span.input-group-btn
 											button.btn.btn-danger(type="button")
 												span.fa.fa-minus
-		script.
-			function dropdownItem(obj) {
-				return '<p><div>'+obj.name+'</div><div><small>'+obj.email+'</small></div></p>';
-			}
-			function appendFriend(options) {
-				var $li    = $('<li class="list-group-item"/>');
-				var $label = $('<label class="checkbox-inline"/>');
-				var $cbox  = $('<input type="checkbox" name="friends[]"/>');
-				$cbox.val(options.id).prop("checked", !!options.checked);
-				$label.append($cbox).append(options.name);
-				$li.append($label);
-				$('#friend-list').append($li);
-			}
-			function saveFriends() {
-				$.post( 
-					"/freunde", 
-					$('#friend-list').find(':checked').serialize() 
-				).done(function(data) {
-					$('#friend-count').text(data.count);
-				});
-			}
-			function errorAlert(message) {
-				var $div = $("<div/>").addClass("alert alert-warning alert-dismissable");
-				var $btn = $('<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><span class="fa fa-times"></span></button>');
-				return $div.append($btn).append(message);
-			}
-			$('#friend-add').typeahead({
-				hint:      true,
-				highlight: true,
-				minLength: 2
-			}, {
-				name:       "usernames",
-				displayKey: "name",
-				templates: {
-					empty: '<div>—kein Name gefunden—</div>',
-					suggestion: dropdownItem,
-				},
-				source: function (q, cb) {
-					$.getJSON("/userlist", { name: q, skip: "own" }, cb);
-				}
-			}).on("typeahead:selected", function(evt, selection, datasetName) {
-				appendFriend(selection);
-				/*var $li = $('<li class="list-group-item"/>');
-				var $label = $('<label class="checkbox-inline"/>');
-				var $cbox = $('<input type="checkbox" name="friends[]"/>');
-				$cbox.val(selection.id);
-				$label.append($cbox).append(selection.name);
-				$li.append($label);
-				$('#friend-list').append($li);//*/
-			});
-			$('#empty').on("click", function() {
-				$('#username-search').val("");
-			});
-			$('#friend-list').on("click", 'input', saveFriends);
-			$('#friend-ask').typeahead({
-				hint:      true,
-				highlight: true,
-				minLength: 2
-			}, {
-				name:       "usernames",
-				displayKey: "name",
-				templates: {
-					empty: '<div>—kein Name gefunden—</div>',
-					suggestion: dropdownItem,
-				},
-				source: function (q, cb) {
-					$.getJSON("/userlist", { name: q, skip: "group" }, cb);
-				}
-			}).on("typeahead:selected", function(evt, selection, datasetName) {
-				this.dataset.id = selection.id;
-			});
-			$('#ask').on("click", function() {
-				var $friend = $('#friend-ask');
-				var fid     = $friend.data("id");
-				if ($friend.val() && fid) {
-					$.get(
-						"/friendship", 
-						{ id: fid }
-					).done(function() {
-						// add friend to pending list
-						var $li = $('<li class="list-group-item"/>').text( $friend.val() );
-						$friend.closest('.panel-body').find('ul.list-group').append($li);
-					}).fail(function(jqXHR) {
-						var msg = jqXHR.responseText;
-						// leave a message
-						$friend.parent().append( errorAlert(msg) );
-						console.log(jqXHR.status);
-						console.log(msg);
-					}).always(function() {
-						// clean up
-						$friend.val("");
-						$friend.data("id", "");
-					});
-				}
-			});
-			$('#friend-requested').on("click", 'button', function() {
-				var $input = $(this).closest('.input-group').find('input');
-				var save, url;
-				// native classList reliable enough?
-				if ($(this).hasClass("btn-success")) {
-					url  = "/friendship/accept";
-					save = function() {
-						appendFriend({
-							id:      $input.data("user"),
-							name:    $input.val(),
-							checked: true
-						});
-						saveFriends();
-					}
-				}
-				else if ($(this).hasClass("btn-danger")) {
-					url  = "/friendship/reject";
-					save = function() {};
-				}
-				else {
-					return null;
-				}
-				$.get(url, { message: $input.data("message") }).done(save).done(function() {
-					// clean up
-					$input.closest('.form-group').remove();
-				}).fail(function(jqXHR) {
-					// notify
-					$input.closest('.form-group').append( errorAlert(jqXHR.responseText) );
-				});
-			});
+		script(src="/friendship.js")

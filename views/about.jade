@@ -6,96 +6,49 @@ html(lang="de")
 		//link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-		//script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 	body
 		nav.navbar.navbar-default(role="navigation")
-			.container
-				ul.nav.navbar-nav
-					li
-						a(href="/helden") Charaktere
-					li
-						a(href="/freunde") Freunde
-					li.active
-						a Konten
-				ul.nav.navbar-nav.navbar-right
-					li
-						a(href="/about") Impressum
-					li
-						a(href="/logout")
-							span.fa.fa-sign-out
-							| Abmelden
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						each __link in _Menu.left
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							if __isCurrent
+								li.active
+									a=__link.title
+							else
+								li
+									a(href=__link.url)=__link.title
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							li
+								a(href=__isCurrent ? null : __link.url, title=__link.title)
+									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
+									span.visible-xs=__link.title
 		.container
 			.page-header.text-center
 				h1
-					span.fa.fa-user &nbsp;
-					| #{_User.local.name}
-			.text-center
-				h2 Kontenverwaltung
-			.row
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4
-								span.fa.fa-user &nbsp;
-								| E-Mail / Passwort
-						.panel-body
-							if (_User.local.email)
-								p
-									strong E-Mail
-									| : #{_User.local.email}
-								p
-									strong Name
-									| : #{_User.local.name}
-								a(href="/unlink/local").btn.btn-default Trennen
-							else
-								a(href="/connect/local").btn.btn-default Verbinden
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4.text-warning OpenID
-						.panel-body
-							if (_User.openid.token)
-								p
-									strong E-Mail
-									| : #{_User.openid.email}
-								p
-									strong Name
-									| : #{_User.openid.name}
-								a(href="/unlink/openid").btn.btn-warning Trennen
-							else
-								a(href="/connect/openid").btn.btn-warning OpenID hinzufügen
-			.row
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4.text-primary
-								span.fa.fa-facebook &nbsp;
-								| Facebook
-						.panel-body
-							if (_User.facebook.token)
-								p
-									strong E-Mail
-									| : #{_User.facebook.email}
-								p
-									strong Name
-									| : #{_User.facebook.name}
-								a(href="/unlink/facebook").btn.btn-primary Trennen
-							else
-								a(href="/connect/facebook").btn.btn-primary Facebook hinzufügen
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4.text-danger
-								span.fa.fa-google-plus &nbsp;
-								| Google+
-						.panel-body
-							if (_User.google.token)
-								p
-									strong E-Mail
-									| : #{_User.google.email}
-								p
-									strong Name
-									| : #{_User.google.name}
-								a(href="/unlink/google").btn.btn-danger Trennen
-							else
-								a(href="/connect/google").btn.btn-danger Google hinzufügen
+					span.fa.fa-info-circle
+					|  Rund um DCM 
+			.container
+				p
+					span.fa.fa-github
+					|  GitHub Projekt: &nbsp;
+					a(href="https://github.com/Dormilich/dcm") DCM @ GitHub&nbsp;
+						span.fa.fa-external-link
+				p 
+					span.fa.fa-github
+					|  Wenn etwas nicht funktioniert oder ein neues Feature fehlt: &nbsp;
+					a(href="https://github.com/Dormilich/dcm/issues") GitHub Issue Tracker&nbsp;
+						span.fa.fa-external-link
+				p 
+					span.fa.fa-comments-o
+					|  An der Stelle möchte ich mich auch bei Tobias Carstens für die Layout-Diskussionen und  Chris Sevilleja für das <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local" lang="en">Node Authentication Tutorial <span class="fa fa-external-link"></span></a> bedanken.

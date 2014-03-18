@@ -39,7 +39,12 @@ module.exports = function (app) {
 	// ### TODO ###
 	// About page
 	app.get('/about', function(req, res, next) {
-		res.render('about', { _User: req.user });
+		var nav = menu.profil;
+		nav.currentURL = req.path;
+		res.render('about', {  
+			_User: req.user,
+			_Menu: nav
+		});
 	});
 	// Account Panel
 	app.get('/profil', function(req, res, next) {
