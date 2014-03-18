@@ -9,28 +9,36 @@ html(lang="de")
 		//script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 	body
 		nav.navbar.navbar-default(role="navigation")
-			.container
-				ul.nav.navbar-nav
-					li
-						a(href="/helden") Helden
-					li
-						a(href="/freunde") Freunde
-					li.active
-						a
-							span.fa.fa-warning &nbsp;
-							span Konten
-					li
-						a(href="/nachrichten")
-							span.fa.fa-warning &nbsp;
-							span Nachrichten &nbsp;
-							span.badge 0
-				ul.nav.navbar-nav.navbar-right
-					li
-						a(href="/about", title="Info")
-							span.fa.fa-info-circle
-					li
-						a(href="/logout", title="Abmelden")
-							span.fa.fa-sign-out
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						each __link in _Menu.left
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							if __isCurrent
+								li.active
+									a=__link.title
+							else
+								li
+									a(href=__link.url)=__link.title
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							- var __isCurrent = __link.url === _Menu.currentURL;
+							li
+								a(href=__isCurrent ? null : __link.url, title=__link.title)
+									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
+									span.visible-xs=__link.title
+						if _User.isAdmin
+							li
+								a(href="/navigation", title="Manage DB")
+									span.hidden-xs.fa.fa-hdd-o
+									span.visible-xs Manage DB
 		.container
 			.page-header.text-center
 				h1
@@ -53,9 +61,44 @@ html(lang="de")
 									| : #{_User.local.name}
 								a(href="/unlink/local").btn.btn-sm.btn-default Trennen
 								| &nbsp;
-								a(href="/setup/local").btn.btn-sm.btn-default Daten ändern
+								//-a(href="/setup/local").btn.btn-sm.btn-default Daten ändern
 							else
 								a(href="/connect/local").btn.btn-sm.btn-default Verbinden
+				.col-sm-6
+					.panel.panel-default
+						.panel-heading
+							h4.text-danger
+								span.fa.fa-google-plus-square &nbsp;
+								strong Google+
+						.panel-body
+							if (_User.google.token)
+								p
+									strong E-Mail
+									| : #{_User.google.email}
+								p
+									strong Name
+									| : #{_User.google.name}
+								a(href="/unlink/google").btn.btn-sm.btn-danger Trennen
+							else
+								a(href="/connect/google").btn.btn-sm.btn-danger Google hinzufügen
+			//-.row
+				.col-sm-6
+					.panel.panel-default
+						.panel-heading
+							h4.text-primary
+								span.fa.fa-facebook-square &nbsp;
+								strong facebook
+						.panel-body
+							if (_User.facebook.token)
+								p
+									strong E-Mail
+									| : #{_User.facebook.email}
+								p
+									strong Name
+									| : #{_User.facebook.name}
+								a(href="/unlink/facebook").btn.btn-sm.btn-primary Trennen
+							else
+								a(href="/connect/facebook").btn.btn-sm.btn-primary Facebook hinzufügen
 				.col-sm-6
 					.panel.panel-default
 						.panel-heading
@@ -72,38 +115,3 @@ html(lang="de")
 								a(href="/unlink/openid").btn.btn-sm.btn-warning Trennen
 							else
 								a(href="/connect/openid").btn.btn-sm.btn-warning OpenID hinzufügen
-			.row
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4.text-primary
-								span.fa.fa-facebook &nbsp;
-								strong Facebook
-						.panel-body
-							if (_User.facebook.token)
-								p
-									strong E-Mail
-									| : #{_User.facebook.email}
-								p
-									strong Name
-									| : #{_User.facebook.name}
-								a(href="/unlink/facebook").btn.btn-sm.btn-primary Trennen
-							else
-								a(href="/connect/facebook").btn.btn-sm.btn-primary Facebook hinzufügen
-				.col-sm-6
-					.panel.panel-default
-						.panel-heading
-							h4.text-danger
-								span.fa.fa-google-plus &nbsp;
-								strong Google+
-						.panel-body
-							if (_User.google.token)
-								p
-									strong E-Mail
-									| : #{_User.google.email}
-								p
-									strong Name
-									| : #{_User.google.name}
-								a(href="/unlink/google").btn.btn-sm.btn-danger Trennen
-							else
-								a(href="/connect/google").btn.btn-sm.btn-danger Google hinzufügen

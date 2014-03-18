@@ -54,12 +54,63 @@ module.exports = function (app, passport) {
 	
 	// GOOGLE
 	
+	app.get('/auth/google', passport.authenticate('google', { 
+		scope: ["profile", "email"] 
+	}));
+	app.get('/auth/google/callback', passport.authenticate('google', {
+		successRedirect: '/helden',
+		failureRedirect: '/'
+	}));
+	
 	// Facebook
 
 	// OpenID
 	
 	// AUTHORIZE
 	
-	// UNLINK
+	/* local */
 	
+	app.get('/connect/local', function(req, res) {
+		res.render('connect-local', { message: req.flash('loginMessage') });
+	});
+	app.post('/connect/local', passport.authenticate('local-signup', {
+		successRedirect: '/profil',
+		failureRedirect: '/connect/local',
+		failureFlash:    true
+	}));
+	
+	/* Google+ */
+	
+	app.get('/connect/google', passport.authorize('google', {  
+		scope: ["profile", "email"]
+	}));
+	
+	app.get('/connect/google/callback', passport.authorize('google', {
+		successRedirect: '/profil',
+		failureRedirect: '/'
+	}));
+	
+	// UNLINK
+
+	/* local */
+	
+	app.get('/unlink/local', function(req, res) {
+		var user            = req.user;
+		user.local.name     = undefined;
+		user.local.email    = undefined;
+		user.local.password = undefined;
+		user.save(function(err) {
+			res.redirect('/profil');
+		});
+	});
+
+	/* Google+ */
+	
+	app.get('/unlink/google', function(req, res) {
+		var user            = req.user;
+		user.google.token   = undefined;
+		user.save(function(err) {
+			res.redirect('/profil');
+		});
+	});
 };

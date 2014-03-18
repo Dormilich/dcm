@@ -48,7 +48,12 @@ module.exports = function (app) {
 	});
 	// Account Panel
 	app.get('/profil', function(req, res, next) {
-		res.render('users/profil', { _User: req.user });
+		var nav = menu.profil;
+		nav.currentURL = req.path;
+		res.render('users/profil', {  
+			_User: req.user,
+			_Menu: nav
+		});
 	});
 	// Character list	
 	app.get('/helden', function(req, res, next) {

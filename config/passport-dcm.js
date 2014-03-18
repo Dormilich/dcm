@@ -22,12 +22,13 @@
  * THE SOFTWARE.
  */
 
-var path           = require('path')
-  , appRoot        = path.dirname(require.main.filename)
-  , User           = require( path.join(appRoot, 'models/user') )
-  , LocalStrategy  = require("passport-local").Strategy
-  //, GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
-  //, configAuth     = require( path.join(appRoot, 'config/auth') ) 
+var path             = require('path')
+  , appRoot          = path.dirname(require.main.filename)
+  , User             = require( path.join(appRoot, 'models/user') )
+  , LocalStrategy    = require("passport-local").Strategy
+  , GoogleStrategy   = require("passport-google-oauth").OAuth2Strategy
+//  , FacebookStrategy = require('passport-facebook').Strategy;
+  , configAuth       = require( path.join(appRoot, 'config/auth') ) 
   ;
 
 module.exports = function (passport) {
@@ -47,6 +48,34 @@ module.exports = function (passport) {
 
 	/**************************************
 	 ***   Login with Email/Password    ***
+	 **************************************/
+
+	passport.use(
+		"local-login",
+		new LocalStrategy({
+			usernameField     : "email",
+			passwordField     : "password",
+			passReqToCallback : true			
+		}, function(req, email, password, done) {
+			process.nextTick(function() {
+				User.findOne({ "local.email": email }, function(err, user) {
+					if (err) {
+						return done(err);
+					}
+					if (!user) {
+						return done(null, false, req.flash("loginMessage", "Benutzer unbekannt."));
+					}
+					if (!user.validPassword(password)) {
+						return done(null, false, req.flash("loginMessage", "Falsches Passwort."));
+					}
+					return done(null, user);
+				});
+			});
+		})
+	);
+
+	/**************************************
+	 ***   Signup with Email/Password   ***
 	 **************************************/
 
 	passport.use(
@@ -92,36 +121,73 @@ module.exports = function (passport) {
 			});
 		})
 	);
-
+	
 	/**************************************
-	 ***   Signup with Email/Password   ***
+	 ***       Login with Google+       ***
 	 **************************************/
 
-	passport.use(
-		"local-login",
-		new LocalStrategy({
-			usernameField     : "email",
-			passwordField     : "password",
-			passReqToCallback : true			
-		}, function(req, email, password, done) {
-			process.nextTick(function() {
-				User.findOne({ "local.email": email }, function(err, user) {
-					if (err) {
-						return done(err);
+    passport.use(new GoogleStrategy({
+        clientID          : configAuth.googleAuth.clientID,
+        clientSecret      : configAuth.googleAuth.clientSecret,
+        callbackURL       : configAuth.googleAuth.callbackURL,
+        passReqToCallback : true 
+    },
+    function(req, token, refreshToken, profile, done) {
+        process.nextTick(function() {
+            if (!req.user) {
+                User.findOne({ 'google.id' : profile.id }, function(err, user) {
+                    if (err) {
+                        return done(err);
 					}
-					if (!user) {
-						return done(null, false, req.flash("loginMessage", "Benutzer unbekannt."));
-					}
-					if (!user.validPassword(password)) {
-						return done(null, false, req.flash("loginMessage", "Falsches Passwort."));
-					}
-					return done(null, user);
-				});
-			});
-		})
-	);
-	
-	// GOOGLE LOGIN
+                    if (user) {
+                        if (!user.google.token) {
+                            user.google.token = token;
+                            user.google.name  = profile.displayName;
+                            user.google.email = profile.emails[0].value; // pull the first email
+
+                            user.save(function(err) {
+                                if (err) {
+                                    throw err;
+                                }
+                                return done(null, user);
+                            });
+                        }
+                        return done(null, user);
+                    } 
+                    else {
+                        var newUser          = new User();
+
+                        newUser.google.id    = profile.id;
+                        newUser.google.token = token;
+                        newUser.google.name  = profile.displayName;
+                        newUser.google.email = profile.emails[0].value; // pull the first email
+
+                        newUser.save(function(err) {
+                            if (err) {
+                                throw err;
+                            }
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } 
+            else {
+                var user          = req.user; // pull the user out of the session
+
+                user.google.id    = profile.id;
+                user.google.token = token;
+                user.google.name  = profile.displayName;
+                user.google.email = profile.emails[0].value; // pull the first email
+
+                user.save(function(err) {
+                    if (err) {
+                        throw err;
+                    }
+                    return done(null, user);
+                });
+            }
+        });
+    }));
 	
 	// Facebook
 

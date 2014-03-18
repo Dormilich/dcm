@@ -33,18 +33,18 @@ module.exports = {
 		}, {
 			url:   "/profil",
 			title: "Konten"
-		}, {
+		/*}, {
 			url:   "/messages",
-			title: "Nachrichten"
+			title: "Nachrichten"//*/
 		}],
 		right: [{
 			url:   "/about",
 			title: "Info",
 			sign:  ["fa", "fa-info-circle", "text-info"]
-		}, {
+		/*}, {
 			url:   "/rss",
 			title: "Update-Feed",
-			sign:  ["fa", "fa-rss-square", "text-warning"]
+			sign:  ["fa", "fa-rss-square", "text-warning"]//*/
 		}, {
 			url:   "/logout",
 			title: "Abmelden",

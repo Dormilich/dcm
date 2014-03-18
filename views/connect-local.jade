@@ -2,7 +2,7 @@ doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title DCM Database Manager
+		title DCM Registrierung
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
 		style.
@@ -14,21 +14,22 @@ html(lang="de")
 			.col-sm-6.col-sm-offset-3
 				h1
 					span.fa.fa-sign-in &nbsp;
-					| Anmeldung
+					| Lokales Konto hinzufügen
 				if (message.length > 0)
 					.alert.alert-danger=message
-				form(action="/login", method="post")
+				form(action="/connect/local", method="post")
+					.form-group
+						label(for="un") Name
+						input#un(type="text", name="display_name", required).form-control
 					.form-group
 						label(for="email") E-Mail
 						input#email(type="text", name="email", required).form-control
 					.form-group
 						label(for="pass") Passwort
 						input#pass(type="password", name="password", required).form-control
-					button(type="submit").btn.btn-warning.btn-lg anmelden
+					button(type="submit").btn.btn-warning.btn-lg registrieren
 				hr
-				p Noch kein Benutzer?&nbsp;
-					a(href="/signup") Registrieren!
-				p Zurück zum 
-					a(href="/") Anfang
+				p Zurück zur 
+					a(href="/profil") Kontenverwaltung
 			
 				
