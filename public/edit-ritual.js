@@ -1,8 +1,8 @@
-$('#newrit').tablesorter({
+/*$('#newrit').tablesorter({
 	headers: {
 		1: { sorter: false }
 	}
-});
+});//*/
 // activate/deactivate entries
 $('#tbl-rk').on("click", "input.isactive", function(evt) {
 	var $row = $(this).closest('tr');

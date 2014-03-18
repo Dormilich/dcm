@@ -417,13 +417,14 @@ html(lang="de")
 							- var __talent = getTalent(Talente.Nahkampf, __waffe);
 							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
 							- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
+							- var __tp     = __waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)
 							tr
 								td.links.name=__waffe.Name
 								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td=__waffe.DK
 								td.at(data-at=__at)=Kampfwerte.AT + __at
 								td.pa(data-pa=__pa, data-paw=Kampfwerte.PA + __pa)=Kampfwerte.PA + __pa
-								td.tp(title=__waffe.TP.roll+" + "+__waffe.TP.rollMod, data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod))
+								td.tp(title=__waffe.TP.roll+(__waffe.TP.rollMod < 0 ? " – " : " + ")+Math.abs(__waffe.TP.rollMod), data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
 								td=__waffe.BF
 								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
 								td
@@ -490,12 +491,13 @@ html(lang="de")
 					tbody#fernkampf-waffen
 						each __waffe in Ausrüstung.Fernkampf
 							- var __talent = getTalent(Talente.Fernkampf, __waffe);
-							- var __tpPlus = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod) : 0
+							- var __tp     = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)+__waffe.TP.rollMod : __waffe.TP.rollMod
+							
 							tr
 								td.links=__waffe.Name
 								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
-								td.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+" + "+(__waffe.TP.rollMod+__tpPlus)
+								td.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
 								td=__waffe.TP.dk.join(" / ")
 								td=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
 								td=__waffe.Laden
@@ -531,8 +533,8 @@ html(lang="de")
 								td=__panzer.RA
 								td=__panzer.LB
 								td=__panzer.RB
-								td=__panzer.RS.toFixed(1)
-								td=__panzer.BE.toFixed(1)
+								td=__panzer.RS.toFixed(2)
+								td=__panzer.BE.toFixed(2)
 								td
 									input(type="radio", name="panzerung", value=Math.round(__panzer.BE))
 		a#taw

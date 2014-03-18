@@ -16,6 +16,8 @@ $('#add').on("click", function() {
 	$row.find('input').each(function() {
 		this.value = this.defaultValue;
 	});
+}).on("click", function() {
+	$('#liste').find(':checked').prop("checked", false);
 });
 $('#liste').on("click", 'input', function() {
 	var ids = ["ko", "br", "ru", "ba", "ra", "la", "rb", "lb", "rs", "be"]

@@ -1,10 +1,10 @@
 $('#spell_list')
-	.tablesorter({
+	/*.tablesorter({
 		headers: {
 			4: { sorter: false },
 			5: { sorter: false }
 		}
-	})
+	})//*/
 	.on("click", 'button', function(evt) {
 		var $row = $(this).closest('tr');
 		var rep  = $row.find('select').val();
@@ -30,13 +30,13 @@ $('#spell_list')
 	})
 ;
 $('#spell_choice')
-	.tablesorter({
+	/*.tablesorter({
 		headers: {
 			2: { sorter: false },
 			4: { sorter: false },
 			5: { sorter: false }
 		}
-	})
+	})//*/
 	.on("click", "input.lock", function(evt) {
 		var $row = $(this).closest('tr');
 		$row.find("*[name]").prop("disabled", !this.checked);
