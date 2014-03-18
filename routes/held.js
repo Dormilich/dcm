@@ -29,32 +29,6 @@ var path    = require('path')
   ;
 
 module.exports = function (app) {
-	// list all characters
-	// ### TODO ### active and deleted Chars need different layout
-	// ### TODO ### move to user route
-	app.get('/helden', function(req, res, next) {
-		var disabled = ("deleted" in req.query);
-		Held
-			.find({ disabled: disabled })
-			.select('Person AP')
-			.sort('AP.alle')
-			.lean()
-			.exec(function(err, arr) {
-				if (err) return next(err);
-				var obj = {
-					_liste: arr,
-					_disabled: disabled,
-					_formData: {
-						method: disabled ? "put" : "delete",
-						sign:   disabled ? "\u2713" : "\u2717",
-						title:  disabled ? "wiederherstellen" : "löschen",
-						class:  disabled ? "restore" : "remove"
-					}
-				};
-				res.render('list-helden', obj);
-			})
-		;
-	});
 	/**********************************
 	 ***     Character creation     ***
 	 **********************************/

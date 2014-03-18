@@ -67,7 +67,7 @@ html(lang="de")
 					
 			.panel.panel-default
 				.panel-heading
-					h4 Meine Charaktere
+					h4 Meine Helden
 				.panel-body
 					ul.list-group
 						each __held in _Own
@@ -79,7 +79,7 @@ html(lang="de")
 			each __friend in _Group
 				.panel.panel-default
 					.panel-heading
-						h4 Charaktere von #{__friend.local.name}
+						h4 Helden von #{__friend.local.name}
 					.panel-body
 						ul.list-group
 							each __held in __friend.chars

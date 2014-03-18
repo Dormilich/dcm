@@ -58,7 +58,7 @@ module.exports = function (passport) {
 		}, function(req, email, password, done) {
 			process.nextTick(function() {
 				if (!req.user) {
-					User.findOne({ "local.email": email }, function(err, user) {
+					User.findOne({ "local.email": new RegExp("^"+email+"$", "i") }, function(err, user) {
 						if (err) {
 							return done(err);
 						}

@@ -36,6 +36,11 @@ function realpath(relativePath) {
 }
 
 module.exports = function (app) {
+	// ### TODO ###
+	// About page
+	app.get('/about', function(req, res, next) {
+		res.render('about', { _User: req.user });
+	});
 	// Account Panel
 	app.get('/profil', function(req, res, next) {
 		res.render('users/profil', { _User: req.user });
@@ -57,8 +62,7 @@ module.exports = function (app) {
 			},
 			_Group: function (cb) {
 				User
-					.find()
-					.in("_id", req.user.friends)
+					.find({ "friends": req.user._id })
 					.populate({ 
 						path:   "chars",
 						match:  { disabled: false },
@@ -82,7 +86,8 @@ module.exports = function (app) {
 			res.render('users/chars', obj);
 		});
 	});
-	// deleted Characters' list	
+	// ### TODO ###
+	// deleted Characters list	
 	app.get('/papierkorb', function(req, res, next) {
 		Held
 			.find({ disabled: true })
@@ -102,20 +107,6 @@ module.exports = function (app) {
 	});
 	// Friend list
 	app.get('/freunde', function(req, res, next) {
-		/*User
-			.find()
-			.in("_id", req.user.friends)
-			.exec(function(err, docs) {
-				if (err) return next(err);
-				var nav = menu.profil;
-				nav.currentURL = req.path;
-				res.render('users/friends', { 
-					_User:    req.user,
-					_Friends: docs,
-					_Menu:    nav
-				});
-			})
-		;//*/
 		async.parallel({
 			_Friends: function (cb) {
 				User
@@ -127,16 +118,41 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_Notices: function (cb) {
-				Message.find({  
-					recipient: req.user.id,
-					topic:     "friendship request",
-					read:      false,
-					deleted:   false
-				}, function(err, arr) {
+			_Group: function (cb) {
+				User.find({ "friends": req.user._id }, function(err, docs) {
 					if (err) return cb(err);
 					cb(null, docs);
 				});
+			},
+			_Inbox: function (cb) {
+				Message
+					.find({  
+						recipient: req.user.id,
+						topic:     "friendship request",
+						read:      false, // accepted state
+						deleted:   false  // rejected state
+					})
+					.populate("sender") 
+					.exec(function(err, arr) {
+						if (err) return cb(err);
+						cb(null, arr);
+					})
+				;
+			},
+			_Outbox: function (cb) {
+				Message
+					.find({  
+						sender:  req.user.id,
+						topic:   "friendship request",
+						read:    false, // accepted state
+						deleted: false  // rejected state
+					})
+					.populate("recipient") 
+					.exec(function(err, arr) {
+						if (err) return cb(err);
+						cb(null, arr);
+					})
+				;
 			}
 		}, 
 		function(err, obj) {
@@ -147,7 +163,7 @@ module.exports = function (app) {
 			res.render('users/friends', obj);
 		});
 	});
-	// save friend list via AJAX
+	// save friend list (AJAX)
 	app.post('/freunde', function(req, res, next) {
 		req.user.friends = req.body.friends;
 		req.user.save(function(err) {
@@ -155,14 +171,14 @@ module.exports = function (app) {
 			res.json({ count: req.user.friends.length });
 		});
 	});
-	// get list of users matching a name string
+	// get list of users matching a name string (AJAX)
 	app.get('/userlist', function(req, res, next) {
 		var query = null;
+		// find user by name
 		if ("name" in req.query) {
-			query = User
-				.find({ "local.name": new RegExp(req.query.name, "i") })
-				.nin("_id", [req.user._id].concat(req.user.friends));
+			query = User.find({ "local.name": new RegExp(req.query.name, "i") });
 		}
+		// find user by ID
 		else if ("id" in req.query) {
 			query = User.findById(req.query.id);
 		}
@@ -170,6 +186,15 @@ module.exports = function (app) {
 			res.json(404);
 			return null;
 		}
+		// exclude own friends
+		if (req.query.skip === "own") {
+			query.nin("_id", [req.user._id].concat(req.user.friends));
+		}
+		// excluding friend group
+		else if (req.query.skip === "group") {
+			query.ne("friends", req.user._id)
+		}
+		// execute
 		query.exec(function(err, arr) {
 			if (err) return next(err);
 			res.json(arr.map(function(user) {
@@ -181,27 +206,98 @@ module.exports = function (app) {
 			}));
 		});
 	});
-	app.post('/friendship', function(req, res, next) {
+	// write a friendship request message (AJAX)
+	app.get('/friendship', function(req, res, next) {
+		// check User ID
 		if (!("id" in req.query)) {
-			res.status(400);
+			res.status(400).end();
 			return null;
 		}
-		Message.create({
-			sender:    req.user._id,
-			recipient: req.query.id,
-			topic:     "friendship request"
-		}, function(err, doc) {
+		User
+			.findById(req.query.id)
+			.exec()
+			.then(function(user) {
+				// check if recipient exists
+				if (!user) {
+					throw new Error("Nutzer unbekannt.");
+				}
+				// check if you’re already a friend
+				if (user.friends.indexOf(req.user._id) > -1) {
+					throw new Error("Freundschaft existiert bereits.")
+				}
+				// check if there is a pending friendship request
+				return Message
+					.find({
+						sender:    req.user._id,
+						recipient: req.query.id,
+						topic:     "friendship request",
+						read:      false,
+						deleted:   false
+					})
+					.count()
+					.exec()
+				;
+			})
+			.then(function(count) {
+				if (count > 0) {
+					throw new Error("Freundschaftsanfrage läuft bereits.")
+				}
+				// check if the last rejected friendship request 
+				// is younger than 1 month (FR spam protect)
+				var datetime = new Date();
+				datetime.setMonth(datetime.getMonth() - 1);
+				return Message
+					.find({
+						sender:    req.user._id,
+						recipient: req.query.id,
+						topic:     "friendship request"
+					})
+					.where("created")
+					.gt(datetime)
+					.count()
+					.exec()
+				;
+			})
+			.then(function(count) {
+				if (count > 0) {
+					throw new Error("Die letzte Freundschaftsanfrage ist jünger als 1 Monat.")
+				}
+				// finally create the message
+				return Message.create({
+					sender:    req.user._id,
+					recipient: req.query.id,
+					topic:     "friendship request"
+				});
+			})
+			.then(function(msg) {
+				res.status(204).end();
+			})
+			.then(null, function(err) {
+				res.status(500).end(err.message);
+			})
+		;
+	});
+	// accept/deny friendship (AJAX)
+	app.get('/friendship/:status', function(req, res, next) {
+		// check User ID
+		if (!("message" in req.query)) {
+			res.status(400).end();
+			return null;
+		}
+		var query;
+		if (req.params.status === "accept") {
+			query = Message.findByIdAndUpdate(req.query.message, { read: true });
+		}
+		else if (req.params.status === "reject") {
+			query = Message.findByIdAndUpdate(req.query.message, { deleted: true });
+		}
+		query.exec(function(err, msg) {
 			if (err) {
-				res.status(500);
+				res.status(500).end(err.message);
 			}
 			else {
-				res.status(204);
+				res.status(204).end();
 			}
 		});
-	});
-	// ### TODO ###
-	// About page
-	app.get('/about', function(req, res, next) {
-		res.render('about', { _User: req.user });
 	});
 };
