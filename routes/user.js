@@ -91,7 +91,6 @@ module.exports = function (app) {
 			res.render('users/chars', obj);
 		});
 	});
-	// ### TODO ###
 	// deleted Characters list	
 	app.get('/papierkorb', function(req, res, next) {
 		Held

@@ -8,12 +8,12 @@ html(lang="de")
 		script(src="//code.jquery.com/jquery.min.js")
 		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
-			.delete {
+			.restore {
 				padding: 5px 10px;
 				border-radius: 7px;
 			}
-			.delete:hover {
-				background-color: orange;
+			.restore:hover {
+				background-color: green;
 				color: white;
 			}
 			.gap-bottom {
@@ -54,8 +54,8 @@ html(lang="de")
 		.container
 			.page-header.text-center
 				h1
-					span.fa.fa-file-text-o &nbsp;
-					span Helden &nbsp;
+					span.fa.fa-trash-o &nbsp;
+					span Gelöschte Helden &nbsp;
 			ul.nav.nav-pills.nav-justified.gap-bottom
 				li
 					a(href="/neu") 
@@ -66,32 +66,24 @@ html(lang="de")
 						span.fa.fa-upload
 						|  Helden importieren
 				li
-					a(href="/papierkorb")
-						span.fa.fa-trash-o
-						|  gelöschte Helden
+					a(href="/helden")
+						span.fa.fa-file-text-o
+						|  aktive Helden
 					
 			.panel.panel-default
 				.panel-heading
-					h4 Meine Helden
+					h4 Meine Papierkorb
 				ul#my-chars.list-group
-					each __held in _Own
+					each __held in _Chars
 						li.list-group-item
-							a(href="/held/"+__held._id)= __held.Person.Name + " ( " + __held.AP.frei + " / " + __held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
-							span.fa.fa-trash-o.pull-right.delete(title="Held löschen", data-id=__held._id.toString())
-			each __friend in _Group
-				.panel.panel-default
-					.panel-heading
-						h4 Helden von #{__friend.local.name}
-					ul.list-group
-						each __held in __friend.chars
-							li.list-group-item
-								a(href="/held/"+__held._id)= __held.Person.Name + " ( " + __held.AP.frei + " / " + __held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
+							span= __held.Person.Name + " ( " + __held.AP.frei + " / " + __held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " )"
+							span.fa.fa-check-square-o.pull-right.restore(title="Held wiederherstellen", data-id=__held._id.toString())
 			script.
-				$('.delete').on("click", function() {
+				$('.restore').on("click", function() {
 					var $row = $(this).closest('li');
 					$.post(
 						"/held/" + this.dataset.id, 
-						{ _method: "delete" }
+						{ _method: "put" }
 					).done(function() {
 						$row.remove();
 					});
