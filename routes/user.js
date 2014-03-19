@@ -183,9 +183,11 @@ module.exports = function (app) {
 	// get list of users matching a name string (AJAX)
 	app.get('/userlist', function(req, res, next) {
 		var query = null;
+		var re    = ".";
 		// find user by name
 		if ("name" in req.query) {
-			query = User.find({ "local.name": new RegExp(req.query.name, "i") });
+			re    = new RegExp(req.query.name, "i");
+			query = User.find().or({ "facebook.name": re }, { "google.name": re }, { "local.name": re });
 		}
 		// find user by ID
 		else if ("id" in req.query) {

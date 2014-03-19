@@ -117,9 +117,11 @@ require('./routes/login')(app, passport);
 // protect following paths
 app.all(/.+/, function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
-		return next();
+		next();
 	}
-	res.redirect('/login');
+	else {
+		res.redirect('/login');
+	}
 });
 
 // User Control Panel
@@ -133,6 +135,33 @@ require("./routes/held")(app);
 // edit/save character sheet sections
 // edit CharSheet Talent section (needs to load data from system table)
 require("./routes/edit")(app);
+
+/* Manage DB */
+
+// only Admin can access this part
+app.all(/.+/, function isAdmin(req, res, next) {
+	if (req.user.isAdmin) {
+		next();
+	}
+	else {
+		res.status(403);
+		next(new Error("Zugriff verweigert."));
+	}
+});
+// DB navigation
+app.get('/db', function (req, res, next) {
+	res.render('system/nav');
+});
+// Talente
+require('./routes/system/talent')(app);
+// Zauber + Varianten
+require('./routes/system/zauber')(app);
+// Rituale
+require('./routes/system/ritual')(app);
+// Liturgien
+require("./routes/system/liturgie")(app);
+// get/insert DB contents
+require("./routes/system/db")(app);
 
 /**************************************
  ***          Start Server          ***
