@@ -72,4 +72,23 @@ userSchema.methods.getName = function () {
 	return null;
 };
 
+userSchema.methods.getEmail = function (name) {
+	var order = ["local", "google", "facebook", "openid"];
+	if (!(typeof name === "string") && name.length) {
+		var type = order.filter(function(item) {
+			return this[item] && (this[item].name === name);
+		});
+		if (type.length) {
+			// if a name matches linked accounts, return the first in order
+			return this[type[0]].email;
+		}
+	}
+	order.forEach(function(item) {
+		if (this[item] && this[item].email) {
+			return this[item].email;
+		}
+	}, this);
+	return null;
+};
+
 module.exports = mongoose.model('User', userSchema);

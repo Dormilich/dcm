@@ -187,7 +187,7 @@ module.exports = function (app) {
 		// find user by name
 		if ("name" in req.query) {
 			re    = new RegExp(req.query.name, "i");
-			query = User.find().or(
+			query = User.find({ isAdmin: false }).or(
 				{ "facebook.name": re }, 
 				{ "google.name"  : re }, 
 				{ "local.name"   : re },
@@ -216,8 +216,8 @@ module.exports = function (app) {
 			res.json(arr.map(function(user) {
 				return {
 					id:    user._id,
-					name:  user.local.name,
-					email: user.local.email
+					name:  user.getName(),
+					email: user.getEmail()
 				};
 			}));
 		});
