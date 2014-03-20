@@ -63,4 +63,13 @@ userSchema.methods.validPassword = function (password) {
 	return bcrypt.compareSync(password, this.local.password);
 };
 
+userSchema.methods.getName = function () {
+	["local", "google", "facebook", "openid"].forEach(function(item) {
+		if (this[item] && this[item].name) {
+			return this[item].name;
+		}
+	}, this);
+	return null;
+};
+
 module.exports = mongoose.model('User', userSchema);

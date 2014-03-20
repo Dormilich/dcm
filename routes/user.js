@@ -187,7 +187,12 @@ module.exports = function (app) {
 		// find user by name
 		if ("name" in req.query) {
 			re    = new RegExp(req.query.name, "i");
-			query = User.find().or({ "facebook.name": re }, { "google.name": re }, { "local.name": re });
+			query = User.find().or(
+				{ "facebook.name": re }, 
+				{ "google.name"  : re }, 
+				{ "local.name"   : re },
+				{ "openid.name"  : re }
+			);
 		}
 		// find user by ID
 		else if ("id" in req.query) {

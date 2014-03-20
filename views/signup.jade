@@ -9,6 +9,11 @@ html(lang="de")
 			body {
 				padding: 5em;
 			}
+		script.
+			var RecaptchaOptions = {
+				lang : "de",
+				theme: "clean"
+			};
 	body
 		.container
 			.col-sm-6.col-sm-offset-3
@@ -27,6 +32,9 @@ html(lang="de")
 					.form-group
 						label(for="pass") Passwort
 						input#pass(type="password", name="password", required).form-control
+					.form-group
+						label Anti-Bot-Maßnahme
+						!=recaptcha
 					button(type="submit").btn.btn-warning.btn-lg registrieren
 				hr
 				p Bereits registriert?&nbsp;

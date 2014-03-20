@@ -29,6 +29,7 @@ var path             = require('path')
   , GoogleStrategy   = require("passport-google-oauth").OAuth2Strategy
 //  , FacebookStrategy = require('passport-facebook').Strategy;
   , configAuth       = require( path.join(appRoot, 'config/auth') ) 
+  , reCaptcha        = require("librecaptcha")
   ;
 
 module.exports = function (passport) {
@@ -86,38 +87,65 @@ module.exports = function (passport) {
 			passReqToCallback : true
 		}, function(req, email, password, done) {
 			process.nextTick(function() {
-				if (!req.user) {
-					User.findOne({ "local.email": new RegExp("^"+email+"$", "i") }, function(err, user) {
-						if (err) {
-							return done(err);
-						}
-						if (user) {
-							return done(null, false, req.flash("signupMessage", "Diese E-Mail existiert bereits"));
-						}
-						else {
-							var newUser            = new User();
-							newUser.local.email    = email;
-							newUser.local.password = newUser.generateHash(password);
-							newUser.local.name     = req.body.display_name;
-
-							newUser.save(function(err) {
-								if (err) throw err;
-								return done(null, newUser);
-							});
-						}
-					});
+				// load reCaptcha config
+				var localConfig = configAuth.reCaptcha[req.host];
+				if (!localConfig) {
+					return done(new Error("Fehler beim Laden des Captchas."));
 				}
-				else {
-					var user            = req.user;
-					user.local.email    = email;
-					user.local.password = user.generateHash(password);
-					user.local.name     = req.body.display_name;
-					
-					user.save(function(err) {
-						if (err) throw err;
-						return done(null, user);
-					});
-				}
+				// verify reCaptcha
+				var captcha = new reCaptcha(localConfig);
+				captcha.verify({
+					remoteip : req.ip,
+					challenge: req.body.recaptcha_challenge_field,
+					response : req.body.recaptcha_response_field
+				}, function(err) {
+					if (err) {
+						return done(null, false, req.flash("signupMessage", "Captcha-Verifizierung fehlgeschlagen."));
+					}
+					// assign User to DB
+					if (!req.user) {
+						var re = new RegExp("^"+email+"$", "i")
+						User
+							.findOne()
+							.or(
+								{ "local.email"   : re }, 
+								{ "google.email"  : re }, 
+								{ "facebook.email": re }, 
+								{ "openid.email"  : re }
+							)
+							.exec(function(err, user) {
+								if (err) {
+									return done(err);
+								}
+								if (user) {
+									return done(null, false, req.flash("signupMessage", "Diese E-Mail existiert bereits"));
+								}
+								else {
+									var newUser            = new User();
+									newUser.local.email    = email;
+									newUser.local.password = newUser.generateHash(password);
+									newUser.local.name     = req.body.display_name;
+		
+									newUser.save(function(err) {
+										if (err) throw err;
+										return done(null, newUser);
+									});
+								}
+							})
+						;
+					}
+					else {
+						var user            = req.user;
+						user.local.email    = email;
+						user.local.password = user.generateHash(password);
+						user.local.name     = req.body.display_name;
+						
+						user.save(function(err) {
+							if (err) throw err;
+							return done(null, user);
+						});
+					}
+				});
 			});
 		})
 	);

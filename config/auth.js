@@ -27,5 +27,11 @@ module.exports = {
 		"clientID"     : "361380832375-tfsa42irp0hctus1n0l4d869e5q1kan6.apps.googleusercontent.com",
 		"clientSecret" : "uG3QocLHcL4CmxGBUAdmB4ER",
 		"callbackURL"  : "http://localhost:8080/auth/google/callback"
+	},
+	"reCaptcha" : {
+		"localhost" : {
+			"private_key" : "6Le1WfASAAAAAGiEUNrIZFl17EbPFSk-kNj4QQyn",
+			"public_key"  : "6Le1WfASAAAAABfAG-bXSqRzN_CBPKEhxgnHdh1p"
+		}
 	}
 };

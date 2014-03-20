@@ -22,6 +22,12 @@
  * THE SOFTWARE.
  */
 
+var path      = require('path')
+  , appRoot   = path.dirname(require.main.filename)
+  , reCaptcha = require("librecaptcha")
+  , rcConfig  = require( path.join(appRoot, 'config/auth') ).reCaptcha
+  ;
+
 module.exports = function (app, passport) {
 	// splash screen, login links
 	app.get('/', function (req, res, next) {
@@ -44,7 +50,15 @@ module.exports = function (app, passport) {
 	}));
 	
 	app.get('/signup', function (req, res, next) {
-		res.render('signup', { message: req.flash('signupMessage') });
+		var localConfig = rcConfig[req.host];
+		if (!localConfig) {
+			return next(new Error("Fehler beim Laden des Captchas."));
+		}
+		var captcha = new reCaptcha(localConfig);
+		res.render('signup', {  
+			message:   req.flash('signupMessage'),
+			recaptcha: captcha.generate()
+		});
 	});
 	app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : "/helden",

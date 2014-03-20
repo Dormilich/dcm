@@ -99,6 +99,10 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
+				/* Node does not seem to support locale aware string comparison
+				doc.Magie.Zauber.sort(function(a, b) {
+					return a._zauber.Name.localeCompare(b._zauber.Name, "de");
+				});//*/
 				res.render('held/magie', doc);
 			})
 		;
