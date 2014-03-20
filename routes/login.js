@@ -78,6 +78,14 @@ module.exports = function (app, passport) {
 	}));
 	
 	// Facebook
+	
+	app.get('/auth/facebook', passport.authenticate('facebook', { 
+		scope: "email"
+	}));
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+		successRedirect: '/helden',
+		failureRedirect: '/'
+	}));
 
 	// OpenID
 	
@@ -103,7 +111,7 @@ module.exports = function (app, passport) {
 		failureFlash:    true
 	}));
 	
-	/* Google+ */
+	/* Google */
 	
 	app.get('/connect/google', passport.authorize('google', {  
 		scope: ["profile", "email"]
@@ -114,7 +122,18 @@ module.exports = function (app, passport) {
 		failureRedirect: '/'
 	}));
 	
-	// UNLINK
+	/* Facebook */
+	
+	app.get('/connect/facebook', passport.authorize('facebook', {  
+		scope: "email"
+	}));
+	
+	app.get('/connect/facebook/callback', passport.authorize('facebook', {
+		successRedirect: '/profil',
+		failureRedirect: '/'
+	}));
+	
+	// UNLINK 
 
 	/* local */
 	
@@ -128,11 +147,21 @@ module.exports = function (app, passport) {
 		});
 	});
 
-	/* Google+ */
+	/* Google */
 	
 	app.get('/unlink/google', function(req, res) {
 		var user            = req.user;
 		user.google.token   = undefined;
+		user.save(function(err) {
+			res.redirect('/profil');
+		});
+	});
+
+	/* Facebook */
+	
+	app.get('/unlink/facebook', function(req, res) {
+		var user              = req.user;
+		user.facebook.token   = undefined;
 		user.save(function(err) {
 			res.redirect('/profil');
 		});

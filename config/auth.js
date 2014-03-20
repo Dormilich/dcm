@@ -28,6 +28,11 @@ module.exports = {
 		"clientSecret" : "uG3QocLHcL4CmxGBUAdmB4ER",
 		"callbackURL"  : "http://localhost:8080/auth/google/callback"
 	},
+	"facebookAuth" : {
+		"clientID"     : "",
+		"clientSecret" : "",
+		"callbackURL"  : ""
+	},
 	"reCaptcha" : {
 		"localhost" : {
 			"private_key" : "6Le1WfASAAAAAGiEUNrIZFl17EbPFSk-kNj4QQyn",
