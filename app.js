@@ -116,11 +116,9 @@ require('./config/param')(app);
 // set DB admin (once)
 app.get('/db/init', function (req, res, next) {
 	var User = require('./models/user');
-	User.find({ isAdmin: true }).exec(function(err, admin) {
+	User.remove({ isAdmin: true }, function(err, admin) {
 		if (err) return next(err);
-		if (!admin) {
-			admin            = new User();
-		}
+		var admin            = new User();
 		// create DB Admin
 		admin.isAdmin        = true;
 		admin.local.email    = process.env.MONGODB_ADMIN_EMAIL;
