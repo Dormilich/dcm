@@ -32,6 +32,7 @@ var express  = require('express')
   , mongoose = require('mongoose')
   , passport = require('passport')
   , flash    = require('connect-flash')
+  , menu     = require('./data/menu')
   ;
 
 /**************************************
@@ -69,8 +70,10 @@ app.use(function(error, req, res, next) {
 	var status = res.statusCode < 400 ? 500 : res.statusCode;
 	//console.log(error.stack)
 	res.status(status).render('error-message', {
-		title: 'Error ' + status + ': ' + http.STATUS_CODES[status], 
-		message: error.message || error
+		title  : 'Error ' + status + ': ' + http.STATUS_CODES[status], 
+		message: error.message || error,
+		_Menu  : menu,
+		_User  : req.user
 	});
 });
 app.locals.pretty = true;
@@ -110,6 +113,28 @@ process.on('SIGINT', function() {
 
 // load app params
 require('./config/param')(app);
+
+// set DB admin (once)
+app.get('/db/init', function (req, res, next) {
+	if (!(typeof req.query.id = "string") && req.query.id.length < 8) {
+		return next(new Error("Passwort nicht ausreichend."));
+	}
+	var User = require('./models/user');
+	User.find({ isAdmin: true }).count(function(err, count) {
+		if (err) return next(err);
+		if (count !== 0) return next(new Error("DB Admin existiert bereits."));
+		// create DB Admin
+		var admin            = new User();
+		admin.isAdmin        = true;
+		admin.local.email    = "Dormilich@netscape.net";
+		admin.local.name     = "Bertold von Dormilich";
+		admin.local.password = admin.generateHash(req.query.id);
+		admin.save(function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/login');
+		});
+	});
+});
 
 // setup login paths
 require('./routes/login')(app, passport);

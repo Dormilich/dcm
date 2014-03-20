@@ -1,6 +1,38 @@
+mixin menuItem(__item)
+	li
+		if Array.isArray(__item.sign)
+			a(href=__item.url, title=__item.title)
+				span.hidden-xs(class=__item.sign.join(" "))
+				span.visible-xs=__item.title
+		else
+			a(href=__item.url)=__item.title
+
 doctype html
 html(lang="de")
 	head
+		meta(charset="utf-8")
 		title= title
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		script(src="//code.jquery.com/jquery.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 	body
-		pre!= message
+		- var __menu = _Menu.default;
+		if _User
+			- __menu = _Menu.profil;
+			
+		nav.navbar.navbar-default(role="navigation")
+			.container-fluid
+				.navbar-header
+					a.navbar-brand DCM
+				ul.nav.navbar-nav
+					each __link in __menu.left
+						+menuItem(__link)
+				ul.nav.navbar-nav.navbar-right
+					each __link in __menu.right
+						+menuItem(__link)
+		.container
+			.page-header.text-center
+				h1 Huch, ein Fehler ist aufgetreten!
+			.container
+				pre.bg-danger!=message

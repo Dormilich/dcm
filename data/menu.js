@@ -23,6 +23,33 @@
  */
 
 module.exports = {
+	default: {
+		left: [{
+			url:   "/",
+			title: "Startseite",
+			sign:  ["fa", "fa-home"]
+		}, {
+			url:   "/login",
+			title: "Anmelden",
+			sign:  ["fa", "fa-sign-in"]
+		}, {
+			url:   "/auth/google",
+			title: "Google",
+			sign:  ["fa", "fa-google-plus-square"]
+		/*}, {
+			url:   "/auth/facebook",
+			title: "facebook",
+			sign:  ["fa", "fa-facebook-square"]
+		}, {
+			url:   "/login/openid",
+			title: "OpenID"//*/
+		}],
+		right: [{
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
+	},
 	profil: {
 		left: [{
 			url:   "/helden",
@@ -46,6 +73,110 @@ module.exports = {
 			title: "Update-Feed",
 			sign:  ["fa", "fa-rss-square", "text-warning"]//*/
 		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
+	},
+	helden: {
+		left: [{
+			title: "Springe zu …",
+			dropdown: [{
+				url:   "#bes",
+				title: "Beschreibung"
+			}, {
+				url:   "#gen",
+				title: "Generierung"
+			}, {
+				url:   "#att",
+				title: "Attribute"
+			}, {
+				url:   "#bas",
+				title: "Basiswerte"
+			}, {
+				url:   "#vnt",
+				title: "Vor- & Nachteile"
+			}, {
+				url:   "#ap",
+				title: "Abenteuerpunkte"
+			}, {
+				url:   "#sf",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "#waf",
+				title: "Waffen & Rüstungen"
+			}, {
+				url:   "#taw",
+				title: "Talentwerte"
+			}, {
+				url:   "#t_kam",
+				title: "– Kampf-Talente"
+			}, {
+				url:   "#t_koe",
+				title: "– Körperliche Talente"
+			}, {
+				url:   "#t_ges",
+				title: "– Gesellschaftstalente"
+			}, {
+				url:   "#t_nat",
+				title: "– Naturtalente"
+			}, {
+				url:   "#t_wis",
+				title: "– Wissenstalente"
+			}, {
+				url:   "#t_han",
+				title: "– Handwerkstalente"
+			}, {
+				url:   "#t_spr",
+				title: "– Sprachen & Schriften"
+			}, {
+				url:   "#eqp",
+				title: "Ausrüstung"
+			}]
+		}, {
+			url:   "/helden",
+			title: "Meine Helden"
+		}, {
+			url:   "/neu",
+			title: "Neuer Held"
+		}, {
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/person/{id}",
+				title: "Beschreibung"
+			}, {
+				url:   "/generierung/{id}",
+				title: "Generierung"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}, {
+				url:   "/ap/{id}",
+				title: "Abenteuerpunkte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/talente/{id}",
+				title: "Talente"
+			}, {
+				url:   "/waffen/{id}",
+				title: "Waffen"
+			}, {
+				url:   "/kleidung/{id}",
+				title: "Rüstungen"
+			}, {
+				url:   "/rucksack/{id}",
+				title: "Gegenstände"
+			}]
+		}],
+		right: [{
 			url:   "/logout",
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]

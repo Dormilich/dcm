@@ -29,8 +29,7 @@ var path    = require('path')
 	  zauber:   require( path.join(appRoot, 'models/zauber') ),
 	  ritual:   require( path.join(appRoot, 'models/ritual') ),
 	  liturgie: require( path.join(appRoot, 'models/liturgie') )
-  }
-  ;
+  };
 
 module.exports = function (app) {
 	// check table existence
