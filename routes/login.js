@@ -90,11 +90,7 @@ module.exports = function (app, passport) {
 	
 	app.get('/connect/local', function(req, res, next) {
 		// same a for signup since both use the same Strategy
-		var localConfig = rcConfig[req.host];
-		if (!localConfig) {
-			return next(new Error("Fehler beim Laden des Captchas."));
-		}
-		var captcha = new reCaptcha(localConfig);
+		var captcha = new reCaptcha(rcConfig);
 		res.render('connect-local', {  
 			message:   req.flash('signupMessage'),
 			recaptcha: captcha.generate()
