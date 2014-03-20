@@ -116,7 +116,7 @@ require('./config/param')(app);
 
 // set DB admin (once)
 app.get('/db/init', function (req, res, next) {
-	if (!(typeof req.query.id = "string") && req.query.id.length < 8) {
+	if (!(typeof req.query.id === "string") && req.query.id.length < 8) {
 		return next(new Error("Passwort nicht ausreichend."));
 	}
 	var User = require('./models/user');
