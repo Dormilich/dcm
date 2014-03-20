@@ -6,6 +6,15 @@ html(lang="de")
 		//link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		style.
+			ol.dcm-list-item li {
+				padding-top:    0.2em;
+				padding-bottom: 0.2em;
+			}
+			.dcm-def-list dt {
+				margin-top:    1em;
+				margin-bottom: 0.5em;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container-fluid
@@ -39,6 +48,7 @@ html(lang="de")
 					span.fa.fa-info-circle
 					|  Rund um DCM 
 			.container
+				h3 Verweise
 				p
 					span.fa.fa-github
 					|  GitHub Projekt: &nbsp;
@@ -52,3 +62,14 @@ html(lang="de")
 				p 
 					span.fa.fa-comments-o
 					|  An der Stelle möchte ich mich auch bei Tobias Carstens für die Layout-Diskussionen und  Chris Sevilleja für das <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local" lang="en">Node Authentication Tutorial <span class="fa fa-external-link"></span></a> bedanken.
+				h3 FAQ
+				dl.dcm-def-list
+					dt Ich habe mein Passwort vergessen!
+					dd 
+						p Hier gibt es zwei Möglichkeiten:
+						ol.dcm-list-item(type="1")
+							li Du hast nur ein lokales Konto (E-Mail/Passwort): Frag den Admin, daß er endlich das Passwort-Reset macht.
+							li Dein lokales Konto ist mit einem Sozialnetzwerkkonto (z.B. facebook) verlinkt: Trenne das lokale Konto ab und verbinde es wieder neu. Falls du das Sozialnetzwerkkonto getrennt haben solltest und dich abgemeldet hast, siehe 1. (solange du angemeldet bist, kannst du das Trennen/Verbinden beliebig wiederholen). 
+					dt Ich habe zwei Konten verlinkt, aber ich sehe immer nur die Helden von einem Account.
+					dd
+						p Dann hast du sehr wahrscheinlich dich vorher mit beiden Konten angemeldet, also zwei Benutzerkonten angelegt. Die Verlinkung betrift aber nur die Anmeldedaten eines einzigen Nutzerkontos. Da kann nur noch der Admin was machen.

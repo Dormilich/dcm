@@ -50,6 +50,7 @@ module.exports = function (app, passport) {
 	}));
 	
 	app.get('/signup', function (req, res, next) {
+		// load and serve reCaptcha form
 		var localConfig = rcConfig[req.host];
 		if (!localConfig) {
 			return next(new Error("Fehler beim Laden des Captchas."));
@@ -85,7 +86,16 @@ module.exports = function (app, passport) {
 	/* local */
 	
 	app.get('/connect/local', function(req, res) {
-		res.render('connect-local', { message: req.flash('loginMessage') });
+		// same a for signup since both use the same Strategy
+		var localConfig = rcConfig[req.host];
+		if (!localConfig) {
+			return next(new Error("Fehler beim Laden des Captchas."));
+		}
+		var captcha = new reCaptcha(localConfig);
+		res.render('connect-local', {  
+			message:   req.flash('signupMessage'),
+			recaptcha: captcha.generate()
+		});
 	});
 	app.post('/connect/local', passport.authenticate('local-signup', {
 		successRedirect: '/profil',
