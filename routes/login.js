@@ -50,12 +50,7 @@ module.exports = function (app, passport) {
 	}));
 	
 	app.get('/signup', function (req, res, next) {
-		// load and serve reCaptcha form
-		var localConfig = rcConfig[req.host];
-		if (!localConfig) {
-			return next(new Error("Fehler beim Laden des Captchas."));
-		}
-		var captcha = new reCaptcha(localConfig);
+		var captcha = new reCaptcha(rcConfig);
 		res.render('signup', {  
 			message:   req.flash('signupMessage'),
 			recaptcha: captcha.generate()

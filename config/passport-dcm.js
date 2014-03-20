@@ -87,13 +87,8 @@ module.exports = function (passport) {
 			passReqToCallback : true
 		}, function(req, email, password, done) {
 			process.nextTick(function() {
-				// load reCaptcha config
-				var localConfig = configAuth.reCaptcha[req.host];
-				if (!localConfig) {
-					return done(new Error("Fehler beim Laden des Captchas."));
-				}
 				// verify reCaptcha
-				var captcha = new reCaptcha(localConfig);
+				var captcha = new reCaptcha(configAuth.reCaptcha);
 				captcha.verify({
 					remoteip : req.ip,
 					challenge: req.body.recaptcha_challenge_field,
@@ -219,7 +214,7 @@ module.exports = function (passport) {
 	
 	/**************************************
 	 ***      Login with Facebook       ***
-	 **************************************
+	 **************************************/
 
 	passport.use(new FacebookStrategy({
 		clientID          : configAuth.facebookAuth.clientID,
@@ -288,7 +283,7 @@ module.exports = function (passport) {
 				});
 			}
 		});
-	}));//*/
+	}));
 
 	// OpenID
 };

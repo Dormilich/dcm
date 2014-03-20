@@ -13,6 +13,9 @@ comments.js
 # Node Modules
 node_modules/
 
+# ENV data
+.env
+
 # GitHub default .gitignore for Node projects
 lib-cov
 *.seed

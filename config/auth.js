@@ -24,19 +24,17 @@
 
 module.exports = {
 	"googleAuth" : {
-		"clientID"     : "361380832375-tfsa42irp0hctus1n0l4d869e5q1kan6.apps.googleusercontent.com",
-		"clientSecret" : "uG3QocLHcL4CmxGBUAdmB4ER",
-		"callbackURL"  : "http://localhost:8080/auth/google/callback"
+		"clientID"     : process.env.AUTH_GOOGLE_ID,
+		"clientSecret" : process.env.AUTH_GOOGLE_SECRET,
+		"callbackURL"  : process.env.AUTH_GOOGLE_URL
 	},
 	"facebookAuth" : {
-		"clientID"     : "",
-		"clientSecret" : "",
-		"callbackURL"  : ""
+		"clientID"     : process.env.AUTH_FACEBOOK_ID,
+		"clientSecret" : process.env.AUTH_FACEBOOK_SECRET,
+		"callbackURL"  : process.env.AUTH_FACEBOOK_URL
 	},
 	"reCaptcha" : {
-		"localhost" : {
-			"private_key" : "6Le1WfASAAAAAGiEUNrIZFl17EbPFSk-kNj4QQyn",
-			"public_key"  : "6Le1WfASAAAAABfAG-bXSqRzN_CBPKEhxgnHdh1p"
-		}
+		"private_key" : process.env.AUTH_RECAPTCHA_KEY_PRIVATE,
+		"public_key"  : process.env.AUTH_RECAPTCHA_KEY_PUBLIC
 	}
 };

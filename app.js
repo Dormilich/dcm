@@ -25,6 +25,7 @@
 /**************************************
  ***       Load Dependencies        ***
  **************************************/
+
 var express  = require('express')
   , app      = express()
   , path     = require('path')
@@ -49,7 +50,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.methodOverride());        // use PUT/DELETE
 app.use(express.cookieParser());
-app.use(express.session({ secret: "d6b4a9296830ed4864ecdd4e5847f93d732cf71f0c67b3dd49f4ff0cb690c533" }));
+app.use(express.session({ secret: process.env.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -59,11 +60,9 @@ app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 	 this is middleware, not an error handler. 
 	 if all previous routes/files failed, this is the response being sent.
  */
-app.use(function(req, res) {
-	res.status(404).render('error-message', {
-		title: '404: File Not Found', 
-		message: 'Sorry, there is no such page "' + req.originalUrl + '"'
-	});
+app.use(function(req, res, next) {
+	res.status(404);
+	next(new Error('Die Seite "' + req.originalUrl + '" existiert leider nicht.'));
 });
 // Handle errors
 app.use(function(error, req, res, next) {
@@ -88,7 +87,7 @@ require('./config/passport-dcm')(passport);
  ***  Connect to and Watch MongoDB  ***
  **************************************/
 
-mongoose.connect('mongodb://localhost/dsa'); 
+mongoose.connect(process.env.MONGODB_URL); 
 // watch DB events
 mongoose.connection.on('error', function _error(err) {
 	console.log('Mongoose error: ' + err);
@@ -116,9 +115,6 @@ require('./config/param')(app);
 
 // set DB admin (once)
 app.get('/db/init', function (req, res, next) {
-	if (!(typeof req.query.id === "string") && req.query.id.length < 8) {
-		return next(new Error("Passwort nicht ausreichend."));
-	}
 	var User = require('./models/user');
 	User.find({ isAdmin: true }).count(function(err, count) {
 		if (err) return next(err);
@@ -126,9 +122,9 @@ app.get('/db/init', function (req, res, next) {
 		// create DB Admin
 		var admin            = new User();
 		admin.isAdmin        = true;
-		admin.local.email    = "Dormilich@netscape.net";
-		admin.local.name     = "Bertold von Dormilich";
-		admin.local.password = admin.generateHash(req.query.id);
+		admin.local.email    = process.env.MONGODB_ADMIN_EMAIL;
+		admin.local.name     = process.env.MONGODB_ADMIN_NAME;
+		admin.local.password = admin.generateHash(process.env.MONGODB_ADMIN_PASSWORD);
 		admin.save(function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/login');
