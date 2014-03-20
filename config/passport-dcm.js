@@ -219,7 +219,7 @@ module.exports = function (passport) {
 	
 	/**************************************
 	 ***      Login with Facebook       ***
-	 **************************************/
+	 **************************************
 
 	passport.use(new FacebookStrategy({
 		clientID          : configAuth.facebookAuth.clientID,
@@ -288,7 +288,7 @@ module.exports = function (passport) {
 				});
 			}
 		});
-	}));
+	}));//*/
 
 	// OpenID
 };
