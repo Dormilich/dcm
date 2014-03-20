@@ -28,7 +28,7 @@ var path             = require('path')
   , configAuth       = require( path.join(appRoot, 'config/auth') ) 
   , LocalStrategy    = require("passport-local").Strategy
   , GoogleStrategy   = require("passport-google-oauth").OAuth2Strategy
-  , FacebookStrategy = require('passport-facebook').Strategy;
+  , FacebookStrategy = require('passport-facebook').Strategy
   , reCaptcha        = require("librecaptcha")
   ;
 
