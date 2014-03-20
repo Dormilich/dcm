@@ -116,11 +116,12 @@ require('./config/param')(app);
 // set DB admin (once)
 app.get('/db/init', function (req, res, next) {
 	var User = require('./models/user');
-	User.find({ isAdmin: true }).count(function(err, count) {
+	User.find({ isAdmin: true }).exec(function(err, admin) {
 		if (err) return next(err);
-		if (count !== 0) return next(new Error("DB Admin existiert bereits."));
+		if (!admin) {
+			admin            = new User();
+		}
 		// create DB Admin
-		var admin            = new User();
 		admin.isAdmin        = true;
 		admin.local.email    = process.env.MONGODB_ADMIN_EMAIL;
 		admin.local.name     = process.env.MONGODB_ADMIN_NAME;
