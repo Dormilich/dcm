@@ -64,30 +64,36 @@ userSchema.methods.validPassword = function (password) {
 };
 
 userSchema.methods.getName = function () {
-	["local", "google", "facebook", "openid"].forEach(function(item) {
-		if (this[item] && this[item].name) {
-			return this[item].name;
-		}
+	var type = ["local", "google", "facebook", "openid"].filter(function(item) {
+		return (this[item] && typeof this[item].name === "string");
 	}, this);
+	if (type.length) {
+		return this[type].name;
+	}
 	return null;
 };
 
 userSchema.methods.getEmail = function (name) {
 	var order = ["local", "google", "facebook", "openid"];
-	if (!(typeof name === "string") && name.length) {
+	// get email from the (linked) accounts with the given name
+	if ((typeof name === "string") && name.length) {
+		// check which account type matches the name
 		var type = order.filter(function(item) {
 			return this[item] && (this[item].name === name);
-		});
+		}, this);
+		// if a name matches linked accounts, return the first in order
 		if (type.length) {
-			// if a name matches linked accounts, return the first in order
 			return this[type[0]].email;
 		}
 	}
-	order.forEach(function(item) {
-		if (this[item] && this[item].email) {
-			return this[item].email;
-		}
+	// get the first email that’s available
+	var type = order.filter(function(item) {
+		return (this[item] && typeof this[item].name === "string");
 	}, this);
+	// return name, if any
+	if (type.length) {
+		return this[type].name;
+	}
 	return null;
 };
 

@@ -187,12 +187,15 @@ module.exports = function (app) {
 		// find user by name
 		if ("name" in req.query) {
 			re    = new RegExp(req.query.name, "i");
-			query = User.find({ isAdmin: false }).or(
-				{ "facebook.name": re }, 
-				{ "google.name"  : re }, 
-				{ "local.name"   : re },
-				{ "openid.name"  : re }
-			);
+			query = User
+				.find({ isAdmin: false })
+				.or([
+					{ "facebook.name": re }, 
+					{ "google.name"  : re }, 
+					{ "local.name"   : re },
+					{ "openid.name"  : re }
+				])
+			;
 		}
 		// find user by ID
 		else if ("id" in req.query) {
@@ -214,10 +217,11 @@ module.exports = function (app) {
 		query.exec(function(err, arr) {
 			if (err) return next(err);
 			res.json(arr.map(function(user) {
+				var username = user.getName();
 				return {
 					id:    user._id,
-					name:  user.getName(),
-					email: user.getEmail()
+					name:  username,
+					email: user.getEmail(username)
 				};
 			}));
 		});
