@@ -68,7 +68,7 @@ userSchema.methods.getName = function () {
 		return (this[item] && typeof this[item].name === "string");
 	}, this);
 	if (type.length) {
-		return this[type].name;
+		return this[type[0]].name;
 	}
 	return null;
 };
@@ -92,7 +92,7 @@ userSchema.methods.getEmail = function (name) {
 	}, this);
 	// return name, if any
 	if (type.length) {
-		return this[type].name;
+		return this[type[0]].email;
 	}
 	return null;
 };
