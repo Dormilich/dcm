@@ -102,12 +102,12 @@ module.exports = function (passport) {
 						var re = new RegExp("^"+email+"$", "i")
 						User
 							.findOne()
-							.or(
+							.or([
 								{ "local.email"   : re }, 
 								{ "google.email"  : re }, 
 								{ "facebook.email": re }, 
 								{ "openid.email"  : re }
-							)
+							])
 							.exec(function(err, user) {
 								if (err) {
 									return done(err);
