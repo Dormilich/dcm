@@ -42,5 +42,5 @@
 		"start": "node app.js"
 	},
 	"main":    "app.js",
-	"license": "MIT",
+	"license": "MIT"
 }
