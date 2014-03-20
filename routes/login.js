@@ -88,7 +88,7 @@ module.exports = function (app, passport) {
 	
 	/* local */
 	
-	app.get('/connect/local', function(req, res) {
+	app.get('/connect/local', function(req, res, next) {
 		// same a for signup since both use the same Strategy
 		var localConfig = rcConfig[req.host];
 		if (!localConfig) {
