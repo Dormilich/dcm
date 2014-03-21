@@ -1,4 +1,4 @@
-$('label').on('click', function() {
+$('table').on('click', 'label', function() {
 	// click is faster than label => checkbox
 	var $tr    = $(this).closest('tr');
 	var $check = $tr.find('.isactive');
@@ -6,7 +6,15 @@ $('label').on('click', function() {
 		$tr.find('.unlock').prop('disabled', $check.prop('checked'));
 		$tr.find('.spez').prop('disabled', true);
 	}
+}).on('click', 'input[type="checkbox"]', function() {
+	var $tr    = $(this).closest('tr');
+	var $check = $tr.find('.isactive');
+	if ($check.length) {
+		$tr.find('.unlock').prop('disabled', !$check.prop('checked'));
+		$tr.find('.spez').prop('disabled', true);
+	}
 });
+
 $('#nahkampf').on('change', 'tr', function() {
 	var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 	$(this).find('.nk-taw').val(taw);
