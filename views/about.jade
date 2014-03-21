@@ -7,7 +7,7 @@ html(lang="de")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
 		style.
-			ol.dcm-list-item li {
+			ol.dcm-list li {
 				padding-top:    0.2em;
 				padding-bottom: 0.2em;
 			}
@@ -67,9 +67,17 @@ html(lang="de")
 					dt Ich habe mein Passwort vergessen!
 					dd 
 						p Hier gibt es zwei Möglichkeiten:
-						ol.dcm-list-item(type="1")
+						ol.dcm-list(type="1")
 							li Du hast nur ein lokales Konto (E-Mail/Passwort): Frag den Admin, daß er endlich das Passwort-Reset macht.
 							li Dein lokales Konto ist mit einem Sozialnetzwerkkonto (z.B. facebook) verlinkt: Trenne das lokale Konto ab und verbinde es wieder neu. Falls du das Sozialnetzwerkkonto getrennt haben solltest und dich abgemeldet hast, siehe 1. (solange du angemeldet bist, kannst du das Trennen/Verbinden beliebig wiederholen). 
 					dt Ich habe zwei Konten verlinkt, aber ich sehe immer nur die Helden von einem Account.
 					dd
 						p Dann hast du sehr wahrscheinlich dich vorher mit beiden Konten angemeldet, also zwei Benutzerkonten angelegt. Die Verlinkung betrifft aber nur die Anmeldedaten eines einzigen Nutzerkontos. Da kann nur noch der Admin was machen.
+					dt Ich möchte einen eigenen Vor-/Nachteil hinzufügen.
+					dd
+						ol.dcm-list(type="1")
+							li einen (oder entsprechend viele) beliebigen Vor- oder Nachteil hinzufügen (Editor)
+							li speichern
+							li Editor wider öffnen
+							li im Textfeld den (oder die) hinzugefügten Vorteil/Nachteil durch deinen eigenen ersetzen
+							li speichern

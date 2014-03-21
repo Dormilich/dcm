@@ -6,6 +6,13 @@ $('table').on('click', 'label', function() {
 		$tr.find('.unlock').prop('disabled', $check.prop('checked'));
 		$tr.toggleClass('selected');
 	}
+}).on('click', 'input[type="checkbox"]', function() {
+	var $tr    = $(this).closest('tr');
+	var $check = $tr.find('.isactive');
+	if ($check.length) {
+		$tr.find('.unlock').prop('disabled', !$check.prop('checked'));
+		$tr.toggleClass('selected');
+	}
 });
 $('form').on('submit', function() {
 	$('#template').remove();
