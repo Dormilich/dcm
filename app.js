@@ -113,7 +113,7 @@ process.on('SIGINT', function() {
 // load app params
 require('./config/param')(app);
 
-// set DB admin (once)
+/*/ set DB admin (once)
 app.get('/db/init', function (req, res, next) {
 	var User = require('./models/user');
 	User.remove({ isAdmin: true }, function(err, admin) {
@@ -129,10 +129,7 @@ app.get('/db/init', function (req, res, next) {
 			res.redirect('/login');
 		});
 	});
-});
-app.get(/^([\w-.])$/, function(req, res, next) {
-	
-});
+});//*/
 
 // setup login paths
 require('./routes/login')(app, passport);
