@@ -417,7 +417,7 @@ html(lang="de")
 							- var __talent = getTalent(Talente.Nahkampf, __waffe);
 							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
 							- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
-							- var __tp     = __waffe.TP.rollMod+Math.floor((Attribute.KK.wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)
+							- var __tp     = __waffe.TP.rollMod + Math.floor((Attribute.KK.wert - __waffe.TP.kk + 0.1)/__waffe.TP.kkMod) + ((Attribute.KK.wert < __waffe.TP.kk) ? 1 : 0)
 							tr
 								td.links.name=__waffe.Name
 								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)

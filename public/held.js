@@ -52,7 +52,10 @@ var kampfwerte = {
 		return effBE;
 	},
 	getPABonus : function (ini) {
-		return Math.floor( (ini - 11) / 10 + 0.01 )
+		if (ini > 11) {
+			return Math.floor( (ini - 11) / 10 + 0.01 );
+		}
+		return 0;
 	},
 	getBHKMod : function($rechts, $links) {
 		if ($rechts.length === 1 && $links.length === 1) {
@@ -130,6 +133,11 @@ var kampfwerte = {
 			AT += +radio.pws.closest('tr').find('td.at').data("wm");
 		}
 		AT     += kampfwerte.getBHKMod(radio.haupt, radio.bhk);
+		// BHK 2nd-weapon
+		if ($row.find(radio.bhk).length === 1) {
+			// BHK I / BHK II
+			AT -= kampfwerte.SFbhk.value;
+		}
 		$at.text(AT);
 	},
 	setWaffenPA : function ($row, radio, iniMod) {
@@ -213,6 +221,10 @@ var kampfwerte = {
 		}
 		// TP/KK
 		tp     += Math.floor( (kk - mod.kk) / mod.tpkk + 0.05 );
+		if (kk < mod.kk) {
+			// the other option would be using Math.floor/Math.ceil in a if()
+			tp += 1;
+		}
 		// display
 		$tp.text( mod.w6 + " + " + tp );
 	},
