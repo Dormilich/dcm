@@ -54,8 +54,8 @@ app.use(express.session({ secret: process.env.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use(app.router);                      // calls routes before static
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
+app.use(app.router);                      // calls routes before static
 /* Handle 404
 	 this is middleware, not an error handler. 
 	 if all previous routes/files failed, this is the response being sent.
@@ -129,6 +129,9 @@ app.get('/db/init', function (req, res, next) {
 			res.redirect('/login');
 		});
 	});
+});
+app.get(/^([\w-.])$/, function(req, res, next) {
+	
 });
 
 // setup login paths
