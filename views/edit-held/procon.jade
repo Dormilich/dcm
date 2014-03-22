@@ -357,18 +357,6 @@ html(lang="de")
 									label(for="vorteil_59") Kräfteschub
 									ul
 										li
-											input(type="checkbox", value="MU", id="vorteil_59_1")
-											label(for="vorteil_59_1") Mut
-										li
-											input(type="checkbox", value="KL", id="vorteil_59_2")
-											label(for="vorteil_59_2") Klugheit
-										li
-											input(type="checkbox", value="IN", id="vorteil_59_3")
-											label(for="vorteil_59_3") Intuition
-										li
-											input(type="checkbox", value="CH", id="vorteil_59_4")
-											label(for="vorteil_59_4") Charisma
-										li
 											input(type="checkbox", value="FF", id="vorteil_59_5")
 											label(for="vorteil_59_5") Fingerfertigkeit
 										li
@@ -480,6 +468,20 @@ html(lang="de")
 								+plainProCon("Schutzgeist", 0)
 								+plainProCon("Schwer zu verzaubern", 0)
 								+plainProCon("Soziale Anpassungsfähigkeit", 0)
+								li
+									input(name="Vorteile", type="checkbox", value="Talentschub", id="vorteil_95").auswahl_text
+									label(for="vorteil_95") Talentschub
+									.fl-rechts
+										input(type="text")
+										br
+										input(type="text")
+										br
+										input(type="text")
+										br
+										input(type="text")
+										br
+										input(type="text")
+									.fl-clear
 								li
 									input(name="Vorteile", type="checkbox", value="Tierempathie", id="vorteil_76").sammeln-nowrap
 									label(for="vorteil_76") Tierempathie
