@@ -53,6 +53,7 @@ module.exports = function (app) {
 		// if the owner of the Character is in your Friends list
 		User.findOne({ chars: id }, function(err, doc) {
 			if (err) return next(err);
+			console.log(doc._id); console.log(req.user.friends);
 			if (req.user.friends.indexOf(doc._id) > -1) {
 				next();
 			}
