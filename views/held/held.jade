@@ -1,5 +1,4 @@
-mixin print(__data)
-	p!=JSON.stringify(__data)
+//- function definitions
 
 -	function contains(__array, __string) {
 -		if (typeof __array === "string") {
@@ -12,6 +11,7 @@ mixin print(__data)
 -		}
 -		return false;
 -	}
+- 
 - function getTalent(__list, __waffe) { 
 - 	var l = __list ? __list.length : 0; 
 - 	while (l--) { 
@@ -21,562 +21,720 @@ mixin print(__data)
 - 	} 
 - 	return { wert: 0, AT: 0, PA: 0 }; 
 - }
+- 
 - function beautifyNumber(num) {
 - 	if (isNaN(num)) return num;
 - 	return (num > 0 ? "+" : num < 0 ? "–" : "") + Math.abs(num);
 - }
+- 
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
 
-mixin SFTableSection(__liste, __name)
-	if __liste.length
-		tbody
-			tr
-				th= __name
-			tr.links
-				td
-					ul.vor-nach.fl-links
-						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
-							li= __liste[x]
-					ul.vor-nach.fl-rechts
-						- for (var y=x, l=__liste.length; y<l; y++)
-							li= __liste[y]
+//- mixin definitions
 
-mixin TalentTable(__liste, __name, __id)
-	table.data-section.mitte.eigenschaften(id=__id)
-		caption= __name
-		colgroup
-			col
-			col(style="width: 8em;")
-			col(style="width: 3em;")
-			col(style="width: 5em;")
-		thead
-			tr
-				th Talent
-				th Probe
-				th(title="Lernschwierigkeit")
-				th TaW
-		tbody
-			each __talent in __liste
-				tr
-					td.links= __talent._talent.name
-						if __talent.Spezialisierung.length
-							|  (#{__talent.Spezialisierung.join(', ')})
-					td(title=__talent._talent.probe.join(' · '))= __talent._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
-					td.mitte= __talent.Lernstufe
-					td.mitte= __talent.wert.toString().replace('-', '–')
-				
-mixin LanguageTable(__liste, __name)
-	table.data-section.mitte.eigenschaften
-		caption= __name
-		colgroup
-			col
-			col(style="width: 5em;")
-			col(style="width: 3em;")
-			col(style="width: 5em;")
-		thead
-			tr
-				th Talent
-				th Kompl.
-				th(title="Lernschwierigkeit")
-				th TaW
-		tbody
-			each __lang in __liste
-				tr
-					td.links=__lang.name
-					td=__lang.Komplexität
-					td=__lang.Lernstufe
-					td=__lang.wert
+mixin print(__data)
+	p!=JSON.stringify(__data)
 
-mixin KampfTable(__liste, __name)
-	table.data-section.mitte.eigenschaften
-		caption= __name
-		colgroup
-			col
-			col(style="width: 3em;")
-			col(style="width: 5em;")
-			col(style="width: 5em;")
-			col(style="width: 5em;")
-		thead
-			tr
-				th Talent
-				th
-				th AT
-				th PA
-				th TaW
-		tbody
-			each __talent in __liste
-				tr
-					td.links= __talent.name
-						if __talent.Spezialisierung.length
-							|  (#{__talent.Spezialisierung.join(', ')})
-					td= __talent.Lernstufe
-					if typeof __talent.AT === 'number' && typeof __talent.PA === 'number'
-						td= __talent.AT + Kampfwerte.AT
-						td= __talent.PA + Kampfwerte.PA
-					else
-						td= __talent.AT + Kampfwerte.FK
-						td
-					td= __talent.TaW
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = render(__item.url,   __data);
+	li
+		if Array.isArray(__item.sign)
+			a(href=__url, title=__title)
+				span.hidden-xs(class=__item.sign.join(" "))
+				span.visible-xs=__title
+		else
+			a(href=__url)=__item.title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = __item.url ? render(__item.url,   __data) : null;
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown", href=__url)=__title
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
+
+//- table for regular talents
+mixin TalentTable(__list)
+	.container-fluid.text-center
+		.row.dcm-row
+			.col-xs-12.col-sm-6.col-md-12.col-lg-6
+				.dcm-header.dcm-border Talent
+			.col-xs-6.col-sm-3.col-md-6.col-lg-3
+				.dcm-header.dcm-border Probe
+			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
+			.col-xs-4.col-sm-2.col-md-4.col-lg-2
+				.dcm-header.dcm-border TaW
+		each __talent in __list
+			.row.dcm-row.dcm-table
+				.col-xs-12.col-sm-6.col-md-12.col-lg-6.text-left=__talent._talent.name
+					if __talent.Spezialisierung.length
+						|  (#{__talent.Spezialisierung.join(', ')})
+				.col-xs-6.col-sm-3.col-md-6.col-lg-3(title=__talent._talent.probe.join(' · '))=__talent._talent.probe.map(function(item) { return _Held.Attribute[item].wert; }).join(' · ')
+				.col-xs-2.col-sm-1.col-md-2.col-lg-1=__talent.Lernstufe
+				.col-xs-4.col-sm-2.col-md-4.col-lg-2=__talent.wert.toString().replace('-', '–')
+
+//- table for languages and scripts
+mixin SprachenTable(__list)
+	.container-fluid.text-center
+		.row.dcm-row
+			.col-xs-12.col-sm-6.col-md-12.col-lg-6
+				.dcm-header.dcm-border Talent
+			.col-xs-6.col-sm-3.col-md-6.col-lg-3
+				.dcm-header.dcm-border Kompl.
+			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
+			.col-xs-4.col-sm-2.col-md-4.col-lg-2
+				.dcm-header.dcm-border TaW
+		each __talent in __list
+			.row.dcm-row.dcm-table
+				.col-xs-12.col-sm-6.col-md-12.col-lg-6.text-left=__talent.name
+				.col-xs-6.col-sm-3.col-md-6.col-lg-3=__talent.Komplexität
+				.col-xs-2.col-sm-1.col-md-2.col-lg-1=__talent.Lernstufe
+				.col-xs-4.col-sm-2.col-md-4.col-lg-2=__talent.wert
+
+//- table for fighting talents
+mixin KampfTable(__list)
+	.container-fluid.text-center
+		.row.dcm-row
+			.col-xs-12.col-sm-5.col-md-12.col-lg-5
+				.dcm-header.dcm-border Talent
+			.col-xs-3.col-sm-2.col-md-3.col-lg-2
+				.dcm-header.dcm-border AT
+			.col-xs-3.col-sm-2.col-md-3.col-lg-2
+				.dcm-header.dcm-border PA
+			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
+			.col-xs-4.col-sm-2.col-md-4.col-lg-2
+				.dcm-header.dcm-border TaW
+		each __talent in __list
+			.row.dcm-row.dcm-table
+				.col-xs-12.col-sm-5.col-md-12.col-lg-5.text-left=__talent.name
+					if __talent.Spezialisierung.length
+						|  (#{__talent.Spezialisierung.join(', ')})
+				if typeof __talent.AT === 'number' && typeof __talent.PA === 'number'
+					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.AT
+					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.AT
+				else
+					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.FK
+					.col-xs-3.col-sm-2.col-md-3.col-lg-2 &nbsp;
+				.col-xs-2.col-sm-1.col-md-2.col-lg-1=__talent.Lernstufe
+				.col-xs-4.col-sm-2.col-md-4.col-lg-2=__talent.TaW
+
 
 doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title= Person.Name
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(src="/jquery-2.0.3.min.js")
-	body
-		nav#top
-			ul#main-menu
-				li
-					a(title="springe zu Abschnitt ...") &#8681;
-					// display section
-					ul
-						li
-							a(href="#bes") Beschreibung
-						li
-							a(href="#gen") Generierung
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#vnt") Vor- &amp; Nachteile
-						li
-							a(href="#ap") Abenteuerpunkte
-						li
-							a(href="#sf") Sonderfertigkeiten
-						li
-							a(href="#waf") Waffen &amp; Rüstungen
-						li
-							a(href="#taw") Talentwerte
-						li 
-							a(href="#t_kam") – Kampf-Talente
-						li 
-							a(href="#t_koe") – Körperliche Talente
-						li 
-							a(href="#t_ges") – Gesellschaftstalente
-						li 
-							a(href="#t_nat") – Naturtalente
-						li 
-							a(href="#t_wis") – Wissenstalente
-						li 
-							a(href="#t_han") – Handwerkstalente
-						li 
-							a(href="#t_spr") – Sprachen &amp; Schriften
-						li
-							a(href="#eqp") Ausrüstung
-						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
-							li
-								a(href="/magie/"+_id) ► Magiebogen
-						if SF && contains(SF.geweiht, "Liturgiekenntnis")
-							li
-								a(href="/weihe/"+_id) ► Geweihtenbogen
-				li
-					a(href="/helden") [ Charakterliste ]
-				li
-					a(href="/neu") [ Neuer Charakter ]
-				li 
-					a #{Person.Name.split(' ')[0]} bearbeiten
-					// edit section
-					ul
-						li
-							a(href="/person/"+_id) Beschreibung
-						li
-							a(href="/generierung/"+_id) Generierung
-						li
-							a(href="/attribute/"+_id) Attribute
-						li
-							a(href="/basiswerte/"+_id) Basiswerte
-						li
-							a(href="/procon/"+_id) Vor- &amp; Nachteile
-						li
-							a(href="/ap/"+_id) Abenteuerpunkte
-						li
-							a(href="/sf/"+_id) Sonderfertigkeiten
-						li
-							a(href="/talente/"+_id) Talente
-						li
-							a(href="/waffen/"+_id) Waffen
-						li
-							a(href="/kleidung/"+_id) Rüstungen
-						li
-							a(href="/rucksack/"+_id) Gegenstände
-		section(style="clear: both;")
-			h1.mitte= Person.Name
-			h2.mitte –Heldenbogen–
+		title DCM – DSA Charakter Manager
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		script(src="//code.jquery.com/jquery.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+		style.
+			.dcm-border {
+				border:           1px solid gray;
+			}
+			.dcm-header {
+				background-color: #eee;
+				border-radius:    0.5em;
+			}
+			.dcm-value {
+				border:           1px solid gray;
+				border-radius:    0.5em;
+			}
+			.dcm-table > div {
+				border:           1px solid silver;
+			}
+			.dcm-table > div:first-child {
+				border-left:                2px solid silver;
+				border-top-left-radius:     0.5em;
+				border-bottom-left-radius:  0.5em;
+			}
+			.dcm-table > div:last-child {
+				border-right:               2px solid silver;
+				border-top-right-radius:    0.5em;
+				border-bottom-right-radius: 0.5em;
+			}
+			.dcm-row > div {
+				padding-top:      0.2em;
+				padding-bottom:   0.2em;
+				margin-top:       0.2em;
+				margin-bottom:    0.2em;
+			}
+			.dcm-caption {
+				font-size:        2em;
+				/*font-style:  italic;*/
+				font-family:      Georgia;
+				text-align:       center;
+			}
+			.dcm-list-item {
+				padding:          0.3em 0.6em;
+				border-bottom:    1px solid silver;
+			}
+			.dcm-row-item {
+				padding-top:      0.5em;
+				border-bottom:    1px solid silver;
+			}
+			#pws_deselect:hover {
+				background-color: #eee;
+			}
+			#pws_deselect:active {
+				background-color: #111;
+				border-color:     silver;
+				color:            white;
+			}
+	body#top
+		nav.navbar.navbar-default(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+					ul.nav.navbar-nav
+						each __link in _Menu.left
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+		.container
+			.page-header.text-center
+				h1=_Held.Person.Name
+				h3 —Heldenbogen—
 			
-			table.data-section.links.eigenschaften#bes
-				caption Beschreibung
-				colgroup
-					col(style="width: 15%")
-					col(style="width: 35%")
-					col(style="width: 15%")
-					col(style="width: 35%")
-				tr
-					th Geschlecht
-					td= Person.Geschlecht
-					th Sozialstatus
-					td= Person.SO
-				tr
-					th Größe
-					td #{Person.Größe} HF
-					th Titel
-					td= Person.Titel
-				tr
-					th Gewicht
-					td #{Person.Gewicht} Stein
-					th Haarfarbe
-					td= Person.Haarfarbe
-				tr
-					th Tsatag
-					- var monate = ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH", "(NLT)"]
-					td= Person.Tsatag.tag+". "+monate[Person.Tsatag.monat]+" "+Person.Tsatag.jahr+" BF"
-					th Augenfarbe
-					td= Person.Augenfarbe
-				tr
-					th Aussehen
-					td(colspan="3")
-						each line in Person.Aussehen.split('\n')
-							p= line
-				tr
-					th Hintergrund
-					td(colspan="3")
-						each line in Person.Hintergrund.split('\n')
-							p= line
+			// Charakter-Beschreibung
+			.panel.panel-default#bes
+				.panel-heading.dcm-caption Beschreibung
+				.panel-body
+					.container-fluid
+						.row.dcm-row
+							.col-xs-4.col-sm-2.dcm-header Geschlecht:
+							.col-xs-8.col-sm-4=_Held.Person.Geschlecht
+							.col-xs-4.col-sm-2.dcm-header Sozialstatus:
+							.col-xs-8.col-sm-4=_Held.Person.SO
+						.row.dcm-row
+							.col-xs-4.col-sm-2.dcm-header Größe:
+							.col-xs-8.col-sm-4=_Held.Person.Größe + " HF"
+							.col-xs-4.col-sm-2.dcm-header Titel:
+							.col-xs-8.col-sm-4=_Held.Person.Titel || "\u00A0"
+						.row.dcm-row
+							.col-xs-4.col-sm-2.dcm-header Gewicht:
+							.col-xs-8.col-sm-4=_Held.Person.Gewicht + " Stein"
+							.col-xs-4.col-sm-2.dcm-header Haarfarbe:
+							.col-xs-8.col-sm-4=_Held.Person.Haarfarbe
+						.row.dcm-row
+							.col-xs-4.col-sm-2.dcm-header Tsatag:
+							- var monate = ["PRA", "RON", "EFF", "TRA", "BOR", "HES", "FIR", "TSA", "PHE", "PER", "ING", "RAH", "(NLT)"]
+							.col-xs-8.col-sm-4=_Held.Person.Tsatag.tag + ". " + monate[_Held.Person.Tsatag.monat] + " " + _Held.Person.Tsatag.jahr + " BF"
+							.col-xs-4.col-sm-2.dcm-header Augenfarbe:
+							.col-xs-8.col-sm-4=_Held.Person.Augenfarbe
+						if _Held.Person.Aussehen.length
+							.row.dcm-row
+								.col-sm-2.dcm-header Aussehen:
+								.col-sm-10
+									each line in _Held.Person.Aussehen.split('\n')
+										=line
+						if _Held.Person.Hintergrund.length
+							.row.dcm-row
+								.col-sm-2.dcm-header Hintergrund:
+								.col-sm-10
+									each line in _Held.Person.Hintergrund.split('\n')
+										=line
+			// Charakter-Generierung
+			.panel.panel-default#gen
+				.panel-heading.dcm-caption Generierung
+				.panel-body
+					.container-fluid
+						each val in ["Rasse", "Kultur", "Profession"]
+							.row.dcm-row
+								.col-sm-3.col-md-2.dcm-header #{val}:
+								.col-sm-9.col-md-4=_Held.Generierung[val].name
+								.col-sm-3.col-md-2.dcm-header Modifikationen:
+								.col-sm-9.col-md-4=_Held.Generierung[val].modifikation || "\u00A0"
+						if _Held.Generierung.BgB.name
+							.row.dcm-row
+								.col-md-2.dcm-header BgB:
+								.col-md-4=_Held.Generierung.BgB.name
+								.col-md-2.dcm-header Modifikationen:
+								.col-md-4=_Held.Generierung.BgB.modifikation || "\u00A0"
+			// Attribute
+			.panel.panel-default#att
+				.panel-heading.dcm-caption Attribute
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __att in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__att
+										.col-xs-6=_Held.Attribute[__att].wert
+			// Basiswerte
+			.panel.panel-default#bas
+				.panel-heading.dcm-caption Basiswerte
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __prop in ["LeP", "AuP", "AsP", "KaP"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__prop
+										.col-xs-6=_Held.Basiswerte[__prop] || "—"
+						.row.dcm-row
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header MR
+										.col-xs-6=_Held.Basiswerte.MR
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header GS
+										.col-xs-6=_Held.Basiswerte.GS
+								.col-xs-6.col-xs-offset-6.col-sm-3.col-sm-offset-3
+									.row
+										.col-xs-6.dcm-header WS
+										.col-xs-6=_Held.Kampfwerte.WS
+						.row.dcm-row
+							each __prop in ["INI", "AT", "PA", "FK"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__prop
+										.col-xs-6=_Held.Kampfwerte[__prop]
+			// Vor- und Nachteile
+			.row
+				.col-sm-6#vt
+					.panel.panel-default
+						.panel-heading.dcm-caption Vorteile
+						ul.list-group
+							each __vt in _Held.Vorteile
+								li.list-group-item=__vt
+				.col-sm-6#nt
+					.panel.panel-default
+						.panel-heading.text-center.dcm-caption Nachteile
+						ul.list-group
+							each __nt in _Held.Nachteile
+								li.list-group-item=__nt
+			// Abenteuerpunkte
+			.panel.panel-default#ap
+				.panel-heading.dcm-caption Abenteuerpunkte
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							.col-xs-6.col-sm-3.dcm-header gesamt:
+							.col-xs-6.col-sm-3=_Held.AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+							.col-xs-6.col-sm-3.dcm-header verfügbar:
+							.col-xs-6.col-sm-3=_Held.AP.frei
+			// Sonderfertigkeiten
+			.panel.panel-default#sf
+				.panel-heading.dcm-caption Sonderfertigkeiten
+				.panel-body
+					if _Held.SF
+						.container-fluid
+							if _Held.SF.allgemein.length
+								.text-center.dcm-header.dcm-list-item.dcm-border Allgemeine Sonderfertigkeiten
+								.row
+									each __sf in _Held.SF.allgemein
+										.col-sm-6.col-lg-4
+											.dcm-list-item=__sf
+								.row
+									.col-lg-12 &nbsp;
+							if _Held.SF.Kampf.length
+								.text-center.dcm-header.dcm-list-item.dcm-border Kampf-Sonderfertigkeiten
+								.row
+									each __sf in _Held.SF.Kampf
+										.col-sm-6.col-lg-4
+											.dcm-list-item=__sf
+								.row
+									.col-lg-12 &nbsp;
+							if _Held.SF.Manöver.length
+								.text-center.dcm-header.dcm-list-item.dcm-border Waffenlose Manöver
+								.row
+									each __sf in _Held.SF.Manöver
+										.col-sm-6.col-lg-4
+											.dcm-list-item=__sf
+								.row
+									.col-lg-12 &nbsp;
+							if _Held.SF.geweiht.length
+								.text-center.dcm-header.dcm-list-item.dcm-border Karmale Sonderfertigkeiten
+								.row
+									each __sf in _Held.SF.geweiht
+										.col-sm-6.col-lg-4
+											.dcm-list-item=__sf
+								.row
+									.col-lg-12 &nbsp;
+							if _Held.SF.magisch.length
+								.text-center.dcm-header.dcm-list-item.dcm-border Magische Sonderfertigkeiten
+								.row
+									each __sf in _Held.SF.magisch
+										.col-sm-6.col-lg-4
+											.dcm-list-item=__sf
+			// INI & Kampfzauber
+			.panel.panel-default#waf
+				.panel-heading.dcm-caption INI &amp; Kampfzauber
+				- var __akrob, __ausw = 0
+				- __ausw += contains(_Held.SF.Kampf, "Ausweichen I")   ?  3 : 0;
+				- __ausw += contains(_Held.SF.Kampf, "Ausweichen II")  ?  3 : 0;
+				- __ausw += contains(_Held.SF.Kampf, "Ausweichen III") ?  3 : 0;
+				- __ausw += contains(_Held.Nachteile, "Zwergenwuchs")  ?  1 : 0;
+				- __ausw += contains(_Held.Vorteile, "Flink")          ?  1 : 0;
+				- __ausw += contains(_Held.Nachteile, "Behäbig")       ? -1 : 0;
+				- __akrob = getTalent(_Held.Talente.körperlich, { talent: "Akrobatik" }).wert;
+				- __akrob = Math.floor((__akrob - 12) / 3 + 0.1);
+				- __ausw += __akrob > 0 ? __akrob : 0;
+				.panel-body
+					.container-fluid
+						.row.dcm-row.text-center
+							.col-xs-6.col-md-2
+								.dcm-header BE:
+							.col-xs-3.col-md-2
+								select#k_be(size="1", style="width: 75%;")
+										option(value="0") ohne RG
+										option(value="1") RG I
+										option(value="1") RG II
+										option(value="2") RG III
+							.col-xs-6.col-md-2
+								.dcm-header INI:
+							.col-xs-3.col-md-2#k_ini_out=_Held.Kampfwerte.INI + " + W6"
+							.col-xs-6.col-md-2
+								.dcm-header Ausweichen:
+							.col-xs-3.col-md-2#k_ausw_out=_Held.Kampfwerte.PA + __ausw
+						.row.dcm-row.text-center
+							.col-xs-6.col-md-2
+								.dcm-header Attributo
+							.col-xs-3.col-md-2
+								input#k_att(type="checkbox").hidden
+								select#sel_att(size="1", style="width: 75%;")
+									option(data-wert=_Held.Attribute.MU.wert) MU
+									option(data-wert=_Held.Attribute.IN.wert) IN
+									option(data-wert=_Held.Attribute.KL.wert) KL
+									option(data-wert=_Held.Attribute.CH.wert) CH
+									option(data-wert=_Held.Attribute.FF.wert) FF
+									option(data-wert=_Held.Attribute.GE.wert) GE
+									option(data-wert=_Held.Attribute.KO.wert) KO
+									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
+							.col-xs-3.col-md-2
+								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
+							.col-xs-6.col-md-2.col-md-offset-2
+								.dcm-header Axxeleratus
+							.col-xs-6.col-md-2 &nbsp;
+								input#k_axx(type="checkbox").hidden
+								input#iniBasis(type="hidden", value=_Held.Kampfwerte.INI - _Held.modifikatoren.INI, data-default=_Held.Kampfwerte.INI - _Held.modifikatoren.INI)
+								input#iniMod(type="hidden", value=_Held.modifikatoren.INI)
+								input#atBasis(type="hidden", value=_Held.Kampfwerte.AT, data-default=_Held.Kampfwerte.AT)
+								input#paBasis(type="hidden", value=_Held.Kampfwerte.PA, data-default=_Held.Kampfwerte.PA)
+								input#fkBasis(type="hidden", value=_Held.Kampfwerte.FK, data-default=_Held.Kampfwerte.FK)
+								input#auswMod(type="hidden", value=__ausw)
+								input#held(type="hidden", value=_id)
+					
+					//-.container-fluid.text-center.visible-md.visible-lg
+						.row.dcm-row
+							.col-md-2
+								.dcm-header INI
+							.col-md-2
+								.dcm-header BE
+							.col-md-2
+								.dcm-header Ausweichen
+							.col-md-2
+								.dcm-header Axxeleratus
+							.col-md-4
+								.dcm-header Attributo
+						.row.dcm-row
+							.col-md-2#k_ini_out=_Held.Kampfwerte.INI + " + W6"
+							.col-md-2
+								select#k_be(size="1", style="width: 75%;")
+										option(value="0") ohne RG
+										option(value="1") RG I
+										option(value="1") RG II
+										option(value="2") RG III
+							.col-md-2#k_ausw_out=_Held.Kampfwerte.PA + __ausw
+							.col-md-2
+								input#k_att(type="checkbox").hidden
+							.col-md-2
+								input#k_att(type="checkbox").hidden
+								select#sel_att(size="1", style="width: 75%;")
+									option(data-wert=_Held.Attribute.MU.wert) MU
+									option(data-wert=_Held.Attribute.IN.wert) IN
+									option(data-wert=_Held.Attribute.KL.wert) KL
+									option(data-wert=_Held.Attribute.CH.wert) CH
+									option(data-wert=_Held.Attribute.FF.wert) FF
+									option(data-wert=_Held.Attribute.GE.wert) GE
+									option(data-wert=_Held.Attribute.KO.wert) KO
+									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
+							.col-md-2
+								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
+					
+					//-.container-fluid.text-center.visible-sm
+						.row.dcm-row
+							.col-sm-4
+								.dcm-header INI
+							.col-sm-4
+								.dcm-header BE
+							.col-sm-4
+								.dcm-header Ausweichen
+						.row.dcm-row
+							.col-sm-4#k_ini_out=_Held.Kampfwerte.INI + " + W6"
+							.col-sm-4
+								select#k_be(size="1", style="width: 75%;")
+										option(value="0") ohne RG
+										option(value="1") RG I
+										option(value="1") RG II
+										option(value="2") RG III
+							.col-sm-4#k_ausw_out=_Held.Kampfwerte.PA + __ausw
+						.row.dcm-row
+							.col-sm-4
+								.dcm-header Axxeleratus
+							.col-sm-4
+								.dcm-header Attributo
+							.col-sm-2
+								input#k_att(type="checkbox").hidden
+								select#sel_att(size="1", style="width: 75%;")
+									option(data-wert=_Held.Attribute.MU.wert) MU
+									option(data-wert=_Held.Attribute.IN.wert) IN
+									option(data-wert=_Held.Attribute.KL.wert) KL
+									option(data-wert=_Held.Attribute.CH.wert) CH
+									option(data-wert=_Held.Attribute.FF.wert) FF
+									option(data-wert=_Held.Attribute.GE.wert) GE
+									option(data-wert=_Held.Attribute.KO.wert) KO
+									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
+							.col-sm-2
+								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
+
+					//-.container-fluid.visible-xs
+						.row.dcm-row.text-center
+							.col-xs-6
+								.dcm-header INI:
+							.col-xs-6#k_ini_out=_Held.Kampfwerte.INI + " + W6"
+							.col-xs-6
+								.dcm-header BE:
+							.col-xs-6
+								select#k_be(size="1", style="width: 75%;")
+										option(value="0") ohne RG
+										option(value="1") RG I
+										option(value="1") RG II
+										option(value="2") RG III
+							.col-xs-6
+								.dcm-header Ausweichen:
+							.col-xs-6#k_ausw_out=_Held.Kampfwerte.PA + __ausw
+							.col-xs-6
+								.dcm-header Axxeleratus
+							.col-xs-6 &nbsp;
+							.col-xs-6
+								.dcm-header Attributo
+							.col-xs-6
+								input#k_att(type="checkbox").hidden
+								select#sel_att(size="1", style="width: 75%;")
+									option(data-wert=_Held.Attribute.MU.wert) MU
+									option(data-wert=_Held.Attribute.IN.wert) IN
+									option(data-wert=_Held.Attribute.KL.wert) KL
+									option(data-wert=_Held.Attribute.CH.wert) CH
+									option(data-wert=_Held.Attribute.FF.wert) FF
+									option(data-wert=_Held.Attribute.GE.wert) GE
+									option(data-wert=_Held.Attribute.KO.wert) KO
+									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
+							.col-xs-6.col-xs-offset-6
+								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
+	
+			// Waffen & Rüstungen
+			if _Held.Ausrüstung && _Held.Ausrüstung.Nahkampf && _Held.Ausrüstung.Nahkampf.length
+				.panel.panel-default
+					.panel-heading.dcm-caption Nahkampfwaffen
+					.panel-body
+						.container-fluid.text-center
+							.row.dcm-row
+								.col-xs-12.col-sm-6.col-md-4.col-lg-3 
+									.dcm-header.dcm-border Waffe
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border AT
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border PA
+								.col-xs-6.col-sm-2.col-md-2.col-lg-1
+									.dcm-header.dcm-border TP
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border DK
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border BF
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border INI
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border eBE
+								.col-xs-6.col-sm-2.col-md-2.col-md-offset-8.col-lg-1.col-lg-offset-0
+									select(size="1", title="Hauptwaffe", style="min-width: 75%")
+										option(selected) rechts
+								.col-xs-6.col-sm-2.col-md-2.col-lg-1
+									select#bhk_typ(size="1", title="Nebenwaffe", style="min-width: 75%")
+										option(value="6", title="SF Linkhand", selected) links
+										option(value="3") BHK I
+										option(value="0") BHK II
+							each __waffe in _Held.Ausrüstung.Nahkampf
+								- var __talent = getTalent(_Held.Talente.Nahkampf, __waffe);
+								- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
+								- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
+								- var __tp     = __waffe.TP.rollMod + Math.floor((_Held.Attribute.KK.wert - __waffe.TP.kk + 0.1)/__waffe.TP.kkMod) + ((_Held.Attribute.KK.wert < __waffe.TP.kk) ? 1 : 0)
+								.row.dcm-row.dcm-table
+									.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-left=__waffe.Name
+									.col-xs-3.col-sm-2.col-md-1.at(data-at=__at)=_Held.Kampfwerte.AT + __at
+									.col-xs-3.col-sm-2.col-md-1.pa(data-pa=__pa, data-paw=_Held.Kampfwerte.PA + __pa)=_Held.Kampfwerte.PA + __pa
+									.col-xs-6.col-sm-2.col-md-2.col-lg-1.tp(title=__waffe.TP.roll+(__waffe.TP.rollMod < 0 ? " – " : " + ")+Math.abs(__waffe.TP.rollMod), data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
+									.col-xs-3.col-sm-2.col-md-1=__waffe.DK
+									.col-xs-3.col-sm-2.col-md-1=__waffe.BF
+									.col-xs-3.col-sm-2.col-md-1.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
+									.col-xs-3.col-sm-2.col-md-1.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
+									.col-xs-4.col-xs-offset-1.col-sm-2.col-sm-offset-0.col-md-2.col-md-offset-8.col-lg-1.col-lg-offset-0
+										input(type="radio", name="haupthand")
+									.col-xs-4.col-xs-offset-2.col-sm-2.col-sm-offset-0.col-md-2.col-lg-1
+										input.bhk(type="radio", name="nebenhand")
 			
-			table.data-section.links.eigenschaften#gen
-				caption Generierung
-				colgroup
-					col(style="width: 15%")
-					col(style="width: 35%")
-					col(style="width: 15%")
-					col(style="width: 35%")
-				each val in ["Rasse", "Kultur", "Profession"]
-					tr
-						th #{val}:
-						td= Generierung[val].name
-						th Modifikationen:
-						td= Generierung[val].modifikation
-				if Generierung.BgB.name
-					tr
-						th BgB:
-						td= Generierung.BgB.name
-						th Modifikationen:
-						td= Generierung.BgB.modifikation
-			
-			table.data-section.mitte.eigenschaften#att(data-attribute=JSON.stringify(Attribute))
-				caption Attribute
-				colgroup
-					col(span="10", style="width: 10%;")
-				thead
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							th= val
-						th
-						th GS
-				tbody
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							td= Attribute[val].wert
-						td
-						td= Basiswerte.GS
-			
-			table.data-section.mitte.eigenschaften#bas
-				caption Basiswerte
-				colgroup
-					col(span="10", style="width: 10%;")
-				thead
-					tr
-						each val in ["LeP", "AuP", "AsP", "KaP", "MR", "INI", "AT", "PA", "FK", "WS"]
-							th= val
-				tbody
-					tr
-						each val in ["LeP", "AuP", "AsP", "KaP", "MR"]
-							td= Basiswerte[val] || '—'
-						each val in ["INI", "AT", "PA", "FK", "WS"]
-							td= Kampfwerte[val]
-			
-			table.data-section#vnt
-				caption Vor- und Nachteile
-				tr
-					td
-						ul.vor-nach.fl-links
-							li.mitte
-								strong Vorteile
-							each val in Vorteile
-								li= val
-						ul.vor-nach.fl-rechts
-							li.mitte
-								strong Nachteile
-							each val in Nachteile
-								li= val
-		section#ap
-			table.data-section.mitte.eigenschaften
-				caption Abenteuerpunkte
-				colgroup
-					col(style="width: 15%")
-					col(style="width: 35%")
-					col(style="width: 15%")
-					col(style="width: 35%")
-				tbody
-					tr
-						th gesamt
-						td= AP.alle.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-						th frei
-						td= AP.frei
-		section#sf
-			table.data-section.mitte.eigenschaften
-				caption Sonderfertigkeiten
-				+SFTableSection(SF.allgemein, 'Allgemeine Sonderfertigkeiten')
-				+SFTableSection(SF.Kampf, 'Kampf-Sonderfertigkeiten')
-				+SFTableSection(SF.Manöver, 'Waffenlose Manöver')
-				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
-				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-		section#waf
-			table.data-section.eigenschaften.mitte
-				caption INI & Kampfzauber
-				thead
-					tr
-						th
-							label(for="k_ini") INI
-						th
-							label(for="k_be") BE
-						th Ausweichen
-						th
-							label(for="k_axx") Axxeleratus
-						th
-							label(for="k_att") Attributo
-				tbody
-					tr
-						- var __akrob, __ausw = 0
-						- __ausw += contains(SF.Kampf, "Ausweichen I")   ?  3 : 0;
-						- __ausw += contains(SF.Kampf, "Ausweichen II")  ?  3 : 0;
-						- __ausw += contains(SF.Kampf, "Ausweichen III") ?  3 : 0;
-						- __ausw += contains(Nachteile, "Zwergenwuchs")  ?  1 : 0;
-						- __ausw += contains(Vorteile, "Flink")          ?  1 : 0;
-						- __ausw += contains(Nachteile, "Behäbig")       ? -1 : 0;
-						- __akrob = getTalent(Talente.körperlich, { talent: "Akrobatik" }).wert;
-						- __akrob = Math.floor((akrob - 12) / 3 + 0.1);
-						- __ausw += __akrob > 0 ? __akrob : 0;
-						td#k_ini_out=Kampfwerte.INI + " + W6"
-						td
-							select#k_be(size="1")
-								option(value="0") ohne RG
-								option(value="1") RG I
-								option(value="1") RG II
-								option(value="2") RG III
-						td#k_ausw_out=Kampfwerte.PA + __ausw
-						td
-							input#k_axx(type="checkbox")
-							input#iniBasis(type="hidden", value=Kampfwerte.INI - modifikatoren.INI, data-default=Kampfwerte.INI - modifikatoren.INI)
-							input#iniMod(type="hidden", value=modifikatoren.INI)
-							input#atBasis(type="hidden", value=Kampfwerte.AT, data-default=Kampfwerte.AT)
-							input#paBasis(type="hidden", value=Kampfwerte.PA, data-default=Kampfwerte.PA)
-							input#fkBasis(type="hidden", value=Kampfwerte.FK, data-default=Kampfwerte.FK)
-							input#auswMod(type="hidden", value=__ausw)
-							input#held(type="hidden", value=_id)
-						td
-							input#k_att(type="checkbox")
-							select#sel_att(size="1")
-								option(data-wert=Attribute.MU.wert) MU
-								option(data-wert=Attribute.IN.wert) IN
-								option(data-wert=Attribute.KL.wert) KL
-								option(data-wert=Attribute.CH.wert) CH
-								option(data-wert=Attribute.FF.wert) FF
-								option(data-wert=Attribute.GE.wert) GE
-								option(data-wert=Attribute.KO.wert) KO
-								option#val_att_kk(data-wert=Attribute.KK.wert, selected) KK
-							input#val_att(type="number", value=Attribute.KK.wert)
-			if Ausrüstung && Ausrüstung.Nahkampf && Ausrüstung.Nahkampf.length > 0
-				table.data-section.eigenschaften.mitte
-					caption Nahkampfwaffen
-					colgroup
-						col(style="width: 20%;")
-						col(style="width: 8em;")
-						col(span="6")
-						col(span="2", style="width: 7em;")
-					thead
-						tr
-							th Waffe
-							th eBE
-							th DK
-							th AT
-							th PA
-							th TP
-							th BF
-							th INI
-							td rechts
-							td
-								select#bhk_typ(size="1", title="Nebenwaffe")
-									option(value="6", title="SF Linkhand") links
-									option(value="3") BHK I
-									option(value="0") BHK II
-					tbody#nahkampf-waffen
-						each __waffe in Ausrüstung.Nahkampf
-							- var __talent = getTalent(Talente.Nahkampf, __waffe);
-							- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
-							- var __pa     = __talent.PA + __waffe.WM.PA + (__waffe.spez ? 1 : 0);
-							- var __tp     = __waffe.TP.rollMod + Math.floor((Attribute.KK.wert - __waffe.TP.kk + 0.1)/__waffe.TP.kkMod) + ((Attribute.KK.wert < __waffe.TP.kk) ? 1 : 0)
-							tr
-								td.links.name=__waffe.Name
-								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
-								td=__waffe.DK
-								td.at(data-at=__at)=Kampfwerte.AT + __at
-								td.pa(data-pa=__pa, data-paw=Kampfwerte.PA + __pa)=Kampfwerte.PA + __pa
-								td.tp(title=__waffe.TP.roll+(__waffe.TP.rollMod < 0 ? " – " : " + ")+Math.abs(__waffe.TP.rollMod), data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
-								td=__waffe.BF
-								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
-								td
-									input(type="radio", name="haupthand")
-								td
-									input.bhk(type="radio", name="nebenhand")
-			if Ausrüstung && Ausrüstung.LinkeHand && Ausrüstung.LinkeHand.length > 0
-				table.data-section.eigenschaften.mitte
-					caption Parierwaffen & Schilde
-					colgroup
-						col(style="width: 20%;")
-						col(style="width: 8em;")
-						col(span="6")
-						col(span="2", style="width: 7em;")
-					thead
-						tr
-							th Waffe
-							th Typ
-							td
-							td AT
-							td PA
-							td
-							th BF
-							th INI
-							td
-								button#unselectLH(type="button", style="text-decoration: line-through;") &nbsp; Waffe &nbsp;
-							td
-								select#pws_typ(size="1", title="Nebenwaffe")
-									option SK I
-									option SK II
-									option PW I
-									option PW II
-					tbody
-						each __waffe in Ausrüstung.LinkeHand
-							tr
-								td.links=__waffe.Name
-								td=__waffe.talent
-								td
-								td.at(data-wm=__waffe.WM.AT)=beautifyNumber(__waffe.WM.AT)
-								td.pa(data-wm=__waffe.WM.PA)=beautifyNumber(__waffe.WM.PA)
-								td
-								td=__waffe.BF
-								td.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
-								td
-								td
-									input.pws(type="radio", name="nebenhand")
-			if Ausrüstung && Ausrüstung.Fernkampf && Ausrüstung.Fernkampf.length > 0
-				table.data-section.eigenschaften.mitte
-					caption Fernkampfwaffen
-					colgroup
-						col(style="width: 20%;")
-						col(span="3", style="width: 8em;")
-						col(span="2")
-						col(style="width: 8em;")
-					thead
-						tr
-							th Waffe
-							th eBE
-							th FKW
-							th TP
-							th DK
-							th TP
-							th Ladezeit
-					tbody#fernkampf-waffen
-						each __waffe in Ausrüstung.Fernkampf
-							- var __talent = getTalent(Talente.Fernkampf, __waffe);
-							- var __tp     = __waffe.TP.kk ? Math.floor((Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)+__waffe.TP.rollMod : __waffe.TP.rollMod
-							
-							tr
-								td.links=__waffe.Name
-								td.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
-								td.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
-								td.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
-								td=__waffe.TP.dk.join(" / ")
-								td=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
-								td=__waffe.Laden
-			if Ausrüstung && Ausrüstung.Kleidung && Ausrüstung.Kleidung.length > 0
-				table.data-section.eigenschaften.mitte
-					caption Rüstungen
-					colgroup
-						col(style="width: 20%")
-						col(span="11")
-					thead
-						tr
-							th Name
-							th(title="Kopf") Ko
-							th(title="Brust") Br
-							th(title="Rücken") Rü
-							th(title="Bauch") Ba
-							th(title="Linker Arm") LA
-							th(title="Rechter Arm") RA
-							th(title="Linkes Bein") LB
-							th(title="Rechtes Bein") RB
-							th(title="Rüstungsschutz") RS
-							th(title="Behinderung (ohne RG)") BE
-							td
-					tbody
-						each __panzer in Ausrüstung.Kleidung
-							tr
-								td.links=__panzer.Name
-								td=__panzer.Ko
-								td=__panzer.Br
-								td=__panzer.Rü
-								td=__panzer.Ba
-								td=__panzer.LA
-								td=__panzer.RA
-								td=__panzer.LB
-								td=__panzer.RB
-								td=__panzer.RS.toFixed(2)
-								td=__panzer.BE.toFixed(2)
-								td
-									input(type="radio", name="panzerung", value=Math.round(__panzer.BE))
-		a#taw
-		section#t_kam
-			.vor-nach.fl-links
-				+KampfTable(Talente.Nahkampf, 'Nahkampf')
-			.vor-nach.fl-rechts
-				+KampfTable(Talente.Fernkampf, 'Fernkampf')
-			.fl-clear
-		section
-			.vor-nach.fl-links
-				if Talente.Gaben.length
-					+TalentTable(Talente.Gaben, 'Gaben')
-				+TalentTable(Talente.körperlich, 'Körperliche Talente', "t_koe")
-				+TalentTable(Talente.Gesellschaft, 'Gesellschaftliche Talente', "t_ges")
-				+TalentTable(Talente.Natur, 'Natur-Talente', "t_nat")
-			.vor-nach.fl-rechts
-				+TalentTable(Talente.Wissen, 'Wissenstalente', "t_wis")
-				+TalentTable(Talente.Handwerk, 'Handwerkstalente', "t_han")
-			.fl-clear
-		section#t_spr
-			.vor-nach.fl-links
-				+LanguageTable(Talente.Sprachen, 'Sprachen')
-			.vor-nach.fl-rechts
-				+LanguageTable(Talente.Schriften, 'Schriften')
-			.fl-clear
-		section#eqp
-			if Ausrüstung && Ausrüstung.Rucksack && Ausrüstung.Rucksack.length > 0
-				table.data-section.talente.links
-					caption Gegenstände
-					colgroup
-						col(style="width: 5em;")
-						col(span="2")
-					thead
-						tr.mitte
-							th Anzahl
-							th Bezeichnung
-							th Kommentar
-					tbody
-						each __item in Ausrüstung.Rucksack
-							tr
-								td.rechts=__item.Anzahl
-								td=__item.Name
-								td=__item.Kommentar
-		script(src="/held.js")
+			if _Held.Ausrüstung && _Held.Ausrüstung.LinkeHand && _Held.Ausrüstung.LinkeHand.length
+				.panel.panel-default
+					.panel-heading.dcm-caption Parierwaffen &amp; Schilde
+					.panel-body
+						.container-fluid.text-center
+							.row.dcm-row
+								.col-xs-12.col-sm-6.col-md-4.col-lg-3 
+									.dcm-header.dcm-border Waffe
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border AT
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border PA
+								.col-xs-6.col-sm-2.col-md-2 
+									.dcm-header.dcm-border Typ
+								.col-xs-3.col-sm-2.col-sm-offset-6.col-md-1.col-md-offset-0
+									.dcm-header.dcm-border BF
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border INI
+								.col-xs-6.hidden-xs.col-sm-2.hidden-sm.col-md-1.col-lg-offset-1
+									.dcm-value#pws_deselect(title="Selektion löschen") &times;
+								.col-xs-6.col-sm-2.col-md-1
+									select#pws_typ(size="1", title="Nebenwaffe", style="min-width: 75%")
+										option SK I
+										option SK II
+										option PW I
+										option PW II
+							each __waffe in _Held.Ausrüstung.LinkeHand
+								.row.dcm-row.dcm-table
+									.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-left=__waffe.Name
+									.col-xs-3.col-sm-2.col-md-1.at(data-wm=__waffe.WM.AT)=beautifyNumber(__waffe.WM.AT)
+									.col-xs-3.col-sm-2.col-md-1.pa(data-wm=__waffe.WM.PA)=beautifyNumber(__waffe.WM.PA)
+									.col-xs-6.col-sm-2.col-md-2=__waffe.talent
+									.col-xs-3.col-sm-2.col-sm-offset-6.col-md-1.col-md-offset-0=__waffe.BF
+									.col-xs-3.col-sm-2.col-md-1.ini(data-ini=__waffe.INI)=beautifyNumber(__waffe.INI)
+									.col-xs-4.col-xs-offset-1.col-sm-2.col-sm-offset-0.col-md-1.col-md-offset-1.col-lg-offset-2
+										input.pws(type="radio", name="nebenhand")
+				
+			if _Held.Ausrüstung && _Held.Ausrüstung.Fernkampf && _Held.Ausrüstung.Fernkampf.length
+				.panel.panel-default
+					.panel-heading.dcm-caption Fernkampfwaffen
+					.panel-body
+						.container-fluid.text-center
+							.row.dcm-row
+								.col-xs-12.col-sm-6.col-md-4.col-lg-3
+									.dcm-header.dcm-border Waffe
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border AT
+								.col-xs-3.col-sm-2.col-md-1
+									.dcm-header.dcm-border Laden
+								.col-xs-6.col-sm-2.col-lg-1
+									.dcm-header.dcm-border TP
+								.col-xs-6.col-sm-4.col-sm-offset-2.col-md-2.col-md-offset-0
+									.dcm-header.dcm-border DK
+								.col-xs-6.col-sm-4.col-md-2
+									.dcm-header.dcm-border TP+
+								.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1
+									.dcm-header.dcm-border eBE
+							each __waffe in _Held.Ausrüstung.Fernkampf
+								- var __talent = getTalent(_Held.Talente.Fernkampf, __waffe);
+								- var __tp     = __waffe.TP.kk ? Math.floor((_Held.Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)+__waffe.TP.rollMod : __waffe.TP.rollMod
+								.row.dcm-row.dcm-table
+									.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-left=__waffe.Name
+									.col-xs-3.col-sm-2.col-md-1.at(data-taw=__talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0))=_Held.Kampfwerte.FK + __talent.AT + __waffe.WM.AT + (__waffe.spez ? 2 : 0)
+									.col-xs-3.col-sm-2.col-md-1=__waffe.Laden
+									.col-xs-6.col-sm-2.col-lg-1.tp(data-w6=__waffe.TP.roll, data-tp=__waffe.TP.rollMod, data-kk=__waffe.TP.kk, data-tpkk=__waffe.TP.kkMod, data-attr=__waffe.TP.kkAtt)=__waffe.TP.roll+(__tp < 0 ? " – " : " + ")+Math.abs(__tp)
+									.col-xs-6.col-sm-4.col-sm-offset-2.col-md-2.col-md-offset-0=__waffe.TP.dk.join(" / ")
+									.col-xs-6.col-sm-4.col-md-2=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
+									.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
+									
+
+			// Talente
+			.row#taw
+				.col-md-6
+					.panel.panel-default#t_nk
+						.panel-heading.text-center.dcm-caption Nahkampf
+						.panel-body
+							+KampfTable(_Held.Talente.Nahkampf)
+				.col-md-6
+					.panel.panel-default#t_fk
+						.panel-heading.text-center.dcm-caption Fernkampf
+						.panel-body
+							+KampfTable(_Held.Talente.Fernkampf)
+			.row
+				.col-md-6
+					if _Held.Talente && _Held.Talente.Gaben && _Held.Talente.Gaben.length
+						.panel.panel-default
+							.panel-heading.text-center.dcm-caption Gaben
+							.panel-body
+								+TalentTable(_Held.Talente.Gaben)
+					.panel.panel-default#t_koe
+						.panel-heading.text-center.dcm-caption Körperliche Talente
+						.panel-body
+							+TalentTable(_Held.Talente.körperlich)
+					.panel.panel-default#t_ges
+						.panel-heading.text-center.dcm-caption Gesellschaftliche Talente
+						.panel-body
+							+TalentTable(_Held.Talente.Gesellschaft)
+					.panel.panel-default#t_nat
+						.panel-heading.text-center.dcm-caption Natur-Talente
+						.panel-body
+							+TalentTable(_Held.Talente.Natur)
+				.col-md-6
+					.panel.panel-default#t_wis
+						.panel-heading.text-center.dcm-caption Wissenstalente
+						.panel-body
+							+TalentTable(_Held.Talente.Wissen)
+					.panel.panel-default#t_han
+						.panel-heading.text-center.dcm-caption Handwerkstalente
+						.panel-body
+							+TalentTable(_Held.Talente.Handwerk)
+			.row
+				.col-md-6
+					.panel.panel-default#t_spr
+						.panel-heading.text-center.dcm-caption Sprachen
+						.panel-body
+							+SprachenTable(_Held.Talente.Sprachen)
+				.col-md-6
+					.panel.panel-default#t_scr
+						.panel-heading.text-center.dcm-caption Schriften
+						.panel-body
+							+SprachenTable(_Held.Talente.Schriften)
+			// Ausrüstung
+			if _Held.Ausrüstung && _Held.Ausrüstung.Rucksack && _Held.Ausrüstung.Rucksack.length
+				.panel.panel-default#eqp
+					.panel-heading.text-center.dcm-caption Ausrüstung
+					.panel-body
+						.container-fluid
+							each __item in _Held.Ausrüstung.Rucksack
+								.row.dcm-row-item
+									.col-xs-2.col-sm-1.text-center=__item.Anzahl
+									.col-xs-10.col-sm-11.col-md-5=__item.Name
+									.col-xs-2.col-sm-1.hidden-md.hidden-lg &nbsp;
+									.col-xs-10.col-sm-11.col-md-6=__item.Kommentar
+		//script(src="/held.js")

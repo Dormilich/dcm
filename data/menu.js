@@ -80,7 +80,7 @@ module.exports = {
 	},
 	helden: {
 		left: [{
-			title: "Springe zu …",
+			title: "{name}",
 			dropdown: [{
 				url:   "#bes",
 				title: "Beschreibung"
@@ -94,8 +94,11 @@ module.exports = {
 				url:   "#bas",
 				title: "Basiswerte"
 			}, {
-				url:   "#vnt",
-				title: "Vor- & Nachteile"
+				url:   "#vt",
+				title: "Vorteile"
+			}, {
+				url:   "#nt",
+				title: "Nachteile"
 			}, {
 				url:   "#ap",
 				title: "Abenteuerpunkte"
@@ -108,27 +111,35 @@ module.exports = {
 			}, {
 				url:   "#taw",
 				title: "Talentwerte"
+			}, { // a divider
 			}, {
-				url:   "#t_kam",
-				title: "– Kampf-Talente"
+				url:   "#t_nk",
+				title: "Nahkampf-Talente"
+			}, {
+				url:   "#t_fk",
+				title: "Fernkampf-Talente"
 			}, {
 				url:   "#t_koe",
-				title: "– Körperliche Talente"
+				title: "Körperliche Talente"
 			}, {
 				url:   "#t_ges",
-				title: "– Gesellschaftstalente"
+				title: "Gesellschaftstalente"
 			}, {
 				url:   "#t_nat",
-				title: "– Naturtalente"
+				title: "Naturtalente"
 			}, {
 				url:   "#t_wis",
-				title: "– Wissenstalente"
+				title: "Wissenstalente"
 			}, {
 				url:   "#t_han",
-				title: "– Handwerkstalente"
+				title: "Handwerkstalente"
 			}, {
 				url:   "#t_spr",
-				title: "– Sprachen & Schriften"
+				title: "Sprachen"
+			}, {
+				url:   "#t_scr",
+				title: "Schriften"
+			}, { // a divider
 			}, {
 				url:   "#eqp",
 				title: "Ausrüstung"
@@ -139,7 +150,8 @@ module.exports = {
 		}, {
 			url:   "/neu",
 			title: "Neuer Held"
-		}, {
+		}],
+		right: [{
 			title: "{name} bearbeiten",
 			dropdown: [{
 				url:   "/person/{id}",
@@ -175,8 +187,7 @@ module.exports = {
 				url:   "/rucksack/{id}",
 				title: "Gegenstände"
 			}]
-		}],
-		right: [{
+		}, {
 			url:   "/logout",
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]

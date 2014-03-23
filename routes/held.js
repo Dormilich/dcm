@@ -26,6 +26,7 @@ var path    = require('path')
   , appRoot = path.dirname(require.main.filename)
   , Held    = require( path.join(appRoot, 'models/person') )
   , data    = require( path.join(appRoot, 'data/dsa') )
+  , menu    = require( path.join(appRoot, 'data/menu') )
   ;
 
 module.exports = function (app) {
@@ -87,7 +88,10 @@ module.exports = function (app) {
 			;
 			Held.populate(doc, talentTypes, function(err, doc) {
 				if (err) return next(err);
-				res.render('held/held', doc);
+				res.render('held/held', {
+					_Held: doc,
+					_Menu: menu.helden
+				});
 			});
 		});
 	});
