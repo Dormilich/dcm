@@ -128,7 +128,7 @@ mixin KampfTable(__list)
 						|  (#{__talent.Spezialisierung.join(', ')})
 				if typeof __talent.AT === 'number' && typeof __talent.PA === 'number'
 					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.AT
-					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.AT
+					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.PA + _Held.Kampfwerte.PA
 				else
 					.col-xs-3.col-sm-2.col-md-3.col-lg-2=__talent.AT + _Held.Kampfwerte.FK
 					.col-xs-3.col-sm-2.col-md-3.col-lg-2 &nbsp;
