@@ -78,6 +78,7 @@ mixin TalentTable(__list)
 			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
 			.col-xs-4.col-sm-2.col-md-4.col-lg-2
 				.dcm-header.dcm-border TaW
+	.container-fluid.text-center.dcm-hover
 		each __talent in __list
 			.row.dcm-row.dcm-table
 				.col-xs-12.col-sm-6.col-md-12.col-lg-6.text-left=__talent._talent.name
@@ -98,6 +99,7 @@ mixin SprachenTable(__list)
 			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
 			.col-xs-4.col-sm-2.col-md-4.col-lg-2
 				.dcm-header.dcm-border TaW
+	.container-fluid.text-center.dcm-hover
 		each __talent in __list
 			.row.dcm-row.dcm-table
 				.col-xs-12.col-sm-6.col-md-12.col-lg-6.text-left=__talent.name
@@ -118,6 +120,7 @@ mixin KampfTable(__list)
 			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
 			.col-xs-4.col-sm-2.col-md-4.col-lg-2
 				.dcm-header.dcm-border TaW
+	.container-fluid.text-center.dcm-hover
 		each __talent in __list
 			.row.dcm-row.dcm-table
 				.col-xs-12.col-sm-5.col-md-12.col-lg-5.text-left=__talent.name
@@ -137,55 +140,15 @@ doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title DCM – DSA Charakter Manager
+		title DCM – #{_Held.Person.Name}
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/dcm-display.css")
 		script(src="//code.jquery.com/jquery.min.js")
 		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
-			.dcm-border {
-				border:           1px solid gray;
-			}
-			.dcm-header {
-				background-color: #eee;
-				border-radius:    0.5em;
-			}
-			.dcm-value {
-				border:           1px solid gray;
-				border-radius:    0.5em;
-			}
-			.dcm-table > div {
-				border:           1px solid silver;
-			}
-			.dcm-table > div:first-child {
-				border-left:                2px solid silver;
-				border-top-left-radius:     0.5em;
-				border-bottom-left-radius:  0.5em;
-			}
-			.dcm-table > div:last-child {
-				border-right:               2px solid silver;
-				border-top-right-radius:    0.5em;
-				border-bottom-right-radius: 0.5em;
-			}
-			.dcm-row > div {
-				padding-top:      0.2em;
-				padding-bottom:   0.2em;
-				margin-top:       0.2em;
-				margin-bottom:    0.2em;
-			}
-			.dcm-caption {
-				font-size:        2em;
-				/*font-style:  italic;*/
-				font-family:      Georgia;
-				text-align:       center;
-			}
-			.dcm-list-item {
-				padding:          0.3em 0.6em;
-				border-bottom:    1px solid silver;
-			}
-			.dcm-row-item {
-				padding-top:      0.5em;
-				border-bottom:    1px solid silver;
+			body {
+				padding-top:      60px;
 			}
 			#pws_deselect:hover {
 				background-color: #eee;
@@ -195,8 +158,8 @@ html(lang="de")
 				border-color:     silver;
 				color:            white;
 			}
-	body#top
-		nav.navbar.navbar-default(role="navigation")
+	body
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
 			.container-fluid
 				.navbar-header
 					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
@@ -204,10 +167,16 @@ html(lang="de")
 						span.icon-bar
 						span.icon-bar
 						span.icon-bar
-					a.navbar-brand DCM
+					span.navbar-brand DCM
 				#navbar-collapse-chars.collapse.navbar-collapse
 					- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
 					ul.nav.navbar-nav
+						if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
+							li
+								a(href="/magie/"+data.id) ► Magiebogen
+						if _Held.SF && contains(_Held.SF.geweiht, "Liturgiekenntnis")
+							li
+								a(href="/weihe/"+data.id) ► Liturgiebogen
 						each __link in _Menu.left
 							if Array.isArray(__link.dropdown)
 								+menuDropdown(__link, data)
@@ -219,13 +188,13 @@ html(lang="de")
 								+menuDropdown(__link, data)
 							else
 								+menuLink(__link, data)
-		.container
+		header.container
 			.page-header.text-center
 				h1=_Held.Person.Name
 				h3 —Heldenbogen—
-			
+		main.container
 			// Charakter-Beschreibung
-			.panel.panel-default#bes
+			section.panel.panel-default#bes
 				.panel-heading.dcm-caption Beschreibung
 				.panel-body
 					.container-fluid
@@ -263,7 +232,7 @@ html(lang="de")
 									each line in _Held.Person.Hintergrund.split('\n')
 										=line
 			// Charakter-Generierung
-			.panel.panel-default#gen
+			section.panel.panel-default#gen
 				.panel-heading.dcm-caption Generierung
 				.panel-body
 					.container-fluid
@@ -280,7 +249,7 @@ html(lang="de")
 								.col-md-2.dcm-header Modifikationen:
 								.col-md-4=_Held.Generierung.BgB.modifikation || "\u00A0"
 			// Attribute
-			.panel.panel-default#att
+			section.panel.panel-default#att
 				.panel-heading.dcm-caption Attribute
 				.panel-body.text-center
 					.container-fluid
@@ -291,7 +260,7 @@ html(lang="de")
 										.col-xs-6.dcm-header=__att
 										.col-xs-6=_Held.Attribute[__att].wert
 			// Basiswerte
-			.panel.panel-default#bas
+			section.panel.panel-default#bas
 				.panel-heading.dcm-caption Basiswerte
 				.panel-body.text-center
 					.container-fluid
@@ -322,20 +291,20 @@ html(lang="de")
 										.col-xs-6=_Held.Kampfwerte[__prop]
 			// Vor- und Nachteile
 			.row
-				.col-sm-6#vt
-					.panel.panel-default
+				.col-sm-6
+					section.panel.panel-default#vt
 						.panel-heading.dcm-caption Vorteile
 						ul.list-group
 							each __vt in _Held.Vorteile
 								li.list-group-item=__vt
-				.col-sm-6#nt
-					.panel.panel-default
+				.col-sm-6
+					section.panel.panel-default#nt
 						.panel-heading.text-center.dcm-caption Nachteile
 						ul.list-group
 							each __nt in _Held.Nachteile
 								li.list-group-item=__nt
 			// Abenteuerpunkte
-			.panel.panel-default#ap
+			section.panel.panel-default#ap
 				.panel-heading.dcm-caption Abenteuerpunkte
 				.panel-body.text-center
 					.container-fluid
@@ -345,7 +314,7 @@ html(lang="de")
 							.col-xs-6.col-sm-3.dcm-header verfügbar:
 							.col-xs-6.col-sm-3=_Held.AP.frei
 			// Sonderfertigkeiten
-			.panel.panel-default#sf
+			section.panel.panel-default#sf
 				.panel-heading.dcm-caption Sonderfertigkeiten
 				.panel-body
 					if _Held.SF
@@ -389,7 +358,7 @@ html(lang="de")
 										.col-sm-6.col-lg-4
 											.dcm-list-item=__sf
 			// INI & Kampfzauber
-			.panel.panel-default#waf
+			section.panel.panel-default#waf
 				.panel-heading.dcm-caption INI &amp; Kampfzauber
 				- var __akrob, __ausw = 0
 				- __ausw += contains(_Held.SF.Kampf, "Ausweichen I")   ?  3 : 0;
@@ -445,118 +414,9 @@ html(lang="de")
 								input#fkBasis(type="hidden", value=_Held.Kampfwerte.FK, data-default=_Held.Kampfwerte.FK)
 								input#auswMod(type="hidden", value=__ausw)
 								input#held(type="hidden", value=_id)
-					
-					//-.container-fluid.text-center.visible-md.visible-lg
-						.row.dcm-row
-							.col-md-2
-								.dcm-header INI
-							.col-md-2
-								.dcm-header BE
-							.col-md-2
-								.dcm-header Ausweichen
-							.col-md-2
-								.dcm-header Axxeleratus
-							.col-md-4
-								.dcm-header Attributo
-						.row.dcm-row
-							.col-md-2#k_ini_out=_Held.Kampfwerte.INI + " + W6"
-							.col-md-2
-								select#k_be(size="1", style="width: 75%;")
-										option(value="0") ohne RG
-										option(value="1") RG I
-										option(value="1") RG II
-										option(value="2") RG III
-							.col-md-2#k_ausw_out=_Held.Kampfwerte.PA + __ausw
-							.col-md-2
-								input#k_att(type="checkbox").hidden
-							.col-md-2
-								input#k_att(type="checkbox").hidden
-								select#sel_att(size="1", style="width: 75%;")
-									option(data-wert=_Held.Attribute.MU.wert) MU
-									option(data-wert=_Held.Attribute.IN.wert) IN
-									option(data-wert=_Held.Attribute.KL.wert) KL
-									option(data-wert=_Held.Attribute.CH.wert) CH
-									option(data-wert=_Held.Attribute.FF.wert) FF
-									option(data-wert=_Held.Attribute.GE.wert) GE
-									option(data-wert=_Held.Attribute.KO.wert) KO
-									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
-							.col-md-2
-								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
-					
-					//-.container-fluid.text-center.visible-sm
-						.row.dcm-row
-							.col-sm-4
-								.dcm-header INI
-							.col-sm-4
-								.dcm-header BE
-							.col-sm-4
-								.dcm-header Ausweichen
-						.row.dcm-row
-							.col-sm-4#k_ini_out=_Held.Kampfwerte.INI + " + W6"
-							.col-sm-4
-								select#k_be(size="1", style="width: 75%;")
-										option(value="0") ohne RG
-										option(value="1") RG I
-										option(value="1") RG II
-										option(value="2") RG III
-							.col-sm-4#k_ausw_out=_Held.Kampfwerte.PA + __ausw
-						.row.dcm-row
-							.col-sm-4
-								.dcm-header Axxeleratus
-							.col-sm-4
-								.dcm-header Attributo
-							.col-sm-2
-								input#k_att(type="checkbox").hidden
-								select#sel_att(size="1", style="width: 75%;")
-									option(data-wert=_Held.Attribute.MU.wert) MU
-									option(data-wert=_Held.Attribute.IN.wert) IN
-									option(data-wert=_Held.Attribute.KL.wert) KL
-									option(data-wert=_Held.Attribute.CH.wert) CH
-									option(data-wert=_Held.Attribute.FF.wert) FF
-									option(data-wert=_Held.Attribute.GE.wert) GE
-									option(data-wert=_Held.Attribute.KO.wert) KO
-									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
-							.col-sm-2
-								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
-
-					//-.container-fluid.visible-xs
-						.row.dcm-row.text-center
-							.col-xs-6
-								.dcm-header INI:
-							.col-xs-6#k_ini_out=_Held.Kampfwerte.INI + " + W6"
-							.col-xs-6
-								.dcm-header BE:
-							.col-xs-6
-								select#k_be(size="1", style="width: 75%;")
-										option(value="0") ohne RG
-										option(value="1") RG I
-										option(value="1") RG II
-										option(value="2") RG III
-							.col-xs-6
-								.dcm-header Ausweichen:
-							.col-xs-6#k_ausw_out=_Held.Kampfwerte.PA + __ausw
-							.col-xs-6
-								.dcm-header Axxeleratus
-							.col-xs-6 &nbsp;
-							.col-xs-6
-								.dcm-header Attributo
-							.col-xs-6
-								input#k_att(type="checkbox").hidden
-								select#sel_att(size="1", style="width: 75%;")
-									option(data-wert=_Held.Attribute.MU.wert) MU
-									option(data-wert=_Held.Attribute.IN.wert) IN
-									option(data-wert=_Held.Attribute.KL.wert) KL
-									option(data-wert=_Held.Attribute.CH.wert) CH
-									option(data-wert=_Held.Attribute.FF.wert) FF
-									option(data-wert=_Held.Attribute.GE.wert) GE
-									option(data-wert=_Held.Attribute.KO.wert) KO
-									option#val_att_kk(data-wert=_Held.Attribute.KK.wert, selected) KK
-							.col-xs-6.col-xs-offset-6
-								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
-	
 			// Waffen & Rüstungen
 			if _Held.Ausrüstung && _Held.Ausrüstung.Nahkampf && _Held.Ausrüstung.Nahkampf.length
-				.panel.panel-default
+				section.panel.panel-default
 					.panel-heading.dcm-caption Nahkampfwaffen
 					.panel-body
 						.container-fluid.text-center
@@ -605,7 +465,7 @@ html(lang="de")
 										input.bhk(type="radio", name="nebenhand")
 			
 			if _Held.Ausrüstung && _Held.Ausrüstung.LinkeHand && _Held.Ausrüstung.LinkeHand.length
-				.panel.panel-default
+				section.panel.panel-default
 					.panel-heading.dcm-caption Parierwaffen &amp; Schilde
 					.panel-body
 						.container-fluid.text-center
@@ -642,7 +502,7 @@ html(lang="de")
 										input.pws(type="radio", name="nebenhand")
 				
 			if _Held.Ausrüstung && _Held.Ausrüstung.Fernkampf && _Held.Ausrüstung.Fernkampf.length
-				.panel.panel-default
+				section.panel.panel-default
 					.panel-heading.dcm-caption Fernkampfwaffen
 					.panel-body
 						.container-fluid.text-center
@@ -672,62 +532,60 @@ html(lang="de")
 									.col-xs-6.col-sm-4.col-sm-offset-2.col-md-2.col-md-offset-0=__waffe.TP.dk.join(" / ")
 									.col-xs-6.col-sm-4.col-md-2=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
 									.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
-									
-
 			// Talente
 			.row#taw
 				.col-md-6
-					.panel.panel-default#t_nk
+					section.panel.panel-default#t_nk
 						.panel-heading.text-center.dcm-caption Nahkampf
 						.panel-body
 							+KampfTable(_Held.Talente.Nahkampf)
 				.col-md-6
-					.panel.panel-default#t_fk
+					section.panel.panel-default#t_fk
 						.panel-heading.text-center.dcm-caption Fernkampf
 						.panel-body
 							+KampfTable(_Held.Talente.Fernkampf)
 			.row
 				.col-md-6
 					if _Held.Talente && _Held.Talente.Gaben && _Held.Talente.Gaben.length
-						.panel.panel-default
+						section.panel.panel-default
 							.panel-heading.text-center.dcm-caption Gaben
 							.panel-body
 								+TalentTable(_Held.Talente.Gaben)
-					.panel.panel-default#t_koe
+					section.panel.panel-default#t_koe
 						.panel-heading.text-center.dcm-caption Körperliche Talente
 						.panel-body
 							+TalentTable(_Held.Talente.körperlich)
-					.panel.panel-default#t_ges
+					section.panel.panel-default#t_ges
 						.panel-heading.text-center.dcm-caption Gesellschaftliche Talente
 						.panel-body
 							+TalentTable(_Held.Talente.Gesellschaft)
-					.panel.panel-default#t_nat
+					section.panel.panel-default#t_nat
 						.panel-heading.text-center.dcm-caption Natur-Talente
 						.panel-body
 							+TalentTable(_Held.Talente.Natur)
 				.col-md-6
-					.panel.panel-default#t_wis
+					section.panel.panel-default#t_wis
 						.panel-heading.text-center.dcm-caption Wissenstalente
 						.panel-body
 							+TalentTable(_Held.Talente.Wissen)
-					.panel.panel-default#t_han
+					section.panel.panel-default#t_han
 						.panel-heading.text-center.dcm-caption Handwerkstalente
 						.panel-body
 							+TalentTable(_Held.Talente.Handwerk)
 			.row
 				.col-md-6
-					.panel.panel-default#t_spr
+					section.panel.panel-default#t_spr
 						.panel-heading.text-center.dcm-caption Sprachen
 						.panel-body
 							+SprachenTable(_Held.Talente.Sprachen)
 				.col-md-6
-					.panel.panel-default#t_scr
+					section.panel.panel-default#t_scr
 						.panel-heading.text-center.dcm-caption Schriften
 						.panel-body
 							+SprachenTable(_Held.Talente.Schriften)
 			// Ausrüstung
 			if _Held.Ausrüstung && _Held.Ausrüstung.Rucksack && _Held.Ausrüstung.Rucksack.length
-				.panel.panel-default#eqp
+				section.panel.panel-default#eqp
 					.panel-heading.text-center.dcm-caption Ausrüstung
 					.panel-body
 						.container-fluid

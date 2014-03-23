@@ -1,3 +1,5 @@
+//- function definitions
+
 -	function contains(__array, __string) {
 -		if (typeof __array === "string") {
 -			return __array.indexOf(__string) > -1;
@@ -9,158 +11,188 @@
 -		}
 -		return false;
 -	}
+- 
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
+
+//- mixin definitions
 
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
-mixin SFTableSection(__liste, __name)
-	if __liste.length
-		tbody
-			tr
-				th= __name
-			tr.links
-				td
-					ul.vor-nach.fl-links
-						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
-							li= __liste[x]
-					ul.vor-nach.fl-rechts
-						- for (var y=x, l=__liste.length; y<l; y++)
-							li= __liste[y]
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = render(__item.url,   __data);
+	li
+		if Array.isArray(__item.sign)
+			a(href=__url, title=__title)
+				span.hidden-xs(class=__item.sign.join(" "))
+				span.visible-xs=__title
+		else
+			a(href=__url)=__item.title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = __item.url ? render(__item.url,   __data) : null;
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown", href=__url)=__title
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
 
 doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title= Person.Name
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
+		title DCM – #{_Held.Person.Name}
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/dcm-display.css")
+		script(src="//code.jquery.com/jquery.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
+			body {
+				padding-top:      60px;
+			}
 	body
-		nav
-			ul#main-menu
-				li
-					a(title="springe zu Abschnitt ...") &#8681;
-					ul
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					span.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+					ul.nav.navbar-nav
 						li
-							a(href="#vnt") Vor- & Nachteile
-						li
-							a(href="#sf") Sonderfertigkeiten
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#lkw") Liturgiekenntnis
-						li
-							a(href="#lit") Liturgien
-						li
-							a(href="/held/"+_id) ► Heldenbogen
-						if SF && (contains(SF.magisch, "Ritualkenntnis") || contains(SF.magisch, "Repräsentation"))
+							a(href="/held/"+data.id) ► Heldenbogen
+						if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
 							li
-								a(href="/magie/"+_id) ► Magiebogen
-				li
-					a(href="/helden") [ Charakterliste ]
-				li
-					a(href="/neu") [ Neuer Charakter ]
-				li 
-					a #{Person.Name.split(' ')[0]} bearbeiten
-					ul
-						li
-							a(href="/sf/"+_id) Sonderfertigkeiten
-						li
-							a(href="/liturgien/"+_id+'#liturgien') Liturgien
-						li
-							a(href="/liturgien/"+_id+"#liturgiekenntnis") Liturgiekenntnis
-
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
-			h2.mitte –Geweihtenbogen–
-		main
-			table.data-section#vnt
-				caption Vor- und Nachteile
-				tr
-					td
-						ul.vor-nach.fl-links
-							li.mitte
-								strong Vorteile
-							each val in Vorteile
-								li= val
-						ul.vor-nach.fl-rechts
-							li.mitte
-								strong Nachteile
-							each val in Nachteile
-								li= val
-			
-			table.data-section.mitte.eigenschaften#sf
-				caption Sonderfertigkeiten
-				+SFTableSection(SF.geweiht, 'Karmale Sonderfertigkeiten')
-			
-			table.data-section.mitte.eigenschaften#att
-				caption Attribute
-				thead
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							th= val
-				tbody
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							td= Attribute[val].wert
-			
-			table.data-section.mitte.eigenschaften#bas
-				caption Basiswerte
-				tbody
-					tr
-						each val in ["LeP", "AuP", "KaP", "MR"]
-							th= val
-							td= Basiswerte[val] || '—'
-			
-			table.data-section.mitte.eigenschaften#lkw
-				caption Liturgiekenntnis
-				colgroup
-					col
-					col(style="width: 15em;")
-					col(style="width: 5em;")
-					col(style="width: 15em;")
-				thead
-					tr
-						th Liturgiekenntnis
-						th Probe
-						th(title="Lernschwierigkeit")
-						th LkW
-				tbody
-					each __lk in Weihe.Liturgiekenntnis
-						tr
-							td.links=__lk.name
-							td(title=__lk._talent.probe.join(' · '))= __lk._talent.probe.map(function(item) { return Attribute[item].wert; }).join(' · ')
-							td.mitte= __lk.Lernstufe
-							td.mitte= __lk.wert.toString().replace('-', '–')
-			
-			table.data-section.eigenschaften#lit
-				caption Liturgien
-				colgroup
-					col(style="width: 30%;")
-					col(style="width: 5em;")
-					col
-					col(style="width: 8em;")
-					col
-					col
-				thead
-					tr
-						th Name
-						th Grad
-						th Dauer
-						th Ziel
-						th Reichweite
-						th Wirkungsdauer
-				if Weihe.Liturgien && Weihe.Liturgien.length
-					- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
-					tbody
-						each __lit in Weihe.Liturgien
-							tr
-								td=__lit.name
-								td.mitte=__grad[__lit.grad]
-								td=__lit.rd
-								td.mitte=__lit.ziel
-								td=__lit.rw
-								td=__lit.wd
+								a(href="/magie/"+data.id) ► Magiebogen
+						each __link in _Menu.left
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+		header.container
+			.page-header.text-center
+				h1(href="/held/"+_Held._id)=_Held.Person.Name
+				h3 —Liturgiebogen—
+		main.container
+			// Vor- und Nachteile
+			.row
+				.col-sm-6
+					section.panel.panel-default#vt
+						.panel-heading.dcm-caption Vorteile
+						ul.list-group
+							each __vt in _Held.Vorteile
+								li.list-group-item=__vt
+				.col-sm-6
+					section.panel.panel-default#nt
+						.panel-heading.text-center.dcm-caption Nachteile
+						ul.list-group
+							each __nt in _Held.Nachteile
+								li.list-group-item=__nt
+			// Sonderfertigkeiten
+			section.panel.panel-default#sf
+				.panel-heading.dcm-caption Sonderfertigkeiten
+				.panel-body
+					if _Held.SF
+						.container-fluid
+							.text-center.dcm-header.dcm-list-item.dcm-border Karmale Sonderfertigkeiten
+							.row
+								each __sf in _Held.SF.geweiht
+									.col-sm-6.col-lg-4
+										.dcm-list-item=__sf
+			// Attribute
+			section.panel.panel-default#att
+				.panel-heading.dcm-caption Attribute
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __att in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__att
+										.col-xs-6=_Held.Attribute[__att].wert
+			// Basiswerte
+			section.panel.panel-default#bas
+				.panel-heading.dcm-caption Basiswerte
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __prop in ["LeP", "AuP", "MR", "KaP"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__prop
+										.col-xs-6=_Held.Basiswerte[__prop] || "—"
+			// Liturgiekenntnis
+			section.panel.panel-default#lkw
+				.panel-heading.dcm-caption Liturgiekenntnis
+				.panel-body
+					.container-fluid.text-center
+						.row.dcm-row
+							.col-xs-12.col-sm-6
+								.dcm-header.dcm-border Liturgiekenntnis
+							.col-xs-6.col-sm-3
+								.dcm-header.dcm-border Probe
+							.col-xs-2.col-sm-1 &nbsp;
+							.col-xs-4.col-sm-2
+								.dcm-header.dcm-border LkW
+						if _Held.Weihe && _Held.Weihe.Liturgiekenntnis && _Held.Weihe.Liturgiekenntnis.length
+							each __lkw in _Held.Weihe.Liturgiekenntnis
+								.row.dcm-row.dcm-table
+									.col-xs-12.col-sm-6.text-left=__lkw.name
+									.col-xs-6.col-sm-3(title=__lkw._talent.probe.join(' · '))= __lkw._talent.probe.map(function(item) { return _Held.Attribute[item].wert; }).join(' · ')
+									.col-xs-2.col-sm-1=__lkw.Lernstufe
+									.col-xs-4.col-sm-2=__lkw.wert.toString().replace('-', '–')
+			// Liturgien
+			section.panel.panel-default#lkw
+				.panel-heading.dcm-caption Liturgien
+				.panel-body
+					.container-fluid
+						.row.dcm-row.text-center
+							.col-xs-10.col-sm-6.col-md-4
+								.dcm-header.dcm-border Liturgie
+							.col-xs-2.col-sm-2.col-md-1
+								.dcm-header.dcm-border Grad
+							.col-xs-6.col-sm-4.col-md-2
+								.dcm-header.dcm-border Dauer
+							.col-xs-6.col-sm-4.col-md-1
+								.dcm-header.dcm-border Ziel
+							.col-xs-6.col-sm-4.col-md-2
+								.dcm-header.dcm-border Reichweite
+							.col-xs-6.col-sm-4.col-md-2
+								.dcm-header.dcm-border Wirkungsdauer
+					if _Held.Weihe && _Held.Weihe.Liturgien && _Held.Weihe.Liturgien.length
+						- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
+						.container-fluid.dcm-hover
+							each __lit in _Held.Weihe.Liturgien
+								.row.dcm-row.dcm-table
+									.col-xs-10.col-sm-6.col-md-4=__lit.name
+									.col-xs-2.col-sm-2.col-md-1.text-center=__grad[__lit.grad]
+									.col-xs-6.col-sm-4.col-md-2=__lit.rd
+									.col-xs-6.col-sm-4.col-md-1.text-center=__lit.ziel
+									.col-xs-6.col-sm-4.col-md-2=__lit.rw
+									.col-xs-6.col-sm-4.col-md-2=__lit.wd

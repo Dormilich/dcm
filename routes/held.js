@@ -119,7 +119,10 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
-				res.render('held/geweiht', doc);
+				res.render('held/geweiht', {
+					_Held: doc,
+					_Menu: menu.weihe
+				});
 			})
 		;
 	});

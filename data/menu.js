@@ -192,5 +192,64 @@ module.exports = {
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]
 		}]
+	},
+	weihe: {
+		left: [{
+			title: "{name}",
+			dropdown: [{
+				url:   "#vt",
+				title: "Vorteile"
+			}, {
+				url:   "#nt",
+				title: "Nachteile"
+			}, {
+				url:   "#sf",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "#att",
+				title: "Attribute"
+			}, {
+				url:   "#bas",
+				title: "Basiswerte"
+			}, {
+				url:   "#lkw",
+				title: "Liturgiekenntnis"
+			}, {
+				url:   "#lit",
+				title: "Liturgien"
+			}]
+		}, {
+			url:   "/helden",
+			title: "Meine Helden"
+		}, {
+			url:   "/neu",
+			title: "Neuer Held"
+		}],
+		right: [{
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/liturgien/{id}#liturgiekenntnis",
+				title: "Liturgiekenntnis"
+			}, {
+				url:   "/liturgien/{id}#liturgien",
+				title: "Liturgien"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
 	}
 };

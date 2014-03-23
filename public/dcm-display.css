@@ -1,0 +1,55 @@
+h1 {
+	font-family:      Georgia;
+	font-size:        3.5em;
+}
+.dcm-border {
+	border:           1px solid gray;
+}
+.dcm-header {
+	background-color: #eee;
+	border-radius:    0.5em;
+}
+.dcm-value {
+	border:           1px solid gray;
+	border-radius:    0.5em;
+}
+.dcm-table > div {
+	border:           1px solid silver;
+}
+.dcm-table > div:first-child {
+	border-left:                2px solid silver;
+	border-top-left-radius:     0.5em;
+	border-bottom-left-radius:  0.5em;
+}
+.dcm-table > div:last-child {
+	border-right:               2px solid silver;
+	border-top-right-radius:    0.5em;
+	border-bottom-right-radius: 0.5em;
+}
+.dcm-hover .dcm-row:hover {
+	background-color: #eee;
+}
+.dcm-row > div {
+	margin-top:       0.2em;
+	margin-bottom:    0.2em;
+	padding-top:      0.2em;
+	padding-bottom:   0.2em;
+}
+.dcm-caption {
+	font-family:      Georgia;
+	font-size:        2em;;
+	text-align:       center;
+}
+.dcm-list-item {
+	border-bottom:    1px solid silver;
+	padding:          0.3em 0.6em;
+}
+.dcm-row-item {
+	border-bottom:    1px solid silver;
+	padding-top:      0.5em;
+}
+.navbar-brand, .navbar-brand:hover {
+	color:            gray !important;
+	cursor:           default;
+	font-family:      Georgia;
+}
