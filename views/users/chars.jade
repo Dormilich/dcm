@@ -4,19 +4,23 @@
 -		});
 -		return __str;
 -	}
+
 //- create a standard menu link
 mixin menuLink(__item, __data)
 	- var __data  = __data || {};
 	- var __curr  = __item.url === _Menu.currentURL;
 	- var __url   = __item.url ? (__curr ? null : render(__item.url, __data)) : null;
 	- var __title = render(__item.title, __data);
-	li(class=__curr ? "active" : null)
-		if Array.isArray(__item.sign)
-			a(href=__url)
-				span.hidden-xs(class=__item.sign.join(" "))
-				span.visible-xs!=__title
-		else
-			a(href=__url)!=__title
+	if Array.isArray(__item.dropdown)
+		+menuDropdown(__item, __data)
+	else
+		li(class=__curr ? "active" : null)
+			if Array.isArray(__item.sign)
+				a(href=__url, title=__title)
+					span.hidden-xs(class=__item.sign.join(" "))
+					span.visible-xs!=__title
+			else
+				a(href=__url)!=__title
 
 //- create a menu dropdown item
 mixin menuDropdown(__item, __data)
@@ -66,16 +70,10 @@ html(lang="de")
 					- var data = _FRCount ? { badge: '<span class="badge">'+_FRCount+'</span>' } : { badge: "" };
 					ul.nav.navbar-nav
 						each __link in _Menu.left
-							if Array.isArray(__link.dropdown)
-								+menuDropdown(__link, data)
-							else
-								+menuLink(__link, data)
+							+menuLink(__link, data)
 					ul.nav.navbar-nav.navbar-right
 						each __link in _Menu.right
-							if Array.isArray(__link.dropdown)
-								+menuDropdown(__link, data)
-							else
-								+menuLink(__link, data)
+							+menuLink(__link, data)
 						if _User.isAdmin
 							li
 								a(href="/db", title="Manage DB")

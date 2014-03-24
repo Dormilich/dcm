@@ -1,3 +1,40 @@
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
+
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	- var __data  = __data || {};
+	- var __curr  = __item.url === _Menu.currentURL;
+	- var __url   = __item.url ? (__curr ? null : render(__item.url, __data)) : null;
+	- var __title = render(__item.title, __data);
+	if Array.isArray(__item.dropdown)
+		+menuDropdown(__item, __data)
+	else
+		li(class=__curr ? "active" : null)
+			if Array.isArray(__item.sign)
+				a(href=__url, title=__title)
+					span.hidden-xs(class=__item.sign.join(" "))
+					span.visible-xs!=__title
+			else
+				a(href=__url)!=__title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- var __data  = __data || {};
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown")!=render(__item.title, __data)
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
+
 doctype html
 html(lang="de")
 	head
@@ -26,22 +63,18 @@ html(lang="de")
 						span.icon-bar
 					a.navbar-brand DCM
 				#navbar-collapse-chars.collapse.navbar-collapse
+					- var data = _FRCount ? { badge: '<span class="badge">'+_FRCount+'</span>' } : { badge: "" };
 					ul.nav.navbar-nav
 						each __link in _Menu.left
-							- var __isCurrent = __link.url === _Menu.currentURL;
-							if __isCurrent
-								li.active
-									a=__link.title
-							else
-								li
-									a(href=__link.url)=__link.title
+							+menuLink(__link, data)
 					ul.nav.navbar-nav.navbar-right
 						each __link in _Menu.right
-							- var __isCurrent = __link.url === _Menu.currentURL;
+							+menuLink(__link, data)
+						if _User.isAdmin
 							li
-								a(href=__isCurrent ? null : __link.url, title=__link.title)
-									span.hidden-xs(class=__link.sign.join(" ")) &nbsp;
-									span.visible-xs=__link.title
+								a(href="/db", title="Manage DB")
+									span.hidden-xs.fa.fa-hdd-o
+									span.visible-xs Manage DB
 		.container
 			.page-header.text-center
 				h1

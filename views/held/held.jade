@@ -41,24 +41,25 @@ mixin print(__data)
 
 //- create a standard menu link
 mixin menuLink(__item, __data)
-	- __data  = __data || {};
-	- __title = render(__item.title, __data);
-	- __url   = render(__item.url,   __data);
-	li
-		if Array.isArray(__item.sign)
-			a(href=__url, title=__title)
-				span.hidden-xs(class=__item.sign.join(" "))
-				span.visible-xs=__title
-		else
-			a(href=__url)=__item.title
+	- var __data  = __data || {};
+	- var __title = render(__item.title, __data);
+	- var __url   = __item.url ? render(__item.url,   __data) : null;
+	if Array.isArray(__item.dropdown)
+		+menuDropdown(__item, __data)
+	else
+		li
+			if Array.isArray(__item.sign)
+				a(href=__url, title=__title)
+					span.hidden-xs(class=__item.sign.join(" "))
+					span.visible-xs!=__title
+			else
+				a(href=__url)!=__title
 
 //- create a menu dropdown item
 mixin menuDropdown(__item, __data)
 	- __data  = __data || {};
-	- __title = render(__item.title, __data);
-	- __url   = __item.url ? render(__item.url,   __data) : null;
 	li.dropdown
-		a.dropdown-toggle(data-toggle="dropdown", href=__url)=__title
+		a.dropdown-toggle(data-toggle="dropdown")!=render(__item.title, __data)
 			b.caret
 		ul.dropdown-menu
 			each __link in __item.dropdown
@@ -178,16 +179,10 @@ html(lang="de")
 							li
 								a(href="/weihe/"+data.id) ► Liturgiebogen
 						each __link in _Menu.left
-							if Array.isArray(__link.dropdown)
-								+menuDropdown(__link, data)
-							else
-								+menuLink(__link, data)
+							+menuLink(__link, data)
 					ul.nav.navbar-nav.navbar-right
 						each __link in _Menu.right
-							if Array.isArray(__link.dropdown)
-								+menuDropdown(__link, data)
-							else
-								+menuLink(__link, data)
+							+menuLink(__link, data)
 		header.container
 			.page-header.text-center
 				h1=_Held.Person.Name

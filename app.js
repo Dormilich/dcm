@@ -110,9 +110,6 @@ process.on('SIGINT', function() {
  ***       Define HTTP Routes       ***
  **************************************/
 
-// load app params
-require('./config/param')(app);
-
 /*/ set DB admin (once)
 app.get('/db/init', function (req, res, next) {
 	var User = require('./models/user');
@@ -130,6 +127,9 @@ app.get('/db/init', function (req, res, next) {
 		});
 	});
 });//*/
+
+// load Express path params
+require('./config/param')(app);
 
 // setup login paths
 require('./routes/login')(app, passport);
