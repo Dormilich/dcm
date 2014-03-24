@@ -65,6 +65,16 @@ $('form').on('submit', function(jqevt) {
 			this.checked = false;
 		}
 	});
+	// value completion
+	$('.zusatz_text:checked').each(function() {
+		var $text = $(this).closest('li').find('input[type="text"]');
+		if ($text.val().length) {
+			this.value += wrapValue($text.val(), '(', ')');
+		}
+		else {
+			this.checked = false;
+		}
+	});
 	// add number fields
 	$('.stufe:checked').each(function() {
 		var $num = $(this).nextAll('input[type="number"]');
