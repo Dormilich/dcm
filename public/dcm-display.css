@@ -2,6 +2,9 @@ h1 {
 	font-family:      Georgia;
 	font-size:        3.5em;
 }
+*[title] {
+	cursor: help;
+}
 .dcm-border {
 	border:           1px solid gray;
 }

@@ -107,7 +107,10 @@ module.exports = function (app) {
 				doc.Magie.Zauber.sort(function(a, b) {
 					return a._zauber.Name.localeCompare(b._zauber.Name, "de");
 				});//*/
-				res.render('held/magie', doc);
+				res.render('held/magie', {
+					_Held: doc,
+					_Menu: menu.magie
+				});
 			})
 		;
 	});

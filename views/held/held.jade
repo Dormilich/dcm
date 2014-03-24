@@ -237,17 +237,19 @@ html(lang="de")
 				.panel-body
 					.container-fluid
 						each val in ["Rasse", "Kultur", "Profession"]
+							- var __hidden = _Held.Generierung[val].modifikation ? null : "hidden-xs hidden-sm"
 							.row.dcm-row
 								.col-sm-3.col-md-2.dcm-header #{val}:
 								.col-sm-9.col-md-4=_Held.Generierung[val].name
-								.col-sm-3.col-md-2.dcm-header Modifikationen:
-								.col-sm-9.col-md-4=_Held.Generierung[val].modifikation || "\u00A0"
+								.col-sm-3.col-md-2.dcm-header.text-center(class=__hidden) Modifikationen:
+								.col-sm-9.col-md-4(class=__hidden)=_Held.Generierung[val].modifikation
 						if _Held.Generierung.BgB.name
+							- var __hidden = _Held.Generierung.BgB.modifikation ? null : "hidden-xs hidden-sm"
 							.row.dcm-row
 								.col-md-2.dcm-header BgB:
 								.col-md-4=_Held.Generierung.BgB.name
-								.col-md-2.dcm-header Modifikationen:
-								.col-md-4=_Held.Generierung.BgB.modifikation || "\u00A0"
+								.col-md-2.dcm-header(class=__hidden) Modifikationen:
+								.col-md-4(class=__hidden)=_Held.Generierung.BgB.modifikation
 			// Attribute
 			section.panel.panel-default#att
 				.panel-heading.dcm-caption Attribute
@@ -593,6 +595,6 @@ html(lang="de")
 								.row.dcm-row-item
 									.col-xs-2.col-sm-1.text-center=__item.Anzahl
 									.col-xs-10.col-sm-11.col-md-5=__item.Name
-									.col-xs-2.col-sm-1.hidden-md.hidden-lg &nbsp;
-									.col-xs-10.col-sm-11.col-md-6=__item.Kommentar
+									.col-xs-2.col-sm-1.hidden-md.hidden-lg(class=__item.Kommentar ? null : "hidden") &nbsp;
+									.col-xs-10.col-sm-11.col-md-6(class=__item.Kommentar ? null : "hidden")=__item.Kommentar
 		//script(src="/held.js")

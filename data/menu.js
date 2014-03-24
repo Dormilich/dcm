@@ -228,11 +228,76 @@ module.exports = {
 		right: [{
 			title: "{name} bearbeiten",
 			dropdown: [{
-				url:   "/liturgien/{id}#liturgiekenntnis",
+				url:   "/liturgien/{id}#lkw",
 				title: "Liturgiekenntnis"
 			}, {
-				url:   "/liturgien/{id}#liturgien",
+				url:   "/liturgien/{id}#lit",
 				title: "Liturgien"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
+	},
+	magie: {
+		left: [{
+			title: "{name}",
+			dropdown: [{
+				url:   "#vt",
+				title: "Vorteile"
+			}, {
+				url:   "#nt",
+				title: "Nachteile"
+			}, {
+				url:   "#sf",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "#att",
+				title: "Attribute"
+			}, {
+				url:   "#bas",
+				title: "Basiswerte"
+			}, {
+				url:   "#zbr",
+				title: "Zauber"
+			}, {
+				url:   "#rkw",
+				title: "Ritualkenntnis"
+			}, {
+				url:   "#rit",
+				title: "Rituale"
+			}]
+		}, {
+			url:   "/helden",
+			title: "Meine Helden"
+		}, {
+			url:   "/neu",
+			title: "Neuer Held"
+		}],
+		right: [{
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/zauber/{id}#zbr",
+				title: "Zauber"
+			}, {
+				url:   "/rituale/{id}#rkw",
+				title: "Ritualkenntnis"
+			}, {
+				url:   "/rituale/{id}#rit",
+				title: "Rituale"
 			}, {
 				url:   "/attribute/{id}",
 				title: "Attribute"

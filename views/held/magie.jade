@@ -1,3 +1,5 @@
+//- function definitions
+
 -	function contains(__array, __string) {
 -		if (typeof __array === "string") {
 -			return __array.indexOf(__string) > -1;
@@ -9,37 +11,309 @@
 -		}
 -		return false;
 -	}
+- 
+- 	function getTalent(__list, __waffe) { 
+- 		var l = __list ? __list.length : 0; 
+- 		while (l--) { 
+- 			if (__list[l].name === __waffe.talent) {
+- 				return __list[l];
+- 			}
+- 		} 
+- 		return { wert: 0, AT: 0, PA: 0 }; 
+-	}
+- 
+-	function beautifyNumber(num) {
+- 		if (isNaN(num)) return num;
+- 		return (num > 0 ? "+" : num < 0 ? "–" : "") + Math.abs(num);
+-	}
+- 
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
+- 
 -	function intersect(__ar1, __ar2) {
 -		return __ar1.filter(function(item) {
 -			return __ar2.indexOf(item) > -1;
 -		});
 -	}
 
+//- mixin definitions
+
 mixin print(__data)
 	p!=JSON.stringify(__data)
 
-mixin SFTableSection(__liste, __name)
-	if __liste.length
-		tbody
-			tr
-				th= __name
-			tr.links
-				td
-					ul.vor-nach.fl-links
-						- for (var x=0, l=Math.ceil(__liste.length/2); x<l; x++)
-							li= __liste[x]
-					ul.vor-nach.fl-rechts
-						- for (var y=x, l=__liste.length; y<l; y++)
-							li= __liste[y]
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = render(__item.url,   __data);
+	li
+		if Array.isArray(__item.sign)
+			a(href=__url, title=__title)
+				span.hidden-xs(class=__item.sign.join(" "))
+				span.visible-xs=__title
+		else
+			a(href=__url)=__item.title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- __data  = __data || {};
+	- __title = render(__item.title, __data);
+	- __url   = __item.url ? render(__item.url,   __data) : null;
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown", href=__url)=__title
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
 
 doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title= Person.Name
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(src="/jquery-2.0.3.min.js")
+		title DCM – #{_Held.Person.Name}
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/dcm-display.css")
+		script(src="//code.jquery.com/jquery.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+		style.
+			body {
+				padding-top:      60px;
+			}
+			.dcm-col-divider {
+				border-bottom:    1px solid silver;
+			}
+	body
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					span.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+					ul.nav.navbar-nav
+						li
+							a(href="/held/"+data.id) ► Heldenbogen
+						if _Held.SF && contains(_Held.SF.geweiht, "Liturgiekenntnis")
+							li
+								a(href="/weihe/"+data.id) ► Liturgiebogen
+						each __link in _Menu.left
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							if Array.isArray(__link.dropdown)
+								+menuDropdown(__link, data)
+							else
+								+menuLink(__link, data)
+		header.container
+			.page-header.text-center
+				h1(href="/held/"+_Held._id)=_Held.Person.Name
+				h3 —Magiebogen—
+		main.container
+			// Vor- und Nachteile
+			.row
+				.col-sm-6
+					section.panel.panel-default#vt
+						.panel-heading.dcm-caption Vorteile
+						ul.list-group
+							each __vt in _Held.Vorteile
+								li.list-group-item=__vt
+				.col-sm-6
+					section.panel.panel-default#nt
+						.panel-heading.text-center.dcm-caption Nachteile
+						ul.list-group
+							each __nt in _Held.Nachteile
+								li.list-group-item=__nt
+			// Sonderfertigkeiten
+			section.panel.panel-default#sf
+				.panel-heading.dcm-caption Sonderfertigkeiten
+				if _Held.SF
+					.panel-body
+						.container-fluid
+							.text-center.dcm-header.dcm-list-item.dcm-border Karmale Sonderfertigkeiten
+							.row
+								each __sf in _Held.SF.geweiht
+									.col-sm-6.col-lg-4
+										.dcm-list-item=__sf
+			// Attribute
+			section.panel.panel-default#att
+				.panel-heading.dcm-caption Attribute
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __att in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__att
+										.col-xs-6=_Held.Attribute[__att].wert
+			// Basiswerte
+			section.panel.panel-default#bas
+				.panel-heading.dcm-caption Basiswerte
+				.panel-body.text-center
+					.container-fluid
+						.row.dcm-row
+							each __prop in ["LeP", "AuP", "MR", "KaP"]
+								.col-xs-6.col-sm-3
+									.row
+										.col-xs-6.dcm-header=__prop
+										.col-xs-6=_Held.Basiswerte[__prop] || "—"
+			// Ritualkenntnis
+			if _Held.Magie && Array.isArray(_Held.Magie.Ritualkenntnis) && _Held.Magie.Ritualkenntnis.length
+				section.panel.panel-default#rkw
+					.panel-heading.dcm-caption Ritualkenntnis
+					.panel-body.text-center
+						.container-fluid
+							.row.dcm-row
+								.col-xs-8.col-sm-3
+									.dcm-header.dcm-border Ritualkenntnis
+								.col-xs-4.col-sm-3
+									.dcm-header.dcm-border Tradition
+								.col-xs-6.col-sm-3
+									.dcm-header.dcm-border Probe
+								.col-xs-4.col-xs-offset-2.col-sm-2.col-sm-offset-1
+									.dcm-header.dcm-border RkW
+							each __rk, __idx in _Held.Magie.Ritualkenntnis
+								case __rk.short
+									when "Ztz"
+										.row.dcm-row.dcm-table
+											.col-xs-8.col-sm-3.text-left Zaubertänzer
+											.col-xs-4.col-sm-3=__rk.long
+											.col-xs-6.col-sm-3(title="sh. Ritual") &nbsp;
+											.col-xs-2.col-sm-1=__rk.Lernstufe
+											.col-xs-4.col-sm-2=__rk.RkW
+									when "Shm"
+										.row.dcm-row.dcm-table
+											.col-xs-8.col-sm-3.text-left=__rk._talent.name
+											.col-xs-4.col-sm-3=__rk.long
+											.col-xs-6.col-sm-3(title=__rk._talent.probe.join(' · '))=__rk._talent.probe.map(function(item) { return _Held.Attribute[item].wert; }).join(' · ')
+											.col-xs-2.col-sm-1=__rk.Lernstufe
+											.col-xs-4.col-sm-2=__rk.RkW
+									default
+										.row.dcm-row.dcm-table
+											.col-xs-8.col-sm-3.text-left=__rk.long
+											.col-xs-4.col-sm-3 &nbsp;
+											.col-xs-6.col-sm-3(title="sh. Ritual") &nbsp;
+											.col-xs-2.col-sm-1=__rk.Lernstufe
+											.col-xs-4.col-sm-2=__rk.RkW
+			// Rituale
+			if _Held.Magie && Array.isArray(_Held.Magie.Rituale) && _Held.Magie.Rituale.length
+				- var __rks = _Held.Magie.Ritualkenntnis.map(function(item) { return item.short; });
+				section.panel.panel-default#rit
+					.panel-heading.dcm-caption Rituale
+					.panel-body
+						.container-fluid.text-center
+							.row.dcm-row
+								.col-xs-12.col-sm-8.col-md-3
+									.dcm-header.dcm-border(style="line-height: 293%;") Ritual
+								.col-xs-6.col-sm-4.col-md-2
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border Probe
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border Ritualkenntnis
+								.col-xs-6.col-sm-4.col-md-3
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border Mod.
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border Merkmale
+								.col-xs-6.col-sm-4.col-md-2
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border RD
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border WD
+								.col-xs-6.col-sm-4.col-md-2
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border AsP
+									.row
+										.col-xs-12
+											.dcm-header.dcm-border RW
+						.container-fluid.text-center.dcm-hover
+							each __rit in _Held.Magie.Rituale
+								-	__rk  = intersect(__rks, __rit.Repräsentationen);
+								-	__rkl = __rk.map(function(short) {
+								-		return _Held.Magie.Ritualkenntnis.filter(function(obj) {
+								-			return obj.short === short;
+								-		})[0].long;
+								-	});
+								.row.dcm-row.dcm-table
+									.col-xs-12.col-sm-8.col-md-3
+										.text-left(style="line-height: 293%;")=__rit.Name
+									.col-xs-6.col-sm-4.col-md-2
+										.row.dcm-col-divider
+											if intersect(__rks, ["Shm", "Elf"]).length
+												.col-xs-12=__rit.Talent.join(', ')
+											else if Array.isArray(__rit.Probe) && __rit.Probe.length > 0
+												.col-xs-12(title=__rit.Probe.join(' · '))=__rit.Probe.map(function(item) { return Attribute[item] ? Attribute[item].wert : item; }).join(' · ')
+											else
+												.col-xs-12 &nbsp;
+										.row
+											.col-xs-12=__rkl.join(', ')
+									.col-xs-6.col-sm-4.col-md-3
+										.row.dcm-col-divider
+											.col-xs-12=__rit.Modifikator || "\u00A0"
+										.row
+											.col-xs-12.text-left=__rit.Merkmale.join(', ') || "\u00A0"
+									.col-xs-6.col-sm-4.col-md-2
+										.row.dcm-col-divider
+											.col-xs-12=__rit.cast.RD || "\u00A0"
+										.row
+											.col-xs-12=__rit.cast.WD || "\u00A0"
+									.col-xs-6.col-sm-4.col-md-2
+										.row.dcm-col-divider
+											.col-xs-12=__rit.cast.AsP || "\u00A0"
+										.row
+											.col-xs-12=__rit.cast.RW || "\u00A0"
+	
+
+			//-if Array.isArray(Magie.Rituale) && Magie.Rituale.length > 0
+				- var __rks = Magie.Ritualkenntnis.map(function(item) { return item.short; });
+				table.data-section.eigenschaften.mitte
+					tbody
+						each __rit in Magie.Rituale
+							-	__rk  = intersect(__rks, __rit.Repräsentationen);
+							-	__rkl = __rk.map(function(short) {
+							-		return Magie.Ritualkenntnis.filter(function(obj) {
+							-			return obj.short === short;
+							-		})[0].long;
+							-	});
+							tr
+								td.links(rowspan="2")=__rit.Name
+								td
+									if intersect(__rks, ["Shm", "Elf"]).length
+										div=__rit.Talent.join(', ')
+									if Array.isArray(__rit.Probe) && __rit.Probe.length > 0
+										div(title=__rit.Probe.join(' · '))=__rit.Probe.map(function(item) { return Attribute[item] ? Attribute[item].wert : item; }).join(' · ')
+								td=__rit.Modifikator
+								td=__rit.cast.RD
+								td=__rit.cast.AsP
+							tr
+								td=__rkl.join(', ')
+								td.links=__rit.Merkmale.join(', ')
+								td=__rit.cast.WD
+								td=__rit.cast.RW
+
+//-html(lang="de")
+	head
 		style.
 			.meta td {
 				background-color: #eee;
@@ -64,88 +338,6 @@ html(lang="de")
 				font-weight: bold;
 			}
 	body
-		nav
-			ul#main-menu
-				li
-					a(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#vnt") Vor- & Nachteile
-						li
-							a(href="#sf") Sonderfertigkeiten
-						li
-							a(href="#att") Attribute
-						li
-							a(href="#bas") Basiswerte
-						li
-							a(href="#spr") Zauber
-						li
-							a(href="#rit") Rituale
-						li
-							a(href="/held/"+_id) ► Heldenbogen
-						if SF && contains(SF.geweiht, "Liturgiekenntnis")
-							li
-								a(href="/weihe/"+_id) ► Geweihtenbogen
-				li
-					a(href="/helden") [ Charakterliste ]
-				li
-					a(href="/neu") [ Neuer Charakter ]
-				li 
-					a #{Person.Name.split(' ')[0]} bearbeiten
-					ul
-						li
-							a(href="/sf/"+_id) Sonderfertigkeiten
-						li
-							a(href="/zauber/"+_id) Zauber
-						li
-							a(href="/rituale/"+_id+"#ritualkenntnis") Ritualkenntnis
-						li
-							a(href="/rituale/"+_id+"#rituale") Rituale
-
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
-			h2.mitte –Magiebogen–
-			
-		section
-			table.data-section#vnt
-				caption Vor- und Nachteile
-				tr
-					td
-						ul.vor-nach.fl-links
-							li.mitte
-								strong Vorteile
-							each val in Vorteile
-								li= val
-						ul.vor-nach.fl-rechts
-							li.mitte
-								strong Nachteile
-							each val in Nachteile
-								li= val
-			
-			table.data-section.mitte.eigenschaften#sf
-				caption Sonderfertigkeiten
-				+SFTableSection(SF.magisch, 'Magische Sonderfertigkeiten')
-			
-			table.data-section.mitte.eigenschaften#att
-				caption Attribute
-				thead
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							th= val
-				tbody
-					tr
-						each val in ["MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"]
-							td= Attribute[val].wert
-		
-			table.data-section.mitte.eigenschaften#bas
-				caption Basiswerte
-				tbody
-					tr
-						each val in ["LeP", "AuP", "AsP", "MR"]
-							th= val
-							td= Basiswerte[val] || '—'
-			
 		section#spr
 			if Array.isArray(Magie.Zauber) && Magie.Zauber.length > 0
 				table.data-section.eigenschaften.mitte.zauber
