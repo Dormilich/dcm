@@ -56,7 +56,7 @@ module.exports = {
 			title: "Helden"
 		}, {
 			url:   "/freunde",
-			title: "Freunde"
+			title: "Freunde {badge}"
 		}, {
 			url:   "/profil",
 			title: "Konten"

@@ -39,21 +39,45 @@ module.exports = function (app) {
 	// ### TODO ###
 	// About page
 	app.get('/about', function(req, res, next) {
-		var nav = menu.profil;
-		nav.currentURL = req.path;
-		res.render('about', {  
-			_User: req.user,
-			_Menu: nav
-		});
+		Message
+			.find({  
+				recipient: req.user.id,
+				topic:     "friendship request",
+				read:      false, // accepted state
+				deleted:   false  // rejected state
+			})
+			.count(function(err, cnt) {
+				if (err) return cb(err);
+				var nav        = menu.profil;
+				nav.currentURL = req.path;
+				res.render('about', {  
+					_User:    req.user,
+					_Menu:    nav,
+					_FRCount: cnt
+				});
+			})
+		;
 	});
 	// Account Panel
 	app.get('/profil', function(req, res, next) {
-		var nav = menu.profil;
-		nav.currentURL = req.path;
-		res.render('users/profil', {  
-			_User: req.user,
-			_Menu: nav
-		});
+		Message
+			.find({  
+				recipient: req.user.id,
+				topic:     "friendship request",
+				read:      false, // accepted state
+				deleted:   false  // rejected state
+			})
+			.count(function(err, cnt) {
+				if (err) return cb(err);
+				var nav        = menu.profil;
+				nav.currentURL = req.path;
+				res.render('users/profil', {  
+					_User:    req.user,
+					_Menu:    nav,
+					_FRCount: cnt
+				});
+			})
+		;
 	});
 	// Character list	
 	app.get('/helden', function(req, res, next) {
@@ -86,12 +110,26 @@ module.exports = function (app) {
 						cb(null, arr);
 					})
 				;
+			},
+			_FRCount: function (cb) {
+				Message
+					.find({  
+						recipient: req.user.id,
+						topic:     "friendship request",
+						read:      false, // accepted state
+						deleted:   false  // rejected state
+					})
+					.count(function(err, cnt) {
+						if (err) return cb(err);
+						cb(null, cnt);
+					})
+				;
 			}
 		},
 		function (err, obj) {
 			if (err) return next(err); 
-			obj._User = req.user;
-			obj._Menu = menu.profil;
+			obj._User            = req.user;
+			obj._Menu            = menu.profil;
 			obj._Menu.currentURL = req.path;
 			res.render('users/chars', obj);
 		});
@@ -166,8 +204,8 @@ module.exports = function (app) {
 		}, 
 		function(err, obj) {
 			if (err) return next(err);
-			obj._User = req.user;
-			obj._Menu = menu.profil;
+			obj._User            = req.user;
+			obj._Menu            = menu.profil;
 			obj._Menu.currentURL = req.path;
 			res.render('users/friends', obj);
 		});

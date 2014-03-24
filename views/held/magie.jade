@@ -171,6 +171,9 @@ html(lang="de")
 									.row
 										.col-xs-6.dcm-header=__prop
 										.col-xs-6=_Held.Basiswerte[__prop] || "—"
+
+			// maybe use Responsive Tables (Bootstrap) ??
+
 			// Ritualkenntnis
 			if _Held.Magie && Array.isArray(_Held.Magie.Ritualkenntnis) && _Held.Magie.Ritualkenntnis.length
 				section.panel.panel-default#rkw
@@ -283,34 +286,9 @@ html(lang="de")
 											.col-xs-12=__rit.cast.AsP || "\u00A0"
 										.row
 											.col-xs-12=__rit.cast.RW || "\u00A0"
-	
 
-			//-if Array.isArray(Magie.Rituale) && Magie.Rituale.length > 0
-				- var __rks = Magie.Ritualkenntnis.map(function(item) { return item.short; });
-				table.data-section.eigenschaften.mitte
-					tbody
-						each __rit in Magie.Rituale
-							-	__rk  = intersect(__rks, __rit.Repräsentationen);
-							-	__rkl = __rk.map(function(short) {
-							-		return Magie.Ritualkenntnis.filter(function(obj) {
-							-			return obj.short === short;
-							-		})[0].long;
-							-	});
-							tr
-								td.links(rowspan="2")=__rit.Name
-								td
-									if intersect(__rks, ["Shm", "Elf"]).length
-										div=__rit.Talent.join(', ')
-									if Array.isArray(__rit.Probe) && __rit.Probe.length > 0
-										div(title=__rit.Probe.join(' · '))=__rit.Probe.map(function(item) { return Attribute[item] ? Attribute[item].wert : item; }).join(' · ')
-								td=__rit.Modifikator
-								td=__rit.cast.RD
-								td=__rit.cast.AsP
-							tr
-								td=__rkl.join(', ')
-								td.links=__rit.Merkmale.join(', ')
-								td=__rit.cast.WD
-								td=__rit.cast.RW
+
+
 
 //-html(lang="de")
 	head
