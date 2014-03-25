@@ -337,17 +337,16 @@ $('#k_att_label').on("click", function() {
 	kampfwerte.attributo();
 });
 
-$('#waf').on("click", 'input[type="radio"]', function() {
+$('#nahkampf-waffen').on("click", 'input[type="radio"]', function() {
 	var $haupt = $("input[name='haupthand']:checked");
 	var $neben = $("input[name='nebenhand']:checked");
 	if (kampfwerte.hasSameRow($haupt, $neben)) {
 		$neben.prop("checked", false);
-		return null;
 	}
 	kampfwerte.calculate();
 });
 
-$('#unselectLH').on("click", function() {
+$('#pws_deselect').on("click", function() {
 	$("input[name='nebenhand']:checked").prop("checked", false);
 	kampfwerte.calculate();
 });
