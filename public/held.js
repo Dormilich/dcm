@@ -14,7 +14,9 @@ var ID = document.getElementById.bind(document);
 var kampfwerte = {
 	// DOM Elements
 	axxel     : ID('k_axx'),
+	axx_label : ID('k_axx_label'),
 	attro     : ID('k_att'),
+	att_label : ID('k_att_label'),
 	iniAxx    : ID('iniAxx'),
 	iniBasis  : ID('iniBasis'),
 	iniMod    : ID('iniMod'),
@@ -59,14 +61,14 @@ var kampfwerte = {
 	},
 	getBHKMod : function($rechts, $links) {
 		if ($rechts.length === 1 && $links.length === 1) {
-			var $rowR = $rechts.closest('tr');
-			var $rowL = $links.closest('tr');
+			var $rowR = $rechts.closest('.row');
+			var $rowL = $links.closest('.row');
 			// different skills
-			if ($rowR.find('td.be').data("talent") !== $rowL.find('td.be').data("talent")) {
+			if ($rowR.find('.be').data("talent") !== $rowL.find('.be').data("talent")) {
 				return -2;
 			}
 			// same skill, different weapons
-			if ($rowR.find('td.name').text().intersect($rowL.find('td.name').text()).length === 0) {
+			if ($rowR.find('.name').text().intersect($rowL.find('.name').text()).length === 0) {
 				return -1;
 			}
 		}
@@ -74,7 +76,7 @@ var kampfwerte = {
 	},
 	hasSameRow : function ($elem1, $elem2) {
 		if ($elem1.length === 1 && $elem2.length === 1) {
-			return $elem1.closest('tr').find($elem2).length === 1;
+			return $elem1.closest('.row').find($elem2).length === 1;
 		}
 		return false;
 	},
@@ -82,7 +84,7 @@ var kampfwerte = {
 	setINI : function () {
 		function getWaffenINI($input) {
 			if ($input.length === 1) {
-				return +$input.closest('tr').find('td.ini').data("ini");
+				return +$input.closest('.row').find('.ini').data("ini");
 			}
 			return 0;
 		}
@@ -118,19 +120,19 @@ var kampfwerte = {
 	},
 	setWaffenAT : function ($row, radio) {
 		// AT = AT-Basis (Attributo) + WM (Hauptwaffe) + WM (Parierwaffe) + Spez + AT-TaW - BE-Mod
-		var $at = $row.find('td.at');
+		var $at = $row.find('.at');
 		// AT-TaW + Spez + WM (Hauptwaffe)
 		var AT  = $at.data("at");
 		// + AT-Basis
 		AT     += +kampfwerte.atBasis.value;
 		// BE
-		var eBE = kampfwerte.getBE() - $row.find('td.be').data("be");
+		var eBE = kampfwerte.getBE() - $row.find('.be').data("be");
 		if (eBE > 0) {
 			AT -= Math.floor(eBE/2);
 		}
 		// WM (Parierwaffe), if selected
 		if ($row.find(radio.haupt).length === 1 && radio.pws.length === 1) {
-			AT += +radio.pws.closest('tr').find('td.at').data("wm");
+			AT += +radio.pws.closest('.row').find('.at').data("wm");
 		}
 		AT     += kampfwerte.getBHKMod(radio.haupt, radio.bhk);
 		// BHK 2nd-weapon
@@ -144,13 +146,13 @@ var kampfwerte = {
 		// PA = PA-Basis (Attributo) + PA-TaW (BHK/PW) + Spez + WM (Hauptwaffe) + 
 		//      WM (Parierwaffe) + Axxeleratus + INI-PA-Mod - BE +
 		//      SF PW / SF SK / SF BHK
-		var $pa    = $row.find('td.pa');
+		var $pa    = $row.find('.pa');
 		// PA-Basis
 		var PA     = kampfwerte.getAxxeleratusValue().PA;
 		// TaW
 		var tawMod = +$pa.data("pa");
 		// BE-Mod
-		var eBE    =  kampfwerte.getBE() - $row.find('td.be').data("be");
+		var eBE    =  kampfwerte.getBE() - $row.find('.be').data("be");
 		var beMod  = 0;
 		if (eBE > 0) {
 			beMod  = Math.floor( (eBE + 1) / 2 );
@@ -164,7 +166,7 @@ var kampfwerte = {
 			// main-weapon with parray-weapon
 			if (radio.pws.length) {
 				// PA-WM (Parierwaffe)
-				PA += +radio.pws.closest('tr').find('td.pa').data("wm");
+				PA += +radio.pws.closest('.row').find('.pa').data("wm");
 				// PA-Mod depending on used SF
 				switch (kampfwerte.SFpws.value) {
 					case "SK I":
@@ -205,7 +207,7 @@ var kampfwerte = {
 	},
 	setWaffenTP : function ($row) {
 		// TP = TP-Basis + Axxeleratus + TP/KK / TP/KK (Attributo)
-		var $tp = $row.find('td.tp');
+		var $tp = $row.find('.tp');
 		var mod = $tp.data();
 		// TP-Basis
 		var tp  = +mod.tp;
@@ -230,11 +232,11 @@ var kampfwerte = {
 	},
 	setFK : function($row) {
 		// set FKW
-		var $fk = $row.find('td.at');
+		var $fk = $row.find('.at');
 		$fk.text( +kampfwerte.fkBasis.value + +$fk.data("taw") );
 
 		// set TP
-		var $tp = $row.find('td.tp');
+		var $tp = $row.find('.tp');
 		var mod = $tp.data();
 		var tp  = mod.tp;
 		// if TP/KK is set at all
@@ -247,14 +249,14 @@ var kampfwerte = {
 	getAxxeleratusValue : function () {
 		// return INI- and PA-Val
 		if (kampfwerte.axxel.checked) {
-			kampfwerte.axxel.parentNode.style.backgroundColor = "red";
+			kampfwerte.axx_label.classList.add("spell-active");
 			return {
 				INI: +kampfwerte.iniBasis.value * 2,
 				PA : +kampfwerte.paBasis.value  + 2
 			};
 		}
 		else {
-			kampfwerte.axxel.parentNode.style.backgroundColor = "";
+			kampfwerte.axx_label.classList.remove("spell-active");
 			return {
 				INI: +kampfwerte.iniBasis.value,
 				PA : +kampfwerte.paBasis.value
@@ -263,7 +265,7 @@ var kampfwerte = {
 	},
 	attributo : function () {
 		if (kampfwerte.attro.checked) {
-			kampfwerte.attro.parentNode.style.backgroundColor = "orange";
+			kampfwerte.att_label.classList.add("spell-pending");
 			$.ajax({
 				data: {
 					attribut: kampfwerte.attrName.value,
@@ -277,13 +279,16 @@ var kampfwerte = {
 				kampfwerte.atBasis.value  = json.AT;
 				kampfwerte.paBasis.value  = json.PA;
 				kampfwerte.fkBasis.value  = json.FK;
-				kampfwerte.attro.parentNode.style.backgroundColor = "red";
+				kampfwerte.att_label.classList.remove("spell-pending");
+				kampfwerte.att_label.classList.add("spell-active");
+				kampfwerte.attrName.disabled = true;
+				kampfwerte.attrWert.disabled = true;
 				// apply changes
 				kampfwerte.calculate();
 			}).fail(function(jqXHR, type, text) { // jqXHR, error type, HTTP message (statusText)
 				console.log(type + " " + jqXHR.status + ": " + text);
 				// reset the changes
-				kampfwerte.attro.parentNode.style.backgroundColor = "";
+				kampfwerte.att_label.classList.remove("spell-pending");
 				kampfwerte.attro.checked  = false;
 				kampfwerte.attrWert.value = $('#sel_att option:selected').data("wert");
 			});
@@ -294,7 +299,9 @@ var kampfwerte = {
 			kampfwerte.paBasis.value  = kampfwerte.paBasis.dataset.default;
 			kampfwerte.fkBasis.value  = kampfwerte.fkBasis.dataset.default;
 			kampfwerte.attrWert.value = $('#sel_att option:selected').data("wert");
-			kampfwerte.attro.parentNode.style.backgroundColor = "";
+			kampfwerte.att_label.classList.remove("spell-active");
+			kampfwerte.attrName.disabled = false;
+			kampfwerte.attrWert.disabled = false;
 			// apply changes
 			kampfwerte.calculate();
 		}
@@ -309,20 +316,26 @@ var kampfwerte = {
 			bhk:   $("input[name='nebenhand'].bhk:checked"),
 			haupt: $("input[name='haupthand']:checked")
 		};
-		$('#nahkampf-waffen tr').each(function() {
+		$('#nahkampf-waffen .row').each(function() {
 			kampfwerte.setWaffenAT( $(this), radios );
 			kampfwerte.setWaffenPA( $(this), radios, iniPa );
 			kampfwerte.setWaffenTP( $(this) );
 		});
-		$('#fernkampf-waffen tr').each(function() {
+		$('#fernkampf-waffen .row').each(function() {
 			kampfwerte.setFK( $(this) );
 		});
 	}
 };
 
  
-$('#k_axx').on("click", kampfwerte.calculate);
-$('#k_att').on("click", kampfwerte.attributo);
+$('#k_axx_label').on("click", function() {
+	kampfwerte.axxel.checked = !kampfwerte.axxel.checked;
+	kampfwerte.calculate();
+});
+$('#k_att_label').on("click", function() {
+	kampfwerte.attro.checked = !kampfwerte.attro.checked;
+	kampfwerte.attributo();
+});
 
 $('#waf').on("click", 'input[type="radio"]', function() {
 	var $haupt = $("input[name='haupthand']:checked");

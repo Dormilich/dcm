@@ -145,7 +145,7 @@ html(lang="de")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
 		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
 		link(rel="stylesheet", href="/dcm-display.css")
-		script(src="//code.jquery.com/jquery.min.js")
+		script(src="//code.jquery.com/jquery-2.1.0.min.js")
 		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
 			body {
@@ -157,6 +157,17 @@ html(lang="de")
 			#pws_deselect:active {
 				background-color: #111;
 				border-color:     silver;
+				color:            white;
+			}
+			#k_axx_label,
+			#k_att_label {
+				cursor:           pointer;
+			}
+			.spell-pending {
+				background-color: orange;
+			}
+			.spell-active {
+				background-color: green;
 				color:            white;
 			}
 	body
@@ -246,7 +257,7 @@ html(lang="de")
 								.col-md-2.dcm-header(class=__hidden) Modifikationen:
 								.col-md-4(class=__hidden)=_Held.Generierung.BgB.modifikation
 			// Attribute
-			section.panel.panel-default#att
+			section.panel.panel-default#att(data-attribute=JSON.stringify(_Held.Attribute))
 				.panel-heading.dcm-caption Attribute
 				.panel-body.text-center
 					.container-fluid
@@ -386,7 +397,7 @@ html(lang="de")
 							.col-xs-3.col-md-2#k_ausw_out=_Held.Kampfwerte.PA + __ausw
 						.row.dcm-row.text-center
 							.col-xs-6.col-md-2
-								.dcm-header Attributo
+								.dcm-header#k_att_label Attributo
 							.col-xs-3.col-md-2
 								input#k_att(type="checkbox").hidden
 								select#sel_att(size="1", style="width: 75%;")
@@ -401,16 +412,16 @@ html(lang="de")
 							.col-xs-3.col-md-2
 								input#val_att(type="number", value=_Held.Attribute.KK.wert, style="width: 75%;").text-center
 							.col-xs-6.col-md-2.col-md-offset-2
-								.dcm-header Axxeleratus
+								.dcm-header#k_axx_label Axxeleratus
 							.col-xs-6.col-md-2 &nbsp;
 								input#k_axx(type="checkbox").hidden
 								input#iniBasis(type="hidden", value=_Held.Kampfwerte.INI - _Held.modifikatoren.INI, data-default=_Held.Kampfwerte.INI - _Held.modifikatoren.INI)
-								input#iniMod(type="hidden", value=_Held.modifikatoren.INI)
+								input#iniMod(type="hidden",  value=_Held.modifikatoren.INI)
 								input#atBasis(type="hidden", value=_Held.Kampfwerte.AT, data-default=_Held.Kampfwerte.AT)
 								input#paBasis(type="hidden", value=_Held.Kampfwerte.PA, data-default=_Held.Kampfwerte.PA)
 								input#fkBasis(type="hidden", value=_Held.Kampfwerte.FK, data-default=_Held.Kampfwerte.FK)
 								input#auswMod(type="hidden", value=__ausw)
-								input#held(type="hidden", value=_id)
+								input#held(type="hidden",    value=_Held._id)
 			// Waffen & Rüstungen
 			if _Held.Ausrüstung && _Held.Ausrüstung.Nahkampf && _Held.Ausrüstung.Nahkampf.length
 				section.panel.panel-default
@@ -442,6 +453,7 @@ html(lang="de")
 										option(value="6", title="SF Linkhand", selected) links
 										option(value="3") BHK I
 										option(value="0") BHK II
+						.container-fluid.text-center#nahkampf-waffen
 							each __waffe in _Held.Ausrüstung.Nahkampf
 								- var __talent = getTalent(_Held.Talente.Nahkampf, __waffe);
 								- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
@@ -518,6 +530,7 @@ html(lang="de")
 									.dcm-header.dcm-border TP+
 								.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1
 									.dcm-header.dcm-border eBE
+						.container-fluid.text-center#fernkampf-waffen
 							each __waffe in _Held.Ausrüstung.Fernkampf
 								- var __talent = getTalent(_Held.Talente.Fernkampf, __waffe);
 								- var __tp     = __waffe.TP.kk ? Math.floor((_Held.Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)+__waffe.TP.rollMod : __waffe.TP.rollMod
@@ -592,4 +605,4 @@ html(lang="de")
 									.col-xs-10.col-sm-11.col-md-5=__item.Name
 									.col-xs-2.col-sm-1.hidden-md.hidden-lg(class=__item.Kommentar ? null : "hidden") &nbsp;
 									.col-xs-10.col-sm-11.col-md-6(class=__item.Kommentar ? null : "hidden")=__item.Kommentar
-		//script(src="/held.js")
+		script(src="/held.js")
