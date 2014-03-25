@@ -316,5 +316,84 @@ module.exports = {
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]
 		}]
+	},
+	neu: {
+		left: [{
+			title: "Neuer Held",
+			dropdown: [{
+				url:   "#bes",
+				title: "Beschreibung"
+			}, {
+				url:   "#gen",
+				title: "Generierung"
+			}, {
+				url:   "#att",
+				title: "Attribute"
+			}, {
+				url:   "#bas",
+				title: "Basiswerte"
+			}, {
+				url:   "#vt",
+				title: "Vorteile"
+			}, { // a divider
+			}, {
+				url:   "#pc_1",
+				title: "A – E"
+			}, {
+				url:   "#pc_22",
+				title: "F – J"
+			}, {
+				url:   "#pc_42",
+				title: "K – O"
+			}, {
+				url:   "#pc_50",
+				title: "P – T"
+			}, {
+				url:   "#vorteil_78",
+				title: "U – Z"
+			}, { // a divider
+			}, {
+				url:   "#nt",
+				title: "Nachteile"
+			}, { // a divider
+			}, {
+				url:   "#pc_69",
+				title: "A – E"
+			}, {
+				url:   "#pc_95",
+				title: "F – J"
+			}, {
+				url:   "#pc_109",
+				title: "K – O"
+			}, {
+				url:   "#pc_131",
+				title: "P – T"
+			}, {
+				url:   "#pc-158",
+				title: "U – Z"
+			}, { // a divider
+			}, {
+				url:   "#top",
+				title: "Seitenanfang"
+			}, {
+				url:   "#save",
+				title: "speichern"
+			}]
+		}, {
+			url:   "/helden",
+			title: "Meine Helden"
+		}, {
+			url:   "/neu",
+			title: "Neuer Held"
+		}],
+		right: [{
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
 	}
 };

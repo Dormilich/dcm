@@ -35,12 +35,17 @@ module.exports = function (app) {
 	 **********************************/
 	// create a character
 	app.get('/neu', function (req, res, next) {
-		if (req.query.force === "jade") {
-			res.render('held/new-char');
-		}
+		//if (req.query.force === "jade") {
+			var nav        = menu.neu;
+			nav.currentURL = req.path;
+			res.render('held/new-char', {
+				_Menu:     nav,
+				_Dropdown: data.dropdown
+			});
+		/*}
 		else {
 			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
-		}
+		}//*/
 	});
 	// save a character and its association
 	app.post('/neu', function(req, res, next) {
@@ -108,8 +113,8 @@ module.exports = function (app) {
 					return a._zauber.Name.localeCompare(b._zauber.Name, "de");
 				});//*/
 				res.render('held/magie', {
-					_Held: doc,
-					_Menu: menu.magie
+					_Held:     doc,
+					_Menu:     menu.magie
 				});
 			})
 		;

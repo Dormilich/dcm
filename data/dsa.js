@@ -690,6 +690,56 @@ module.exports = {
 				"Wasser"
 			]
 		},
+		Merkmalskenntnis2: [
+			"Antimagie", 
+			"Beschwörung", 
+			"Eigenschaften", 
+			"Einfluß", 
+			"Form", 
+			"Geisterwesen", 
+			"Heilung", 
+			"Hellsicht", 
+			"Herbeirufung", 
+			"Herrschaft", 
+			"Illusion", 
+			"Kraft", 
+			"Limbus", 
+			"Metamagie", 
+			"Objekt", 
+			"Schaden", 
+			"Telekinese", 
+			"Temporal", 
+			"Umwelt", 
+			"Verständigung",
+			{
+				Dämonisch: [
+					"gesamt", 
+					"Blakharaz", 
+					"Belhalhar", 
+					"Charyptoroth", 
+					"Lolgramoth", 
+					"Thargunitoth", 
+					"Amazeroth", 
+					"Belshirash", 
+					"Asfaloth", 
+					"Tasfarelel", 
+					"Belzhorash", 
+					"Agrimoth", 
+					"Belkelel"
+				]
+			},
+			{
+				Elementar: [
+					"gesamt", 
+					"Eis", 
+					"Erz", 
+					"Feuer", 
+					"Humus", 
+					"Luft", 
+					"Wasser"
+				]
+			}
+		],
 		Repräsentation: {
 			Mag: "Gildenmagier",
 			Srl: "Scharlatan",

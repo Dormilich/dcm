@@ -1,0 +1,43 @@
+.fl-links  { 
+	float:             left; 
+}
+.fl-rechts  { 
+	float:             right; 
+}
+.fl-clear {
+	clear:             both;
+}
+input, select, textarea { 
+	font-family:       monospace; 
+}
+.vor-nach ul {
+	list-style-type:   none;
+}
+.vor-nach li {
+	padding-top:       0.5em;
+	padding-left:      1em;
+	padding-bottom:    0.5em;
+}
+.vor-nach input[type="number"] { 
+	text-align:        center; 
+	width:             5em; 
+	float:             right;
+}
+.vor-nach input[type="text"] { 
+	padding-left:      0.2em;
+}
+.vor-nach input[type="radio"] + label {
+	margin:            0 0.5em 0 4px;
+	min-width:         1em;
+	font-family:       monospace;
+}
+.vor-nach label {
+	font-weight:       normal;
+}
+.vor-nach select,
+.vor-nach div {
+	width:             50%;
+}
+.vor-nach div > input {
+	width:             100%;
+}
