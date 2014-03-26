@@ -53,6 +53,47 @@ function realpath(relativePath) {
 }
 
 module.exports = function (app) {
+	// create a character
+	app.get('/neu', function (req, res, next) {
+		//if (req.query.force === "jade") {
+			var nav        = menu.neu;
+			nav.currentURL = req.path;
+			res.render('held/new-char', {
+				_Menu:     nav,
+				_Dropdown: data.dropdown
+			});
+		/*}
+		else {
+			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
+		}//*/
+	});
+	// save a character and its association
+	app.post('/neu', function(req, res, next) {
+		var key
+		  , mod = req.body.modifikatoren
+		  ;
+		// array => value
+		/* faster by factor 2-3 against Object.keys().filter().forEach() */
+		for (key in mod) {
+			if (Array.isArray(mod[key])) {
+				mod[key] = mod[key].reduce(function (prev, curr) {
+					return (+prev) + (+curr);
+				}, 0);
+			}
+		}
+		req.body.AP = {
+			frei: 0,
+			alle: ((+req.body.Attribute.KL.wert) + (+req.body.Attribute.IN.wert)) * 20
+		};
+		Held.create(req.body, function(err, doc) {
+			if (err) return next(err);
+			req.user.chars.push(doc._id);
+			req.user.save(function(err) {
+				if (err) return next(err);
+				res.redirect('/held/' + doc._id);
+			});
+		});
+	});
 	// Character's skills edit form
 	app.get('/talente/:mdbwrite', function(req, res, next) {
 		async.parallel({
@@ -66,7 +107,7 @@ module.exports = function (app) {
 			_Sprachen:     getTalentType("Sprachen"),
 			_Schriften:    getTalentType("Schriften"),
 			_Gaben:        getTalentType("Gaben"),
-			_held: function (cb) {// _chardata
+			_Held: function (cb) {// _chardata
 				Held.findById(req.id, function(err, doc) {
 					if (err) return cb(err);
 					cb(null, doc);
@@ -75,13 +116,15 @@ module.exports = function (app) {
 		},
 		function (err, obj) {
 			if (err) return next(err); 
+			obj._Menu            = menu.neu;
+			obj._Menu.currentURL = req.path;
 			res.render('edit-held/talente', obj);
 		});
 	});
 	// Character's spells edit form
 	app.get('/zauber/:mdbwrite', function(req, res, next) {
 		async.parallel({
-			_zauber: function (cb) {
+			_Zauber: function (cb) {
 				Zauber
 					.find()
 					.sort('Name')
@@ -92,7 +135,7 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_held: function (cb) {
+			_Held: function (cb) {
 				Held
 					.findById(req.id)
 					.select('Person Magie')
@@ -106,13 +149,15 @@ module.exports = function (app) {
 		},
 		function(err, obj) {
 			if (err) return next(err);
+			obj._Menu            = menu.edit;
+			obj._Menu.currentURL = req.path;
 			res.render('edit-held/zauber', obj);
 		});
 	});
 	// Character's rituals edit form
 	app.get('/rituale/:mdbwrite', function(req, res, next) {
 		async.parallel({
-			_talente: function (cb) {
+			_Talente: function (cb) {
 				Talent
 					.find({ typ: "Schamanismus" })
 					.exec(function(err, docs) {
@@ -121,7 +166,7 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_held: function (cb) {
+			_Held: function (cb) {
 				Held
 					.findById(req.id)
 					.populate("Magie.Ritualkenntnis._talent Magie.Rituale")
@@ -132,7 +177,7 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_rituale: function (cb) {
+			_Rituale: function (cb) {
 				Held
 					.findById(req.id)
 					.exec(function(err, doc) {
@@ -159,14 +204,17 @@ module.exports = function (app) {
 		},
 		function (err, obj) {
 			if (err) return next(err);
-			obj._data = data.ritual;
+			obj._Data            = data.ritual;
+			obj._Dropdown        = data.dropdown;
+			obj._Menu            = menu.edit;
+			obj._Menu.currentURL = req.path;
 			res.render('edit-held/rituale', obj);
 		});
 	});
 	// Character's liturgies edit form
 	app.get('/liturgien/:mdbwrite', function(req, res, next) {
 		async.parallel({
-			_held: function (cb) {
+			_Held: function (cb) {
 				Held
 					.findById(req.id)
 					.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
@@ -177,7 +225,7 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_gottheiten: function (cb) {
+			_Gottheiten: function (cb) {
 				Talent
 					.find({ typ: "Liturgiekenntnis" })
 					.sort('name')
@@ -187,7 +235,7 @@ module.exports = function (app) {
 					})
 				;
 			},
-			_liturgien: function (cb) {
+			_Liturgien: function (cb) {
 				Held
 					.findById(req.id)
 					.populate('Weihe.Liturgiekenntnis._talent')
@@ -215,6 +263,9 @@ module.exports = function (app) {
 		},
 		function (err, obj) {
 			if (err) return next(err);
+			obj._Dropdown        = data.dropdown;
+			obj._Menu            = menu.edit;
+			obj._Menu.currentURL = req.path;
 			res.render('edit-held/liturgien', obj);
 		})
 	});
@@ -223,7 +274,7 @@ module.exports = function (app) {
 		async.parallel({
 			_Nahkampf:     getTalentType("Nahkampf"),
 			_Fernkampf:    getTalentType("Fernkampf"),
-			_held: function (cb) {// _chardata
+			_Held: function (cb) {// _chardata
 				Held.findById(req.id, function(err, doc) {
 					if (err) return cb(err);
 					cb(null, doc);
@@ -232,7 +283,8 @@ module.exports = function (app) {
 		},
 		function (err, obj) {
 			if (err) return next(err); 
-		//	obj._data = data.waffen;
+			obj._Menu            = menu.edit;
+			obj._Menu.currentURL = req.path;
 			res.render('edit-held/waffen', obj);
 		});
 	});

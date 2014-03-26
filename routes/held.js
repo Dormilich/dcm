@@ -30,53 +30,6 @@ var path    = require('path')
   ;
 
 module.exports = function (app) {
-	/**********************************
-	 ***     Character creation     ***
-	 **********************************/
-	// create a character
-	app.get('/neu', function (req, res, next) {
-		//if (req.query.force === "jade") {
-			var nav        = menu.neu;
-			nav.currentURL = req.path;
-			res.render('held/new-char', {
-				_Menu:     nav,
-				_Dropdown: data.dropdown
-			});
-		/*}
-		else {
-			res.sendfile('neu.html', { root: path.join(appRoot, 'public') });
-		}//*/
-	});
-	// save a character and its association
-	app.post('/neu', function(req, res, next) {
-		var key
-		  , mod = req.body.modifikatoren
-		  ;
-		// array => value
-		/* faster by factor 2-3 against Object.keys().filter().forEach() */
-		for (key in mod) {
-			if (Array.isArray(mod[key])) {
-				mod[key] = mod[key].reduce(function (prev, curr) {
-					return (+prev) + (+curr);
-				}, 0);
-			}
-		}
-		req.body.AP = {
-			frei: 0,
-			alle: ((+req.body.Attribute.KL.wert) + (+req.body.Attribute.IN.wert)) * 20
-		};
-		Held.create(req.body, function(err, doc) {
-			if (err) return next(err);
-			req.user.chars.push(doc._id);
-			req.user.save(function(err) {
-				if (err) return next(err);
-				res.redirect('/held/' + doc._id);
-			});
-		});
-	});
-	/**********************************
-	 ***     Character display      ***
-	 **********************************/
 	// display character sheet (mundane)
 	app.get('/held/:mdbread', function (req, res, next) {
 		Held.findById(req.id, function(err, doc) {

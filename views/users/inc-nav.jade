@@ -1,0 +1,22 @@
+nav.navbar.navbar-default(role="navigation")
+	.container-fluid
+		.navbar-header
+			button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+				span.sr-only Navigation
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+			span.navbar-brand DCM
+		#navbar-collapse-chars.collapse.navbar-collapse
+			- var data = _FRCount ? { badge: '<span class="badge">'+_FRCount+'</span>' } : { badge: "" };
+			ul.nav.navbar-nav
+				each __link in _Menu.left
+					+menuLink(__link, data)
+			ul.nav.navbar-nav.navbar-right
+				each __link in _Menu.right
+					+menuLink(__link, data)
+				if _User.isAdmin
+					li
+						a(href="/db", title="Manage DB")
+							span.hidden-xs.fa.fa-hdd-o
+							span.visible-xs Manage DB

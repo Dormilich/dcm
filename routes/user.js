@@ -207,6 +207,7 @@ module.exports = function (app) {
 			obj._User            = req.user;
 			obj._Menu            = menu.profil;
 			obj._Menu.currentURL = req.path;
+			obj._FRCount         = obj._Inbox.length;
 			res.render('users/friends', obj);
 		});
 	});
