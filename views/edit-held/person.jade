@@ -94,7 +94,7 @@ html(lang="de")
 			.page-header.text-center
 				h1=_Held.Person.Name
 		main.container
-			form.form-horizontal(action="/person/"+_Held._id, method="post", accept-charset="utf-8")#newChar
+			form.form-horizontal(action="/person/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				// Beschreibung
 				section.panel.panel-default#bes

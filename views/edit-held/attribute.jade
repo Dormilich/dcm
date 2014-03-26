@@ -101,7 +101,7 @@ html(lang="de")
 			.page-header.text-center
 				h1=_Held.Person.Name
 		main.container
-			form.form-horizontal(action="/attribute/"+_Held._id, method="post", accept-charset="utf-8")#newChar
+			form.form-horizontal(action="/attribute/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				// Attribute
 				section.panel.panel-default#att
