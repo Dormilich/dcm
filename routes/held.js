@@ -93,9 +93,11 @@ module.exports = function (app) {
 			;
 			Held.populate(doc, talentTypes, function(err, doc) {
 				if (err) return next(err);
+				var nav        = menu.helden;
+				nav.currentURL = req.path;
 				res.render('held/held', {
 					_Held: doc,
-					_Menu: menu.helden
+					_Menu: nav
 				});
 			});
 		});
@@ -112,9 +114,11 @@ module.exports = function (app) {
 				doc.Magie.Zauber.sort(function(a, b) {
 					return a._zauber.Name.localeCompare(b._zauber.Name, "de");
 				});//*/
+				var nav        = menu.helden;
+				nav.currentURL = req.path;
 				res.render('held/magie', {
-					_Held:     doc,
-					_Menu:     menu.magie
+					_Held: doc,
+					_Menu: nav
 				});
 			})
 		;
@@ -127,9 +131,11 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
+				var nav        = menu.helden;
+				nav.currentURL = req.path;
 				res.render('held/geweiht', {
 					_Held: doc,
-					_Menu: menu.weihe
+					_Menu: nav
 				});
 			})
 		;

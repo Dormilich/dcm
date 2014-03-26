@@ -147,9 +147,6 @@ module.exports = {
 		}, {
 			url:   "/helden",
 			title: "Meine Helden"
-		}, {
-			url:   "/neu",
-			title: "Neuer Held"
 		}],
 		right: [{
 			title: "{name} bearbeiten",

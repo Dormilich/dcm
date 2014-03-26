@@ -1,95 +1,15 @@
-//- function definitions
-
--	function contains(__array, __string) {
--		if (typeof __array === "string") {
--			return __array.indexOf(__string) > -1;
--		}
--		if (Array.isArray(__array)) {
--			return __array.filter(function(item) {
--				return item.indexOf(__string) > -1;
--			}).length > 0;
--		}
--		return false;
--	}
-- 
--	function render(__str, __data) {
--		Object.keys(__data).forEach(function(key) {
--			__str = __str.replace("{"+key+"}", __data[key].toString());
--		});
--		return __str;
--	}
-
-//- mixin definitions
-
-mixin print(__data)
-	p!=JSON.stringify(__data)
-
-//- create a standard menu link
-mixin menuLink(__item, __data)
-	-     __data  = __data || {};
-	- var __title = render(__item.title, __data);
-	- var __url   = __item.url ? render(__item.url,   __data) : null;
-	if Array.isArray(__item.dropdown)
-		+menuDropdown(__item, __data)
-	else
-		li
-			if Array.isArray(__item.sign)
-				a(href=__url, title=__title)
-					span.hidden-xs(class=__item.sign.join(" "))
-					span.visible-xs!=__title
-			else
-				a(href=__url)!=__title
-
-//- create a menu dropdown item
-mixin menuDropdown(__item, __data)
-	- __data  = __data || {};
-	li.dropdown
-		a.dropdown-toggle(data-toggle="dropdown")!=render(__item.title, __data)
-			b.caret
-		ul.dropdown-menu
-			each __link in __item.dropdown
-				if __link.title
-					+menuLink(__link, __data)
-				else
-					li.divider
+include ../inc-mixins
 
 doctype html
 html(lang="de")
 	head
-		meta(charset="utf-8")
-		title DCM – #{_Held.Person.Name}
-		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
-		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-		link(rel="stylesheet", href="/dcm-display.css")
-		script(src="//code.jquery.com/jquery-2.1.0.min.js")
-		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
+		include inc-head
 		style.
 			body {
 				padding-top:      60px;
 			}
 	body
-		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
-			.container-fluid
-				.navbar-header
-					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
-						span.sr-only Navigation
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					span.navbar-brand DCM
-				#navbar-collapse-chars.collapse.navbar-collapse
-					- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
-					ul.nav.navbar-nav
-						li
-							a(href="/held/"+data.id) ► Heldenbogen
-						if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
-							li
-								a(href="/magie/"+data.id) ► Magiebogen
-						each __link in _Menu.left
-							+menuLink(__link, data)
-					ul.nav.navbar-nav.navbar-right
-						each __link in _Menu.right
-							+menuLink(__link, data)
+		include inc-nav
 		header.container
 			.page-header.text-center
 				h1(href="/held/"+_Held._id)=_Held.Person.Name
