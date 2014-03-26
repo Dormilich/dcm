@@ -1,82 +1,160 @@
-- var counter = { count: 0, next: function() { counter.count += 1; return counter.count; } };
+//- function definitions
+
+-	function contains(__array, __string) {
+-		if (typeof __array === "string") {
+-			return __array.indexOf(__string) > -1;
+-		}
+-		if (Array.isArray(__array)) {
+-			return __array.filter(function(item) {
+-				return item.indexOf(__string) > -1;
+-			}).length > 0;
+-		}
+-		return false;
+-	}
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
+
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	-     __data  = __data || {};
+	- var __title = render(__item.title, __data);
+	- var __url   = __item.url ? render(__item.url, __data) : null;
+	- var __curr  = __url === _Menu.currentURL;
+	-     __url   = __curr ? null : __url;
+	if Array.isArray(__item.dropdown)
+		+menuDropdown(__item, __data)
+	else
+		li(class=__curr ? "active" : null)
+			if Array.isArray(__item.sign)
+				a(href=__url, title=__title)
+					span.hidden-xs(class=__item.sign.join(" "))
+					span.visible-xs!=__title
+			else
+				a(href=__url)!=__title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- __data  = __data || {};
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown")!=render(__item.title, __data)
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
+
+mixin dropdown(__list, __prefix)
+	- var __lock = __prefix === null;
+	-   __prefix = __prefix || "";
+	each __val, __key in __list
+		if Array.isArray(__val)
+			- __prefix = __lock ? "" : __key+"/"
+			optgroup(label=__key)
+				+dropdown(__val, __prefix)
+		else
+			option(value=__prefix+__val)=__val
+
+- var counter = { count: 0, next: function() { return ++counter.count; } };
 
 mixin plainProCon(pro, x)
-	- var id = counter.next()
-	li
-		input(name=["Vorteile", "Nachteile"][x], type="checkbox", value=pro, id="pc_"+id)
-		label(for="pc_"+id)= pro
+	- var idx = counter.next()
+	li.list-group-item
+		input(name=["Vorteile", "Nachteile"][x], type="checkbox", value=pro, id="pc_"+idx)
+		label(for="pc_"+idx)= pro
 
 mixin stagedProCon(pro, x, opt)
-	- var id = counter.next()
-	li
-		input.stufe(name=["Vorteile", "Nachteile"][x], type="checkbox", value=pro, id="pc_"+id)
-		label(for="pc_"+id)= pro
+	- var idx = counter.next()
+	li.list-group-item
+		input.stufe(name=["Vorteile", "Nachteile"][x], type="checkbox", value=pro, id="pc_"+idx)
+		label(for="pc_"+idx)= pro
 		input(type="number", min=opt.min||1, max=opt.max, step=opt.step||1)
 
 doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title #{Person.Name.split(' ')[0]} bearbeiten
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+		title #{_Held.Person.Name.split(' ')[0]} bearbeiten – Vor- &amp; Nachteile
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/dcm-display.css")
+		link(rel="stylesheet", href="/vorteile.css")
+		script(src="//code.jquery.com/jquery-2.1.0.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
-			.setting tbody tr:nth-child(odd) {
-				background-color: #eee;
+			body {
+				padding-top:      60px;
 			}
-	body
-		nav
-			ul#main-menu
-				li
-					a(href="#top") [Seitenanfang]
-				li
-					a(href="#save") [speichern]
-				li
-					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
-		
-		main
-			form(action="/procon/"+_id, method="post", accept-charset="utf-8")#newChar
+	body#top
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					span.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						li
+							a(href="/held/"+_Held._id) ► Heldenbogen
+						if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
+							li
+								a(href="/magie/"+_Held._id) ► Magiebogen
+						if _Held.SF && contains(_Held.SF.geweiht, "Liturgiekenntnis")
+							li
+								a(href="/weihe/"+_Held._id) ► Liturgiebogen
+						li
+							a(href="/helden") Meine Helden
+					ul.nav.navbar-nav.navbar-right
+						- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+						each __link in _Menu.right
+							+menuLink(__link, data)
+		header.container
+			.page-header.text-center
+				h1=_Held.Person.Name
+		main.container
+			form.form-horizontal(action="/procon/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
-
-				table.data-section#vna
-					caption Bestehende Vor- & Nachteile
-					tr
-						td
-							ul.vor-nach.fl-links
-								li.mitte 
-									strong Vorteile
-								each val in Vorteile.filter(function(item) { return item.length; })
-									li
-										input.fullSize(name="Vorteile", type="text", value=val)
-							ul.vor-nach.fl-rechts
-								li.mitte 
-									strong Nachteile
-								each val in Nachteile.filter(function(item) { return item.length; })
-									li
-										input.fullSize(name="Nachteile", type="text", value=val)
-				
-				table.data-section#vnn
-					caption Neue Vor- & Nachteile
-					tr
-						td
-							ul.vor-nach.fl-links
-								li.mitte
-									strong Vorteile
+				// Vor- und Nachteile (alt)
+				.row#vna
+					.col-md-6
+						section.panel.panel-default
+							.panel-heading.dcm-caption Bestehende Vorteile
+							ul.list-group
+								each __vt in _Held.Vorteile.filter(function(item) { return item.length; })
+									li.list-group-item
+										input.form-control(name="Vorteile", type="text", value=__vt)
+					.col-md-6
+						section.panel.panel-default
+							.panel-heading.dcm-caption Bestehende Nachteile
+							ul.list-group
+								each __nt in _Held.Nachteile.filter(function(item) { return item.length; })
+									li.list-group-item
+										input.form-control(name="Nachteile", type="text", value=__nt)
+				// Vor- und Nachteile (neu)
+				.row#vnn
+					.col-md-6
+						section.panel.panel-default#vt
+							.panel-heading.dcm-caption Vorteile
+							ul.list-group.vor-nach
 								+plainProCon("Adlige Abstammung", 0)
 								+plainProCon("Adliges Erbe", 0)
 								+plainProCon("Amtsadel", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Affinität", id="vorteil_4").auswahl_liste
 									label(for="vorteil_4") Affinität zu
 									select(size="1").fl-rechts
 										option(value="Dämonen") Dämonen
 										option(value="Elementare") Elementaren
 										option(value="Geister") Geistern
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Akademische Ausbildung", id="vorteil_5").auswahl_liste
 									label(for="vorteil_5") Akademische Ausbildung
 									select(size="1").fl-rechts
@@ -84,7 +162,7 @@ html(lang="de")
 										option(value="Krieger") Krieger
 										option(value="Magier") Magier
 								+plainProCon("Altersresistenz", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Astrale Regeneration", id="vorteil_7").zusatz
 									label(for="vorteil_7") Astrale Regeneration
 									span.fl-rechts
@@ -99,54 +177,13 @@ html(lang="de")
 								+plainProCon("Ausdauernder Zauberer", 0)
 								+stagedProCon("Ausrüstungsvorteil", 0, { max:20 })
 								+plainProCon("Balance", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Begabung (Merkmal)", id="vorteil_13").auswahl_liste
 									label(for="vorteil_13") Begabung für Merkmal
 									select(size="5", multiple).fl-rechts
-										option Antimagie
-										option Beschwörung
-										optgroup(label="Dämonisch")
-											option(value="Dämonisch/gesamt") - gesamt
-											option(value="Dämonisch/Blakharaz") - Blakharaz
-											option(value="Dämonisch/Belhalhar") - Belhalhar
-											option(value="Dämonisch/Charyptoroth") - Charyptoroth
-											option(value="Dämonisch/Lolgramoth") - Lolgramoth
-											option(value="Dämonisch/Thargunitoth") - Thargunitoth
-											option(value="Dämonisch/Amazeroth") - Amazeroth
-											option(value="Dämonisch/Belshirash") - Belshirash
-											option(value="Dämonisch/Asfaloth") - Asfaloth
-											option(value="Dämonisch/Tasfarelel") - Tasfarelel
-											option(value="Dämonisch/Belzhorash") - Belzhorash
-											option(value="Dämonisch/Agrimoth") - Agrimoth
-											option(value="Dämonisch/Belkelel") - Belkelel
-										optgroup(label="Elementar")
-											option(value="Elementar/gesamt") - gesamt
-											option(value="Elementar/Eis") - Eis
-											option(value="Elementar/Erz") - Erz
-											option(value="Elementar/Feuer") - Feuer
-											option(value="Elementar/Humus") - Humus
-											option(value="Elementar/Luft") - Luft
-											option(value="Elementar/Wasser") - Wasser
-										option Eigenschaften
-										option Einfluß
-										option Form
-										option Geisterwesen
-										option Heilung
-										option Hellsicht
-										option Herbeirufung
-										option Herrschaft
-										option Illusion
-										option Kraft
-										option Limbus
-										option Metamagie
-										option Objekt
-										option Schaden
-										option Telekinese
-										option Temporal
-										option Umwelt
-										option Verständigung
+										+dropdown(_Dropdown.Merkmalskenntnis)
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Begabung (Ritual)", id="vorteil_14").auswahl_text
 									label(for="vorteil_14") Begabung für Ritual
 									.fl-rechts
@@ -156,7 +193,7 @@ html(lang="de")
 										br
 										input(type="text")
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Begabung (Zauber)", id="vorteil_15").auswahl_text
 									label(for="vorteil_15") Begabung für Zauber
 									.fl-rechts
@@ -166,7 +203,7 @@ html(lang="de")
 										br
 										input(type="text")
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Begabung (Talent)", id="vorteil_16").auswahl_text
 									label(for="vorteil_16") Begabung für Talent
 									.fl-rechts
@@ -180,7 +217,7 @@ html(lang="de")
 										br
 										input(type="text")
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Begabung (Talentgruppe)", id="vorteil_17").auswahl_liste
 									label(for="vorteil_17") Begabung für Talentgruppe
 									select(size="5", multiple).fl-rechts
@@ -197,7 +234,7 @@ html(lang="de")
 									.fl-clear
 								+plainProCon("Beidhändig", 0)
 								+plainProCon("Beseelte Knochenkeule", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Besonderer Besitz", id="vorteil_20").spezifisch
 									label(for="vorteil_20") Besonderer Besitz
 									input(type="text").fl-rechts.halfSize
@@ -218,37 +255,11 @@ html(lang="de")
 								+stagedProCon("Gebildet", 0, { max:5 })
 								+plainProCon("Gefahreninstinkt", 0)
 								+plainProCon("Geräuschhexerei", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Geweiht", id="vorteil_38").auswahl_liste
 									label(for="vorteil_38") Geweiht
 									select(size="1").fl-rechts
-										optgroup(label="alveranische Gottheiten")
-											option Boron
-											option Efferd
-											option Firun
-											option Hesinde
-											option Ingrimm
-											option Peraine
-											option Phex
-											option Praios
-											option Rahja
-											option Rondra
-											option Travia
-											option Tsa
-										optgroup(label="nicht-alveranische Gottheiten")
-											option Aves
-											option Ifirn
-											option Nandus
-											option Swafnir
-											// option Kamaluq
-											// option Himmelswölfe
-										optgroup(label="echsiche Gottheiten")
-											option H’Szint
-											option Zsahh
-										optgroup(label="orkische Gottheiten")
-											option Gravesh
-										optgroup(label="zwergische Gottheiten")
-											option Angrosch
+										+dropdown(_Dropdown.Götter, null)
 								+plainProCon("Glück", 0)
 								+plainProCon("Glück im Spiel", 0)
 								+plainProCon("Gut Aussehend", 0)
@@ -256,7 +267,7 @@ html(lang="de")
 								+plainProCon("Gutes Gedächtnis", 0)
 								+plainProCon("Halbzauberer", 0)
 								+plainProCon("Herausragende Balance", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Herausragende Eigenschaft", id="vorteil_46").sammeln-alle
 									label(for="vorteil_46") Herausragende Eigenschaft
 									ul
@@ -293,7 +304,7 @@ html(lang="de")
 											label(for="vorteil_46_8") Körperkraft
 											input(type="number", min="1", step="1")
 								+plainProCon("Herausragender Sechster Sinn", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Herausragender Sinn", id="vorteil_48").sammeln-eins
 									label(for="vorteil_48") Herausragender Sinn
 									ul
@@ -313,7 +324,7 @@ html(lang="de")
 								+plainProCon("Hitzeresistenz", 0)
 								+stagedProCon("Hohe Lebenskraft", 0, { max:3 })
 								+stagedProCon("Hohe Magieresistenz", 0, { max:3 })
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Immunität gegen Gift", id="vorteil_53").sammeln-nowrap
 									label(for="vorteil_53") Immunität gegen Gift
 									ul
@@ -337,7 +348,7 @@ html(lang="de")
 										li
 											input(type="radio", name="temp[v][53]", value="[alle Gifte]", id="vorteil_53_3")
 											label(for="vorteil_53_3") alle Gifte
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Immunität gegen Krankheiten", id="vorteil_54").sammeln-nowrap
 									label(for="vorteil_54") Immunität gegen Krankheiten
 									ul
@@ -352,7 +363,7 @@ html(lang="de")
 								+plainProCon("Kälteresistenz", 0)
 								+plainProCon("Kampfrausch", 0)
 								+plainProCon("Koboldfreund", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Kräfteschub", id="vorteil_59").sammeln-eins
 									label(for="vorteil_59") Kräfteschub
 									ul
@@ -371,7 +382,7 @@ html(lang="de")
 								+plainProCon("Linkshänder", 0)
 								+plainProCon("Machtvoller Vertrauter", 0)
 								+plainProCon("Magiegespür", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Meisterhandwerk", id="vorteil_63").auswahl_text
 									label(for="vorteil_63") Meisterhandwerk
 									.fl-rechts
@@ -386,7 +397,7 @@ html(lang="de")
 										input(type="text")
 									.fl-clear
 								+plainProCon("Nachtsicht", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Natürliche Waffen", id="vorteil_65").sammeln-alle
 									label(for="vorteil_65") Natürliche Waffen
 									ul
@@ -428,7 +439,7 @@ html(lang="de")
 												option 1W6+6 TP
 								+stagedProCon("Natürlicher Rüstungsschutz", 0, { max:3 })
 								+plainProCon("Prophezeihen", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Resistenz gegen Gift", id="vorteil_68").sammeln-nowrap
 									label(for="vorteil_68") Resistenz gegen Gift
 									ul
@@ -455,7 +466,7 @@ html(lang="de")
 								+plainProCon("Resistenz gegen Krankheiten", 0)
 								+plainProCon("Richtungssinn", 0)
 								+plainProCon("Schlangenmensch", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Schnelle Heilung", id="vorteil_72")
 									label(for="vorteil_72") Schnelle Heilung
 									span.fl-rechts
@@ -468,7 +479,7 @@ html(lang="de")
 								+plainProCon("Schutzgeist", 0)
 								+plainProCon("Schwer zu verzaubern", 0)
 								+plainProCon("Soziale Anpassungsfähigkeit", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Talentschub", id="vorteil_95").auswahl_text
 									label(for="vorteil_95") Talentschub
 									.fl-rechts
@@ -482,7 +493,7 @@ html(lang="de")
 										br
 										input(type="text")
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Tierempathie", id="vorteil_76").sammeln-nowrap
 									label(for="vorteil_76") Tierempathie
 									ul
@@ -493,7 +504,7 @@ html(lang="de")
 											input(type="radio", name="temp[v][76]", value="", id="vorteil_76_2").auswahl_text
 											input(type="text")
 								+plainProCon("Tierfreund", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Übernatürliche Begabung", id="vorteil_78").auswahl_text
 									label(for="vorteil_78") Übernatürliche Begabung
 									.fl-rechts
@@ -508,23 +519,23 @@ html(lang="de")
 										input(type="text")
 									.fl-clear
 								+plainProCon("Unbeschwertes Zaubern", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Verbindungen", id="vorteil_80").stufe
 									label(for="vorteil_80") Verbindungen
 									input(type="number", min="1", step="1")
 								+plainProCon("Verhüllte Aura", 0)
 								+plainProCon("Veteran", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Viertelzauberer", id="vorteil_83").zusatz
 									label(for="vorteil_83") Viertelzauberer
 									span.fl-rechts
 										input(type="radio", name="temp[v][83]", value="", id="vorteil_83_1")
 										label(for="vorteil_83_1") bewußt
-										input(type="radio", name="temp[v][83]", value="unbewußter ", id="vorteil_83_2")
+										input(type="radio", name="temp[v][83]", value="(unbewußt)", id="vorteil_83_2")
 										label(for="vorteil_83_2") unbewußt
 								+plainProCon("Vollzauberer", 0)
 								+plainProCon("Vom Schicksal begünstigt", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Wesen der Nacht", id="vorteil_86").zusatz
 									label(for="vorteil_86") Wesen der Nacht
 									span.fl-rechts
@@ -535,18 +546,18 @@ html(lang="de")
 										input(type="radio", name="temp[v][86]", value="III", id="vorteil_86_3")
 										label(for="vorteil_86_3") III
 								+plainProCon("Wohlklang", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Wolfskind", id="vorteil_87").zusatz
 									label(for="vorteil_87") Wolfskind
 									span.fl-rechts
 										input(type="radio", name="temp[v][87]", value="", id="vorteil_87_1")
 										label(for="vorteil_87_1") bewußt
-										input(type="radio", name="temp[v][87]", value="unbewußtes ", id="vorteil_87_2")
+										input(type="radio", name="temp[v][87]", value="(unbewußt)", id="vorteil_87_2")
 										label(for="vorteil_87_2") unbewußt
 								+plainProCon("Zäher Hund", 0)
 								+plainProCon("Zauberhaar", 0)
 								+plainProCon("Zeitgefühl", 0)
-								li
+								li.list-group-item
 									input(name="Vorteile", type="checkbox", value="Zusätzliche Gliedmaßen", id="vorteil_91").sammeln-alle
 									label(for="vorteil_91") Zusätzliche Gliedmaßen
 									ul
@@ -562,9 +573,10 @@ html(lang="de")
 								+plainProCon("Zweistimmiger Gesang", 0)
 								+plainProCon("Zwergennase", 0)
 
-							ul.vor-nach.fl-rechts
-								li.mitte
-									strong Nachteile
+					.col-md-6
+						section.panel.panel-default#nt
+							.panel-heading.text-center.dcm-caption Nachteile
+							ul.list-group.vor-nach
 								+stagedProCon("Aberglaube", 1, { max:20 })
 								+plainProCon("Albino", 1)
 								+stagedProCon("Angst vor Insekten", 1, { max:20 })
@@ -572,18 +584,18 @@ html(lang="de")
 								+stagedProCon("Angst vor Reptilien", 1, { max:20 })
 								+stagedProCon("Angst vor Feuer", 1, { max:20 })
 								+stagedProCon("Angst vor Wasser", 1, { max:20 })
-								li
-									input(name="Nachteile", type="checkbox", value="Angst vor ", id="nachteil_8").zusatz_text.stufe
+								li.list-group-item
+									input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_8").zusatz_text.stufe
 									label(for="nachteil_8") Angst vor 
 									input(type="text")
 									input(type="number", min="1", max="20", step="1")
-								li
-									input(name="Nachteile", type="checkbox", value="Angst vor ", id="nachteil_9").zusatz_text.stufe
+								li.list-group-item
+									input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_9").zusatz_text.stufe
 									label(for="nachteil_9") Angst vor 
 									input(type="text")
 									input(type="number", min="1", max="20", step="1")
-								li
-									input(name="Nachteile", type="checkbox", value="Angst vor ", id="nachteil_10").zusatz_text.stufe
+								li.list-group-item
+									input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_10").zusatz_text.stufe
 									label(for="nachteil_10") Angst vor 
 									input(type="text")
 									input(type="number", min="1", max="20", step="1")
@@ -603,7 +615,7 @@ html(lang="de")
 								+plainProCon("Einbeinig", 1)
 								+plainProCon("Einbildungen", 1)
 								+plainProCon("Eingeschränkte Elementarnähe", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Eingeschränkter Sinn", id="nachteil_27").sammeln-eins
 									label(for="nachteil_27") Eingeschränkter Sinn
 									ul
@@ -624,13 +636,13 @@ html(lang="de")
 								+plainProCon("Elfische Weltsicht", 1)
 								+plainProCon("Farbenblind", 1)
 								+stagedProCon("Feind", 1, { max:15 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Feste Gewohnheit", id="nachteil_33").spezifisch
 									label(for="nachteil_33") Feste Gewohnheit
 									input(type="text")
 								+stagedProCon("Festgefügtes Denken", 1, { max:20 })
 								+plainProCon("Fettleibig", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Fluch der Finsternis", id="nachteil_36").zusatz
 									label(for="nachteil_36") Fluch der Finsternis
 									span.fl-rechts
@@ -642,7 +654,7 @@ html(lang="de")
 										label(for="nachteil_36_3") III
 								+stagedProCon("Geiz", 1, { max:20 })
 								+stagedProCon("Gerechtigkeitswahn", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Gesucht", id="nachteil_39").spezifisch.zusatz
 									label(for="nachteil_39") Gesucht
 									input(type="text")
@@ -674,7 +686,7 @@ html(lang="de")
 								+plainProCon("Lästige Mindergeister", 1)
 								+plainProCon("Lichtempfindlich", 1)
 								+plainProCon("Lichtscheu", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Madas Fluch", id="nachteil_61").zusatz
 									label(for="nachteil_61") Madas Fluch
 									span.fl-rechts
@@ -686,7 +698,7 @@ html(lang="de")
 										label(for="nachteil_61_3") III
 								+plainProCon("Medium", 1)
 								+stagedProCon("Meeresangst", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Miserable Eigenschaft", id="nachteil_64").sammeln-eins
 									label(for="nachteil_64") Miserable Eigenschaft
 									ul
@@ -715,13 +727,13 @@ html(lang="de")
 											input(type="checkbox", value="KK", id="nachteil_64_8")
 											label(for="nachteil_64_8") Körperkraft
 								+plainProCon("Mondsüchtig", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Moralkodex", id="nachteil_66").spezifisch.stufe
 									label(for="nachteil_66") Moralkodex
 									input(type="text")
 									input(type="number", min="3", max="12", step="1")
 								+plainProCon("Nachtblind", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Nahrungsrestriktion", id="nachteil_68").spezifisch
 									label(for="nachteil_68") Nahrungsrestriktion
 									input(type="text").fl-rechts.halfSize
@@ -732,13 +744,13 @@ html(lang="de")
 								+stagedProCon("Niedrige Magieresistenz", 1, { max:3 })
 								+plainProCon("Pechmagnet", 1)
 								+stagedProCon("Platzangst", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Prinzipientreue", id="nachteil_76").spezifisch.stufe
 									label(for="nachteil_76") Prinzipientreue
 									input(type="text")
 									input(type="number", min="3", max="12", step="1")
 								+stagedProCon("Rachsucht", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Randgruppe", id="nachteil_78").spezifisch
 									label(for="nachteil_78") Randgruppe
 									input(type="text").fl-rechts.halfSize
@@ -746,7 +758,7 @@ html(lang="de")
 								+stagedProCon("Raumangst", 1, { max:20 })
 								+plainProCon("Rückschlag", 1)
 								+plainProCon("Schlaflosigkeit", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Schlafstörungen", id="nachteil_83").zusatz
 									label(for="nachteil_83") Schlafstörungen
 									span.fl-rechts
@@ -755,15 +767,15 @@ html(lang="de")
 										input(type="radio", name="temp[n][83]", value="II", id="nachteil_83_2")
 										label(for="nachteil_83_2") II
 								+plainProCon("Schlafwandler", 1)
-								li 
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", id="nachteil_85").zusatz.stufe
 									input(type="text", placeholder="Schlechte Eigenschaft", size="21")
 									input(type="number", min="1", max="20", step="1")
-								li 
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", id="nachteil_86").zusatz.stufe
 									input(type="text", placeholder="Schlechte Eigenschaft", size="21")
 									input(type="number", min="1", max="20", step="1")
-								li 
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", id="nachteil_87").zusatz.stufe
 									input(type="text", placeholder="Schlechte Eigenschaft", size="21")
 									input(type="number", min="1", max="20", step="1")
@@ -771,7 +783,7 @@ html(lang="de")
 								+stagedProCon("Schlechter Ruf", 1, { max:10 })
 								+stagedProCon("Schleichender Verfall", 1, { max:10 })
 								+plainProCon("Schneller Alternd", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Schulden", id="nachteil_92").stufe
 									label(for="nachteil_92") Schulden (Dukaten)
 									input(type="number", min="500", max="2000", step="1")
@@ -780,13 +792,13 @@ html(lang="de")
 								+plainProCon("Schwanzlos", 1)
 								+plainProCon("Seffer Manich", 1)
 								+plainProCon("Selbstgespräche", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Sensibler Geruchssinn", id="nachteil_98").stufe
 									label(for="nachteil_98") Sensibler Geruchssinn
 									input(type="number", min="1", max="20", step="1")
 								+plainProCon("Sippenlosigkeit", 1)
 								+stagedProCon("Sonnensucht", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Speisegebote", id="nachteil_101").spezifisch
 									label(for="nachteil_101") Speisegebote
 									input(type="text")
@@ -796,12 +808,12 @@ html(lang="de")
 								+stagedProCon("Stigma", 1, { max:12 })
 								+stagedProCon("Streitsucht", 1, { max:20 })
 								+plainProCon("Stubenhocker", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Sucht", id="nachteil_108").spezifisch.stufe
 									label(for="nachteil_108") Sucht
 									input(type="text")
 									input(type="number", min="1", max="20", step="1")
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Thesisgebunden", id="nachteil_109").auswahl_text
 									label(for="nachteil_109") Thesisgebunden
 									.fl-rechts
@@ -820,55 +832,14 @@ html(lang="de")
 								+plainProCon("Übler Geruch", 1)
 								+plainProCon("Unangenehme Stimme", 1)
 								+plainProCon("Unansehnlich", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Unfähigkeit (Merkmal)", id="nachteil_115").auswahl_liste
 									label(for="nachteil_115") Unfähigkeit für Merkmal
 									br
 									select(size="5", multiple).fl-rechts
-										option Antimagie
-										option Beschwörung
-										optgroup(label="Dämonisch")
-											option(value="Dämonisch/gesamt") - gesamt
-											option(value="Dämonisch/Blakharaz") - Blakharaz
-											option(value="Dämonisch/Belhalhar") - Belhalhar
-											option(value="Dämonisch/Charyptoroth") - Charyptoroth
-											option(value="Dämonisch/Lolgramoth") - Lolgramoth
-											option(value="Dämonisch/Thargunitoth") - Thargunitoth
-											option(value="Dämonisch/Amazeroth") - Amazeroth
-											option(value="Dämonisch/Belshirash") - Belshirash
-											option(value="Dämonisch/Asfaloth") - Asfaloth
-											option(value="Dämonisch/Tasfarelel") - Tasfarelel
-											option(value="Dämonisch/Belzhorash") - Belzhorash
-											option(value="Dämonisch/Agrimoth") - Agrimoth
-											option(value="Dämonisch/Belkelel") - Belkelel
-										optgroup(label="Elementar")
-											option(value="Elementar/gesamt") - gesamt
-											option(value="Elementar/Eis") - Eis
-											option(value="Elementar/Erz") - Erz
-											option(value="Elementar/Feuer") - Feuer
-											option(value="Elementar/Humus") - Humus
-											option(value="Elementar/Luft") - Luft
-											option(value="Elementar/Wasser") - Wasser
-										option Eigenschaften
-										option Einfluß
-										option Form
-										option Geisterwesen
-										option Heilung
-										option Hellsicht
-										option Herbeirufung
-										option Herrschaft
-										option Illusion
-										option Kraft
-										option Limbus
-										option Metamagie
-										option Objekt
-										option Schaden
-										option Telekinese
-										option Temporal
-										option Umwelt
-										option Verständigung
+										+dropdown(_Dropdown.Merkmalskenntnis)
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Unfähigkeit (Talent)", id="nachteil_116").auswahl_text
 									label(for="nachteil_116") Unfähigkeit für Talent
 									.fl-rechts
@@ -882,7 +853,7 @@ html(lang="de")
 										br
 										input(type="text")
 									.fl-clear
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Unfähigkeit (Talentgruppe)", id="nachteil_117").auswahl_liste
 									label(for="nachteil_117") Unfähigkeit für Talentgruppe
 									br
@@ -903,13 +874,13 @@ html(lang="de")
 								+plainProCon("Unstet", 1)
 								+plainProCon("Unverträglichkeit mit verarbeitetem Metall", 1)
 								+plainProCon("Vergesslichkeit", 1)
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Verpflichtungen", id="nachteil_123").spezifisch.stufe
 									label(for="nachteil_123") Verpflichtungen gegenüber 
 									input(type="text").fl-rechts.halfSize
 								+stagedProCon("Verschwendungssucht", 1, { max:20 })
 								+stagedProCon("Verwöhnt", 1, { max:20 })
-								li
+								li.list-group-item
 									input(name="Nachteile", type="checkbox", value="Vorurteile", id="nachteil_126").spezifisch.stufe
 									label(for="nachteil_126") Vorurteile gegenüber 
 									input(type="text")
@@ -924,8 +895,12 @@ html(lang="de")
 								+plainProCon("Zielschwierigkeiten", 1)
 								+stagedProCon("Zögerlicher Zauberer", 1, { max:5 })
 								+plainProCon("Zwergenwuchs", 1)
-				.mitte#save
-					button(type="submit", disabled) speichern
-					button(type="reset")  zurücksetzen
-
-		script(type="text/javascript", src="/preprocess.vorteile.js")
+				.well.text-center#save
+					.row.dcm-row
+						.col-sm-4.col-sm-offset-1
+							button.form-control.btn.btn-success(type="submit", disabled) speichern
+						.col-sm-4.col-sm-offset-2
+							a.form-control.btn.btn-warning(href="/held/"+_Held._id) zurück
+		script(type="text/javascript", src="/vorteile.js")
+		script.
+			$('button:disabled').prop('disabled', false);

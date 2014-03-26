@@ -1,115 +1,236 @@
+//- function definitions
+
+-	function contains(__array, __string) {
+-		if (typeof __array === "string") {
+-			return __array.indexOf(__string) > -1;
+-		}
+-		if (Array.isArray(__array)) {
+-			return __array.filter(function(item) {
+-				return item.indexOf(__string) > -1;
+-			}).length > 0;
+-		}
+-		return false;
+-	}
+-	function render(__str, __data) {
+-		Object.keys(__data).forEach(function(key) {
+-			__str = __str.replace("{"+key+"}", __data[key].toString());
+-		});
+-		return __str;
+-	}
+
+//- create a standard menu link
+mixin menuLink(__item, __data)
+	-     __data  = __data || {};
+	- var __title = render(__item.title, __data);
+	- var __url   = __item.url ? render(__item.url, __data) : null;
+	- var __curr  = __url === _Menu.currentURL;
+	-     __url   = __curr ? null : __url;
+	if Array.isArray(__item.dropdown)
+		+menuDropdown(__item, __data)
+	else
+		li(class=__curr ? "active" : null)
+			if Array.isArray(__item.sign)
+				a(href=__url, title=__title)
+					span.hidden-xs(class=__item.sign.join(" "))
+					span.visible-xs!=__title
+			else
+				a(href=__url)!=__title
+
+//- create a menu dropdown item
+mixin menuDropdown(__item, __data)
+	- __data  = __data || {};
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown")!=render(__item.title, __data)
+			b.caret
+		ul.dropdown-menu
+			each __link in __item.dropdown
+				if __link.title
+					+menuLink(__link, __data)
+				else
+					li.divider
+
 doctype html
 html(lang="de")
 	head
 		meta(charset="utf-8")
-		title #{Person.Name.split(' ')[0]} bearbeiten
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(type="text/javascript", src="/jquery-2.0.3.min.js")
+		title #{_Held.Person.Name.split(' ')[0]} bearbeiten – Basiswerte
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css")
+		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/dcm-display.css")
+		script(src="//code.jquery.com/jquery-2.1.0.min.js")
+		script(src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 		style.
-			.setting tbody tr:nth-child(odd) {
-				background-color: #eee;
+			body {
+				padding-top:      60px;
 			}
-	body
-		nav
-			ul#main-menu
-				li
-					a(href="#top") [Seitenanfang]
-				li
-					a(href="#save") [speichern]
-				li
-					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
-		
-		main
-			form(action="/basiswerte/"+_id, method="post", accept-charset="utf-8")#newChar
+			.dcm-gap-bottom {
+				margin-bottom:    1em;
+			}
+			/* overwrite */
+			.form-group {
+				margin-top:       7px;
+				margin-bottom:    8px;
+			}
+	body#top
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					span.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						li
+							a(href="/held/"+_Held._id) ► Heldenbogen
+						if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
+							li
+								a(href="/magie/"+_Held._id) ► Magiebogen
+						if _Held.SF && contains(_Held.SF.geweiht, "Liturgiekenntnis")
+							li
+								a(href="/weihe/"+_Held._id) ► Liturgiebogen
+						li
+							a(href="/helden") Meine Helden
+					ul.nav.navbar-nav.navbar-right
+						- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+						each __link in _Menu.right
+							+menuLink(__link, data)
+		header.container
+			.page-header.text-center
+				h1=_Held.Person.Name
+		main.container
+			form.form-horizontal(action="/attribute/"+_Held._id, method="post", accept-charset="utf-8")#newChar
 				input(type="hidden", name="_method", value="put")
-			
-				table.data-section.talente#bas
-					caption Basiswerte
-					colgroup
-						col(style="width: 40%")
-						col(span="3" style="width: 20%")
-					thead
-						tr
-							th Eigenschaft
-							th Modifikator
-							th gekauft
-							th maximal
-					tbody
-						tr
-							td Lebensenergie
-							td 
-								input(name="modifikatoren[LeP][start]", type="number", min="0", step="1", value=modifikatoren.LeP.start)
-							td
-								input(name="modifikatoren[LeP][add]",   type="number", min="0", step="1", value=modifikatoren.LeP.add)
-							td
-								input(name="modifikatoren[LeP][max]",   type="number", min="0", step="1", value=modifikatoren.LeP.max)
-						tr
-							td Ausdauer
-							td 
-								input(name="modifikatoren[AuP][start]", type="number", min="0", step="1", value=modifikatoren.AuP.start)
-							td
-								input(name="modifikatoren[AuP][add]",   type="number", min="0", step="1", value=modifikatoren.AuP.add)
-							td
-								input(name="modifikatoren[AuP][max]",   type="number", min="0", step="1", value=modifikatoren.AuP.max)
-						unless modifikatoren.AsP
-							- modifikatoren.AsP = { start: '', add: '', max: '' }
-						tr
-							td#asp(title="Zum (De-)Aktivieren klicken") Astralenergie
-							td 
-								input(name="modifikatoren[AsP][start]", type="number", step="1", value=modifikatoren.AsP.start)
-							td
-								input(name="modifikatoren[AsP][add]",   type="number", min="0", step="1", value=modifikatoren.AsP.add)
-							td
-								input(name="modifikatoren[AsP][max]",   type="number", min="0", step="1", value=modifikatoren.AsP.max)
-						unless modifikatoren.KaP
-							- modifikatoren.KaP = { start: '', add: '' }
-						tr
-							td#kap(title="Zum (De-)Aktivieren klicken") Karmaenergie
-							td 
-								input(name="modifikatoren[KaP][start]", type="number", min="0", step="1", value=modifikatoren.KaP.start)
-							td
-								input(name="modifikatoren[KaP][add]",   type="number", min="0", step="1", value=modifikatoren.KaP.add)
-							td
-						tr
-							td Magieresistenz
-							td 
-								input(name="modifikatoren[MR][start]", type="number", min="-10", max="10", step="1", value=modifikatoren.MR.start)
-							td
-								input(name="modifikatoren[MR][add]",   type="number", min="0", step="1", value=modifikatoren.MR.add)
-							td
-								input(name="modifikatoren[MR][max]",   type="number", min="0", step="1", value=modifikatoren.MR.max)
-						tr
-							td Initiative
-							td
-								input(name="modifikatoren[INI]", type="number", step="1", value=modifikatoren.INI)
-							td(colspan="2")
-						tr
-							td Wundschwelle
-							td
-								input(name="modifikatoren[WS]", type="number", step="1", value=modifikatoren.WS)
-							td(colspan="2")
-						tr
-							td Geschwindigkeit
-							td
-								input(name="modifikatoren[GS]", type="number", step="1", value=modifikatoren.GS)
-							td(colspan="2")
-				.mitte#save
-					button(type="submit", disabled) speichern
-					button(type="reset")  zurücksetzen
-				
+				// Basiswerte
+				section.panel.panel-default#bas
+					.panel-heading.dcm-caption Basiswerte
+					.panel-body
+						.container-fluid.text-center.dcm-gap-bottom
+							.row.dcm-row
+								.col-sm-4
+									.dcm-header.dcm-border Eigenschaft
+								.col-sm-7.col-sm-offset-1
+									.row
+										.col-sm-4
+											.dcm-header.dcm-border Modifikator
+										.col-sm-4
+											.dcm-header.dcm-border gekauft
+										.col-sm-4
+											.dcm-header.dcm-border maximal
+						.container-fluid.dcm-striped
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label Lebensenergie:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												label.sr-only(for="lep-1") Lebensenergie (Startwert)
+												input.form-control.text-center#lep-1(name="modifikatoren[LeP][start]", type="number", min="0", step="1", value=_Held.modifikatoren.LeP.start)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="lep-2") Lebensenergie (zugekauft)
+												input.form-control.text-center#lep-2(name="modifikatoren[LeP][add]", type="number", min="0", step="1", value=_Held.modifikatoren.LeP.add)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="lep-3") Lebensenergie (maximal zukaufbar)
+												input.form-control.text-center#lep-3(name="modifikatoren[LeP][max]", type="number", min="0", step="1", value=_Held.modifikatoren.LeP.max)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label Ausdauer:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												label.sr-only(for="aup-1") Ausdauer (Startwert)
+												input.form-control.text-center#aup-1(name="modifikatoren[AuP][start]", type="number", min="0", step="1", value=_Held.modifikatoren.AuP.start)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="aup-2") Ausdauer (zugekauft)
+												input.form-control.text-center#aup-2(name="modifikatoren[AuP][add]", type="number", min="0", step="1", value=_Held.modifikatoren.AuP.add)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="aup-3") Ausdauer (maximal zukaufbar)
+												input.form-control.text-center#aup-3(name="modifikatoren[AuP][max]", type="number", min="0", step="1", value=_Held.modifikatoren.AuP.max)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label#asp(title="Zum (De-)Aktivieren klicken") Astralenergie:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												label.sr-only(for="asp-1") Astralenergie (Startwert)
+												input.form-control.text-center#asp-1(name="modifikatoren[AsP][start]", type="number", step="1", value=_Held.modifikatoren.AsP.start)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="asp-2") Astralenergie (zugekauft)
+												input.form-control.text-center#asp-2(name="modifikatoren[AsP][add]", type="number", min="0", step="1", value=_Held.modifikatoren.AsP.add)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="asp-3") Astralenergie (maximal zukaufbar)
+												input.form-control.text-center#asp-3(name="modifikatoren[AsP][max]", type="number", min="0", step="1", value=_Held.modifikatoren.AsP.max)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label#kap(title="Zum (De-)Aktivieren klicken") Karmaenergie:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												label.sr-only(for="kap-1") Karmaenergie (Startwert)
+												input.form-control.text-center#kap-1(name="modifikatoren[KaP][start]", type="number", min="0", step="1", value=_Held.modifikatoren.KaP.start)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="kap-2") Karmaenergie (zugekauft)
+												input.form-control.text-center#kap-2(name="modifikatoren[KaP][add]", type="number", min="0", step="1", value=_Held.modifikatoren.KaP.add)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label Magieresistenz:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												label.sr-only(for="mr-1") Magieresistenz (Startwert)
+												input.form-control.text-center#mr-1(name="modifikatoren[MR][start]", type="number", min="-10", max="10", step="1", value=_Held.modifikatoren.MR.start)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="mr-2") Magieresistenz (zugekauft)
+												input.form-control.text-center#mr-2(name="modifikatoren[MR][add]", type="number", min="0", step="1", value=_Held.modifikatoren.MR.add)
+											.col-sm-4.col-md-2.col-md-offset-2
+												label.sr-only(for="mr-3") Magieresistenz (maximal zukaufbar)
+												input.form-control.text-center#mr-3(name="modifikatoren[MR][max]", type="number", min="0", step="1", value=_Held.modifikatoren.MR.max)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label(for="ini-mod") Initiative:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												input#ini-mod.form-control.text-center(name="modifikatoren[INI]", type="number", step="1", value=_Held.modifikatoren.INI)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label(for="ws-mod") Wundschwelle:
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												input#ws-mod.form-control.text-center(name="modifikatoren[WS]", type="number", step="1", value=_Held.modifikatoren.INI)
+							.row
+								.form-group.container-fluid
+									.col-sm-3.col-sm-offset-1
+										label.control-label(for="gs-mod") Geschwindigkeit
+									.col-sm-7.col-sm-offset-1
+										.row
+											.col-sm-4.col-md-2.col-md-offset-1
+												input#gs-mod.form-control.text-center(name="modifikatoren[GS]", type="number", step="1", value=_Held.modifikatoren.INI)
+				.well.text-center#save
+					.row.dcm-row
+						.col-sm-4.col-sm-offset-1
+							button.form-control.btn.btn-success(type="submit", disabled) speichern
+						.col-sm-4.col-sm-offset-2
+							a.form-control.btn.btn-warning(href="/held/"+_Held._id) zurück
 		script.
 			$('#asp, #kap').on("click", function() {
-				var $inputs = $(this).closest('tr').find('input');
+				var $inputs = $(this).closest('.row').find('input');
 				$inputs.prop('disabled', !$inputs.prop('disabled'));
 			});
-			if (#{!modifikatoren.AsP.max}) {
-				$('#asp').closest('tr').find('input').prop('disabled', true);
+			if (#{!_Held.modifikatoren.AsP.max}) {
+				$('#asp').closest('.row').find('input').prop('disabled', true);
 			}
-			if (#{!modifikatoren.KaP.start}) {
-				$('#kap').closest('tr').find('input').prop('disabled', true);
+			if (#{!_Held.modifikatoren.KaP.start}) {
+				$('#kap').closest('.row').find('input').prop('disabled', true);
 			}
 			$('button:disabled').prop('disabled', false);

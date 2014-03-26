@@ -26,6 +26,7 @@ var path     = require('path')
   , async    = require('async')
   , appRoot  = path.dirname(require.main.filename)
   , data     = require( realpath('data/dsa') )
+  , menu     = require( realpath('data/menu') )
   , Held     = require( realpath('models/person') )
   , Talent   = require( realpath('models/talent') )
   , Zauber   = require( realpath('models/zauber') )
@@ -254,10 +255,16 @@ module.exports = function (app) {
 	app.get('/:section/:mdbwrite', function(req, res, next) {
 		Held
 			.findById(req.id)
-			.exec(function(err, obj) {
+			.exec(function(err, doc) {
 				if (err) next(err);
-				obj._data = data[req.section];
-				res.render('edit-held/' + req.section, obj);
+				var nav        = menu.edit;
+				nav.currentURL = req.path;
+				res.render('edit-held/' + req.section, {
+					_Held:     doc,
+					_Data:     data[req.section],
+					_Menu:     nav,
+					_Dropdown: data.dropdown
+				});
 			})
 		;
 	});

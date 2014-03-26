@@ -26,7 +26,7 @@ mixin print(__data)
 
 //- create a standard menu link
 mixin menuLink(__item, __data)
-	- var __data  = __data || {};
+	-     __data  = __data || {};
 	- var __title = render(__item.title, __data);
 	- var __url   = __item.url ? render(__item.url,   __data) : null;
 	if Array.isArray(__item.dropdown)

@@ -51,6 +51,9 @@ h1 {
 	border-bottom:    1px solid silver;
 	padding-top:      0.5em;
 }
+.dcm-striped > *:nth-child(odd) {
+	background-color: #eee;
+}
 .navbar-brand, .navbar-brand:hover {
 	color:            gray !important;
 	cursor:           default;

@@ -188,6 +188,10 @@ module.exports = {
 				title: "Gegenstände"
 			}]
 		}, {
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
+		}, {
 			url:   "/logout",
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]
@@ -246,6 +250,10 @@ module.exports = {
 				url:   "/procon/{id}",
 				title: "Vor- & Nachteile"
 			}]
+		}, {
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
 		}, {
 			url:   "/logout",
 			title: "Abmelden",
@@ -311,6 +319,10 @@ module.exports = {
 				url:   "/procon/{id}",
 				title: "Vor- & Nachteile"
 			}]
+		}, {
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
 		}, {
 			url:   "/logout",
 			title: "Abmelden",
@@ -387,6 +399,61 @@ module.exports = {
 			title: "Neuer Held"
 		}],
 		right: [{
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
+	},
+	edit: {
+		right: [{
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/person/{id}",
+				title: "Beschreibung"
+			}, {
+				url:   "/generierung/{id}",
+				title: "Generierung"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}, {
+				url:   "/ap/{id}",
+				title: "Abenteuerpunkte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/talente/{id}",
+				title: "Talente"
+			}, {
+				url:   "/waffen/{id}",
+				title: "Waffen"
+			}, {
+				url:   "/kleidung/{id}",
+				title: "Rüstungen"
+			}, {
+				url:   "/rucksack/{id}",
+				title: "Gegenstände"
+			}]
+		}, {
+			url:   "#top",
+			title: "Seitenanfang",
+			sign:  ["fa", "fa-hand-o-up"]
+		}, {
+			url:   "#save",
+			title: "Speichern",
+			sign:  ["fa", "fa-floppy-o"]
+		}, {
 			url:   "/about",
 			title: "Info",
 			sign:  ["fa", "fa-info-circle", "text-info"]

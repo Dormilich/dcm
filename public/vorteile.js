@@ -119,7 +119,7 @@ $('form').on('submit', function(jqevt) {
 	// clean up
 	$('.vor-nach input[type="radio"]').prop('checked', false);
 	// remove empty inputs
-	$('.vor-nach input').each(function() {
+	$('#vna input').each(function() {
 		if (this.value.length === 0) {
 			$(this).remove();
 		}
