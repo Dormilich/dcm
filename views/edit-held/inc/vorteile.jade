@@ -1,0 +1,431 @@
+section.panel.panel-default#vt
+	.panel-heading.dcm-caption Vorteile
+	ul.list-group.vor-nach
+		+plainProCon("Adlige Abstammung", 0)
+		+plainProCon("Adliges Erbe", 0)
+		+plainProCon("Amtsadel", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Affinität", id="vorteil_4").auswahl_liste
+			label(for="vorteil_4") Affinität zu
+			select(size="1").fl-rechts
+				option(value="Dämonen") Dämonen
+				option(value="Elementare") Elementaren
+				option(value="Geister") Geistern
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Akademische Ausbildung", id="vorteil_5").auswahl_liste
+			label(for="vorteil_5") Akademische Ausbildung
+			select(size="1").fl-rechts
+				option(value="Gelehrter") Gelehrter
+				option(value="Krieger") Krieger
+				option(value="Magier") Magier
+		+plainProCon("Altersresistenz", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Astrale Regeneration", id="vorteil_7").zusatz
+			label(for="vorteil_7") Astrale Regeneration
+			span.fl-rechts
+				input(type="radio", name="temp[v][7]", value="I", id="vorteil_7_1")
+				label(for="vorteil_7_1") I
+				input(type="radio", name="temp[v][7]", value="II", id="vorteil_7_2")
+				label(for="vorteil_7_2") II
+				input(type="radio", name="temp[v][7]", value="III", id="vorteil_7_3")
+				label(for="vorteil_7_3") III
+		+stagedProCon("Astralmacht", 0, { max:6 })
+		+stagedProCon("Ausdauernd", 0, { min:2, max:6, step:2 })
+		+plainProCon("Ausdauernder Zauberer", 0)
+		+stagedProCon("Ausrüstungsvorteil", 0, { max:20 })
+		+plainProCon("Balance", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Begabung (Merkmal)", id="vorteil_13").auswahl_liste
+			label(for="vorteil_13") Begabung für Merkmal
+			select(size="5", multiple).fl-rechts
+				+dropdown(_Dropdown.Merkmalskenntnis)
+			.fl-clear
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Begabung (Ritual)", id="vorteil_14").auswahl_text
+			label(for="vorteil_14") Begabung für Ritual
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Begabung (Zauber)", id="vorteil_15").auswahl_text
+			label(for="vorteil_15") Begabung für Zauber
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Begabung (Talent)", id="vorteil_16").auswahl_text
+			label(for="vorteil_16") Begabung für Talent
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Begabung (Talentgruppe)", id="vorteil_17").auswahl_liste
+			label(for="vorteil_17") Begabung für Talentgruppe
+			select(size="5", multiple).fl-rechts
+				optgroup(label="Kampftalente")
+					option(value="Kampf") gesamt
+					option Nahkampf
+					option Fernkampf
+				option Körperliche Talente
+				option Gesellschaft
+				option Natur
+				option Wissen
+				option Handwerk
+				option Sprachen und Schriften
+			.fl-clear
+		+plainProCon("Beidhändig", 0)
+		+plainProCon("Beseelte Knochenkeule", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Besonderer Besitz", id="vorteil_20").spezifisch
+			label(for="vorteil_20") Besonderer Besitz
+			input(type="text").fl-rechts.halfSize
+		+plainProCon("Breitgefächerte Bildung", 0)
+		+plainProCon("Dschinngeboren", 0)
+		+plainProCon("Dämmerungssicht", 0)
+		+plainProCon("Eidetisches Gedächtnis", 0)
+		+plainProCon("Eigeboren", 0)
+		+plainProCon("Eisenaffine Aura", 0)
+		+plainProCon("Eisern", 0)
+		+plainProCon("Empathie", 0)
+		+plainProCon("Entfernungssinn", 0)
+		+plainProCon("Ererbte Knochenkeule", 0)
+		+plainProCon("Feenfreund", 0)
+		+plainProCon("Feste Matrix", 0)
+		+plainProCon("Flink", 0)
+		+plainProCon("Früher Vertrauter", 0)
+		+stagedProCon("Gebildet", 0, { max:5 })
+		+plainProCon("Gefahreninstinkt", 0)
+		+plainProCon("Geräuschhexerei", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Geweiht", id="vorteil_38").auswahl_liste
+			label(for="vorteil_38") Geweiht
+			select(size="1").fl-rechts
+				+dropdown(_Dropdown.Götter, null)
+		+plainProCon("Glück", 0)
+		+plainProCon("Glück im Spiel", 0)
+		+plainProCon("Gut Aussehend", 0)
+		+stagedProCon("Guter Ruf", 0, { max:10 })
+		+plainProCon("Gutes Gedächtnis", 0)
+		+plainProCon("Halbzauberer", 0)
+		+plainProCon("Herausragende Balance", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Herausragende Eigenschaft", id="vorteil_46").sammeln-alle
+			label(for="vorteil_46") Herausragende Eigenschaft
+			ul
+				li
+					input(type="checkbox", value="MU", id="vorteil_46_1").stufe
+					label(for="vorteil_46_1") Mut
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="KL", id="vorteil_46_2").stufe
+					label(for="vorteil_46_2") Klugheit
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="IN", id="vorteil_46_3").stufe
+					label(for="vorteil_46_3") Intuition
+					input(type="number", min="1", step="1")
+				li 
+					input(type="checkbox", value="CH", id="vorteil_46_4").stufe
+					label(for="vorteil_46_4") Charisma
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="FF", id="vorteil_46_5").stufe
+					label(for="vorteil_46_5") Fingerfertigkeit
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="GE", id="vorteil_46_6").stufe
+					label(for="vorteil_46_6") Gewandheit
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="KO", id="vorteil_46_7").stufe
+					label(for="vorteil_46_7") Konstitution
+					input(type="number", min="1", step="1")
+				li
+					input(type="checkbox", value="KK", id="vorteil_46_8").stufe
+					label(for="vorteil_46_8") Körperkraft
+					input(type="number", min="1", step="1")
+		+plainProCon("Herausragender Sechster Sinn", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Herausragender Sinn", id="vorteil_48").sammeln-eins
+			label(for="vorteil_48") Herausragender Sinn
+			ul
+				li
+					input(type="checkbox", value="Sicht", id="vorteil_48_1")
+					label(for="vorteil_48_1") Sicht
+				li
+					input(type="checkbox", value="Gehör", id="vorteil_48_2")
+					label(for="vorteil_48_2") Gehör
+				li
+					input(type="checkbox", value="Geruch/Geschmack", id="vorteil_48_3")
+					label(for="vorteil_48_3") Geruch/Geschmack
+				li
+					input(type="checkbox", value="Tastsinn", id="vorteil_48_4")
+					label(for="vorteil_48_4") Tastsinn
+		+plainProCon("Herausragendes Aussehen", 0)
+		+plainProCon("Hitzeresistenz", 0)
+		+stagedProCon("Hohe Lebenskraft", 0, { max:3 })
+		+stagedProCon("Hohe Magieresistenz", 0, { max:3 })
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Immunität gegen Gift", id="vorteil_53").sammeln-nowrap
+			label(for="vorteil_53") Immunität gegen Gift
+			ul
+				li
+					input(type="radio", name="temp[v][53]", value="", id="vorteil_53_1").auswahl_text
+					label(for="vorteil_53_1") einzelnes Gift:
+					input(type="text").fl-rechts.halfSize
+				li
+					input(type="radio", name="temp[v][53]", value="", id="vorteil_53_2").auswahl_liste
+					label(for="vorteil_53_2") Giftgruppe:
+					select(size="5", multiple).fl-rechts
+						option tierische Gifte
+						option mineralische Gifte
+						option pflanzliche Gifte
+						option alchimistische Gifte
+						option Atemgifte
+						option Einnahmegifte
+						option Kontaktgifte
+						option Blut-/Waffengifte
+					.fl-clear
+				li
+					input(type="radio", name="temp[v][53]", value="[alle Gifte]", id="vorteil_53_3")
+					label(for="vorteil_53_3") alle Gifte
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Immunität gegen Krankheiten", id="vorteil_54").sammeln-nowrap
+			label(for="vorteil_54") Immunität gegen Krankheiten
+			ul
+				li
+					input(type="radio", name="temp[v][54]", value="", id="vorteil_54_1").auswahl_text
+					label(for="vorteil_54_1") einzelne Krankheit:
+					input(type="text").fl-rechts.halfSize
+				li
+					input(type="radio", name="temp[v][54]", value="[alle Krankheiten]", id="vorteil_54_3")
+					label(for="vorteil_54_3") alle Krankheiten
+		+plainProCon("Innerer Kompass", 0)
+		+plainProCon("Kälteresistenz", 0)
+		+plainProCon("Kampfrausch", 0)
+		+plainProCon("Koboldfreund", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Kräfteschub", id="vorteil_59").sammeln-eins
+			label(for="vorteil_59") Kräfteschub
+			ul
+				li
+					input(type="checkbox", value="FF", id="vorteil_59_5")
+					label(for="vorteil_59_5") Fingerfertigkeit
+				li
+					input(type="checkbox", value="GE", id="vorteil_59_6")
+					label(for="vorteil_59_6") Gewandheit
+				li
+					input(type="checkbox", value="KO", id="vorteil_59_7")
+					label(for="vorteil_59_7") Konstitution
+				li
+					input(type="checkbox", value="KK", id="vorteil_59_8")
+					label(for="vorteil_59_8") Körperkraft
+		+plainProCon("Linkshänder", 0)
+		+plainProCon("Machtvoller Vertrauter", 0)
+		+plainProCon("Magiegespür", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Meisterhandwerk", id="vorteil_63").auswahl_text
+			label(for="vorteil_63") Meisterhandwerk
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		+plainProCon("Nachtsicht", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Natürliche Waffen", id="vorteil_65").sammeln-alle
+			label(for="vorteil_65") Natürliche Waffen
+			ul
+				li
+					input(type="checkbox", value="Gebiß", id="vorteil_65_1").auswahl_liste
+					label(for="vorteil_65_1") Gebiß
+					select(size="1").fl-rechts
+						option 1W6 TP(A)
+						option 1W6 TP
+						option 1W6+1 TP
+						option 1W6+2 TP
+						option 1W6+3 TP
+						option 1W6+4 TP
+						option 1W6+5 TP
+						option 1W6+6 TP
+				li
+					input(type="checkbox", value="Krallen", id="vorteil_65_2").auswahl_liste
+					label(for="vorteil_65_2") Krallen
+					select(size="1").fl-rechts
+						option 1W6 TP(A)
+						option 1W6 TP
+						option 1W6+1 TP
+						option 1W6+2 TP
+						option 1W6+3 TP
+						option 1W6+4 TP
+						option 1W6+5 TP
+						option 1W6+6 TP
+				li
+					input(type="checkbox", value="Schwanz", id="vorteil_65_3").auswahl_liste
+					label(for="vorteil_65_3") Schwanz
+					select(size="1").fl-rechts
+						option 1W6 TP(A)
+						option 1W6 TP
+						option 1W6+1 TP
+						option 1W6+2 TP
+						option 1W6+3 TP
+						option 1W6+4 TP
+						option 1W6+5 TP
+						option 1W6+6 TP
+		+stagedProCon("Natürlicher Rüstungsschutz", 0, { max:3 })
+		+plainProCon("Prophezeihen", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Resistenz gegen Gift", id="vorteil_68").sammeln-nowrap
+			label(for="vorteil_68") Resistenz gegen Gift
+			ul
+				li
+					input(type="radio", name="temp[v][68]", value="", id="vorteil_68_1").auswahl_text
+					label(for="vorteil_68_1") einzelnes Gift:
+					input(type="text").fl-rechts.halfSize
+				li
+					input(type="radio", name="temp[v][68]", value="", id="vorteil_68_2").auswahl_liste
+					label(for="vorteil_68_2") Giftgruppe:
+					select(size="5", multiple).fl-rechts
+						option tierische Gifte
+						option mineralische Gifte
+						option pflanzliche Gifte
+						option alchimistische Gifte
+						option Atemgifte
+						option Einnahmegifte
+						option Kontaktgifte
+						option Blut-/Waffengifte
+					.fl-clear
+				li
+					input(type="radio", name="temp[v][68]", value="[alle Gifte]" id="vorteil_68_3")
+					label(for="vorteil_68_3") alle Gifte
+		+plainProCon("Resistenz gegen Krankheiten", 0)
+		+plainProCon("Richtungssinn", 0)
+		+plainProCon("Schlangenmensch", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Schnelle Heilung", id="vorteil_72")
+			label(for="vorteil_72") Schnelle Heilung
+			span.fl-rechts
+				input(type="radio", name="temp[v][72]", value="I", id="vorteil_72_1")
+				label(for="vorteil_72_1") I
+				input(type="radio", name="temp[v][72]", value="II", id="vorteil_72_2")
+				label(for="vorteil_72_2") II
+				input(type="radio", name="temp[v][72]", value="III", id="vorteil_72_3")
+				label(for="vorteil_72_3") III
+		+plainProCon("Schutzgeist", 0)
+		+plainProCon("Schwer zu verzaubern", 0)
+		+plainProCon("Soziale Anpassungsfähigkeit", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Talentschub", id="vorteil_95").auswahl_text
+			label(for="vorteil_95") Talentschub
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Tierempathie", id="vorteil_76").sammeln-nowrap
+			label(for="vorteil_76") Tierempathie
+			ul
+				li
+					input(type="radio", name="temp[v][76]", value="[allgemein]", id="vorteil_76_1")
+					label(for="vorteil_76_1") allgemein
+				li
+					input(type="radio", name="temp[v][76]", value="", id="vorteil_76_2").auswahl_text
+					input(type="text")
+		+plainProCon("Tierfreund", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Übernatürliche Begabung", id="vorteil_78").auswahl_text
+			label(for="vorteil_78") Übernatürliche Begabung
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		+plainProCon("Unbeschwertes Zaubern", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Verbindungen", id="vorteil_80").stufe
+			label(for="vorteil_80") Verbindungen
+			input(type="number", min="1", step="1")
+		+plainProCon("Verhüllte Aura", 0)
+		+plainProCon("Veteran", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Viertelzauberer", id="vorteil_83").zusatz
+			label(for="vorteil_83") Viertelzauberer
+			span.fl-rechts
+				input(type="radio", name="temp[v][83]", value="", id="vorteil_83_1")
+				label(for="vorteil_83_1") bewußt
+				input(type="radio", name="temp[v][83]", value="(unbewußt)", id="vorteil_83_2")
+				label(for="vorteil_83_2") unbewußt
+		+plainProCon("Vollzauberer", 0)
+		+plainProCon("Vom Schicksal begünstigt", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Wesen der Nacht", id="vorteil_86").zusatz
+			label(for="vorteil_86") Wesen der Nacht
+			span.fl-rechts
+				input(type="radio", name="temp[v][86]", value="I", id="vorteil_86_1")
+				label(for="vorteil_86_1") I
+				input(type="radio", name="temp[v][86]", value="II", id="vorteil_86_2")
+				label(for="vorteil_86_2") II
+				input(type="radio", name="temp[v][86]", value="III", id="vorteil_86_3")
+				label(for="vorteil_86_3") III
+		+plainProCon("Wohlklang", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Wolfskind", id="vorteil_87").zusatz
+			label(for="vorteil_87") Wolfskind
+			span.fl-rechts
+				input(type="radio", name="temp[v][87]", value="", id="vorteil_87_1")
+				label(for="vorteil_87_1") bewußt
+				input(type="radio", name="temp[v][87]", value="(unbewußt)", id="vorteil_87_2")
+				label(for="vorteil_87_2") unbewußt
+		+plainProCon("Zäher Hund", 0)
+		+plainProCon("Zauberhaar", 0)
+		+plainProCon("Zeitgefühl", 0)
+		li.list-group-item
+			input(name="Vorteile", type="checkbox", value="Zusätzliche Gliedmaßen", id="vorteil_91").sammeln-alle
+			label(for="vorteil_91") Zusätzliche Gliedmaßen
+			ul
+				li
+					input(type="checkbox", value="Arme", id="vorteil_91_1")
+					label(for="vorteil_91_1") Arme
+				li
+					input(type="checkbox", value="Schwanz", id="vorteil_91_2")
+					label(for="vorteil_91_2") Schwanz
+				li
+					input(type="checkbox", value="Flügel", id="vorteil_91_3")
+					label(for="vorteil_91_3") Flügel
+		+plainProCon("Zweistimmiger Gesang", 0)
+		+plainProCon("Zwergennase", 0)

@@ -1,0 +1,22 @@
+nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+	.container-fluid
+		.navbar-header
+			button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+				span.sr-only Navigation
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+			span.navbar-brand DCM
+		#navbar-collapse-chars.collapse.navbar-collapse
+			- var data = { id: _Held._id, name: _Held.Person.Name.split(" ")[0] }
+			ul.nav.navbar-nav
+				+menuLink({ title: "‹ Heldenbogen ›", url: "/held/{id}"}, data)
+				if _Held.SF && (contains(_Held.SF.magisch, "Ritualkenntnis") || contains(_Held.SF.magisch, "Repräsentation"))
+					+menuLink({ title: "‹ Magiebogen ›", url: "/magie/{id}"}, data)
+				if _Held.SF && contains(_Held.SF.geweiht, "Liturgiekenntnis")
+					+menuLink({ title: "‹ Liturgiebogen ›", url: "/weihe/{id}"}, data)
+				li
+					a(href="/helden") Meine Helden
+			ul.nav.navbar-nav.navbar-right
+				each __link in _Menu.right
+					+menuLink(__link, data)

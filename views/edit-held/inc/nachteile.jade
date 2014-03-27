@@ -1,0 +1,321 @@
+section.panel.panel-default#nt
+	.panel-heading.text-center.dcm-caption Nachteile
+	ul.list-group.vor-nach
+		+stagedProCon("Aberglaube", 1, { max:20 })
+		+plainProCon("Albino", 1)
+		+stagedProCon("Angst vor Insekten", 1, { max:20 })
+		+stagedProCon("Angst vor Spinnen", 1, { max:20 })
+		+stagedProCon("Angst vor Reptilien", 1, { max:20 })
+		+stagedProCon("Angst vor Feuer", 1, { max:20 })
+		+stagedProCon("Angst vor Wasser", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_8").zusatz_text.stufe
+			label(for="nachteil_8") Angst vor 
+			input(type="text")
+			input(type="number", min="1", max="20", step="1")
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_9").zusatz_text.stufe
+			label(for="nachteil_9") Angst vor 
+			input(type="text")
+			input(type="number", min="1", max="20", step="1")
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Angst vor", id="nachteil_10").zusatz_text.stufe
+			label(for="nachteil_10") Angst vor 
+			input(type="text")
+			input(type="number", min="1", max="20", step="1")
+		+plainProCon("Animalische Magie", 1)
+		+stagedProCon("Arkanophobie", 1, { max:20 })
+		+stagedProCon("Arroganz", 1, { max:20 })
+		+plainProCon("Artefaktgebunden", 1)
+		+plainProCon("Astraler Block", 1)
+		+stagedProCon("Autoritätsgläubig", 1, { max:20 })
+		+plainProCon("Behäbig", 1)
+		+stagedProCon("Blutdurst", 1, { max:20 })
+		+plainProCon("Blutrausch", 1)
+		+stagedProCon("Brünstigkeit", 1, { max:20 })
+		+stagedProCon("Dunkelangst", 1, { max:20 })
+		+plainProCon("Einarmig", 1)
+		+plainProCon("Einäugig", 1)
+		+plainProCon("Einbeinig", 1)
+		+plainProCon("Einbildungen", 1)
+		+plainProCon("Eingeschränkte Elementarnähe", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Eingeschränkter Sinn", id="nachteil_27").sammeln-eins
+			label(for="nachteil_27") Eingeschränkter Sinn
+			ul
+				li
+					input(type="checkbox", value="Sicht", id="nachteil_27_1")
+					label(for="nachteil_27_1") Sicht
+				li
+					input(type="checkbox", value="Gehör", id="nachteil_27_2")
+					label(for="nachteil_27_2") Gehör
+				li
+					input(type="checkbox", value="Geruch/Geschmack", id="nachteil_27_3")
+					label(for="nachteil_27_3") Geruch/Geschmack
+				li
+					input(type="checkbox", value="Tastsinn", id="nachteil_27_4")
+					label(for="nachteil_27_4") Tastsinn
+		+plainProCon("Einhändig", 1)
+		+stagedProCon("Eitelkeit", 1, { max:20 })
+		+plainProCon("Elfische Weltsicht", 1)
+		+plainProCon("Farbenblind", 1)
+		+stagedProCon("Feind", 1, { max:15 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Feste Gewohnheit", id="nachteil_33").spezifisch
+			label(for="nachteil_33") Feste Gewohnheit
+			input(type="text")
+		+stagedProCon("Festgefügtes Denken", 1, { max:20 })
+		+plainProCon("Fettleibig", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Fluch der Finsternis", id="nachteil_36").zusatz
+			label(for="nachteil_36") Fluch der Finsternis
+			span.fl-rechts
+				input(type="radio", name="temp[n][36]", value="I", id="nachteil_36_1")
+				label(for="nachteil_36_1") I
+				input(type="radio", name="temp[n][36]", value="II", id="nachteil_36_2")
+				label(for="nachteil_36_2") II
+				input(type="radio", name="temp[n][36]", value="III", id="nachteil_36_3")
+				label(for="nachteil_36_3") III
+		+stagedProCon("Geiz", 1, { max:20 })
+		+stagedProCon("Gerechtigkeitswahn", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Gesucht", id="nachteil_39").spezifisch.zusatz
+			label(for="nachteil_39") Gesucht
+			input(type="text")
+			span.fl-rechts
+				input(type="radio", name="temp[n][39]", value="I", id="nachteil_39_1")
+				label(for="nachteil_39_1") I
+				input(type="radio", name="temp[n][39]", value="II", id="nachteil_39_2")
+				label(for="nachteil_39_2") II
+				input(type="radio", name="temp[n][39]", value="III", id="nachteil_39_3")
+				label(for="nachteil_39_3") III
+		+plainProCon("Glasknochen", 1)
+		+stagedProCon("Goldgier", 1, { max:20 })
+		+stagedProCon("Größenwahn", 1, { max:20 })
+		+plainProCon("Heimwehkrank", 1)
+		+plainProCon("Hitzeempfindlichkeit", 1)
+		+stagedProCon("Höhenangst", 1, { max:20 })
+		+plainProCon("Impulsiv", 1)
+		+stagedProCon("Jähzorn", 1, { max:20 })
+		+plainProCon("Kälteempfindlichkeit", 1)
+		+plainProCon("Kältestarre", 1)
+		+plainProCon("Kein Vertrauter", 1)
+		+plainProCon("Kleinwüchsig", 1)
+		+plainProCon("Körpergebundene Kraft", 1)
+		+stagedProCon("Krankhafte Reinlichkeit", 1, { max:20 })
+		+plainProCon("Krankheitsanfällig", 1)
+		+plainProCon("Kristallgebunden", 1)
+		+stagedProCon("Kurzatmig", 1, { min:2, max:2, step:2 })
+		+plainProCon("Lahm", 1)
+		+plainProCon("Lästige Mindergeister", 1)
+		+plainProCon("Lichtempfindlich", 1)
+		+plainProCon("Lichtscheu", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Madas Fluch", id="nachteil_61").zusatz
+			label(for="nachteil_61") Madas Fluch
+			span.fl-rechts
+				input(type="radio", name="temp[n][61]", value="I", id="nachteil_61_1")
+				label(for="nachteil_61_1") I
+				input(type="radio", name="temp[n][61]", value="II", id="nachteil_61_2")
+				label(for="nachteil_61_2") II
+				input(type="radio", name="temp[n][61]", value="III", id="nachteil_61_3")
+				label(for="nachteil_61_3") III
+		+plainProCon("Medium", 1)
+		+stagedProCon("Meeresangst", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Miserable Eigenschaft", id="nachteil_64").sammeln-eins
+			label(for="nachteil_64") Miserable Eigenschaft
+			ul
+				li
+					input(type="checkbox", value="MU", id="nachteil_64_1")
+					label(for="nachteil_64_1") Mut
+				li
+					input(type="checkbox", value="KL", id="nachteil_64_2")
+					label(for="nachteil_64_2") Klugheit
+				li
+					input(type="checkbox", value="IN", id="nachteil_64_3")
+					label(for="nachteil_64_3") Intuition
+				li 
+					input(type="checkbox", value="CH", id="nachteil_64_4")
+					label(for="nachteil_64_4") Charisma
+				li
+					input(type="checkbox", value="FF", id="nachteil_64_5")
+					label(for="nachteil_64_5") Fingerfertigkeit
+				li
+					input(type="checkbox", value="GE", id="nachteil_64_6")
+					label(for="nachteil_64_6") Gewandheit
+				li
+					input(type="checkbox", value="KO", id="nachteil_64_7")
+					label(for="nachteil_64_7") Konstitution
+				li
+					input(type="checkbox", value="KK", id="nachteil_64_8")
+					label(for="nachteil_64_8") Körperkraft
+		+plainProCon("Mondsüchtig", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Moralkodex", id="nachteil_66").spezifisch.stufe
+			label(for="nachteil_66") Moralkodex
+			input(type="text")
+			input(type="number", min="3", max="12", step="1")
+		+plainProCon("Nachtblind", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Nahrungsrestriktion", id="nachteil_68").spezifisch
+			label(for="nachteil_68") Nahrungsrestriktion
+			input(type="text").fl-rechts.halfSize
+		+stagedProCon("Neid", 1, { max:20 })
+		+stagedProCon("Neugier", 1, { max:20 })
+		+stagedProCon("Niedrige Astralkraft", 1, { max:6 })
+		+stagedProCon("Niedrige Lebenskraft", 1, { max:6 })
+		+stagedProCon("Niedrige Magieresistenz", 1, { max:3 })
+		+plainProCon("Pechmagnet", 1)
+		+stagedProCon("Platzangst", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Prinzipientreue", id="nachteil_76").spezifisch.stufe
+			label(for="nachteil_76") Prinzipientreue
+			input(type="text")
+			input(type="number", min="3", max="12", step="1")
+		+stagedProCon("Rachsucht", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Randgruppe", id="nachteil_78").spezifisch
+			label(for="nachteil_78") Randgruppe
+			input(type="text").fl-rechts.halfSize
+		+plainProCon("Raubtiergeruch", 1)
+		+stagedProCon("Raumangst", 1, { max:20 })
+		+plainProCon("Rückschlag", 1)
+		+plainProCon("Schlaflosigkeit", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Schlafstörungen", id="nachteil_83").zusatz
+			label(for="nachteil_83") Schlafstörungen
+			span.fl-rechts
+				input(type="radio", name="temp[n][83]", value="I", id="nachteil_83_1")
+				label(for="nachteil_83_1") I
+				input(type="radio", name="temp[n][83]", value="II", id="nachteil_83_2")
+				label(for="nachteil_83_2") II
+		+plainProCon("Schlafwandler", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", id="nachteil_85").zusatz.stufe
+			input(type="text", placeholder="Schlechte Eigenschaft", size="21")
+			input(type="number", min="1", max="20", step="1")
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", id="nachteil_86").zusatz.stufe
+			input(type="text", placeholder="Schlechte Eigenschaft", size="21")
+			input(type="number", min="1", max="20", step="1")
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", id="nachteil_87").zusatz.stufe
+			input(type="text", placeholder="Schlechte Eigenschaft", size="21")
+			input(type="number", min="1", max="20", step="1")
+		+plainProCon("Schlechte Regeneration", 1)
+		+stagedProCon("Schlechter Ruf", 1, { max:10 })
+		+stagedProCon("Schleichender Verfall", 1, { max:10 })
+		+plainProCon("Schneller Alternd", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Schulden", id="nachteil_92").stufe
+			label(for="nachteil_92") Schulden (Dukaten)
+			input(type="number", min="500", max="2000", step="1")
+		+stagedProCon("Schwache Ausstrahlung", 1, { max:5 })
+		+plainProCon("Schwacher Astralkörper", 1)
+		+plainProCon("Schwanzlos", 1)
+		+plainProCon("Seffer Manich", 1)
+		+plainProCon("Selbstgespräche", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Sensibler Geruchssinn", id="nachteil_98").stufe
+			label(for="nachteil_98") Sensibler Geruchssinn
+			input(type="number", min="1", max="20", step="1")
+		+plainProCon("Sippenlosigkeit", 1)
+		+stagedProCon("Sonnensucht", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Speisegebote", id="nachteil_101").spezifisch
+			label(for="nachteil_101") Speisegebote
+			input(type="text")
+		+stagedProCon("Spielsucht", 1, { max:20 })
+		+plainProCon("Sprachfehler", 1)
+		+plainProCon("Spruchhemmung", 1)
+		+stagedProCon("Stigma", 1, { max:12 })
+		+stagedProCon("Streitsucht", 1, { max:20 })
+		+plainProCon("Stubenhocker", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Sucht", id="nachteil_108").spezifisch.stufe
+			label(for="nachteil_108") Sucht
+			input(type="text")
+			input(type="number", min="1", max="20", step="1")
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Thesisgebunden", id="nachteil_109").auswahl_text
+			label(for="nachteil_109") Thesisgebunden
+			.fl-rechts
+				input(type="text", title="Zauber")
+				br
+				input(type="text", title="Zauber")
+				br
+				input(type="text", title="Zauber")
+				br
+				input(type="text", title="Zauber")
+				br
+				input(type="text", title="Zauber")
+			.fl-clear
+		+plainProCon("Tollpatsch", 1)
+		+stagedProCon("Totenangst", 1, { max:20 })
+		+plainProCon("Übler Geruch", 1)
+		+plainProCon("Unangenehme Stimme", 1)
+		+plainProCon("Unansehnlich", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Unfähigkeit (Merkmal)", id="nachteil_115").auswahl_liste
+			label(for="nachteil_115") Unfähigkeit für Merkmal
+			br
+			select(size="5", multiple).fl-rechts
+				+dropdown(_Dropdown.Merkmalskenntnis)
+			.fl-clear
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Unfähigkeit (Talent)", id="nachteil_116").auswahl_text
+			label(for="nachteil_116") Unfähigkeit für Talent
+			.fl-rechts
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+				br
+				input(type="text")
+			.fl-clear
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Unfähigkeit (Talentgruppe)", id="nachteil_117").auswahl_liste
+			label(for="nachteil_117") Unfähigkeit für Talentgruppe
+			br
+			select(size="5", id="nachteil__l", multiple).fl-rechts
+				optgroup(label="Kampftalente")
+					option(value="Kampf") gesamt
+					option Nahkampf
+					option Fernkampf
+				option Körperliche Talente
+				option Gesellschaft
+				option Natur
+				option Wissen
+				option Handwerk
+				option Sprachen und Schriften
+			.fl-clear
+		+plainProCon("Unfrei", 1)
+		+stagedProCon("Ungebildet", 1, { max:5 })
+		+plainProCon("Unstet", 1)
+		+plainProCon("Unverträglichkeit mit verarbeitetem Metall", 1)
+		+plainProCon("Vergesslichkeit", 1)
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Verpflichtungen", id="nachteil_123").spezifisch.stufe
+			label(for="nachteil_123") Verpflichtungen gegenüber 
+			input(type="text").fl-rechts.halfSize
+		+stagedProCon("Verschwendungssucht", 1, { max:20 })
+		+stagedProCon("Verwöhnt", 1, { max:20 })
+		li.list-group-item
+			input(name="Nachteile", type="checkbox", value="Vorurteile", id="nachteil_126").spezifisch.stufe
+			label(for="nachteil_126") Vorurteile gegenüber 
+			input(type="text")
+			input(type="number", min="1", max="20", step="1")
+		+plainProCon("Wahnvorstellungen", 1)
+		+plainProCon("Wahrer Name", 1)
+		+stagedProCon("Weltfremd", 1, { max:20 })
+		+stagedProCon("Weltfremd", 1, { max:20 })
+		+stagedProCon("Weltfremd", 1, { max:20 })
+		+plainProCon("Widerwärtiges Aussehen", 1)
+		+plainProCon("Wilde Magie", 1)
+		+plainProCon("Zielschwierigkeiten", 1)
+		+stagedProCon("Zögerlicher Zauberer", 1, { max:5 })
+		+plainProCon("Zwergenwuchs", 1)
