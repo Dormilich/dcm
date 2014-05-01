@@ -1,277 +1,269 @@
-mixin print(__data)
-	p!=JSON.stringify(__data)
+include ../inc-mixins
 
-unless SF
-	- SF = {}
-unless SF.Kampf
-	- SF.Kampf = []
+//- make sure the filter functions operate on an array
+unless _Held.SF
+	- _Held.SF = {}
+unless _Held.SF.Kampf
+	- _Held.SF.Kampf = []
+unless _Held.SF.Manöver
+	- _Held.SF.Manöver = []
+unless _Held.SF.allgemein
+	- _Held.SF.allgemein = []
+unless _Held.SF.magisch
+	- _Held.SF.magisch = []
+unless _Held.SF.geweiht
+	- _Held.SF.geweiht = []
 
-unless SF.Manöver
-	- SF.Manöver = []
-
-unless SF.allgemein
-	- SF.allgemein = []
-
-unless SF.magisch
-	- SF.magisch = []
-
-unless SF.geweiht
-	- SF.geweiht = []
 
 doctype html
 html(lang="de")
 	head
-		meta(charset="utf-8")
+		include ../inc-bootstrap
 		title Sonderfertigkeiten hinzufügen
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(src="/jquery-2.0.3.min.js")
+		link(rel="stylesheet", href="/dcm-display.css")
 		style.
-			li > select, li > input[type="text"] {
-				width: 35%;
+			body {
+				padding-top: 				60px;
 			}
-	body
-		nav
-			ul#main-menu
-				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#allg") allgemeine SF
-						li
-							a(href="#kampf") Kampf-SF
-						li
-							a(href="#wlk") Manöver
-						li
-							a(href="#gott") karmale SF
-						li
-							a(href="#mag") magische SF
-				li
-					a(href="#top") [Seitenanfang]
-				li
-					a(href="#save") [speichern]
-				li
-					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
+			input[type='text'] {
+				width:       				35%;
+				border-bottom-left-radius:  5px;
+				border-top-left-radius:     5px;
+				padding-left:				3px;
+			}
+			select {
+				margin-right:               5px;
+			}
+	body#top
+		include inc/nav
+		header.container
+			.page-header.text-center
+				h1=_Held.Person.Name
 		main
-			form#newChar(action="/sf/"+_id, method="post", accept-charset="utf-8")
-				input(type="hidden", name="_method", value="put")
-				
-				table.data-section#allg
-					caption allgemeine Sonderfertigkeiten
-					tr
-						td
-							ul.vor-nach.fl-links
-								each val, key in _data.allgemein
-									if val.charAt(0) === "*"
-										- var __name = val.slice(1)
-										each __sf, __idx in SF.allgemein.filter(function(item) { return (item.indexOf(__name) === 0); })
-											li
-												input.spezifisch(type="checkbox", name="SF[allgemein][]", value=__name, checked, id="sf1a_"+__idx)
-												label(for="sf1a_"+__idx)= __name
-												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
-										li
-											input.spezifisch(type="checkbox", name="SF[allgemein][]", value=__name, id="sf1_"+key)
-											label(for="sf1_"+key)= __name
-											input.fl-rechts(type="text")
-											button.add.fl-rechts(type="button") +
-									else
-										li
-											input(type="checkbox", name="SF[allgemein][]", id="sf1_"+key, value=val, checked= SF.allgemein.indexOf(val) !== -1)
-											label(for="sf1_"+key)= val
-							ul.vor-nach.fl-rechts
-								li
-									strong Kulturkunde:
-								each __sf, __idx in SF.allgemein.filter(function(item) { return (item.indexOf("Kulturkunde") === 0); })
-									li
-										input.auswahl_liste2(type="checkbox", name="SF[allgemein][]", value=__sf, checked, id="sf1a_"+__idx)
-										label(for="sf1a_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[allgemein][]", id="sf1a", value="Kulturkunde")
-									label(for="sf1a") Kulturkunde
-									select.fl-rechts(size="1")
-										each __kk in _data.Kulturkunde.sort()
-											option(value=__kk)=__kk
-									button.add.fl-rechts(type="button") +
-								li
-									input.spezifisch(type="checkbox", name="SF[allgemein][]", id="sf1b", value="Kulturkunde")
-									label(for="sf1b") Kulturkunde
-									input.fl-rechts(type="text", placeholder="sonstige Kulturkunde", style="width: 49%;")
-									button.add.fl-rechts(type="button") +
-
-				table.data-section#kampf
-					caption Kampf-Sonderfertigkeiten
-					tr
-						td
-							ul.vor-nach.fl-links
-								- for (var x=0, l=Math.ceil(_data.Kampf.length/2); x<l; x++)
-									if _data.Kampf[x].charAt(0) === "*"
-										- var __name = _data.Kampf[x].slice(1)
-										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
-											li
-												input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, checked, id="sf3a_"+__idx)
-												label(for="sf3a_"+__idx)= __name
-												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
-										li
-											input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, id="sf3_"+x)
-											label(for="sf3_"+x)= __name
-											input.fl-rechts(type="text")
-											button.add.fl-rechts(type="button") +
-									else
-										li
-											input(type="checkbox", name="SF[Kampf][]", id="sf3_"+x, value=_data.Kampf[x], checked= SF.Kampf.indexOf(_data.Kampf[x]) !== -1)
-											label(for="sf3_"+x)= _data.Kampf[x]
-							ul.vor-nach.fl-rechts
-								- for (var y=x, l=_data.Kampf.length; y<l; y++)
-									if _data.Kampf[y].charAt(0) === "*"
-										- var __name = _data.Kampf[y].slice(1)
-										each __sf, __idx in SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
-											li
-												input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, checked, id="sf3a_"+__idx)
-												label(for="sf3a_"+__idx)= __name
-												input.fl-rechts(type="text", value=__sf.match(/\((.+)\)/)[1])
-										li
-											input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, id="sf3_"+y)
-											label(for="sf3_"+y)= __name
-											input.fl-rechts(type="text")
-											button.add.fl-rechts(type="button") +
-									else
-										li
-											input(type="checkbox", name="SF[Kampf][]", id="sf3_"+y, value=_data.Kampf[y], checked= SF.Kampf.indexOf(_data.Kampf[y]) !== -1)
-											label(for="sf3_"+y)= _data.Kampf[y]
-
-				table.data-section#wlk
-					caption Waffenlose Manöver
-					tr
-						td
-							ul.vor-nach.fl-links
-								- for (var x=0, l=Math.ceil(_data.Manöver.length/2); x<l; x++)
-									li
-										input(type="checkbox", name="SF[Manöver][]", id="sf7_"+x, value=_data.Manöver[x], checked= SF.Manöver.indexOf(_data.Manöver[x]) !== -1)
-										label(for="sf7_"+x)= _data.Manöver[x]
-							ul.vor-nach.fl-rechts
-								- for (var y=x, l=_data.Manöver.length; y<l; y++)
-									li
-										input(type="checkbox", name="SF[Manöver][]", id="sf8_"+y, value=_data.Manöver[y], checked= SF.Manöver.indexOf(_data.Manöver[y]) !== -1)
-										label(for="sf8_"+y)= _data.Manöver[y]
-
-				table.data-section#gott
-					caption Karmale Sonderfertigkeiten
-					tr
-						td.gods
-							ul.vor-nach.fl-links
-								each val, key in _data.geweiht
-									li
-										input(type="checkbox", name="SF[geweiht][]", id="sf9_"+key, value=val, checked= SF.geweiht.indexOf(val) !== -1)
-										label(for="sf9_"+key)= val
-							ul.vor-nach.fl-rechts
-								each __sf, __idx in SF.geweiht.filter(function(item) { return (item.indexOf("Liturgiekenntnis") === 0); })
-									li
-										input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", value=__sf, checked, id="sf9a_"+__idx)
-										label(for="sf9a_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf9a", value="Liturgiekenntnis")
-									label(for="sf9a") Liturgiekenntnis
-									select.fl-rechts(size="1")
-										each __list, __typ in _data.Götter
+			nav#tab-header.container
+				ul.nav.nav-pills.nav-justified
+					li
+						a(href="#allg", data-toggle="pill") allgemeine SF
+					li
+						a(href="#kampf", data-toggle="pill") Kampf-SF
+					li
+						a(href="#hand", data-toggle="pill") Manöver
+					li
+						a(href="#gott", data-toggle="pill") karmale SF
+					li
+						a(href="#mag", data-toggle="pill") magische SF
+			.row
+				.col-lg-12 &nbsp;
+			.container.tab-content
+				#allg.tab-pane
+					.row
+						each __val, __idx in _Data.allgemein
+							if __val.charAt(0) === "*"
+								- var __name = __val.slice(1)
+								each __sf, __key in _Held.SF.allgemein.filter(function(item) { return (item.indexOf(__name) === 0); })
+									.col-sm-6.col-lg-4
+										.dcm-list-item
+											input(type="checkbox", name="SF[allgemein][]", value=__sf, checked, id="sf1a_"+__key)
+											label(for="sf1a_"+__key)=__sf
+								.col-sm-6.col-lg-4.dcm-template
+									.dcm-list-item
+										input.spezifisch(type="checkbox", name="SF[allgemein][]", value=__name, id="sf1_"+__idx)
+										label(for="sf1_"+__idx)=__name
+										button.add.pull-right
+											span.fa.fa-plus
+										input.pull-right(type="text")
+							else
+								.col-sm-6.col-lg-4
+									.dcm-list-item
+										input(type="checkbox", name="SF[allgemein][]", id="sf1_"+__idx, value=__val, checked=_Held.SF.allgemein.indexOf(__val) !== -1)
+										label(for="sf1_"+__idx)=__val
+					.row
+						.col-lg-12 &nbsp;
+					.text-center.dcm-header.dcm-list-item.dcm-border Geländekunde
+					.row
+						each __sf, __idx in _Data.Geländekunde
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[allgemein][]", id="sf2_"+__idx, value=__sf, checked=_Held.SF.allgemein.indexOf(__sf) !== -1)
+									label(for="sf2_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+					.text-center.dcm-header.dcm-list-item.dcm-border Kulturkunde
+					.row
+						each __sf, __idx in _Data.Kulturkunde
+							- var __kk = "Kulturkunde ("+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[allgemein][]", id="sf3_"+__idx, value=__kk, checked=_Held.SF.allgemein.indexOf(__kk) !== -1)
+									label(for="sf3_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+				#kampf.tab-pane
+					.row
+						each __val, __idx in _Data.Kampf
+							if __val.charAt(0) === "*"
+								- var __name = __val.slice(1)
+								each __sf, __key in _Held.SF.Kampf.filter(function(item) { return (item.indexOf(__name) === 0); })
+									.col-sm-6.col-lg-4
+										.dcm-list-item
+											input(type="checkbox", name="SF[Kampf][]", value=__sf, checked, id="sf4a_"+__key)
+											label(for="sf4a_"+__key)=__sf
+								.col-sm-6.col-lg-4.dcm-template
+									.dcm-list-item
+										input.spezifisch(type="checkbox", name="SF[Kampf][]", value=__name, id="sf4_"+__idx)
+										label(for="sf4_"+__idx)=__name
+										button.add.pull-right
+											span.fa.fa-plus
+										input.pull-right(type="text")
+							else
+								.col-sm-6.col-lg-4
+									.dcm-list-item
+										input(type="checkbox", name="SF[Kampf][]", id="sf4_"+__idx, value=__val, checked=_Held.SF.Kampf.indexOf(__val) !== -1)
+										label(for="sf4_"+__idx)=__val
+					.row
+						.col-lg-12 &nbsp;
+				#hand.tab-pane
+					.row
+						each __sf, __idx in _Data.Manöver
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[Manöver][]", id="sf5_"+__idx, value=__sf, checked=_Held.SF.Manöver.indexOf(__sf) !== -1)
+									label(for="sf5_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+				#gott.tab-pane
+					.row
+						each __sf, __idx in _Data.geweiht
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[geweiht][]", id="sf6_"+__idx, value=__sf, checked=_Held.SF.geweiht.indexOf(__sf) !== -1)
+									label(for="sf6_"+__idx)=__sf
+					.row
+						.col-lg-12
+							hr
+					.row
+						each __sf, __idx in _Held.SF.geweiht.filter(function(item) { return (item.indexOf("Liturgiekenntnis") === 0); })
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[geweiht][]", id="sf6a_"+__idx, value=__sf, checked=_Held.SF.geweiht.indexOf(__sf) !== -1)
+									label(for="sf6a_"+__idx)=__sf
+						.col-sm-6.col-lg-4.dcm-template
+							.dcm-list-item
+									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf6a", value="Liturgiekenntnis")
+									label(for="sf6a") Liturgiekenntnis
+									button.add.pull-right
+										span.fa.fa-plus
+									select.pull-right(size="1")
+										each __list, __typ in _Data.Götter
 											optgroup(label=__typ)
 												each __gott in __list
 													option(value=__gott)=__gott
-									button.add.fl-rechts(type="button") +
-								
-								each __sf, __idx in SF.geweiht.filter(function(item) { return (item.indexOf("Spätweihe") === 0); })
-									li
-										input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", value=__sf, checked, id="sf9b_"+__idx)
-										label(for="sf9b_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf9b", value="Spätweihe")
-									label(for="sf9b") Spätweihe
-									select.fl-rechts(size="1")
-										each __list, __typ in _data.Götter
+						each __sf, __idx in _Held.SF.geweiht.filter(function(item) { return (item.indexOf("Spätweihe") === 0); })
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[geweiht][]", id="sf6b_"+__idx, value=__sf, checked=_Held.SF.geweiht.indexOf(__sf) !== -1)
+									label(for="sf6b_"+__idx)=__sf
+						.col-sm-6.col-lg-4.dcm-template
+							.dcm-list-item
+									input.auswahl_liste2(type="checkbox", name="SF[geweiht][]", id="sf6b", value="Spätweihe")
+									label(for="sf6b") Spätweihe
+									button.add.pull-right
+										span.fa.fa-plus
+									select.pull-right(size="1")
+										each __list, __typ in _Data.Götter
 											optgroup(label=__typ)
 												each __gott in __list
 													option(value=__gott)=__gott
-									button.add.fl-rechts(type="button") +
-																		
-							script.
-								$('#nogod').on('click', function() {
-									$('.gods input[type="radio"]:checked').prop('checked', false);
-								});
-				
-				table.data-section#mag
-					caption Magische Sonderfertigkeiten
-					tr
-						td
-							ul.vor-nach.fl-links
-								each val, key in _data.magisch
-									li
-										input(type="checkbox", name="SF[magisch][]", id="sf10_"+key, value=val, checked= SF.magisch.indexOf(val) !== -1)
-										label(for="sf10_"+key)= val
-							ul.vor-nach.fl-rechts
-								li
-									strong Merkmalskenntnis:
-								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Merkmalskenntnis") === 0); })
-									li
-										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf11b_"+__idx)
-										label(for="sf11b_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf11b", value="Merkmalskenntnis")
-									label(for="sf11b") Merkmalskenntnis
-									select.fl-rechts(size="1")
-										- var __mmkext
-										each __list, __typ in _data.Merkmalskenntnis
-											- var __ext = ["Dämonisch", "Elementar"].indexOf(__typ) > -1 ? __typ+" / " : ""
-											optgroup(label=__typ)
-												each __mmk in __list
-													option(value=__ext+__mmk)=__mmk
-									button.add.fl-rechts(type="button") +
-								li
-									strong Repräsentation:
-								- var __count = 0
-								each __long, __short in _data.Repräsentation
-									- var __isAvailable = SF.magisch.indexOf("Repräsentation ("+__long+")") > -1
-									li
-										input(type="hidden", name="Magie.Repräsentation[#{__count}][short]", value=__short, disabled=!__isAvailable)
-										input(type="hidden", name="Magie.Repräsentation[#{__count}][long]",  value=__long, disabled=!__isAvailable)
-										input.rep(type="checkbox", name="SF[magisch][]", value="Repräsentation (#{__long})", id="rep_"+__count, checked=__isAvailable)
-										label(for="rep_"+__count)= __long
-									- __count++
-								li
-									strong Ritualkenntnis:
-								each __sf, __idx in SF.magisch.filter(function(item) { return (item.indexOf("Ritualkenntnis") === 0); })
-									li
-										input.auswahl_liste2(type="checkbox", name="SF[magisch][]", value=__sf, checked, id="sf13_"+__idx)
-										label(for="sf13_"+__idx)=__sf
-								li
-									input.auswahl_liste2(type="checkbox", name="SF[magisch][]", id="sf13a", value="Ritualkenntnis")
-									label(for="sf13a") Ritualkenntnis
-									select.fl-rechts(size="1")
-										each __rep in _data.Ritualkenntnis
-											option(value=__rep)=__rep
-									button.add.fl-rechts(type="button") +
-								li
-									input.spezifisch(type="checkbox", name="SF[magisch][]", id="sf13b", value="Ritualkenntnis")
-									label(for="sf13b") Ritualkenntnis
-									input.fl-rechts(type="text", placeholder="sonstige Ritualkenntnis", style="width: 49%;")
-									button.add.fl-rechts(type="button") +
-
-				a#save
-				.mitte
-					button(type="submit", disabled) speichern
-		
-		script(type="text/javascript", src="/preprocess.vorteile.js")
+					.row
+						.col-lg-12 &nbsp;
+				#mag.tab-pane
+					.row
+						each __sf, __idx in _Data.magisch
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf7_"+__idx, value=__sf, checked=_Held.SF.magisch.indexOf(__sf) !== -1)
+									label(for="sf7_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+					.text-center.dcm-header.dcm-list-item.dcm-border Repräsentation
+					.row
+						each __sf, __idx in _Data.Repräsentation
+							- var __rep = "Repräsentation ("+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf8_"+__idx, value=__rep, checked=_Held.SF.magisch.indexOf(__rep) !== -1)
+									label(for="sf8_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+					.text-center.dcm-header.dcm-list-item.dcm-border Ritualkenntnis
+					.row
+						each __sf, __idx in _Data.Ritualkenntnis
+							- var __rk = "Ritualkenntnis ("+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf8_"+__idx, value=__rk, checked=_Held.SF.magisch.indexOf(__rk) !== -1)
+									label(for="sf8_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+					.text-center.dcm-header.dcm-list-item.dcm-border Merkmalskenntnis
+					.row
+						each __sf, __idx in _Data.Merkmalskenntnis.allgemein
+							- var __rk = "Merkmalskenntnis ("+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf9_"+__idx, value=__rk, checked=_Held.SF.magisch.indexOf(__rk) !== -1)
+									label(for="sf9_"+__idx)=__sf
+					.row
+						.col-lg-12
+							hr
+					.row
+						each __sf, __idx in _Data.Merkmalskenntnis.Dämonisch
+							- var __rk = "Merkmalskenntnis (Dämonisch / "+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf10_"+__idx, value=__rk, checked=_Held.SF.magisch.indexOf(__rk) !== -1)
+									label(for="sf10_"+__idx)=__sf
+					.row
+						.col-lg-12
+							hr
+					.row
+						each __sf, __idx in _Data.Merkmalskenntnis.Elementar
+							- var __rk = "Merkmalskenntnis (Elementar / "+__sf+")"
+							.col-sm-6.col-lg-4
+								.dcm-list-item
+									input(type="checkbox", name="SF[magisch][]", id="sf11_"+__idx, value=__rk, checked=_Held.SF.magisch.indexOf(__rk) !== -1)
+									label(for="sf11_"+__idx)=__sf
+					.row
+						.col-lg-12 &nbsp;
+		script(type="text/javascript", src="/vorteile.js")
 		script.
-			(function() {
-				$('ul').on("click", 'button.add', function() {
-					var $li = $(this).closest('li')
-					$li.clone().insertAfter($li);
-					$(this).remove();
-				});
-				$('#newChar').on('submit', function(evt) {
-					$('.rep').each(function() {
-						$(this).closest('li').find("input[type='hidden']").prop('disabled', !this.checked);
-					});
-				});
-			})();
+			$('#tab-header').on("click", "a", function (evt) {
+				evt.preventDefault();
+				$(this).tab("show");
+			});
+			$('#tab-header a:first').tab("show");
+			$('button.add').on("click", function() {
+				var $row   = $(this).closest('.dcm-template');
+				var $new   = $row.clone();
+				// modify ID
+				var $label = $new.find('label');
+				var id     = $label.attr('for');
+				var $input = $new.find('*[id="'+id+'"]');
+				$label.attr('for', id + "x");
+				$input.attr('id',  id + "x");
+				$new.find('input[type="text"]').val("");
+				// insert
+				$new.insertAfter($row);
+				// remove button on original
+				$(this).remove();
+				// get value from textbox and place it in checkbox and label
+				var $text  = $row.find('input[type="text"], select');
+				var $check = $row.find('input[type="checkbox"]');
+				var $rowlb = $row.find('label');
+				var val    = " (" + $text.val().trim() + ")";
+				$text.remove();
+				$rowlb.text($rowlb.text() + val);
+				$check.val($check.val() + val);
+				$check.prop("checked", true);
+				$check.removeClass();
+			});

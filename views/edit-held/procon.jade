@@ -1,16 +1,5 @@
 include ../inc-mixins
 
-mixin dropdown(__list, __prefix)
-	- var __lock = __prefix === null;
-	-   __prefix = __prefix || "";
-	each __val, __key in __list
-		if Array.isArray(__val)
-			- __prefix = __lock ? "" : __key+"/"
-			optgroup(label=__key)
-				+dropdown(__val, __prefix)
-		else
-			option(value=__prefix+__val)=__val
-
 - var counter = { count: 0, next: function() { return ++counter.count; } };
 
 mixin plainProCon(pro, x)

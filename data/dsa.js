@@ -136,17 +136,7 @@ module.exports = {
 			"Nandusgefälliges Wissen", 
 			"*Ortskenntnis", 
 			"Roßtäuscher", 
-			"Standfest", 
-			"Dschungelkundig", 
-			"Eiskundig", 
-			"Gebirgskundig", 
-			"Höhlenkundig", 
-			"Maraskankundig", 
-			"Meereskundig", 
-			"Steppenkundig", 
-			"Sumpfkundig", 
-			"Waldkundig", 
-			"Wüstenkundig"
+			"Standfest"
 		],
 		magisch: [
 			"Astrale Meditation", 
@@ -258,6 +248,18 @@ module.exports = {
 			"Trolle", 
 			"Grolme"
 		],
+		Geländekunde: [
+			"Dschungelkundig", 
+			"Eiskundig", 
+			"Gebirgskundig", 
+			"Höhlenkundig", 
+			"Maraskankundig", 
+			"Meereskundig", 
+			"Steppenkundig", 
+			"Sumpfkundig", 
+			"Waldkundig", 
+			"Wüstenkundig"
+		],
 		Götter: {
 			"alveranische Gottheiten": [
 				"Praios", 
@@ -365,7 +367,6 @@ module.exports = {
 				"Verständigung"
 			],
 			Dämonisch: [
-				"gesamt", 
 				"Blakharaz", 
 				"Belhalhar", 
 				"Charyptoroth", 
@@ -377,16 +378,17 @@ module.exports = {
 				"Tasfarelel", 
 				"Belzhorash", 
 				"Agrimoth", 
-				"Belkelel"
+				"Belkelel", 
+				"gesamt"
 			],
 			Elementar: [
-				"gesamt", 
 				"Eis", 
 				"Erz", 
 				"Feuer", 
 				"Humus", 
 				"Luft", 
-				"Wasser"
+				"Wasser", 
+				"gesamt"
 			]
 		}
 	},
