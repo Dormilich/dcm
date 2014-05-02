@@ -2,17 +2,17 @@ include ../inc-mixins
 
 //- make sure the filter functions operate on an array
 unless _Held.SF
-	- _Held.SF = {}
+	- _Held.SF           = {}
 unless _Held.SF.Kampf
-	- _Held.SF.Kampf = []
+	- _Held.SF.Kampf     = []
 unless _Held.SF.Manöver
-	- _Held.SF.Manöver = []
+	- _Held.SF.Manöver   = []
 unless _Held.SF.allgemein
 	- _Held.SF.allgemein = []
 unless _Held.SF.magisch
-	- _Held.SF.magisch = []
+	- _Held.SF.magisch   = []
 unless _Held.SF.geweiht
-	- _Held.SF.geweiht = []
+	- _Held.SF.geweiht   = []
 
 
 doctype html
@@ -39,23 +39,24 @@ html(lang="de")
 		header.container
 			.page-header.text-center
 				h1=_Held.Person.Name
-		main
-			nav#tab-header.container
-				ul.nav.nav-pills.nav-justified
-					li
-						a(href="#allg", data-toggle="pill") allgemeine SF
-					li
-						a(href="#kampf", data-toggle="pill") Kampf-SF
-					li
-						a(href="#hand", data-toggle="pill") Manöver
-					li
-						a(href="#gott", data-toggle="pill") karmale SF
-					li
-						a(href="#mag", data-toggle="pill") magische SF
+		main.container
+			ul#tab-header.nav.nav-pills.nav-justified
+				li
+					a(href="#allg", data-toggle="pill") allgemeine SF
+				li
+					a(href="#kampf", data-toggle="pill") Kampf-SF
+				li
+					a(href="#hand", data-toggle="pill") Manöver
+				li
+					a(href="#gott", data-toggle="pill") karmale SF
+				li
+					a(href="#mag", data-toggle="pill") magische SF
 			.row
 				.col-lg-12 &nbsp;
-			.container.tab-content
-				#allg.tab-pane
+			
+			form.tab-content(action="/sf/"+_Held._id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				section#allg.tab-pane
 					.row
 						each __val, __idx in _Data.allgemein
 							if __val.charAt(0) === "*"
@@ -98,7 +99,7 @@ html(lang="de")
 									label(for="sf3_"+__idx)=__sf
 					.row
 						.col-lg-12 &nbsp;
-				#kampf.tab-pane
+				section#kampf.tab-pane
 					.row
 						each __val, __idx in _Data.Kampf
 							if __val.charAt(0) === "*"
@@ -122,7 +123,7 @@ html(lang="de")
 										label(for="sf4_"+__idx)=__val
 					.row
 						.col-lg-12 &nbsp;
-				#hand.tab-pane
+				section#hand.tab-pane
 					.row
 						each __sf, __idx in _Data.Manöver
 							.col-sm-6.col-lg-4
@@ -131,7 +132,7 @@ html(lang="de")
 									label(for="sf5_"+__idx)=__sf
 					.row
 						.col-lg-12 &nbsp;
-				#gott.tab-pane
+				section#gott.tab-pane
 					.row
 						each __sf, __idx in _Data.geweiht
 							.col-sm-6.col-lg-4
@@ -176,7 +177,7 @@ html(lang="de")
 													option(value=__gott)=__gott
 					.row
 						.col-lg-12 &nbsp;
-				#mag.tab-pane
+				section#mag.tab-pane
 					.row
 						each __sf, __idx in _Data.magisch
 							.col-sm-6.col-lg-4
@@ -235,6 +236,9 @@ html(lang="de")
 									label(for="sf11_"+__idx)=__sf
 					.row
 						.col-lg-12 &nbsp;
+				#save.row.well
+					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
+						button.btn.btn-success.form-control(type="submit", disabled) speichern
 		script(type="text/javascript", src="/vorteile.js")
 		script.
 			$('#tab-header').on("click", "a", function (evt) {
