@@ -32,6 +32,9 @@ html(lang="de")
 				border-color:     silver;
 				color:            white;
 			}
+			.dcm-template {
+				display:		  none;
+			}
 			label {
 				min-width: 2.5em;
 			}
@@ -111,7 +114,7 @@ html(lang="de")
 							.col-xs-4.col-xs-offset-1.col-lg-3.col-lg-offset-2
 								button.btn.btn-success.form-control(type="submit") speichern
 							.col-xs-4.col-xs-offset-2.col-lg-3
-								button.btn.btn-warning.form-control(type="button") neue Waffe
+								button.btn.btn-warning.form-control.add(type="button") neue Waffe
 					form.row.well(action="/waffen/Nahkampf/"+_Held._id, method="post", accept-charset="utf-8")
 						.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
 							input(type="hidden", name="_method", value="delete")
@@ -163,7 +166,7 @@ html(lang="de")
 							.col-xs-4.col-xs-offset-1.col-lg-3.col-lg-offset-2
 								button.btn.btn-success.form-control(type="submit") speichern
 							.col-xs-4.col-xs-offset-2.col-lg-3
-								button.btn.btn-warning.form-control(type="button") neue Waffe
+								button.btn.btn-warning.form-control.add(type="button") neue Waffe
 					form.row.well(action="/waffen/LinkeHand/"+_Held._id, method="post", accept-charset="utf-8")
 						.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
 							input(type="hidden", name="_method", value="delete")
@@ -243,15 +246,9 @@ html(lang="de")
 							.col-xs-4.col-xs-offset-1.col-lg-3.col-lg-offset-2
 								button.btn.btn-success.form-control(type="submit") speichern
 							.col-xs-4.col-xs-offset-2.col-lg-3
-								button.btn.btn-warning.form-control(type="button") neue Waffe
+								button.btn.btn-warning.form-control.add(type="button") neue Waffe
 					form.row.well(action="/waffen/Fernkampf/"+_Held._id, method="post", accept-charset="utf-8")
 						.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
 							input(type="hidden", name="_method", value="delete")
 							button.btn.btn-danger.form-control(type="submit") alle Fernkampfwaffen löschen
-		script#save.
-			$('#tab-header').on("click", "a", function (evt) {
-				evt.preventDefault();
-				$(this).tab("show");
-			});
-			$('#tab-header a:first').tab("show");
-		//script(src="/edit-waffen.js")
+		script#save(src="/edit-waffen.js")

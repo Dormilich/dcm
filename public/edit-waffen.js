@@ -1,48 +1,40 @@
-$('#addNKW').on("click", function() {
-	var $rows = $('#tmpl-nkw tr').clone();
-	var index = $(this).closest("table").find(".isactive").length;
-	$rows.find("*[name]").each(function() {
+// activate tabs
+$('#tab-header').on("click", "a", function (evt) {
+	evt.preventDefault();
+	$(this).tab("show");
+});
+$('#tab-header a:first').tab("show");
+
+// remove template from form
+$('form').on("submit", function () {
+	$(this).find('.dcm-template').remove();
+});
+
+// add weapon panel
+$('.add').on("click", function () {
+	var index  = $(this).closest('form').find('.panel').length - 1;
+	var $tmpl  = $(this).closest('form').find('.dcm-template');
+	var $panel = $tmpl.clone();
+	$panel.removeClass('dcm-template');
+	$panel.find("*[name]").each(function() {
 		this.name = this.name.replace("{index}", index);
 	});
-	$rows.find("*[id]").each(function() {
+	$panel.find("*[id]").each(function() {
 		this.id = this.id.replace("{index}", index);
 	});
-	$rows.find("*[for]").each(function() {
+	$panel.find("*[for]").each(function() {
 		this.htmlFor = this.htmlFor.replace("{index}", index);
 	});
-	$(this).closest("table").append($rows);
+	$panel.insertBefore($tmpl);
 });
-$('#addPWS').on("click", function() {
-	var $rows = $('#tmpl-pws tr').clone();
-	var index = $(this).closest("table").find(".isactive").length;
-	$rows.find("*[name]").each(function() {
-		this.name = this.name.replace("{index}", index);
-	});
-	$(this).closest("table").append($rows);
+
+// delete weapon panel
+$('.tab-content').on("click", '.del', function () {
+	$(this).closest('.panel').remove();
 });
-$('#addFKW').on("click", function() {
-	var $rows = $('#tmpl-fkw tr').clone();
-	var index = $(this).closest("table").find(".isactive").length;
-	$rows.find("*[name]").each(function() {
-		this.name = this.name.replace("{index}", index);
-	});
-	$rows.find("*[id]").each(function() {
-		this.id = this.id.replace("{index}", index);
-	});
-	$rows.find("*[for]").each(function() {
-		this.htmlFor = this.htmlFor.replace("{index}", index);
-	});
-	$(this).closest("table").append($rows);
-});
-$('table').on("click", '.isactive', function() {
-	var $tr     = $(this).closest("tr");
-	var counter = this.dataset.span;
-	if (counter == 2) {
-		$tr = $tr.add($tr.next());
-	}
-	$tr.find("input[name], select[name]").prop("disabled", !this.checked);
-});
+/*
 $('table').on("click", '.wurf', function() {
 	$(this).nextAll().prop("disabled", !this.checked);
 });
+*/
 $('button').prop("disabled", false);
