@@ -59,7 +59,8 @@ module.exports = function (passport) {
 			passReqToCallback : true			
 		}, function(req, email, password, done) {
 			process.nextTick(function() {
-				User.findOne({ "local.email": email }, function(err, user) {
+				var re = new RegExp("^"+email+"$", "i");
+				User.findOne({ "local.email": re }, function(err, user) {
 					if (err) {
 						return done(err);
 					}
@@ -99,7 +100,7 @@ module.exports = function (passport) {
 					}
 					// assign User to DB
 					if (!req.user) {
-						var re = new RegExp("^"+email+"$", "i")
+						var re = new RegExp("^"+email+"$", "i");
 						User
 							.findOne()
 							.or([

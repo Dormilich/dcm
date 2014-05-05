@@ -58,7 +58,7 @@ module.exports = function (app) {
 		//if (req.query.force === "jade") {
 			var nav        = menu.neu;
 			nav.currentURL = req.path;
-			res.render('held/new-char', {
+			res.render('edit-held/new-char', {
 				_Menu:     nav,
 				_Dropdown: data.dropdown
 			});
