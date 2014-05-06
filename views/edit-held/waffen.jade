@@ -39,7 +39,6 @@ html(lang="de")
 				min-width: 2.5em;
 			}
 	body#top
-		// add a pill nav below and use CSS3 :target
 		include inc/nav
 		header.container
 			.page-header.text-center
@@ -59,6 +58,56 @@ html(lang="de")
 				section#nahkampf.tab-pane
 					form.form-horizontal(action="/waffen/"+_Held._id, method="post", accept-charset="utf-8")
 						input(type="hidden", name="_method", value="put")
+						- var _NK = Array.isArray(_Held.Ausrüstung.Nahkampf) ? _Held.Ausrüstung.Nahkampf : []
+						each __sf, __idx in _NK
+							.panel.panel-default
+								.panel-heading
+									.form-group.dcm-row
+										.col-xs-12.col-sm-6.col-md-5.col-md-offset-1
+											label.sr-only Name
+											input.form-control(type="text", name="Ausrüstung.Nahkampf[#{__idx}][Name]", placeholder="Name", value=__sf.Name)
+										.col-xs-10.col-sm-4
+											label.sr-only Talent
+											select.form-control(name="Ausrüstung.Nahkampf[#{__idx}][talent]")
+												each __nk in _Nahkampf
+													option(selected=(__sf.talent===__nk.name))=__nk.name
+										.col-xs-2
+											.checkbox-inline
+												label
+													input(type="checkbox", name="Ausrüstung.Nahkampf[#{__idx}][spez]", checked=__sf.spez)
+													span.hidden-lg Spez.
+													span.visible-lg Spezialisierung
+								.panel-body
+									.form-group.dcm-row
+										label.control-label.col-xs-1 DK
+										.col-xs-3.col-sm-2
+											input.form-control.text-center(type="text", name="Ausrüstung.Nahkampf[#{__idx}][DK]", value=__sf.DK, placeholder="HNSP", size="3", maxlength="4")
+										label.control-label.col-xs-1 BE
+										.col-xs-3.col-sm-2
+											input.form-control(type="number", name="Ausrüstung.Nahkampf[#{__idx}][BE]", max="0", step="1", value=__sf.BE)
+										label.control-label.col-xs-1.col-md-offset-1 BF
+										.col-xs-3.col-sm-2.col-md-1
+											input.form-control(type="number", name="Ausrüstung.Nahkampf[#{__idx}][BF]", step="1", value=__sf.BF)
+										label.control-label.col-xs-1 INI
+										.col-xs-5.col-sm-2
+											input.form-control(type="number", name="Ausrüstung.Nahkampf[#{__idx}][INI]", step="1", min="-5", max="5", value=__sf.INI)
+										label.control-label.col-xs-1 WM
+										.col-xs-5.col-sm-3.col-md-2
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Nahkampf[#{__idx}][WM][AT]", step="1", min="-5", max="5", value=__sf.WM.AT)
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Nahkampf[#{__idx}][WM][PA]", step="1", min="-5", max="5", value=__sf.WM.PA)
+										label.control-label.col-xs-1 TP
+										.col-xs-5.col-sm-3
+											input.form-control.form-control-inline.text-center(type="text", name="Ausrüstung.Nahkampf[#{__idx}][TP][roll]", value=__sf.TP.roll, size="3", maxlength="5", placeholder="n·W6", title="Anzahl Würfel")
+											|  +
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Nahkampf[#{__idx}][TP][rollMod]", step="1", value=__sf.TP.rollMod)
+										label.control-label.col-xs-1 TP/KK
+										.col-xs-5.col-sm-3.col-md-2
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Nahkampf[#{__idx}][TP][kk]", step="1", min="5", value=__sf.TP.kk)
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Nahkampf[#{__idx}][TP][kkMod]", step="1", min="1", max="10", value=__sf.TP.kkMod)
+								.panel-footer.text-right
+									a.btn.btn-default.del Waffe löschen
 						// template
 						.panel.panel-default.dcm-template
 							.panel-heading
@@ -74,7 +123,7 @@ html(lang="de")
 									.col-xs-2
 										.checkbox-inline
 											label
-												input(type="checkbox")
+												input(type="checkbox", name="Ausrüstung.Nahkampf[{index}][spez]")
 												span.hidden-lg Spez.
 												span.visible-lg Spezialisierung
 							.panel-body
@@ -123,6 +172,43 @@ html(lang="de")
 				section#linkhand.tab-pane
 					form.form-horizontal(action="/waffen/"+_Held._id, method="post", accept-charset="utf-8")
 						input(type="hidden", name="_method", value="put")
+						- var _LH = Array.isArray(_Held.Ausrüstung.LinkeHand) ? _Held.Ausrüstung.LinkeHand : []
+						each __sf, __idx in _LH
+							.panel.panel-default.text-center
+								.panel-heading
+									.row.dcm-row
+										.col-xs-6.col-md-3.col-lg-4
+											.dcm-header.dcm-border Bezeichnung
+										.col-xs-6.col-md-3
+											.dcm-header.dcm-border Typ
+										.col-xs-6.col-md-3.col-lg-2
+											.dcm-header.dcm-border WM
+										.col-xs-6.col-md-3
+											.col-xs-6
+												.dcm-header.dcm-border BF
+											.col-xs-6
+												.dcm-header.dcm-border INI
+								.panel-body
+									.form-group.dcm-row
+										label.sr-only Name
+										.col-xs-6.col-md-3.col-lg-4
+											input.form-control(type="text", name="Ausrüstung.LinkeHand[#{__idx}][Name]", placeholder="Name", value=__sf.Name)
+										label.sr-only Talent
+										.col-xs-6.col-md-3
+											select.form-control(name="Ausrüstung.LinkeHand[#{__idx}][talent]")
+												each __val in ["Schild", "Parierwaffe", "Schild / PW"]
+													option(selected=(__sf.talent===__val))=__val
+										.col-xs-6.col-md-3.col-lg-2
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.LinkeHand[#{__idx}][WM][AT]", step="1", min="-10", max="3", value=__sf.WM.AT)
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.LinkeHand[#{__idx}][WM][PA]", step="1", min="0", max="5", value=__sf.WM.PA)
+										.col-xs-6.col-md-3
+											.col-xs-6
+												input.form-control.form-control-inline(type="number", name="Ausrüstung.LinkeHand[#{__idx}][BF]", step="1", value=__sf.BF)
+											.col-xs-6
+												input.form-control.form-control-inline(type="number", name="Ausrüstung.LinkeHand[#{__idx}][INI]", step="1", value=__sf.INI)
+								.panel-footer.text-right
+									a.btn.btn-default.del Waffe löschen
 						// template
 						.panel.panel-default.text-center.dcm-template
 							.panel-heading
@@ -142,7 +228,7 @@ html(lang="de")
 								.form-group.dcm-row
 									label.sr-only Name
 									.col-xs-6.col-md-3.col-lg-4
-										input.form-control(type="text", name="Ausrüstung.Nahkampf[{index}][Name]", placeholder="Name")
+										input.form-control(type="text", name="Ausrüstung.LinkeHand[{index}][Name]", placeholder="Name")
 									label.sr-only Talent
 									.col-xs-6.col-md-3
 										select.form-control(name="Ausrüstung.LinkeHand[{index}][talent]")
@@ -175,6 +261,72 @@ html(lang="de")
 				section#fernkampf.tab-pane
 					form.form-horizontal(action="/waffen/"+_Held._id, method="post", accept-charset="utf-8")
 						input(type="hidden", name="_method", value="put")
+						- var _FK = Array.isArray(_Held.Ausrüstung.Fernkampf) ? _Held.Ausrüstung.Fernkampf : []
+						each __sf, __idx in _FK
+							.panel.panel-default
+								.panel-heading
+									.form-group.dcm-row
+										.col-xs-10.col-md-5
+											label.sr-only Name
+											input.form-control(type="text", name="Ausrüstung.Fernkampf[#{__idx}][Name]", placeholder="Name", value=__sf.Name)
+										.col-xs-2.col-md-1
+											.checkbox-inline
+												label
+													input(type="checkbox", name="Ausrüstung.Fernkampf[#{__idx}][spez]")
+													| Spez.
+										.col-xs-8.col-md-3
+											label.sr-only Talent
+											select.form-control(name="Ausrüstung.Fernkampf[#{__idx}][talent]")
+												each __fk in _Fernkampf
+													option(selected=(__sf.talent===__fk.name))=__fk.name
+										label.control-label.col-xs-2.col-md-1 Laden
+										.col-xs-2.col-md-2
+											input.form-control.text-center(type="text", name="Ausrüstung.Fernkampf[#{__idx}][Laden]", placeholder="Ladezeit", value=__sf.Laden, size="5")
+								.panel-body
+									.form-group.dcm-row
+										label.control-label.col-xs-2.col-md-1 WM
+										.col-xs-3.col-md-1
+											input.form-control(type="number", name="Ausrüstung.Fernkampf[#{__idx}][WM][AT]", min="-1", max="2", step="1", value=__sf.WM.AT)
+										label.control-label.col-xs-2.col-md-1 TP
+										.col-xs-5.col-md-3
+											input.form-control.form-control-inline.text-center(type="text", name="Ausrüstung.Fernkampf[#{__idx}][TP][roll]", size="3", maxlength="5", placeholder="n·W6", value=__sf.TP.roll, title="Anzahl Würfel")
+											|  +
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][rollMod]", step="1", min="-5" value=__sf.TP.rollMod)
+										label.control-label.col-xs-2.col-md-1 BE
+										.col-xs-3.col-md-1
+											input.form-control(type="number", name="Ausrüstung.Fernkampf[#{__idx}][BE]", max="0", step="1", value=__sf.BE)
+										label.control-label.col-xs-2.col-md-1
+											span.dcm-button(title="nur bei Wurfwaffen") TP/KK
+										.col-xs-5.col-md-3
+											input(type="hidden", name="Ausrüstung.Fernkampf[#{__idx}][TP][kkAtt]", disabled=(__sf.TP.kkAtt!==true))
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][kk]", step="1", min="5", value=__sf.TP.kk, disabled=(__sf.TP.kkAtt!==true))
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][kkMod]", step="1", min="1", max="10", value=__sf.TP.kkMod, disabled=(__sf.TP.kkAtt!==true))
+									.form-group.dcm-row
+										label.control-label.col-xs-1.col-sm-2.col-md-1 DK
+										.col-xs-11.col-sm-10.col-md-5
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dk][]", min="0", step="1", value=__sf.TP.dk[0], title="wenn unterhalb der Mindestreichweite: 0")
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dk][]", min="0", step="1", value=__sf.TP.dk[1])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dk][]", min="0", step="1", value=__sf.TP.dk[2])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dk][]", min="0", step="1", value=__sf.TP.dk[3])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dk][]", min="0", step="1", value=__sf.TP.dk[4])
+										label.control-label.col-xs-1.col-sm-2.col-md-1 TP+
+										.col-xs-11.col-sm-10.col-md-5
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dkMod][]", step="1", value=__sf.TP.dkMod[0])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dkMod][]", step="1", value=__sf.TP.dkMod[1])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dkMod][]", step="1", value=__sf.TP.dkMod[2])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dkMod][]", step="1", value=__sf.TP.dkMod[3])
+											|  /
+											input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[#{__idx}][TP][dkMod][]", step="1", value=__sf.TP.dkMod[4])
+								.panel-footer.text-right
+									a.btn.btn-default.del Waffe löschen
 						// template
 						.panel.panel-default.dcm-template
 							.panel-heading
@@ -185,7 +337,7 @@ html(lang="de")
 									.col-xs-2.col-md-1
 										.checkbox-inline
 											label
-												input(type="checkbox")
+												input(type="checkbox", name="Ausrüstung.Fernkampf[{index}][spez]")
 												| Spez.
 									.col-xs-8.col-md-3
 										label.sr-only Talent
@@ -202,7 +354,7 @@ html(lang="de")
 										input.form-control(type="number", name="Ausrüstung.Fernkampf[{index}][WM][AT]", min="-1", max="2", step="1", value="0")
 									label.control-label.col-xs-2.col-md-1 TP
 									.col-xs-5.col-md-3
-										input.form-control.form-control-inline.text-center(type="text", size="3", maxlength="5", placeholder="n·W6", value="1W6", title="Anzahl Würfel")
+										input.form-control.form-control-inline.text-center(type="text", name="Ausrüstung.Fernkampf[{index}][TP][roll]", size="3", maxlength="5", placeholder="n·W6", value="1W6", title="Anzahl Würfel")
 										|  +
 										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][rollMod]", step="1", min="-5" value="4")
 									label.control-label.col-xs-2.col-md-1 BE
@@ -229,15 +381,15 @@ html(lang="de")
 										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dk][]", min="0", step="1")
 									label.control-label.col-xs-1.col-sm-2.col-md-1 TP+
 									.col-xs-11.col-sm-10.col-md-5
-										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]")
+										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]", step="1")
 										|  /
-										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]")
+										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]", step="1")
 										|  /
-										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]")
+										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]", step="1")
 										|  /
-										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]")
+										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]", step="1")
 										|  /
-										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]")
+										input.form-control.form-control-inline(type="number", name="Ausrüstung.Fernkampf[{index}][TP][dkMod][]", step="1")
 							.panel-footer.text-right
 								a.btn.btn-default.del Waffe löschen
 						.row
