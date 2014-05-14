@@ -1,12 +1,12 @@
+include ../inc-mixins
+
 doctype html
 html(lang="de")
 	head
-		meta(charset="utf-8")
+		include ../inc-bootstrap
 		title Rüstkammer
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(src="/jquery-2.0.3.min.js")
-		style.
+		link(rel="stylesheet", href="/dcm-display.css")
+		//-style.
 			#liste {
 				list-style-type: none;
 				padding: 1em 5em;
@@ -29,23 +29,16 @@ html(lang="de")
 				padding: 0 !important;
 				text-align: center;
 			}
-	body
-		nav
-			ul#main-menu
-				li
-					a(href="#top") [Seitenanfang]
-				li
-					a(href="#save") [speichern]
-				li
-					a(href="/held/"+_id, title="Heldenbogen")= "⇒ "+Person.Name.split(' ')[0]
-		header#top
-			h1.mitte
-				a(href="/held/"+_id)= Person.Name
-		main
-			form(action="/kleidung/"+_id, method="post", accept-charset="utf-8")
+	body#top
+		include inc/nav
+		header.container
+			.page-header.text-center
+				h1=_Held.Person.Name
+		main.container
+			form(action="/kleidung/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 
-				table.data-section.eigenschaften
+				//-table.data-section.eigenschaften
 					caption Rüstungen
 					colgroup
 						col(style="width: 2em;")
@@ -128,17 +121,24 @@ html(lang="de")
 				.mitte
 					button(type="submit", disabled) speichern
 
-			form(action="/waffen/Kleidung/"+_id, method="post", accept-charset="utf-8")
-				input(type="hidden", name="_method", value="delete")
-				.mitte
-					button(type="submit", disabled) alle Rüstungen löschen
+			form.row.well(action="/waffen/Kleidung/"+_Held._id, method="post", accept-charset="utf-8")
+				.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
+					input(type="hidden", name="_method", value="delete")
+					button.btn.btn-danger.form-control(type="submit", disabled) alle Rüstungen löschen
 
-			ul#liste
-				- var counter = 0;
-				each __rs, __name in _data
-					li
-						input(type="checkbox", id="rs_"+counter, value=__name, data-ko=__rs[0], data-br=__rs[1], data-ru=__rs[2], data-ba=__rs[3], data-ra=__rs[4], data-la=__rs[5], data-rb=__rs[6], data-lb=__rs[7], data-rs=__rs[8], data-be=__rs[9])
-						label(for="rs_"+counter)=__name
-						- counter += 1;
-			.fl-clear
-			script(src="/edit-kleidung.js")
+			section.panel.panel-default
+				.panel-heading.dcm-caption Rüstungsteile
+				.panel-body
+					- var counter = 0;
+					each __data, __cat in _Data
+						.text-center.dcm-header.dcm-list-item.dcm-border=__cat
+						.row
+							each __rs, __name in __data
+								.col-sm-6.col-md-4
+									.dcm-list-item
+										input(type="checkbox", id="rs_"+counter, value=__name, data-ko=__rs[0], data-br=__rs[1], data-ru=__rs[2], data-ba=__rs[3], data-ra=__rs[4], data-la=__rs[5], data-rb=__rs[6], data-lb=__rs[7], data-rs=__rs[8], data-be=__rs[9])
+										label(for="rs_"+counter)=__name
+										- counter += 1;
+						.row
+							.col-lg-12 &nbsp;
+			//script(src="/edit-kleidung.js")
