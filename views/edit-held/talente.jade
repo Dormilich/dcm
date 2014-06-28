@@ -45,14 +45,18 @@ doctype html
 html(lang="de")
 	head
 		include ../inc-bootstrap
-		title Rüstkammer
+		title Talente
 		link(rel="stylesheet", href="/dcm-display.css")
 		style.
 			body {
-				padding-top:    60px;
+				padding-top:    	60px;
 			}
 			input[type='number'] {
-				text-align: 	center;
+				text-align: 		center;
+				border-radius:		5px;
+			}
+			input[type='number']:disabled {
+				background-color:	#ddd;
 			}
 	body#top
 		include inc/nav
@@ -60,9 +64,9 @@ html(lang="de")
 			h1.page-header.text-center=_Held.Person.Name
 				
 		main.container
-			ul#tab-header.nav.nav-tabs.nav-justified
+			ul.nav.nav-pills.nav-justified.text-center
 				li
-					a(href="#Nahkampf", data-toggle="pill") Nahkampf
+					a#init(href="#Nahkampf", data-toggle="pill") Nahkampf
 				li
 					a(href="#Fernkampf", data-toggle="pill") Fernkampf
 				li
@@ -114,7 +118,7 @@ html(lang="de")
 									input.nk-at.unlock(type="number", name="Talente.Nahkampf[#{__idx}].AT", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 								.col-xs-3.col-sm-2
 									input.nk-pa.unlock(type="number", name="Talente.Nahkampf[#{__idx}].PA", min="0", max="20", step="1", value=__heldentalent.PA, disabled=!__isAvailable)
-								.col-xs-3.col-sm-1.text-center=__heldentalent.AT+__heldentalent.PA
+								.col-xs-3.col-sm-1.nk-taw.text-center=__heldentalent.AT+__heldentalent.PA
 
 				section#Fernkampf.tab-pane.panel.panel-default.text-center
 					.panel-heading
@@ -243,6 +247,9 @@ html(lang="de")
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente.Gaben[#{__idx}].wert", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
 
+			script(src="/edit-talente.js")
+			script.
+				$('#init').trigger('click');
 
 //-mixin talenttable(__titel, __data, __name)
 	- var __talente = _held.Talente[__name];
