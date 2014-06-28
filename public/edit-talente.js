@@ -19,12 +19,12 @@ $('#Nahkampf').on('change', '.row', function() {
 	var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 	$(this).find('.nk-taw').text(taw);
 });
+/*
 
 $('#Nahkampf .row').each(function() {
 	var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 	$(this).find('.nk-taw').text(taw);
 });
-
 $('.add').on('click', function() {
 	var $datasrc = $(this).closest('tr');
 	var options  = $datasrc.data('options');
@@ -65,3 +65,4 @@ $('.add').on('click', function() {
 $('.del').on('click', function() {
 	$(this.parentNode).remove();
 });
+*/
