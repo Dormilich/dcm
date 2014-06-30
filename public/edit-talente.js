@@ -1,3 +1,5 @@
+$('#pagenav a:first').trigger('click');
+
 $('.tab-content').on('click', 'label', function() {
 	// click is faster than label => checkbox
 	var $tr    = $(this).closest('.row');
@@ -19,12 +21,9 @@ $('#Nahkampf').on('change', '.row', function() {
 	var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
 	$(this).find('.nk-taw').text(taw);
 });
-/*
 
-$('#Nahkampf .row').each(function() {
-	var taw = Number($(this).find('.nk-at').val()) + Number($(this).find('.nk-pa').val());
-	$(this).find('.nk-taw').text(taw);
-});
+
+/*
 $('.add').on('click', function() {
 	var $datasrc = $(this).closest('tr');
 	var options  = $datasrc.data('options');
