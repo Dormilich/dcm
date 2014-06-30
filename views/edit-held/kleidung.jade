@@ -8,11 +8,15 @@ html(lang="de")
 		link(rel="stylesheet", href="/dcm-display.css")
 		style.
 			input[type='number'] {
-				width: 3em;
-				text-align: center;
+				width: 				3em;
+				text-align: 		center;
+				border-radius:		5px;
+			}
+			input[type='number']:disabled {
+				background-color:	#ddd;
 			}
 			#be {
-				width: 4em;
+				width: 				4em;
 			}
 		//-style.
 			#liste {
@@ -79,85 +83,6 @@ html(lang="de")
 				.row.well.text-center
 					.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
 						button.btn.btn-success.form-control(type="submit", disabled) speichern
-				//-table.data-section.eigenschaften
-					caption Rüstungen
-					colgroup
-						col(style="width: 2em;")
-						col(style="width: 20%;")
-						col(span="10")
-						col(style="width: 5em;")
-					thead
-						tr
-							td
-							th Name
-							th Ko
-							th Br
-							th Rü
-							th Ba
-							th RA
-							th LA
-							th RB
-							th LB
-							th RS
-							th BE
-							td
-					tfoot
-						tr
-							td
-								input.isactive(type="checkbox", checked)
-							td
-								input#nm.fullSize(type="text", name="Ausrüstung.Kleidung[{index}][Name]", placeholder="Bezeichnung")
-							td
-								input#ko(type="number", name="Ausrüstung.Kleidung[{index}][Ko]", min="0", step="1", value="0")
-							td
-								input#br(type="number", name="Ausrüstung.Kleidung[{index}][Br]", min="0", step="1", value="0")
-							td
-								input#ru(type="number", name="Ausrüstung.Kleidung[{index}][Rü]", min="0", step="1", value="0")
-							td
-								input#ba(type="number", name="Ausrüstung.Kleidung[{index}][Ba]", min="0", step="1", value="0")
-							td
-								input#ra(type="number", name="Ausrüstung.Kleidung[{index}][RA]", min="0", step="1", value="0")
-							td
-								input#la(type="number", name="Ausrüstung.Kleidung[{index}][LA]", min="0", step="1", value="0")
-							td
-								input#rb(type="number", name="Ausrüstung.Kleidung[{index}][RB]", min="0", step="1", value="0")
-							td
-								input#lb(type="number", name="Ausrüstung.Kleidung[{index}][LB]", min="0", step="1", value="0")
-							td
-								input#rs(type="number", name="Ausrüstung.Kleidung[{index}][RS]", min="0", step="0.1", value="0")
-							td
-								input#be(type="number", name="Ausrüstung.Kleidung[{index}][BE]", min="0", step="0.05", value="0")
-							td
-								button#add(type="button") neu
-					tbody
-						if Ausrüstung && Ausrüstung.Kleidung
-							each __rst, __idx in Ausrüstung.Kleidung
-								tr
-									td
-										input.isactive(type="checkbox", checked)
-									td
-										input.fullSize(type="text", name="Ausrüstung.Kleidung[#{__idx}][Name]", placeholder="Bezeichnung", value=__rst.Name)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][Ko]", min="0", step="1", value=__rst.Ko)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][Br]", min="0", step="1", value=__rst.Br)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][Rü]", min="0", step="1", value=__rst.Rü)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][Ba]", min="0", step="1", value=__rst.Ba)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][RA]", min="0", step="1", value=__rst.RA)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][LA]", min="0", step="1", value=__rst.LA)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][RB]", min="0", step="1", value=__rst.RB)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][LB]", min="0", step="1", value=__rst.LB)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][RS]", min="0", step="0.1", value=__rst.RS)
-									td
-										input(type="number", name="Ausrüstung.Kleidung[#{__idx}][BE]", min="0", step="0.05", value=__rst.BE)
-									td
 
 			form.row.well(action="/waffen/Kleidung/"+_Held._id, method="post", accept-charset="utf-8")
 				.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center

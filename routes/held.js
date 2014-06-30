@@ -67,7 +67,7 @@ module.exports = function (app) {
 				doc.Magie.Zauber.sort(function(a, b) {
 					return a._zauber.Name.localeCompare(b._zauber.Name, "de");
 				});//*/
-				var nav        = menu.helden;
+				var nav        = menu.magie;
 				nav.currentURL = req.path;
 				res.render('held/magie', {
 					_Held: doc,
@@ -84,7 +84,7 @@ module.exports = function (app) {
 			.exec(function(err, doc) {
 				if (err)  return next(err);
 				if (!doc) return next();
-				var nav        = menu.helden;
+				var nav        = menu.weihe;
 				nav.currentURL = req.path;
 				res.render('held/geweiht', {
 					_Held: doc,
