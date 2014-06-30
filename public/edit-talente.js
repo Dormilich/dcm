@@ -1,4 +1,5 @@
 $('#pagenav a:first').trigger('click');
+$('button:disabled').prop('disabled', false);
 
 $('.tab-content').on('click', 'label', function() {
 	// click is faster than label => checkbox

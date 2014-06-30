@@ -89,9 +89,9 @@ html(lang="de")
 					a(href="#Gaben", data-toggle="pill") Gaben
 			.row
 				.col-lg-12 &nbsp;
-			section.tab-content
-				form#Nahkampf.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+			form.tab-content(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+				section#Nahkampf.tab-pane.panel.panel-default.text-center
 					.panel-heading
 						.row
 							.col-xs-12.col-sm-5 Talent
@@ -122,11 +122,8 @@ html(lang="de")
 								.col-xs-3.col-sm-2
 									input.nk-pa.unlock(type="number", name="Talente.Nahkampf[#{__idx}][PA]", min="0", max="20", step="1", value=__heldentalent.PA, disabled=!__isAvailable)
 								.col-xs-3.col-sm-1.nk-taw.text-center=__heldentalent.AT+__heldentalent.PA
-					.panel-footer.text-center
-						button.btn.btn-default(type="submit") speichern
 
-				form#Fernkampf.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Fernkampf.tab-pane.panel.panel-default.text-center
 					.panel-heading
 						.row
 							.col-xs-6.col-sm-8.col-lg-10 Talent
@@ -152,31 +149,23 @@ html(lang="de")
 											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente.Fernkampf[#{__idx}][AT]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
-					.panel-footer.text-center
-						button.btn.btn-default(type="submit") speichern
 
-				form#Koerper.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Koerper.tab-pane.panel.panel-default.text-center
 					+talentTable(_körperlich, "körperlich")
 
-				form#Gesellschaft.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Gesellschaft.tab-pane.panel.panel-default.text-center
 					+talentTable(_Gesellschaft, "Gesellschaft")
 
-				form#Wissen.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Wissen.tab-pane.panel.panel-default.text-center
 					+talentTable(_Wissen, "Wissen")
 
-				form#Natur.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Natur.tab-pane.panel.panel-default.text-center
 					+talentTable(_Natur, "Natur")
 
-				form#Handwerk.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Handwerk.tab-pane.panel.panel-default.text-center
 					+talentTable(_Handwerk, "Handwerk")
 
-				form#Sprachen.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Sprachen.tab-pane.panel.panel-default.text-center
 					.panel-heading
 						.row
 							.col-xs-5.col-sm-7.col-lg-9 Sprachen
@@ -205,11 +194,8 @@ html(lang="de")
 											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente.Sprachen[#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
-					.panel-footer.text-center
-						button.btn.btn-default(type="submit") speichern
 
-				form#Schriften.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Schriften.tab-pane.panel.panel-default.text-center
 					.panel-heading
 						.row
 							.col-xs-5.col-sm-7.col-lg-9 Schriften
@@ -238,11 +224,8 @@ html(lang="de")
 											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente.Schriften[#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
-					.panel-footer.text-center
-						button.btn.btn-default(type="submit") speichern
 
-				form#Gaben.tab-pane.panel.panel-default.text-center(action="/talente/"+_Held._id, method="post", accept-charset="utf-8")
-					input(type="hidden", name="_method", value="put")
+				section#Gaben.tab-pane.panel.panel-default.text-center
 					.panel-heading
 						.row
 							.col-xs-6.col-sm-8.col-lg-10 Gaben
@@ -268,7 +251,8 @@ html(lang="de")
 											option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente.Gaben[#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
-					.panel-footer.text-center
-						button.btn.btn-default(type="submit") speichern
+				#save.row.well
+					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
+						button.btn.btn-success.form-control(type="submit", disabled) speichern
 
 			script(src="/edit-talente.js")
