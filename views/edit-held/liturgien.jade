@@ -1,24 +1,28 @@
+include ../inc-mixins
+
 mixin print(__data)
 	p!=JSON.stringify(__data)
-
-- function isAvailable(_charlist, _stdTalent) { 
-- 	var l = _charlist ? _charlist.length : 0;
-- 	while (l--) { 
-- 		if (String(_charlist[l]._id) == String(_stdTalent._id)) {
-- 			return true; 
-- 		}
-- 	} 
-- 	return false; 
-- }
 
 doctype html
 html(lang="de")
 	head
+		include ../inc-bootstrap
 		title Liturgien hinzufügen
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		script(src="/jquery-2.0.3.min.js")
+		link(rel="stylesheet", href="/dcm-display.css")
 		style.
+			input[type='number'] {
+				text-align: 		center;
+				border-radius:		5px;
+				max-width:			5em;
+				width:				100%;
+			}
+			input[type='number']:disabled {
+				background-color:	#ddd;
+			}
+			.dcm-gap-bottom {
+				margin-bottom:    1em;
+			}
+		//-style.
 			#lit .selected label {
 				font-weight: bold;
 				font-variant: small-caps;
@@ -32,31 +36,45 @@ html(lang="de")
 			#template {
 				display: none;
 			}
-	body
-		nav
-			ul#main-menu
-				li
-					a.mitte(title="springe zu Abschnitt ...") &#8681;
-					ul
-						li
-							a(href="#liturgiekenntnis") Liturgiekenntnis
-						li
-							a(href="#liturgien") Liturgien
-				li
-					a(href="#top") [Seitenanfang]
-				li
-					a(href="#save") [speichern]
-				li
-					a(href="/weihe/"+_held._id, title="Geweihtenbogen")= "⇒ "+_held.Person.Name.split(' ')[0]
-		header#top
-			h1.mitte
-				a(href="/held/"+_held._id)= _held.Person.Name
-		main
-			form(action="/liturgien/"+_held._id, method="post", accept-charset="utf-8")
+	body#top
+		include inc/nav
+		header.container
+			h1.page-header.text-center=_Held.Person.Name
+		main.container
+			form(action="/liturgien/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 				
-				section#liturgiekenntnis
-					table.data-section.eigenschaften#lkw
+				section#lkw.panel.panel-default
+					.panel-heading.dcm-caption Liturgiekenntnis
+					.panel-body
+						//-.container-fluid.text-center.dcm-gap-bottom
+							.row.dcm-row
+								.col-xs-6
+									.dcm-header.dcm-border Gottheit
+								.col-xs-3
+									.dcm-header.dcm-border Lern
+								.col-xs-3
+									.dcm-header.dcm-border LkW
+						.container-fluid.text-center
+							.row.dcm-row
+								.col-xs-1
+									input(type="checkbox")
+								.col-xs-5.text-left 
+									label Boron
+								.col-xs-3
+									select(size="1")
+										each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+											option=__kat
+								.col-xs-3
+									input(type="number")
+					.panel-footer
+						select(size="1")
+							each __list, __typ in _Dropdown.Götter
+								optgroup(label=__typ)
+									each __gott in __list
+										option(value=__gott)=__gott
+
+					//table.data-section.eigenschaften#lkw
 						caption Liturgiekenntnis
 						colgroup
 							col(style="width: 2em;")
@@ -104,8 +122,26 @@ html(lang="de")
 												option(selected=__lk.Lernstufe === kat)= kat
 									td.mitte
 										input.unlock(type="number", name="Weihe.Liturgiekenntnis[#{key}][wert]", min="3", max="35", step="1", value=__lk.wert)
-				section#liturgien
-					table.data-section.mitte.eigenschaften#lit
+				section#lit.panel.panel-default
+					.panel-heading.dcm-caption Liturgien
+					ul.list-group
+						- var __grad = {1:"I", 2:"II", 3:"III", 4:"IV", 5:"V", 6:"VI", 7:"VII"}
+						each __lit, __idx in _Liturgien
+							- var __isAvailable  = isAvailable(_Held.Weihe.Liturgien, __lit)
+							li.list-group-item
+								.row
+									.col-xs-1
+										input.unlock(type="hidden", name="Weihe.Liturgien[#{__idx}]", value=__lit._id, disabled=!__isAvailable)
+										input.isactive(type="checkbox", id="Liturgie_"+__idx, checked=__isAvailable)
+									.col-xs-11
+										label(for="Liturgie_"+__idx)=__lit.name + " ("+__grad[__lit.grad]+")"
+									.col-xs-3=__lit.rd
+									.col-xs-3=__lit.ziel
+									.col-xs-3=__lit.rw
+									.col-xs-3=__lit.wd
+
+
+					//table.data-section.mitte.eigenschaften#lit
 						caption Liturgien
 						colgroup
 							col(style="width: 4em;")
@@ -135,6 +171,7 @@ html(lang="de")
 									td=__lit.ziel
 									td=__lit.rw
 									td=__lit.wd
-				section#save.mitte
-					button(type="submit") speichern
-		script(src="/edit-liturgie.js")
+				#save.row.well
+					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
+						button.btn.btn-success.form-control(type="submit", disabled) speichern
+		//script(src="/edit-liturgie.js")

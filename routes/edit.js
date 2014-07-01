@@ -264,7 +264,7 @@ module.exports = function (app) {
 		function (err, obj) {
 			if (err) return next(err);
 			obj._Dropdown        = data.dropdown;
-			obj._Menu            = menu.edit;
+			obj._Menu            = menu.liturgien;
 			obj._Menu.currentURL = req.path;
 			res.render('edit-held/liturgien', obj);
 		})

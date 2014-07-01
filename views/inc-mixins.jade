@@ -33,6 +33,19 @@
 -		});
 -		return __str;
 -	}
+- 
+- function isAvailable(__list, __talent) { 
+- 	var l = __list ? __list.length : 0; 
+- 	if (__talent.standard) {
+- 		return true;
+- 	}
+- 	while (l--) { 
+- 		if (__list[l].name === __talent.name) {
+- 			return true; 
+- 		}
+- 	} 
+- 	return false; 
+- }
 
 //- create a standard menu link
 mixin menuLink(__item, __data)
