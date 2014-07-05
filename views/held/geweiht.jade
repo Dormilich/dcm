@@ -88,9 +88,9 @@ html(lang="de")
 				.panel-body
 					.container-fluid
 						.row.dcm-row.text-center
-							.col-xs-10.col-sm-6.col-md-4
+							.col-xs-9.col-sm-6.col-md-4
 								.dcm-header.dcm-border Liturgie
-							.col-xs-2.col-sm-2.col-md-1
+							.col-xs-3.col-sm-2.col-md-1
 								.dcm-header.dcm-border Grad
 							.col-xs-6.col-sm-4.col-md-2
 								.dcm-header.dcm-border Dauer
@@ -105,8 +105,8 @@ html(lang="de")
 						.container-fluid.dcm-hover
 							each __lit in _Held.Weihe.Liturgien
 								.row.dcm-row.dcm-table
-									.col-xs-10.col-sm-6.col-md-4=__lit.name
-									.col-xs-2.col-sm-2.col-md-1.text-center=__grad[__lit.grad]
+									.col-xs-9.col-sm-6.col-md-4=__lit.name
+									.col-xs-3.col-sm-2.col-md-1.text-center=__grad[__lit.grad]
 									.col-xs-6.col-sm-4.col-md-2=__lit.rd
 									.col-xs-6.col-sm-4.col-md-1.text-center=__lit.ziel
 									.col-xs-6.col-sm-4.col-md-2=__lit.rw
