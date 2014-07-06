@@ -149,7 +149,7 @@ module.exports = function (app) {
 		},
 		function(err, obj) {
 			if (err) return next(err);
-			obj._Menu            = menu.edit;
+			obj._Menu            = menu.zauber;
 			obj._Menu.currentURL = req.path;
 			res.render('edit-held/zauber', obj);
 		});
@@ -206,7 +206,7 @@ module.exports = function (app) {
 			if (err) return next(err);
 			obj._Data            = data.ritual;
 			obj._Dropdown        = data.dropdown;
-			obj._Menu            = menu.edit;
+			obj._Menu            = menu.rituale;
 			obj._Menu.currentURL = req.path;
 			res.render('edit-held/rituale', obj);
 		});

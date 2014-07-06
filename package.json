@@ -1,7 +1,7 @@
 {
 	"name":        "dcm",
 	"description": "a DSA Character Manager",
-	"version":     "0.0.5",
+	"version":     "0.0.6",
 	"author":      "Bertold von Dormilich <Dormilich@netscape.net>",
 	"maintainers": [
 		{ "name": "Bertold von Dormilich", "email": "Dormilich@netscape.net" }

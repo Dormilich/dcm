@@ -493,5 +493,88 @@ module.exports = {
 			title: "Abmelden",
 			sign:  ["fa", "fa-sign-out"]
 		}]
+	},
+	zauber: {
+		right: [{
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/zauber/{id}#zbr",
+				title: "Zauber"
+			}, {
+				url:   "/rituale/{id}#rkw",
+				title: "Ritualkenntnis"
+			}, {
+				url:   "/rituale/{id}#rit",
+				title: "Rituale"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}]
+		}, {
+			url:   "#top",
+			title: "Seitenanfang",
+			sign:  ["fa", "fa-hand-o-up"]
+		}, {
+			url:   "#save",
+			title: "Speichern",
+			sign:  ["fa", "fa-floppy-o"]
+		}, {
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
+	},
+	rituale: {
+		right: [{
+			title: "{name} bearbeiten",
+			dropdown: [{
+				url:   "/rituale/{id}#rkw",
+				title: "Ritualkenntnis"
+			}, {
+				url:   "/rituale/{id}#rit",
+				title: "Rituale"
+			}, {
+				url:   "/attribute/{id}",
+				title: "Attribute"
+			}, {
+				url:   "/basiswerte/{id}",
+				title: "Basiswerte"
+			}, {
+				url:   "/sf/{id}",
+				title: "Sonderfertigkeiten"
+			}, {
+				url:   "/procon/{id}",
+				title: "Vor- & Nachteile"
+			}]
+		}, {
+			url:   "#top",
+			title: "Seitenanfang",
+			sign:  ["fa", "fa-hand-o-up"]
+		}, {
+			url:   "#save",
+			title: "Speichern",
+			sign:  ["fa", "fa-floppy-o"]
+		}, {
+			url:   "/about",
+			title: "Info",
+			sign:  ["fa", "fa-info-circle", "text-info"]
+		}, {
+			url:   "/logout",
+			title: "Abmelden",
+			sign:  ["fa", "fa-sign-out"]
+		}]
 	}
 };

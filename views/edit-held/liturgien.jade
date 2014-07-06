@@ -8,7 +8,7 @@ html(lang="de")
 	head
 		include ../inc-bootstrap
 		title Liturgien hinzufügen
-		link(rel="stylesheet", href="/dcm-display.css")
+		link(rel="stylesheet", href="/css/dcm-display.css")
 		style.
 			input[type='number'] {
 				text-align: 		center;
@@ -54,14 +54,6 @@ html(lang="de")
 				section#lkw.panel.panel-default.text-center
 					.panel-heading.dcm-caption Liturgiekenntnis
 					.panel-body
-						.container-fluid.dcm-gap-bottom
-							.row.dcm-row
-								.col-xs-6
-									.dcm-header.dcm-border Gottheit
-								.col-xs-3
-									.dcm-header.dcm-border Lern
-								.col-xs-3
-									.dcm-header.dcm-border LkW
 						#collection.container-fluid
 							if _Held.Weihe && _Held.Weihe.Liturgiekenntnis && _Held.Weihe.Liturgiekenntnis.length
 								each __lk, __idx in _Held.Weihe.Liturgiekenntnis
@@ -122,4 +114,4 @@ html(lang="de")
 							option=__kat
 				.col-xs-3
 					input.unlock(type="number", name="Weihe.Liturgiekenntnis[{index}][wert]", min="3", max="35", step="1", value="3")
-		script(src="/edit-liturgie.js")
+		script(src="/js/edit-liturgie.js")

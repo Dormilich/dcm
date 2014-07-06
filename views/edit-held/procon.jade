@@ -20,12 +20,8 @@ html(lang="de")
 	head
 		include ../inc-bootstrap
 		title #{_Held.Person.Name.split(' ')[0]} bearbeiten – Vor- &amp; Nachteile
-		link(rel="stylesheet", href="/dcm-display.css")
-		link(rel="stylesheet", href="/vorteile.css")
-		style.
-			body {
-				padding-top:      60px;
-			}
+		link(rel="stylesheet", href="/css/dcm-display.css")
+		link(rel="stylesheet", href="/css/vorteile.css")
 	body#top
 		include inc/nav
 		header.container
@@ -62,5 +58,5 @@ html(lang="de")
 							button.form-control.btn.btn-success(type="submit", disabled) speichern
 						.col-sm-4.col-sm-offset-2
 							a.form-control.btn.btn-warning(href="/held/"+_Held._id) zurück
-		script(type="text/javascript", src="/vorteile.js")
+		script(type="text/javascript", src="/js/vorteile.js")
 		script $('button:disabled').prop('disabled', false);

@@ -1,18 +1,29 @@
-mixin print(__data)
-	p!=JSON.stringify(__data)
+include ../inc-mixins
 
 doctype html
 html(lang="de")
 	head
-		meta(charset="utf-8")
+		include ../inc-bootstrap
 		title Zauber hinzufügen
-		link(rel="stylesheet", type="text/css", href="/edit.css")
-		link(rel="stylesheet", type="text/css", href="/nav.css")
-		link(rel="stylesheet", type="text/css", href="/dropout.css")
-		link(rel="stylesheet", type="text/css", href="/tablesorter/tablesorter.css")
-		script(src="/jquery-2.0.3.min.js")
-		//script(src="/tablesorter/jquery.tablesorter.min.js")
+		link(rel="stylesheet", href="/css/dcm-display.css")
 		style.
+			input[type='number'] {
+				text-align: 		center;
+				border-radius:		5px;
+			}
+			input[type='number']:disabled {
+				background-color:	#ddd;
+			}
+	body#top
+		include inc/nav
+		header.container
+			h1.page-header.text-center=_Held.Person.Name
+				
+		main.container
+			form(action="/zauber/"+_Held._id, method="post", accept-charset="utf-8")
+				input(type="hidden", name="_method", value="put")
+
+		//-style.
 			#spell_choice tbody td:first-child {
 				padding-left: 0;
 				padding-right: 0;
@@ -20,7 +31,7 @@ html(lang="de")
 			.disabled {
 				color: #ddd;
 			}
-	body
+	//-body
 		nav
 			ul#main-menu
 				li
@@ -142,4 +153,4 @@ html(lang="de")
 										option(value=__rep, selected=(__heldReps.indexOf(__rep) > -1))=__rep
 							td
 								button.add(type="button") neu
-		script(src="/edit-zauber.js")
+		script(src="/js/edit-zauber.js")

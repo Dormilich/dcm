@@ -10,7 +10,7 @@ html(lang="de")
 	head
 		meta(charset="utf-8")
 		title Ritual bearbeiten
-		link(rel="stylesheet", type="text/css", href="/system-new.css")
+		link(rel="stylesheet", type="text/css", href="/css/system-new.css")
 		script(src="/jquery-2.0.3.min.js")
 	body
 		#logout
@@ -111,7 +111,7 @@ html(lang="de")
 								label(for="mmk"+__idx)= __mmk
 			fieldset.mitte.submitter
 				button(type="submit") speichern
-		script(src="/system-ritual.js")
+		script(src="/js/system-ritual.js")
 		
 		form(action="/ritual/"+_ritual._id, method="post", accept-charset="utf-8")
 			input(type="hidden", name="_method", value="delete")
