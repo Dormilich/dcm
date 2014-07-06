@@ -33,6 +33,20 @@ html(lang="de")
 			input[type='number']:disabled {
 				background-color:	#ddd;
 			}
+			label {
+				font-weight: 		normal;
+			}
+			#rit .selected label {
+				font-weight: 		bold;
+				font-variant: 		small-caps;
+				font-family:		serif;
+			}
+			#rit li:hover {
+				background-color:	#eee;
+			}
+			#templates {
+				display:			none;
+			}
 	body#top
 		include inc/nav
 		header.container
@@ -97,7 +111,7 @@ html(lang="de")
 					.panel-footer
 						.row
 							.col-xs-5.col-xs-offset-1
-								select(size="1")
+								select#newrk(size="1")
 									optgroup(label="Allgemeine RK")
 										each __long, __short in _Data.Ritualkenntnis.allgemein
 											option(data-long=__long, data-short=__short)=__long
@@ -108,7 +122,32 @@ html(lang="de")
 										each __long, __short in _Data.Ritualkenntnis.Schamane
 											option(data-long="Schamane", data-short="Shm", data-rep-long=__long, data-rep-short=__short)=__long
 							.col-xs-3.col-xs-offset-3
-								button(type="button")#addlk.btn.btn-default.fa.fa-plus
+								button(type="button")#addrk.btn.btn-default.fa.fa-plus
+
+				section#rit.panel.panel-default
+					.panel-heading.dcm-caption Rituale
+					ul.list-group
+						each __rit, __idx in _Rituale
+							- var __isAvailable  = isAvailable(_Held.Magie.Rituale, __rit)
+							- var __talente      = []
+							if Array.isArray(__rit.Talent)
+								- __talente      = __rit.Talent.concat()
+							if Array.isArray(__rit.Probe)
+								- __talente.push(__rit.Probe.join(' · '))
+							li.list-group-item
+								.row(class=__isAvailable ? 'selected' : '')
+									.col-xs-2.col-sm-1.text-center
+										input.unlock(type="hidden", name="Magie.Rituale[#{__idx}]", value=__rit._id, disabled=!__isAvailable)
+										input.isactive(type="checkbox", id="rit_"+__idx, checked=__isAvailable)
+									.col-xs-10.col-sm-5.col-md-4
+										label(for="rit_"+__idx, title=__talente.join(', '))=__rit.Name
+									.col-xs-10.col-xs-offset-2.col-sm-5.col-sm-offset-0=__rit.Repräsentationen.join(', ')
+									if __rit.Traditionen.length
+										.col-xs-10.col-xs-offset-2.col-sm-11.col-sm-offset-1.col-md-7.col-md-offset-5=__rit.Traditionen.join(', ')
+				
+				#save.row.well
+					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
+						button.btn.btn-success.form-control(type="submit", disabled) speichern
 
 		aside#templates
 			.std.row
@@ -116,7 +155,7 @@ html(lang="de")
 					input.isactive(type="checkbox", id="rk_{index}", checked)
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][short]")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label(for="rk_{index}")
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -130,7 +169,7 @@ html(lang="de")
 					input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Ztz")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label.links(for="zt_{index}") Zaubertänzer
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -145,7 +184,7 @@ html(lang="de")
 					input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Shm")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label(for="sr_{index}") Geister binden
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -160,7 +199,7 @@ html(lang="de")
 					input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Shm")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label(for="sr_{index}") Geister rufen
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -175,7 +214,7 @@ html(lang="de")
 					input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Shm")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label(for="sr_{index}") Geister bannen
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -190,7 +229,7 @@ html(lang="de")
 					input.unlock(type="hidden", name="Magie.Ritualkenntnis[{index}][short]", value="Shm")
 					input.unlock.long(type="hidden", name="Magie.Ritualkenntnis[{index}][long]")
 					input.unlock.short(type="hidden", name="Magie.Ritualkenntnis[{index}][tradition]")
-				.col-xs-5.links
+				.col-xs-5.text-left
 					label(for="sr_{index}") Geister aufnehmen
 				.col-xs-3
 					select.unlock(size="1", name="Magie.Ritualkenntnis[{index}][Lernstufe]")
@@ -199,6 +238,7 @@ html(lang="de")
 				.col-xs-3
 					input.unlock.mitte(type="number", name="Magie.Ritualkenntnis[{index}][RkW]", min="3", max="35", step="1", value="3")
 
+		script(src="/js/edit-ritual.js")
 		//-main
 			form(action="/rituale/"+_held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
