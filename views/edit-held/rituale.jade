@@ -70,7 +70,7 @@ html(lang="de")
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][short]", value="Ztz")
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][long]", value=__rk.long)
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][tradition]", value=__rk.tradition)
-												.col-xs-5.links
+												.col-xs-5.text-left
 													label(for="zt_"+__idx) Zaubertänzer (#{__rk.long})
 												.col-xs-3
 													select.unlock(size="1", name="Magie.Ritualkenntnis[#{__idx}][Lernstufe]")
@@ -86,7 +86,7 @@ html(lang="de")
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][short]", value="Shm")
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][long]", value=__rk.long)
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][tradition]", value=__rk.tradition)
-												.col-xs-5.links
+												.col-xs-5.text-left
 													label(for="sr_"+__idx)=__rk._talent.name + "(" + __rk.long + ")"
 												.col-xs-3
 													select.unlock(size="1", name="Magie.Ritualkenntnis[#{__idx}][Lernstufe]")
@@ -100,7 +100,7 @@ html(lang="de")
 													input.isactive(type="checkbox", id="rk_"+__idx, checked)
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][short]", value=__rk.short)
 													input.unlock(type="hidden", name="Magie.Ritualkenntnis[#{__idx}][long]", value=__rk.long)
-												.col-xs-5.links
+												.col-xs-5.text-left
 													label(for="rk_"+__idx)=__rk.long
 												.col-xs-3
 													select.unlock(size="1", name="Magie.Ritualkenntnis[#{__idx}][Lernstufe]")
