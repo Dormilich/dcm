@@ -138,7 +138,7 @@ module.exports = function (app) {
 			_Held: function (cb) {
 				Held
 					.findById(req.id)
-					.select('Person Magie')
+					.select('Person Magie SF')
 					.populate('Magie.Zauber._zauber')
 					.exec(function(err, doc) {
 						if (err) return cb(err);
@@ -170,7 +170,7 @@ module.exports = function (app) {
 				Held
 					.findById(req.id)
 					.populate("Magie.Ritualkenntnis._talent Magie.Rituale")
-					.select("Person Magie")
+					.select("Person Magie SF")
 					.exec(function(err, doc) {
 						if (err) return cb(err);
 						cb(null, doc);
@@ -218,7 +218,7 @@ module.exports = function (app) {
 				Held
 					.findById(req.id)
 					.populate('Weihe.Liturgiekenntnis._talent Weihe.Liturgien')
-					.select("Person Weihe")
+					.select("Person Weihe SF")
 					.exec(function(err, doc) {
 						if (err) return cb(err);
 						cb(null, doc);

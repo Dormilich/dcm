@@ -14,35 +14,55 @@ html(lang="de")
 			input[type='number']:disabled {
 				background-color:	#ddd;
 			}
+			.panel h1 {
+				margin:				0;
+			}
+			#template {
+				display:			none;
+			}
 	body#top
 		include inc/nav
 		header.container
 			h1.page-header.text-center=_Held.Person.Name
 				
 		main.container
-			form(action="/zauber/"+_Held._id, method="post", accept-charset="utf-8")
-				input(type="hidden", name="_method", value="put")
+			form.panel.panel-default(action="/zauber/"+_Held._id, method="post", accept-charset="utf-8")
+				h1.panel-heading.dcm-caption Zauber
+				ul.list-group
+					li.list-group-item.text-center
+						.row.dcm-row
+							.col-xs-11.col-xs-offset-1.col-sm-5
+								.dcm-header.dcm-border Zauber
+							.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0
+								.dcm-header.dcm-border Rep.
+							.col-xs-4.col-sm-2
+								.dcm-header.dcm-border Lern
+							.col-xs-4.col-sm-2
+								.dcm-header.dcm-border ZfW
+				.panel-footer
+					#save.row
+						.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
+							button.btn.btn-success.form-control(type="submit", disabled) speichern
+							input(type="hidden", name="_method", value="put")
 
-				section.panel.panel-default
-					.panel-heading.dcm-caption Zauber
-					ul.list-group
-						li.list-group-item.text-center
-							.row.dcm-row
-								.col-xs-11.col-xs-offset-1.col-sm-5
-									.dcm-header.dcm-border Zauber
-								.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0
-									.dcm-header.dcm-border Rep.
-								.col-xs-4.col-sm-2
-									.dcm-header.dcm-border Lern
-								.col-xs-4.col-sm-2
-									.dcm-header.dcm-border ZfW
-					.panel-footer
-						#save.row
-							.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
-								button.btn.btn-success.form-control(type="submit", disabled) speichern
+			aside#template
+				.row
+					.col-xs-1
+						input.unlock.id(type="hidden",  name="Magie.Zauber[{index}][_zauber]")
+						input.unlock.rep(type="hidden", name="Magie.Zauber[{index}][Repräsentation]")
+						input.isactive(type="checkbox", id="zbr_{index}", checked)
+					.col-xs-11.col-sm-5
+						label(for="zbr_{index}") {name}
+					.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0 {rep}
+					.col-xs-4.col-sm-2
+						select(size="1", name="Magie.Zauber[{index}][Lernstufe]")
+							each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+								option=__kat
+					.col-xs-4.col-sm-2
+						input(type="number", name="Magie.Zauber[{index}][ZfW]", value="0", min="0", max="35" step="1")
 
 			section.panel.panel-default
-				.panel-heading.dcm-caption Zauber hinzufügen
+				h1.panel-heading.dcm-caption Zauber hinzufügen
 				- var __heldReps = ["Mag"]
 				if Array.isArray(_Held.Magie.Repräsentation) && _Held.Magie.Repräsentation.length
 					- __heldReps = _Held.Magie.Repräsentation.map(function(item) { return item.short; })
@@ -71,14 +91,6 @@ html(lang="de")
 											option(value=__rep, selected=(__heldReps.indexOf(__rep) > -1))=__rep
 								.col-xs-10.col-xs-offset-2.col-sm-11.col-sm-offset-1.col-md-5.col-md-offset-0.text-left=__stdSpell.Merkmale.join(', ')
 
-		//-style.
-			#spell_choice tbody td:first-child {
-				padding-left: 0;
-				padding-right: 0;
-			}
-			.disabled {
-				color: #ddd;
-			}
 	//-body
 		nav
 			ul#main-menu
