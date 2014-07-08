@@ -1,10 +1,20 @@
+$("button[type='submit']").prop("disabled", false);
+
+$('.panel').on('click', 'input[type="checkbox"]', function(evt) {
+	var $tr    = $(this).closest('.row');
+	var $check = $tr.find('.isactive');
+	if ($check.length) {
+		$tr.find('.unlock').prop('disabled', !$check.prop('checked'));
+	}
+});
+
+$('#liste').on('click', 'button', function (evt) {
+	var $row = $(this).closest('.row');
+
+	var $tpl = $('#template .row').clone();
+});
+/*
 $('#spell_list')
-	/*.tablesorter({
-		headers: {
-			4: { sorter: false },
-			5: { sorter: false }
-		}
-	})//*/
 	.on("click", 'button', function(evt) {
 		var $row = $(this).closest('tr');
 		var rep  = $row.find('select').val();
@@ -30,13 +40,6 @@ $('#spell_list')
 	})
 ;
 $('#spell_choice')
-	/*.tablesorter({
-		headers: {
-			2: { sorter: false },
-			4: { sorter: false },
-			5: { sorter: false }
-		}
-	})//*/
 	.on("click", "input.lock", function(evt) {
 		var $row = $(this).closest('tr');
 		$row.find("*[name]").prop("disabled", !this.checked);
@@ -48,7 +51,6 @@ $('#spell_choice')
 		}
 	})
 ;
-$("button[type='submit']").prop("disabled", false);
 $("#newSpell").on("submit", function() {
 	$('#spell_template').remove();
 	$('#spell_choice').trigger("sorton", [[[0,0], [1,0]]]);
@@ -96,3 +98,4 @@ $('#spell_choice').on('click', '.addspez', function() {
 $('#spell_choice').on('click', 'button.del', function() {
 	$(this.parentNode).remove();
 });
+*/
