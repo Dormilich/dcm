@@ -28,8 +28,8 @@ html(lang="de")
 		main.container
 			form.panel.panel-default(action="/zauber/"+_Held._id, method="post", accept-charset="utf-8")
 				h1.panel-heading.dcm-caption Zauber
-				ul#zauber.list-group
-					li.list-group-item.text-center
+				ul#zauber.list-group.text-center
+					li.list-group-item
 						.row.dcm-row
 							.col-xs-11.col-xs-offset-1.col-sm-5
 								.dcm-header.dcm-border Zauber
@@ -39,6 +39,23 @@ html(lang="de")
 								.dcm-header.dcm-border Lern
 							.col-xs-4.col-sm-2
 								.dcm-header.dcm-border ZfW
+					if Array.isArray(_Held.Magie.Zauber)
+						each __spell, __idx in _Held.Magie.Zauber
+							li.list-group-item
+								.row
+									.col-xs-1
+										input.unlock(type="hidden", name="Magie.Zauber[#{__idx}][_zauber]", value=__spell._zauber._id)
+										input.unlock(type="hidden", name="Magie.Zauber[#{__idx}][Repräsentation]", value=__spell.Repräsentation)
+										input.isactive(type="checkbox", id="zbr_"+__idx, checked)
+									.col-xs-11.col-sm-5.text-left
+										label(for="zbr_"+__idx)=__spell._zauber.Name
+									.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0=__spell.Repräsentation
+									.col-xs-4.col-sm-2
+										select.unlock(size="1", name="Magie.Zauber[#{__idx}][Lernstufe]")
+											each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+												option(selected=(__spell.Lernstufe === __kat))=__kat
+									.col-xs-4.col-sm-2
+										input.unlock(type="number", name="Magie.Zauber[#{__idx}][ZfW]", value=__spell.ZfW, min="0", max="35" step="1")
 				.panel-footer
 					#save.row
 						.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
@@ -46,20 +63,21 @@ html(lang="de")
 							input(type="hidden", name="_method", value="put")
 
 			aside#template
-				.row
-					.col-xs-1
-						input.unlock.id(type="hidden",  name="Magie.Zauber[{index}][_zauber]")
-						input.unlock.rep(type="hidden", name="Magie.Zauber[{index}][Repräsentation]")
-						input.isactive(type="checkbox", id="zbr_{index}", checked)
-					.col-xs-11.col-sm-5
-						label(for="zbr_{index}") {name}
-					.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0 {rep}
-					.col-xs-4.col-sm-2
-						select(size="1", name="Magie.Zauber[{index}][Lernstufe]")
-							each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-								option=__kat
-					.col-xs-4.col-sm-2
-						input(type="number", name="Magie.Zauber[{index}][ZfW]", value="0", min="0", max="35" step="1")
+				li.list-group-item
+					.row
+						.col-xs-1
+							input.unlock.id(type="hidden",  name="Magie.Zauber[{index}][_zauber]")
+							input.unlock.rep(type="hidden", name="Magie.Zauber[{index}][Repräsentation]")
+							input.isactive(type="checkbox", id="zbr_{index}", checked)
+						.col-xs-11.col-sm-5.text-left
+							label(for="zbr_{index}")
+						.col-xs-3.col-xs-offset-1.col-sm-2.col-sm-offset-0.rep
+						.col-xs-4.col-sm-2
+							select.unlock(size="1", name="Magie.Zauber[{index}][Lernstufe]")
+								each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+									option=__kat
+						.col-xs-4.col-sm-2
+							input.unlock(type="number", name="Magie.Zauber[{index}][ZfW]", value="0", min="0", max="35" step="1")
 
 			section.panel.panel-default
 				h1.panel-heading.dcm-caption Zauber hinzufügen
@@ -79,9 +97,9 @@ html(lang="de")
 								.dcm-header.dcm-border Merkmale
 					each __stdSpell in _Zauber
 						li.list-group-item
-							.row
+							.row(data-kompl=__stdSpell.Komplexität, data-name=__stdSpell.Name)
 								.col-xs-2.col-sm-1
-									button.add.btn.btn-default.fa.fa-plus(type="button")
+									button.btn.btn-default.fa.fa-plus(type="button")
 									input.id(type="hidden", value=__stdSpell._id)
 								.col-xs-10.col-sm-7.col-md-4.text-left(title=__stdSpell.Probe.join(' · '))=__stdSpell.Name
 								.col-xs-5.col-sm-2.col-md-1=__stdSpell.Komplexität

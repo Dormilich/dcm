@@ -1,6 +1,6 @@
 $("button[type='submit']").prop("disabled", false);
 
-$('.panel').on('click', 'input[type="checkbox"]', function(evt) {
+$('.panel').on('click', 'input[type="checkbox"]', function (evt) {
 	var $tr    = $(this).closest('.row');
 	var $check = $tr.find('.isactive');
 	if ($check.length) {
@@ -9,55 +9,34 @@ $('.panel').on('click', 'input[type="checkbox"]', function(evt) {
 });
 
 $('#liste').on('click', 'button', function (evt) {
-	var $row = $(this).closest('.row');
+	var $row   = $(this).closest('.row');
+	var $rep   = $row.find('select :selected');
+	var index  = $('#zauber').find('li').length - 1;
 
-	var $tpl = $('#template .row').clone();
+	var $tpl   = $('#template li').clone();
+	var $check = $tpl.find('input.isactive');
+	var $label = $tpl.find('label');
+
+	$tpl.find('.id').val($row.find('.id').val());
+	$tpl.find('input.rep').val($rep.val());
+	$tpl.find('div.rep').text($rep.val());
+	$tpl.find('select').val($row.data('kompl'));
+
+	$tpl.find('*[name]').each(function() {
+		this.name = this.name.replace("{index}", index);
+	});
+	$check.prop('id', $check.prop('id').replace("{index}", index));
+	$label
+		.text($row.data('name'))
+		.prop('for', $label.prop('for').replace("{index}", index));
+	
+	$rep.remove();
+	if (0 === $row.find('option').length) {
+		$row.parent().remove();
+	}
+	$('#zauber').append($tpl);
 });
 /*
-$('#spell_list')
-	.on("click", 'button', function(evt) {
-		var $row = $(this).closest('tr');
-		var rep  = $row.find('select').val();
-		var name = $row.find('.name').text();
-		var id   = $row.find('.id').val();
-		var kompl = $row.find('.kompl').text();
-		var index = $('#spell_choice tbody tr').length;
-		var $new = $('#spell_template').clone().removeAttr('id');
-		
-		$new.find('input.id').val(id);
-		$new.find('label.name').text(name);
-		$new.find('input.rep').val(rep).next().text(rep);
-		// $new.find('label.rep').text(rep);
-		$new.find('td.kompl').text(kompl);
-		$new.find('select.lern').val(kompl);
-		
-		$new.find('*[name]').each(function() {
-			this.name = this.name.replace("{index}", index);
-		});
-		
-		$new.appendTo('#spell_choice');
-		$row.find("option[value='" + rep + "']").remove();
-	})
-;
-$('#spell_choice')
-	.on("click", "input.lock", function(evt) {
-		var $row = $(this).closest('tr');
-		$row.find("*[name]").prop("disabled", !this.checked);
-		if (this.checked) {
-			$row.removeClass("disabled");
-		}
-		else {
-			$row.addClass("disabled");
-		}
-	})
-;
-$("#newSpell").on("submit", function() {
-	$('#spell_template').remove();
-	$('#spell_choice').trigger("sorton", [[[0,0], [1,0]]]);
-	$('.isactive:not(:checked)').each(function() {
-		$(this).closest('tr').find('select, input').prop('disabled', true);
-	});
-});
 $('#spell_choice').on('click', '.addspez', function() {
 	var $datasrc = $(this).closest('tr');
 	var options  = $datasrc.data('options');
