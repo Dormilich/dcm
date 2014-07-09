@@ -107,7 +107,7 @@ module.exports = function (app) {
 			_Sprachen:     getTalentType("Sprachen"),
 			_Schriften:    getTalentType("Schriften"),
 			_Gaben:        getTalentType("Gaben"),
-			_Held: function (cb) {// _chardata
+			_Held: function (cb) {
 				Held.findById(req.id, function(err, doc) {
 					if (err) return cb(err);
 					cb(null, doc);
@@ -116,7 +116,7 @@ module.exports = function (app) {
 		},
 		function (err, obj) {
 			if (err) return next(err); 
-			obj._Menu            = menu.neu;
+			obj._Menu            = menu.edit;
 			obj._Menu.currentURL = req.path;
 			res.render('edit-held/talente', obj);
 		});
