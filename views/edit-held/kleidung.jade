@@ -15,31 +15,11 @@ html(lang="de")
 			input[type='number']:disabled {
 				background-color:	#ddd;
 			}
-			#be {
+			input.long {
 				width: 				4em;
 			}
-		//-style.
-			#liste {
-				list-style-type: none;
-				padding: 1em 5em;
-			}
-			#liste li {
-				float: left;
-				width: 33%;
-				padding: 0.2em 0;
-			}
-			#liste li:nth-child(6n+1), #liste li:nth-child(6n+2), #liste li:nth-child(6n+3) {
-				background-color: silver;
-			}
-			input[type='number'] {
-				width: 3em;
-			}
-			tfoot .isactive {
-				display: none;
-			}
-			tbody td:first-child {
-				padding: 0 !important;
-				text-align: center;
+			#template {
+				display:			none;
 			}
 	body#top
 		include inc/nav
@@ -50,39 +30,101 @@ html(lang="de")
 			form(action="/kleidung/"+_Held._id, method="post", accept-charset="utf-8")
 				input(type="hidden", name="_method", value="put")
 
-				section#armor.panel.panel-default
+				section.panel.panel-default
 					.panel-heading.dcm-caption Rüstungen
-					.panel-body
+					ul#armor.list-group
+						if _Held.Ausrüstung && Array.isArray(_Held.Ausrüstung.Kleidung)
+							each __item, __idx in _Held.Ausrüstung.Kleidung
+								li.list-group-item
+									.row.dcm-row
+										.col-xs-1
+											input.isactive(type="checkbox", checked)
+										.col-xs-10.col-sm-8
+											input.form-control.unlock(type="text", name="Ausrüstung.Kleidung[#{__idx}][Name]", value=__item.Name)
+									.row
+										.col-xs-11.col-xs-offset-1
+											.row
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][Ko]", min="0", step="1", title="Kopf", value=__item.Ko)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][Br]", min="0", step="1", title="Brust", value=__item.Br)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][Rü]", min="0", step="1", title="Rücken", value=__item.Rü)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][Ba]", min="0", step="1", title="Bauch", value=__item.Ba)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][LA]", min="0", step="1", title="Linker Arm", value=__item.LA)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][RA]", min="0", step="1", title="Rechter Arm", value=__item.RA)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][LB]", min="0", step="1", title="Linkes Bein", value=__item.LB)
+												.col-xs-3.col-sm-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][RB]", min="0", step="1", title="Rechtes Bein", value=__item.RB)
+												.col-xs-3.col-xs-offset-6.col-sm-1.col-sm-offset-1
+													input.unlock(type="number", name="Ausrüstung.Kleidung[#{__idx}][BE]", min="0", step="0.1", title="Behinderung", value=__item.BE)
+												.col-xs-3.col-sm-2
+													input.unlock.long(type="number", name="Ausrüstung.Kleidung[#{__idx}][RS]", min="0", step="0.05", title="Rüstungsschutz", value=__item.RS)
 					.panel-footer
-						.row.container-fluid
+						.row
 							.col-xs-2.col-sm-1
 								button#add(type="button").btn.btn-default.fa.fa-plus
 							.col-xs-10.col-sm-11
 								.row
 									.col-xs-3.col-sm-1
-										input#ko(type="number", min="0", step="1", value="0")
+										input#ko(type="number", min="0", step="1", value="0", title="Kopf")
 									.col-xs-3.col-sm-1
-										input#br(type="number", min="0", step="1", value="0")
+										input#br(type="number", min="0", step="1", value="0", title="Brust")
 									.col-xs-3.col-sm-1
-										input#ru(type="number", min="0", step="1", value="0")
+										input#ru(type="number", min="0", step="1", value="0", title="Rücken")
 									.col-xs-3.col-sm-1
-										input#ba(type="number", min="0", step="1", value="0")
+										input#ba(type="number", min="0", step="1", value="0", title="Bauch")
 									.col-xs-3.col-sm-1
-										input#la(type="number", min="0", step="1", value="0")
+										input#la(type="number", min="0", step="1", value="0", title="Linker Arm")
 									.col-xs-3.col-sm-1
-										input#ra(type="number", min="0", step="1", value="0")
+										input#ra(type="number", min="0", step="1", value="0", title="Rechter Arm")
 									.col-xs-3.col-sm-1
-										input#lb(type="number", min="0", step="1", value="0")
+										input#lb(type="number", min="0", step="1", value="0", title="Linkes Bein")
 									.col-xs-3.col-sm-1
-										input#rb(type="number", min="0", step="1", value="0")
+										input#rb(type="number", min="0", step="1", value="0" title="Rechtes Bein")
 									.col-xs-3.col-xs-offset-6.col-sm-1.col-sm-offset-1
-										input#rs(type="number", min="0", step="0.1", value="0")
+										input#rs(type="number", min="0", step="0.1", value="0", title="Behinderung")
 									.col-xs-3.col-sm-2
-										input#be(type="number", min="0", step="0.05", value="0")
+										input#be.long(type="number", min="0", step="0.05", value="0", title="Rüstungsschutz")
 
 				#save.row.well.text-center
 					.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center
 						button.btn.btn-success.form-control(type="submit", disabled) speichern
+
+			aside#template
+				li.list-group-item
+					.row.dcm-row
+						.col-xs-1
+							input.isactive(type="checkbox", checked)
+						.col-xs-10.col-sm-8
+							input.form-control.unlock(type="text", name="Ausrüstung.Kleidung[{index}][Name]")
+					.row
+						.col-xs-11.col-xs-offset-1
+							.row
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][Ko]", min="0", step="1", title="Kopf")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][Br]", min="0", step="1", title="Brust")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][Rü]", min="0", step="1", title="Rücken")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][Ba]", min="0", step="1", title="Bauch")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][LA]", min="0", step="1", title="Linker Arm")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][RA]", min="0", step="1", title="Rechter Arm")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][LB]", min="0", step="1", title="Linkes Bein")
+								.col-xs-3.col-sm-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][RB]", min="0", step="1", title="Rechtes Bein")
+								.col-xs-3.col-xs-offset-6.col-sm-1.col-sm-offset-1
+									input.unlock(type="number", name="Ausrüstung.Kleidung[{index}][BE]", min="0", step="0.1", title="Behinderung")
+								.col-xs-3.col-sm-2
+									input.unlock.long(type="number", name="Ausrüstung.Kleidung[{index}][RS]", min="0", step="0.05", title="Rüstungsschutz")
 
 			form.row.well(action="/waffen/Kleidung/"+_Held._id, method="post", accept-charset="utf-8")
 				.col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4.text-center

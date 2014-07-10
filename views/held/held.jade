@@ -95,6 +95,9 @@ html(lang="de")
 				background-color: green;
 				color:            white;
 			}
+			.panel h2 {
+				margin:				0;
+			}
 	body
 		include inc-nav
 		header.container
@@ -104,7 +107,7 @@ html(lang="de")
 		main.container
 			// Charakter-Beschreibung
 			section.panel.panel-default#bes
-				.panel-heading.dcm-caption Beschreibung
+				h2.panel-heading.dcm-caption Beschreibung
 				.panel-body
 					.container-fluid
 						.row.dcm-row
@@ -142,7 +145,7 @@ html(lang="de")
 										=line
 			// Charakter-Generierung
 			section.panel.panel-default#gen
-				.panel-heading.dcm-caption Generierung
+				h2.panel-heading.dcm-caption Generierung
 				.panel-body
 					.container-fluid
 						each val in ["Rasse", "Kultur", "Profession"]
@@ -161,7 +164,7 @@ html(lang="de")
 								.col-md-4(class=__hidden)=_Held.Generierung.BgB.modifikation
 			// Attribute
 			section.panel.panel-default#att(data-attribute=JSON.stringify(_Held.Attribute))
-				.panel-heading.dcm-caption Attribute
+				h2.panel-heading.dcm-caption Attribute
 				.panel-body.text-center
 					.container-fluid
 						.row.dcm-row
@@ -172,7 +175,7 @@ html(lang="de")
 										.col-xs-6=_Held.Attribute[__att].wert
 			// Basiswerte
 			section.panel.panel-default#bas
-				.panel-heading.dcm-caption Basiswerte
+				h2.panel-heading.dcm-caption Basiswerte
 				.panel-body.text-center
 					.container-fluid
 						.row.dcm-row
@@ -204,19 +207,19 @@ html(lang="de")
 			.row
 				.col-sm-6
 					section.panel.panel-default#vt
-						.panel-heading.dcm-caption Vorteile
+						h2.panel-heading.dcm-caption Vorteile
 						ul.list-group
 							each __vt in _Held.Vorteile
 								li.list-group-item=__vt
 				.col-sm-6
 					section.panel.panel-default#nt
-						.panel-heading.text-center.dcm-caption Nachteile
+						h2.panel-heading.text-center.dcm-caption Nachteile
 						ul.list-group
 							each __nt in _Held.Nachteile
 								li.list-group-item=__nt
 			// Abenteuerpunkte
 			section.panel.panel-default#ap
-				.panel-heading.dcm-caption Abenteuerpunkte
+				h2.panel-heading.dcm-caption Abenteuerpunkte
 				.panel-body.text-center
 					.container-fluid
 						.row.dcm-row
@@ -226,7 +229,7 @@ html(lang="de")
 							.col-xs-6.col-sm-3=_Held.AP.frei
 			// Sonderfertigkeiten
 			section.panel.panel-default#sf
-				.panel-heading.dcm-caption Sonderfertigkeiten
+				h2.panel-heading.dcm-caption Sonderfertigkeiten
 				.panel-body
 					if _Held.SF
 						.container-fluid
@@ -270,7 +273,7 @@ html(lang="de")
 											.dcm-list-item=__sf
 			// INI & Kampfzauber
 			section.panel.panel-default#waf
-				.panel-heading.dcm-caption INI &amp; Kampfzauber
+				h2.panel-heading.dcm-caption INI &amp; Kampfzauber
 				- var __akrob, __ausw = 0
 				- __ausw += contains(_Held.SF.Kampf, "Ausweichen I")   ?  3 : 0;
 				- __ausw += contains(_Held.SF.Kampf, "Ausweichen II")  ?  3 : 0;
@@ -282,8 +285,8 @@ html(lang="de")
 				- __akrob = Math.floor((__akrob - 12) / 3 + 0.1);
 				- __ausw += __akrob > 0 ? __akrob : 0;
 				.panel-body
-					.container-fluid
-						.row.dcm-row.text-center
+					.container-fluid.text-center
+						.row.dcm-row
 							.col-xs-6.col-md-2
 								.dcm-header BE:
 							.col-xs-3.col-md-2
@@ -298,7 +301,7 @@ html(lang="de")
 							.col-xs-6.col-md-2
 								.dcm-header Ausweichen:
 							.col-xs-3.col-md-2#k_ausw_out=_Held.Kampfwerte.PA + __ausw
-						.row.dcm-row.text-center
+						.row.dcm-row
 							.col-xs-6.col-md-2
 								.dcm-header#k_att_label Attributo
 							.col-xs-3.col-md-2
@@ -328,9 +331,9 @@ html(lang="de")
 			// Waffen & Rüstungen
 			if _Held.Ausrüstung && _Held.Ausrüstung.Nahkampf && _Held.Ausrüstung.Nahkampf.length
 				section.panel.panel-default
-					.panel-heading.dcm-caption Nahkampfwaffen
-					.panel-body
-						.container-fluid.text-center
+					h2.panel-heading.dcm-caption Nahkampfwaffen
+					.panel-body.text-center
+						.container-fluid
 							.row.dcm-row
 								.col-xs-12.col-sm-6.col-md-4.col-lg-3 
 									.dcm-header.dcm-border Waffe
@@ -356,7 +359,7 @@ html(lang="de")
 										option(value="6", title="SF Linkhand", selected) links
 										option(value="3") BHK I
 										option(value="0") BHK II
-						.container-fluid.text-center#nahkampf-waffen
+						.container-fluid#nahkampf-waffen
 							each __waffe in _Held.Ausrüstung.Nahkampf
 								- var __talent = getTalent(_Held.Talente.Nahkampf, __waffe);
 								- var __at     = __talent.AT + __waffe.WM.AT + (__waffe.spez ? 1 : 0);
@@ -378,7 +381,7 @@ html(lang="de")
 			
 			if _Held.Ausrüstung && _Held.Ausrüstung.LinkeHand && _Held.Ausrüstung.LinkeHand.length
 				section.panel.panel-default
-					.panel-heading.dcm-caption Parierwaffen &amp; Schilde
+					h2.panel-heading.dcm-caption Parierwaffen &amp; Schilde
 					.panel-body
 						.container-fluid.text-center
 							.row.dcm-row
@@ -415,9 +418,9 @@ html(lang="de")
 				
 			if _Held.Ausrüstung && _Held.Ausrüstung.Fernkampf && _Held.Ausrüstung.Fernkampf.length
 				section.panel.panel-default
-					.panel-heading.dcm-caption Fernkampfwaffen
-					.panel-body
-						.container-fluid.text-center
+					h2.panel-heading.dcm-caption Fernkampfwaffen
+					.panel-body.text-center
+						.container-fluid
 							.row.dcm-row
 								.col-xs-12.col-sm-6.col-md-4.col-lg-3
 									.dcm-header.dcm-border Waffe
@@ -433,7 +436,7 @@ html(lang="de")
 									.dcm-header.dcm-border TP+
 								.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1
 									.dcm-header.dcm-border eBE
-						.container-fluid.text-center#fernkampf-waffen
+						.container-fluid#fernkampf-waffen
 							each __waffe in _Held.Ausrüstung.Fernkampf
 								- var __talent = getTalent(_Held.Talente.Fernkampf, __waffe);
 								- var __tp     = __waffe.TP.kk ? Math.floor((_Held.Attribute[__waffe.TP.kkAtt].wert-__waffe.TP.kk+0.1)/__waffe.TP.kkMod)+__waffe.TP.rollMod : __waffe.TP.rollMod
@@ -445,61 +448,106 @@ html(lang="de")
 									.col-xs-6.col-sm-4.col-sm-offset-2.col-md-2.col-md-offset-0=__waffe.TP.dk.join(" / ")
 									.col-xs-6.col-sm-4.col-md-2=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
 									.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
+			
+			if _Held.Ausrüstung && Array.isArray(_Held.Ausrüstung.Kleidung)
+				section.panel.panel-default
+					h2.panel-heading.dcm-caption Rüstungen
+					.panel-body
+						.container-fluid
+							.row.dcm-row.text-center
+								.col-xs-6.col-sm-2.col-md-1.col-md-offset-1
+									.dcm-header.dcm-border BE
+								.col-xs-6.col-sm-2.col-md-1
+									.dcm-header.dcm-border RS
+								.col-xs-3.col-sm-1.col-md-offset-1
+									.dcm-header.dcm-border Ko
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border Br
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border Rü
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border Ba
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border LA
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border RA
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border LB
+								.col-xs-3.col-sm-1
+									.dcm-header.dcm-border RB
+						each __item in _Held.Ausrüstung.Kleidung
+							.container-fluid#ruestungen
+								.row.dcm-table.dcm-row.text-left
+									.col-xs-12.col-sm-8.col-md-6.col-lg-4
+										span=__item.Name
+										input.pull-right(type="radio", name="panzerung", value=__item.BE)
+								.row.dcm-row.text-center.dcm-table
+									.col-xs-6.col-sm-2.col-md-1.col-md-offset-1=__item.BE
+									.col-xs-6.col-sm-2.col-md-1=__item.RS
+									.col-xs-3.col-sm-1.col-md-offset-1=__item.Ko
+									.col-xs-3.col-sm-1=__item.Br
+									.col-xs-3.col-sm-1=__item.Rü
+									.col-xs-3.col-sm-1=__item.Ba
+									.col-xs-3.col-sm-1=__item.LA
+									.col-xs-3.col-sm-1=__item.RA
+									.col-xs-3.col-sm-1=__item.LB
+									.col-xs-3.col-sm-1=__item.RB
+			
 			// Talente
 			.row#taw
 				.col-md-6
 					section.panel.panel-default#t_nk
-						.panel-heading.text-center.dcm-caption Nahkampf
+						h2.panel-heading.text-center.dcm-caption Nahkampf
 						.panel-body
 							+KampfTable(_Held.Talente.Nahkampf)
 				.col-md-6
 					section.panel.panel-default#t_fk
-						.panel-heading.text-center.dcm-caption Fernkampf
+						h2.panel-heading.text-center.dcm-caption Fernkampf
 						.panel-body
 							+KampfTable(_Held.Talente.Fernkampf)
 			.row
 				.col-md-6
 					if _Held.Talente && _Held.Talente.Gaben && _Held.Talente.Gaben.length
 						section.panel.panel-default
-							.panel-heading.text-center.dcm-caption Gaben
+							h2.panel-heading.text-center.dcm-caption Gaben
 							.panel-body
 								+TalentTable(_Held.Talente.Gaben)
 					section.panel.panel-default#t_koe
-						.panel-heading.text-center.dcm-caption Körperliche Talente
+						h2.panel-heading.text-center.dcm-caption Körperliche Talente
 						.panel-body
 							+TalentTable(_Held.Talente.körperlich)
 					section.panel.panel-default#t_ges
-						.panel-heading.text-center.dcm-caption Gesellschaftliche Talente
+						h2.panel-heading.text-center.dcm-caption Gesellschaftliche Talente
 						.panel-body
 							+TalentTable(_Held.Talente.Gesellschaft)
 					section.panel.panel-default#t_nat
-						.panel-heading.text-center.dcm-caption Natur-Talente
+						h2.panel-heading.text-center.dcm-caption Natur-Talente
 						.panel-body
 							+TalentTable(_Held.Talente.Natur)
 				.col-md-6
 					section.panel.panel-default#t_wis
-						.panel-heading.text-center.dcm-caption Wissenstalente
+						h2.panel-heading.text-center.dcm-caption Wissenstalente
 						.panel-body
 							+TalentTable(_Held.Talente.Wissen)
 					section.panel.panel-default#t_han
-						.panel-heading.text-center.dcm-caption Handwerkstalente
+						h2.panel-heading.text-center.dcm-caption Handwerkstalente
 						.panel-body
 							+TalentTable(_Held.Talente.Handwerk)
 			.row
 				.col-md-6
 					section.panel.panel-default#t_spr
-						.panel-heading.text-center.dcm-caption Sprachen
+						h2.panel-heading.text-center.dcm-caption Sprachen
 						.panel-body
 							+SprachenTable(_Held.Talente.Sprachen)
 				.col-md-6
 					section.panel.panel-default#t_scr
-						.panel-heading.text-center.dcm-caption Schriften
+						h2.panel-heading.text-center.dcm-caption Schriften
 						.panel-body
 							+SprachenTable(_Held.Talente.Schriften)
 			// Ausrüstung
 			if _Held.Ausrüstung && _Held.Ausrüstung.Rucksack && _Held.Ausrüstung.Rucksack.length
 				section.panel.panel-default#eqp
-					.panel-heading.text-center.dcm-caption Ausrüstung
+					h2.panel-heading.text-center.dcm-caption Ausrüstung
 					.panel-body
 						.container-fluid
 							each __item in _Held.Ausrüstung.Rucksack
