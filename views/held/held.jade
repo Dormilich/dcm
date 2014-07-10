@@ -449,7 +449,7 @@ html(lang="de")
 									.col-xs-6.col-sm-4.col-md-2=__waffe.TP.dkMod.map(beautifyNumber).join(" / ")
 									.col-xs-3.hidden-xs.col-sm-2.hidden-md.col-lg-1.be(title=__waffe.talent, data-be=Math.abs(__waffe.BE), data-talent=__waffe.talent)="BE–"+Math.abs(__waffe.BE)
 			
-			if _Held.Ausrüstung && Array.isArray(_Held.Ausrüstung.Kleidung)
+			if _Held.Ausrüstung && _Held.Ausrüstung.Kleidung && _Held.Ausrüstung.Kleidung.length
 				section.panel.panel-default
 					h2.panel-heading.dcm-caption Rüstungen
 					.panel-body

@@ -1,3 +1,5 @@
+include ../inc-mixins
+
 mixin talentTable(__group, __name)
 	.panel-heading
 		.row
@@ -6,8 +8,8 @@ mixin talentTable(__group, __name)
 			.col-xs-3.col-sm-2.col-lg-1 TaW
 	ul.list-group
 	each __talent, __idx in __group
-		- var __heldentalent = getTalent(_Held.Talente.__name, {talent:__talent.name})
-		- var __isAvailable  = isAvailable(_Held.Talente.__name, __talent)
+		- var __heldentalent = getTalent(_Held.Talente[__name], {talent:__talent.name})
+		- var __isAvailable  = isAvailable(_Held.Talente[__name], __talent)
 		li.list-group-item
 			.row(data-name="Talente[#{__name}][#{__idx}][Spezialisierung]", data-options=__talent.spezialisierungen.join(','))
 				.col-xs-1
@@ -23,10 +25,7 @@ mixin talentTable(__group, __name)
 						each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 							option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
 				.col-xs-3.col-sm-2.col-lg-1
-					input.unlock(type="number", name="Talente[#{__name}][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.AT, disabled=!__isAvailable)
-
-
-include ../inc-mixins
+					input.unlock(type="number", name="Talente[#{__name}][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 doctype html
 html(lang="de")
