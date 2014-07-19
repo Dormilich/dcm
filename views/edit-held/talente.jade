@@ -11,16 +11,27 @@ mixin talentTable(__group, __name)
 		- var __heldentalent = getTalent(_Held.Talente[__name], {talent:__talent.name})
 		- var __isAvailable  = isAvailable(_Held.Talente[__name], __talent)
 		li.list-group-item
-			.row(data-name="Talente[#{__name}][#{__idx}][Spezialisierung]", data-options=__talent.spezialisierungen.join(','))
+			.row
 				.col-xs-1
 					input.unlock(type="hidden", name="Talente[#{__name}][#{__idx}][_talent]", value=__talent._id, disabled=!__isAvailable)
 					if __talent.standard
 						input(type="hidden", name="Talente[#{__name}][#{__idx}][name]", value=__talent.name)
 					else
 						input.isactive(type="checkbox", name="Talente[#{__name}][#{__idx}][name]", value=__talent.name, id=__name+__idx, checked=__isAvailable)
-				.col-xs-5.col-sm-7.col-lg-9.text-left
+				.col-xs-6.col-sm-4.text-left
 					label(for=__name+__idx)=__talent.name
-				.col-xs-3.col-sm-2.col-lg-1
+				.col-xs-5.col-sm-3.col-lg-5.text-left
+					span.badge=Array.isArray(__heldentalent.Spezialisierung) ? __heldentalent.Spezialisierung.length : 0
+					ul.options
+						li
+							input.toggle-custom(type="checkbox")
+							input(type="text", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", disabled)
+						each __spez in __talent.spezialisierungen
+							li
+								label
+									input.unlock(type="checkbox", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", value=__spez, checked=contains(__heldentalent.Spezialisierung, __spez))
+									span=__spez
+				.col-xs-3.col-xs-offset-6.col-sm-2.col-sm-offset-0.col-lg-1
 					select.unlock(size="1", name="Talente[#{__name}][#{__idx}][Lernstufe]", disabled=!__isAvailable)
 						each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
 							option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
@@ -33,6 +44,7 @@ html(lang="de")
 		include ../inc-bootstrap
 		title Talente
 		link(rel="stylesheet", href="/css/dcm-display.css")
+		link(rel="stylesheet", href="/css/dropout.css")
 		style.
 			input[type='number'] {
 				text-align: 		center;
@@ -40,6 +52,9 @@ html(lang="de")
 			}
 			input[type='number']:disabled {
 				background-color:	#ddd;
+			}
+			ul.options input[type="checkbox"] {
+				margin-right:		0.5em;
 			}
 	body#top
 		include inc/nav
