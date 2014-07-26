@@ -35,11 +35,10 @@ $('.tab-content').on('click', 'label', function() {
 */
 $('.tab-content').on('click', '.isactive', function() {
 	var $tr    = $(this).closest('.row');
-	//var $check = $tr.find('.isactive');
 	var $check = $(this);
 	if ($check.length) {
 		$tr.find('.unlock').prop('disabled', !$check.prop('checked'));
-		$tr.find('.spez').prop('disabled', true);
+		$tr.find('.lock').prop('disabled', true);
 	}
 });
 
@@ -55,7 +54,7 @@ $('form').on('click', '.badge', function (evt) {
 });
 $('form').on('click', '.toggle-custom', function (evt) {
 	var $input = $(this).next();
-	$input.prop('disabled', !$input.prop('disabled'));
+	$input.prop('disabled', !this.checked);
 });
 /*
 $('form').on('click', '.badge', function (evt) {
