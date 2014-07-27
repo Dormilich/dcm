@@ -128,17 +128,17 @@ html(lang="de")
 									ul.options
 										li
 											input.unlock.toggle-custom(type="checkbox", disabled=!__isAvailable)
-											input.lock(type="text", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", disabled)
+											input.lock(type="text", name="Talente[Nahkampf][#{__idx}][Spezialisierung][]", disabled)
 										if Array.isArray(__heldentalent.Spezialisierung) && __heldentalent.Spezialisierung.length > 0
 											each __spez in __heldentalent.Spezialisierung.filter(function (item) { return !contains(__talent.spezialisierungen, item); })
 												li
 													label
-														input.unlock(type="checkbox", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", value=__spez, checked)
+														input.unlock(type="checkbox", name="Talente[Nahkampf][#{__idx}][Spezialisierung][]", value=__spez, checked)
 														span=__spez
 										each __spez in __talent.spezialisierungen
 											li
 												label
-													input.unlock(type="checkbox", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", value=__spez, checked=contains(__heldentalent.Spezialisierung, __spez), disabled=!__isAvailable)
+													input.unlock(type="checkbox", name="Talente[Nahkampf][#{__idx}][Spezialisierung][]", value=__spez, checked=contains(__heldentalent.Spezialisierung, __spez), disabled=!__isAvailable)
 													span=__spez
 								.col-xs-3.col-sm-2
 									select.unlock(size="1", name="Talente[Nahkampf][#{__idx}][Lernstufe]", disabled=!__isAvailable)
@@ -174,17 +174,17 @@ html(lang="de")
 									ul.options
 										li
 											input.unlock.toggle-custom(type="checkbox", disabled=!__isAvailable)
-											input.lock(type="text", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", disabled)
+											input.lock(type="text", name="Talente[Fernkampf][#{__idx}][Spezialisierung][]", disabled)
 										if Array.isArray(__heldentalent.Spezialisierung) && __heldentalent.Spezialisierung.length > 0
 											each __spez in __heldentalent.Spezialisierung.filter(function (item) { return !contains(__talent.spezialisierungen, item); })
 												li
 													label
-														input.unlock(type="checkbox", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", value=__spez, checked)
+														input.unlock(type="checkbox", name="Talente[Fernkampf][#{__idx}][Spezialisierung][]", value=__spez, checked)
 														span=__spez
 										each __spez in __talent.spezialisierungen
 											li
 												label
-													input.unlock(type="checkbox", name="Talente[#{__name}][#{__idx}][Spezialisierung][]", value=__spez, checked=contains(__heldentalent.Spezialisierung, __spez), disabled=!__isAvailable)
+													input.unlock(type="checkbox", name="Talente[Fernkampf][#{__idx}][Spezialisierung][]", value=__spez, checked=contains(__heldentalent.Spezialisierung, __spez), disabled=!__isAvailable)
 													span=__spez
 								.col-xs-3.col-sm-2.col-lg-1
 									select.unlock(size="1", name="Talente[Fernkampf][#{__idx}][Lernstufe]", disabled=!__isAvailable)
@@ -269,8 +269,51 @@ html(lang="de")
 									input.unlock(type="number", name="Talente[Schriften][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
 				section#Gaben.tab-pane.panel.panel-default.text-center
-					+talentTable(_Gaben, "Gaben")
-				
+					//- 
+						Tierempathie [allgemein] => Spezialisierung
+						Gaben generell aus den Vorteilen Heraussuchen
+					.panel-heading
+						.row
+							.col-xs-6.col-sm-8.col-lg-10 Gabe
+							.col-xs-3.col-sm-2.col-lg-1 Lern
+							.col-xs-3.col-sm-2.col-lg-1 TaW
+					ul.list-group
+						- var __Gaben      = {}
+						- var __GabenNamen = _Gaben.map(function (gabe) { __Gaben[gabe.name] = gabe; return gabe.name; })
+						- var __GabenMap   = {}
+						- var __HeldGaben  = _Held.Vorteile.filter(function (item) { return __GabenNamen.some(function (gabe) { return item.indexOf(gabe) === 0 }); })
+						//- Vorteile nach Gaben filtern
+						each __talentname, __idx in __HeldGaben
+							- var __talent       = __Gaben[__name]
+							- var __heldentalent = getTalent(_Held.Talente.Gaben, {talent:__talentname})
+							//- gabe kann noch nicht existieren
+							li.list-group-item
+								.row
+									.col-xs-1
+										input.unlock(type="hidden", name="Talente[Gaben][#{__idx}][_talent]", value=__talent._id)
+										input(type="hidden", name="Talente[Gaben][#{__idx}][name]", value=__talentname)
+									.col-xs-6.col-sm-4.text-left
+										label=__talentname
+									.col-xs-5.col-sm-3.col-lg-5.text-left
+										if __talentname === 'Tierempathie [allgemein]'
+											span.badge=Array.isArray(__heldentalent.Spezialisierung) ? __heldentalent.Spezialisierung.length : 0
+											ul.options
+												li
+													input.unlock.toggle-custom(type="checkbox")
+													input.lock(type="text", name="Talente[Gaben][#{__idx}][Spezialisierung][]", disabled)
+												if Array.isArray(__heldentalent.Spezialisierung) && __heldentalent.Spezialisierung.length > 0
+													each __spez in __heldentalent.Spezialisierung.filter(function (item) { return !contains(__talent.spezialisierungen, item); })
+														li
+															label
+																input.unlock(type="checkbox", name="Talente[Gaben][#{__idx}][Spezialisierung][]", value=__spez, checked)
+																span=__spez
+									.col-xs-3.col-xs-offset-6.col-sm-2.col-sm-offset-0.col-lg-1
+										select.unlock(size="1", name="Talente[Gaben][#{__idx}][Lernstufe]")
+											each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
+												option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
+									.col-xs-3.col-sm-2.col-lg-1
+										input.unlock(type="number", name="Talente[Gaben][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert)
+								
 				#save.row.well
 					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
 						button.btn.btn-success.form-control(type="submit", disabled) speichern
