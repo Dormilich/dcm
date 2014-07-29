@@ -497,7 +497,15 @@ html(lang="de")
 						section.panel.panel-default
 							h2.panel-heading.text-center.dcm-caption Gaben
 							.panel-body
-								+TalentTable(_Held.Talente.Gaben)
+								.container-fluid.text-center.dcm-hover
+									each __talent in _Held.Talente.Gaben
+										.row.dcm-row.dcm-table
+											.col-xs-12.col-sm-6.col-md-12.col-lg-6.text-left=__talent.name
+												if __talent.Spezialisierung.length
+													|  (#{__talent.Spezialisierung.join(', ')})
+											.col-xs-6.col-sm-3.col-md-6.col-lg-3(title=__talent._talent.probe.join(' · '))=__talent._talent.probe.map(function(item) { return _Held.Attribute[item].wert; }).join(' · ')
+											.col-xs-2.col-sm-1.col-md-2.col-lg-1=__talent.Lernstufe
+											.col-xs-4.col-sm-2.col-md-4.col-lg-2=__talent.wert.toString().replace('-', '–')
 					section.panel.panel-default#t_koe
 						h2.panel-heading.text-center.dcm-caption Körperliche Talente
 						.panel-body
