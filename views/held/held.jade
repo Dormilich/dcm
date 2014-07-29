@@ -2,15 +2,6 @@ include ../inc-mixins
 
 //- table for regular talents
 mixin TalentTable(__list)
-	.container-fluid.text-center
-		.row.dcm-row
-			.col-xs-12.col-sm-6.col-md-12.col-lg-6
-				.dcm-header.dcm-border Talent
-			.col-xs-6.col-sm-3.col-md-6.col-lg-3
-				.dcm-header.dcm-border Probe
-			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
-			.col-xs-4.col-sm-2.col-md-4.col-lg-2
-				.dcm-header.dcm-border TaW
 	.container-fluid.text-center.dcm-hover
 		each __talent in __list
 			.row.dcm-row.dcm-table
@@ -24,10 +15,8 @@ mixin TalentTable(__list)
 //- table for languages and scripts
 mixin SprachenTable(__list)
 	.container-fluid.text-center
-		.row.dcm-row
-			.col-xs-12.col-sm-6.col-md-12.col-lg-6
-				.dcm-header.dcm-border Talent
-			.col-xs-6.col-sm-3.col-md-6.col-lg-3
+		//-.row.dcm-row
+			.col-xs-6.col-sm-3.col-sm-offset-6.col-md-6.col-md-offset-0.col-lg-3.col-lg-offset-6
 				.dcm-header.dcm-border Kompl.
 			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
 			.col-xs-4.col-sm-2.col-md-4.col-lg-2
@@ -44,14 +33,11 @@ mixin SprachenTable(__list)
 mixin KampfTable(__list)
 	.container-fluid.text-center
 		.row.dcm-row
-			.col-xs-12.col-sm-5.col-md-12.col-lg-5
-				.dcm-header.dcm-border Talent
-			.col-xs-3.col-sm-2.col-md-3.col-lg-2
+			.col-xs-3.col-sm-2.col-sm-offset-5.col-md-3.col-md-offset-0.col-lg-2.col-lg-offset-5
 				.dcm-header.dcm-border AT
 			.col-xs-3.col-sm-2.col-md-3.col-lg-2
 				.dcm-header.dcm-border PA
-			.col-xs-2.col-sm-1.col-md-2.col-lg-1 &nbsp;
-			.col-xs-4.col-sm-2.col-md-4.col-lg-2
+			.col-xs-4.col-xs-offset-2.col-sm-2.col-sm-offset-1.col-md-4.col-md-offset-2.col-lg-2.col-lg-offset-1
 				.dcm-header.dcm-border TaW
 	.container-fluid.text-center.dcm-hover
 		each __talent in __list
