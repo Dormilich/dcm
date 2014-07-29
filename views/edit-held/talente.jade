@@ -1,3 +1,53 @@
+-	function getGabenTalente() {
+-		// get all names as plain array
+-		var __GabenNamen = _Gaben.map(function (gabe) { 
+-			return gabe.name; 
+-		});
+-		// get all character’s traits’ names that are Gaben
+-		var __HeldGaben  = _Held.Vorteile.filter(function (item) { 
+-			return __GabenNamen.some(function (gabe) { 
+-				return (item.indexOf(gabe) === 0); 
+-			}); 
+-		});
+-		// substitute those names that match an entry in the talent section
+-		if (Array.isArray(_Held.Talente.Gaben)) {
+-			__HeldGaben = __HeldGaben.map(function (name) {
+-				var __gabe = _Held.Talente.Gaben.filter(function (gabe) {
+-					return (gabe.name === name);
+-				});
+-				if (__gabe.length > 0) {
+-					return __gabe[0];
+-				}
+-				return name;
+-			});
+-		}
+-		// fill remaining with data from _Gaben
+-		__HeldGaben = __HeldGaben.map(function (item) {
+-			if (typeof item !== 'string') {
+-				return item;
+-			}
+-			// find matching Gabe
+-			var __gabe = _Gaben.filter(function (gabe) {
+-				return (item.indexOf(gabe.name) === 0);
+-			});
+-			if (__gabe.length > 0) {
+-				var __obj    = __gabe[0];
+-				var __talent = {};
+-				__talent._talent   = __obj._id;
+-				__talent.Lernstufe = __obj.stufe;
+-				__talent.name      = item;
+-				__talent.wert      = 3;
+-				return __talent;
+-			}
+-			// return NULL if neither sources has a match
+-			return null;
+-		});
+-		// remove empty entries
+-		return __HeldGaben.filter(function (item) {
+-			return (item !== null);
+-		});
+-	}
+
 include ../inc-mixins
 
 mixin talentTable(__group, __name)
@@ -268,8 +318,8 @@ html(lang="de")
 								.col-xs-3.col-sm-2.col-lg-1
 									input.unlock(type="number", name="Talente[Schriften][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert, disabled=!__isAvailable)
 
-				//-section#Gaben.tab-pane.panel.panel-default.text-center
-					// 
+				section#Gaben.tab-pane.panel.panel-default.text-center
+					//- 
 						Tierempathie [allgemein] => Spezialisierung
 						Gaben generell aus den Vorteilen Heraussuchen
 					.panel-heading
@@ -278,31 +328,23 @@ html(lang="de")
 							.col-xs-3.col-sm-2.col-lg-1 Lern
 							.col-xs-3.col-sm-2.col-lg-1 TaW
 					ul.list-group
-						- var __Gaben      = {}
-						- var __GabenNamen = _Gaben.map(function (gabe) { __Gaben[gabe.name] = gabe; return gabe.name; })
-						- var __GabenMap   = {}
-						- var __HeldGaben  = _Held.Vorteile.filter(function (item) { return __GabenNamen.some(function (gabe) { return item.indexOf(gabe) === 0 }); })
-						//- Vorteile nach Gaben filtern
-						each __talentname, __idx in __HeldGaben
-							- var __talent       = __Gaben[__name]
-							- var __heldentalent = getTalent(_Held.Talente.Gaben, {talent:__talentname})
-							//- gabe kann noch nicht existieren
+						each __gabe, __idx in getGabenTalente()
 							li.list-group-item
 								.row
 									.col-xs-1
-										input.unlock(type="hidden", name="Talente[Gaben][#{__idx}][_talent]", value=__talent._id)
-										input(type="hidden", name="Talente[Gaben][#{__idx}][name]", value=__talentname)
+										input.unlock(type="hidden", name="Talente[Gaben][#{__idx}][_talent]", value=__gabe._talent)
+										input(type="hidden", name="Talente[Gaben][#{__idx}][name]", value=__gabe.name)
 									.col-xs-6.col-sm-4.text-left
-										label=__talentname
+										label=__gabe.name
 									.col-xs-5.col-sm-3.col-lg-5.text-left
-										if __talentname === 'Tierempathie [allgemein]'
-											span.badge=Array.isArray(__heldentalent.Spezialisierung) ? __heldentalent.Spezialisierung.length : 0
+										if __gabe.name === 'Tierempathie [allgemein]'
+											span.badge=Array.isArray(__gabe.Spezialisierung) ? __gabe.Spezialisierung.length : 0
 											ul.options
 												li
 													input.unlock.toggle-custom(type="checkbox")
 													input.lock(type="text", name="Talente[Gaben][#{__idx}][Spezialisierung][]", disabled)
-												if Array.isArray(__heldentalent.Spezialisierung) && __heldentalent.Spezialisierung.length > 0
-													each __spez in __heldentalent.Spezialisierung.filter(function (item) { return !contains(__talent.spezialisierungen, item); })
+												if Array.isArray(__gabe.Spezialisierung) && __gabe.Spezialisierung.length > 0
+													each __spez in __gabe.Spezialisierung
 														li
 															label
 																input.unlock(type="checkbox", name="Talente[Gaben][#{__idx}][Spezialisierung][]", value=__spez, checked)
@@ -310,12 +352,12 @@ html(lang="de")
 									.col-xs-3.col-xs-offset-6.col-sm-2.col-sm-offset-0.col-lg-1
 										select.unlock(size="1", name="Talente[Gaben][#{__idx}][Lernstufe]")
 											each __kat in ["A+", "A", "B", "C", "D", "E", "F", "G", "H"]
-												option(selected=__heldentalent.Lernstufe ? __heldentalent.Lernstufe === __kat : __talent.stufe === __kat)=__kat
+												option(selected=(__gabe.Lernstufe === __kat))=__kat
 									.col-xs-3.col-sm-2.col-lg-1
-										input.unlock(type="number", name="Talente[Gaben][#{__idx}][wert]", min="0", max="20", step="1", value=__heldentalent.wert)
+										input.unlock(type="number", name="Talente[Gaben][#{__idx}][wert]", min="0", max="20", step="1", value=__gabe.wert)
 								
 				#save.row.well
 					.col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.text-center
 						button.btn.btn-success.form-control(type="submit", disabled) speichern
 
-			script(src="/js/edit-talente.js")
+		script(src="/js/edit-talente.js")
