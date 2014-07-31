@@ -44,7 +44,7 @@ html(lang="de")
 				.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
 					.panel.panel-default
 						h2.panel-heading.text-center Anzeigename ändern
-						form.panel-body(action="/change/local", method="post")
+						form.panel-body(action="/change/local", method="post", accept-charset="utf-8")
 							input(type="hidden", name="_method", value="put")
 							.form-group.container-fluid
 								label(for="display_name") Name
@@ -54,8 +54,10 @@ html(lang="de")
 				.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
 					.panel.panel-default
 						h2.panel-heading.text-center Passwort ändern
-						form.panel-body(action="/change/local", method="post")
+						form.panel-body(action="/change/local", method="post", accept-charset="utf-8")
 							input(type="hidden", name="_method", value="put")
+							if (_Message.length > 0)
+								.alert.alert-danger=_Message
 							.form-group.container-fluid
 								label(for="new_pass") neues Passwort
 								input#new_pass.form-control(type="password", name="password[0]", required)

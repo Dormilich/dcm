@@ -38,7 +38,7 @@ function realpath(relativePath) {
 module.exports = function (app) {
 	// ### TODO ###
 	// About page
-	app.get('/about', function(req, res, next) {
+	app.get('/about', function (req, res, next) {
 		Message
 			.find({  
 				recipient: req.user.id,
@@ -46,7 +46,7 @@ module.exports = function (app) {
 				read:      false, // accepted state
 				deleted:   false  // rejected state
 			})
-			.count(function(err, cnt) {
+			.count(function (err, cnt) {
 				if (err) return cb(err);
 				var nav        = menu.profil;
 				nav.currentURL = req.path;
@@ -59,7 +59,7 @@ module.exports = function (app) {
 		;
 	});
 	// Account Panel
-	app.get('/profil', function(req, res, next) {
+	app.get('/profil', function (req, res, next) {
 		Message
 			.find({  
 				recipient: req.user.id,
@@ -67,7 +67,7 @@ module.exports = function (app) {
 				read:      false, // accepted state
 				deleted:   false  // rejected state
 			})
-			.count(function(err, cnt) {
+			.count(function (err, cnt) {
 				if (err) return cb(err);
 				var nav        = menu.profil;
 				nav.currentURL = req.path;
@@ -80,7 +80,7 @@ module.exports = function (app) {
 		;
 	});
 	// Character list	
-	app.get('/helden', function(req, res, next) {
+	app.get('/helden', function (req, res, next) {
 		async.parallel({
 			_Own: function (cb) {
 				Held
@@ -88,7 +88,7 @@ module.exports = function (app) {
 					.in("_id", req.user.chars)
 					.select('Person AP')
 					.sort('AP.alle')
-					.exec(function(err, arr) {
+					.exec(function (err, arr) {
 						if (err) return cb(err);
 						cb(null, arr);
 					})
@@ -105,7 +105,7 @@ module.exports = function (app) {
 							sort: "AP.alle"
 						}
 					})
-					.exec(function(err, arr) {
+					.exec(function (err, arr) {
 						if (err) return cb(err);
 						cb(null, arr);
 					})
@@ -119,7 +119,7 @@ module.exports = function (app) {
 						read:      false, // accepted state
 						deleted:   false  // rejected state
 					})
-					.count(function(err, cnt) {
+					.count(function (err, cnt) {
 						if (err) return cb(err);
 						cb(null, cnt);
 					})
@@ -135,12 +135,12 @@ module.exports = function (app) {
 		});
 	});
 	// deleted Characters list	
-	app.get('/papierkorb', function(req, res, next) {
+	app.get('/papierkorb', function (req, res, next) {
 		Held
 			.find({ disabled: true })
 			.in("_id", req.user.chars)
 			.sort('AP.alle')
-			.exec(function(err, arr) {
+			.exec(function (err, arr) {
 				if (err) return next(err);
 				var nav = menu.profil;
 				nav.currentURL = req.path;
@@ -153,20 +153,20 @@ module.exports = function (app) {
 		;
 	});
 	// Friend list
-	app.get('/freunde', function(req, res, next) {
+	app.get('/freunde', function (req, res, next) {
 		async.parallel({
 			_Friends: function (cb) {
 				User
 					.find()
 					.in("_id", req.user.friends)
-					.exec(function(err, docs) {
+					.exec(function (err, docs) {
 						if (err) return cb(err);
 						cb(null, docs);
 					})
 				;
 			},
 			_Group: function (cb) {
-				User.find({ "friends": req.user._id }, function(err, docs) {
+				User.find({ "friends": req.user._id }, function (err, docs) {
 					if (err) return cb(err);
 					cb(null, docs);
 				});
@@ -180,7 +180,7 @@ module.exports = function (app) {
 						deleted:   false  // rejected state
 					})
 					.populate("sender") 
-					.exec(function(err, arr) {
+					.exec(function (err, arr) {
 						if (err) return cb(err);
 						cb(null, arr);
 					})
@@ -195,7 +195,7 @@ module.exports = function (app) {
 						deleted: false  // rejected state
 					})
 					.populate("recipient") 
-					.exec(function(err, arr) {
+					.exec(function (err, arr) {
 						if (err) return cb(err);
 						cb(null, arr);
 					})
@@ -212,15 +212,17 @@ module.exports = function (app) {
 		});
 	});
 	// save friend list (AJAX)
-	app.post('/freunde', function(req, res, next) {
+	app.post('/freunde', function (req, res, next) {
 		req.user.friends = req.body.friends;
-		req.user.save(function(err) {
+		req.user.save(function (err) {
 			if (err) return next(err);
-			res.json({ count: req.user.friends.length });
+			res.json({ 
+				count: req.user.friends.length 
+			});
 		});
 	});
 	// get list of users matching a name string (AJAX)
-	app.get('/userlist', function(req, res, next) {
+	app.get('/userlist', function (req, res, next) {
 		var query = null;
 		var re    = ".";
 		// find user by name
@@ -253,9 +255,9 @@ module.exports = function (app) {
 			query.ne("friends", req.user._id)
 		}
 		// execute
-		query.exec(function(err, arr) {
+		query.exec(function (err, arr) {
 			if (err) return next(err);
-			res.json(arr.map(function(user) {
+			res.json(arr.map(function (user) {
 				var username = user.getName();
 				return {
 					id:    user._id,
@@ -266,7 +268,7 @@ module.exports = function (app) {
 		});
 	});
 	// write a friendship request message (AJAX)
-	app.get('/friendship', function(req, res, next) {
+	app.get('/friendship', function (req, res, next) {
 		// check User ID
 		if (!("id" in req.query)) {
 			res.status(400).end();
@@ -275,7 +277,7 @@ module.exports = function (app) {
 		User
 			.findById(req.query.id)
 			.exec()
-			.then(function(user) {
+			.then(function (user) {
 				// check if recipient exists
 				if (!user) {
 					throw new Error("Nutzer unbekannt.");
@@ -297,7 +299,7 @@ module.exports = function (app) {
 					.exec()
 				;
 			})
-			.then(function(count) {
+			.then(function (count) {
 				if (count > 0) {
 					throw new Error("Freundschaftsanfrage läuft bereits.")
 				}
@@ -317,7 +319,7 @@ module.exports = function (app) {
 					.exec()
 				;
 			})
-			.then(function(count) {
+			.then(function (count) {
 				if (count > 0) {
 					throw new Error("Die letzte Freundschaftsanfrage ist jünger als 1 Monat.")
 				}
@@ -328,16 +330,16 @@ module.exports = function (app) {
 					topic:     "friendship request"
 				});
 			})
-			.then(function(msg) {
+			.then(function (msg) {
 				res.status(204).end();
 			})
-			.then(null, function(err) {
+			.then(null, function (err) {
 				res.status(500).end(err.message);
 			})
 		;
 	});
 	// accept/deny friendship (AJAX)
-	app.get('/friendship/:status', function(req, res, next) {
+	app.get('/friendship/:status', function (req, res, next) {
 		// check User ID
 		if (!("message" in req.query)) {
 			res.status(400).end();
@@ -360,12 +362,49 @@ module.exports = function (app) {
 		});
 	});
 	// modify local account data
-	app.get('/change/local', function(req, res, next) {
+	app.get('/change/local', function (req, res, next) {
 		var nav        = menu.profil;
 		nav.currentURL = req.path;
 		res.render('users/local-data', {  
 			_User:    req.user,
-			_Menu:    nav
+			_Menu:    nav,
+			_Message: req.flash('passwordMessage')
 		});
+	});
+	app.put('/change/local', function (req, res, next) {
+		var user = req.user;
+		// change user name
+		if (typeof req.body.display_name === 'string') {
+			user.local.name = req.body.display_name;
+			user.save(function (err) {
+				if (err) return next(err);
+				res.redirect('/profil');
+			});
+		}
+		// change user password
+		else if (Array.isArray(req.body.password) && req.body.password.length === 2) {
+			var password = req.body.password[0];
+			var data 	 = {  
+				_User:    user,
+				_Menu:    menu.profil,
+				_Message: ""
+			};
+			data._Menu.currentURL = req.path;
+			if (password !== req.body.password[1]) {
+				data._Message = "Passwörter stimmen nicht überein";
+				res.render('users/local-data', data);
+			}
+			else if (password.length < 8) {
+				data._Message = "Passwort zu kurz";
+				res.render('users/local-data', data);
+			}
+			else {
+				user.local.password = user.generateHash(password);
+				user.save(function (err) {
+					if (err) return next(err);
+					res.redirect('/profil');
+				});
+			}
+		}
 	});
 };
