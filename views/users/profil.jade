@@ -5,6 +5,13 @@ html(lang="de")
 	head
 		include ../inc-bootstrap
 		title DCM – DSA Charakter Manager
+		style.
+			h1, h2, h3, h4 {
+				margin:		0;
+			}
+			h2 {
+				font-size: 	1.5em;
+			}
 	body
 		nav.navbar.navbar-default(role="navigation")
 			.container-fluid
@@ -29,19 +36,17 @@ html(lang="de")
 									span.hidden-xs.fa.fa-hdd-o
 									span.visible-xs Manage DB
 		header.container
-			.page-header.text-center
-				h1
-					span.fa.fa-user &nbsp;
-					| Kontenverwaltung
+			h1.page-header.text-center
+				span.fa.fa-user &nbsp;
+				| Kontenverwaltung
 		main.container
 			.row
 				.col-sm-6
 					.panel.panel-default
-						.panel-heading
-							h4
-								span.fa.fa-user &nbsp;
-								strong E-Mail / Passwort
-						.panel-body
+						h2.panel-heading
+							span.fa.fa-user &nbsp;
+							strong E-Mail / Passwort
+						section.panel-body
 							if (_User.local.email)
 								p
 									strong E-Mail
@@ -49,18 +54,19 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.local.name}
-								a(href="/unlink/local").btn.btn-sm.btn-default Trennen
+								a.btn.btn-sm.btn-default(href="/unlink/local") Trennen
 								| &nbsp;
-								//-a(href="/setup/local").btn.btn-sm.btn-default Daten ändern
+								a.btn.btn-sm.btn-default(href="/change/local") Passwort ändern
+								| &nbsp;
+								a.btn.btn-sm.btn-default(href="/setup/local") Daten ändern
 							else
-								a(href="/connect/local").btn.btn-sm.btn-default Verbinden
+								a.btn.btn-sm.btn-default(href="/connect/local") Verbinden
 				.col-sm-6
 					.panel.panel-default
-						.panel-heading
-							h4.text-danger
-								span.fa.fa-google-plus-square &nbsp;
-								strong Google
-						.panel-body
+						h2.panel-heading
+							span.text-danger.fa.fa-google-plus-square &nbsp;
+							strong.text-danger Google
+						section.panel-body
 							if (_User.google.token)
 								p
 									strong E-Mail
@@ -68,17 +74,16 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.google.name}
-								a(href="/unlink/google").btn.btn-sm.btn-danger Trennen
+								a.btn.btn-sm.btn-danger(href="/unlink/google") Trennen
 							else
-								a(href="/connect/google").btn.btn-sm.btn-danger Google hinzufügen
+								a.btn.btn-sm.btn-danger(href="/connect/google") Google hinzufügen
 			.row
 				.col-sm-6
 					.panel.panel-default
-						.panel-heading
-							h4.text-primary
-								span.fa.fa-facebook-square &nbsp;
-								strong facebook
-						.panel-body
+						h2.panel-heading
+							span.text-primary.fa.fa-facebook-square &nbsp;
+							strong.text-primary facebook
+						section.panel-body
 							if (_User.facebook.token)
 								p
 									strong E-Mail
@@ -86,9 +91,9 @@ html(lang="de")
 								p
 									strong Name
 									| : #{_User.facebook.name}
-								a(href="/unlink/facebook").btn.btn-sm.btn-primary Trennen
+								a.btn.btn-sm.btn-primary(href="/unlink/facebook") Trennen
 							else
-								a(href="/connect/facebook").btn.btn-sm.btn-primary Facebook hinzufügen
+								a.btn.btn-sm.btn-primary(href="/connect/facebook") Facebook hinzufügen
 				//-.col-sm-6
 					.panel.panel-default
 						.panel-heading
