@@ -1,0 +1,67 @@
+include ../inc-mixins
+
+doctype html
+html(lang="de")
+	head
+		include ../inc-bootstrap
+		title DCM – Passwort ändern
+		style.
+			h1, h2, h3, h4 {
+				margin:			0;
+			}
+			.panel h2 {
+				font-family: 	Georgia, serif;
+			}
+	body
+		nav.navbar.navbar-default(role="navigation")
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar-collapse-chars")
+						span.sr-only Navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					span.navbar-brand DCM
+				#navbar-collapse-chars.collapse.navbar-collapse
+					- var data = { badge: "" };
+					ul.nav.navbar-nav
+						each __link in _Menu.left
+							+menuLink(__link, data)
+					ul.nav.navbar-nav.navbar-right
+						each __link in _Menu.right
+							+menuLink(__link, data)
+						if _User.isAdmin
+							li
+								a(href="/db", title="Manage DB")
+									span.hidden-xs.fa.fa-hdd-o
+									span.visible-xs Manage DB
+		header.container
+			h1.page-header.text-center
+				span.fa.fa-edit &nbsp;
+				| persönliche Daten ändern
+		main.container
+			.row
+				.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+					.panel.panel-default
+						h2.panel-heading.text-center Anzeigename ändern
+						form.panel-body(action="/change/local", method="post")
+							input(type="hidden", name="_method", value="put")
+							.form-group.container-fluid
+								label(for="display_name") Name
+								input#display_name.form-control(type="text", name="display_name", value=_User.local.name, required)
+							.text-center
+								button.btn.btn-warning(type="submit") Name ändern
+				.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+					.panel.panel-default
+						h2.panel-heading.text-center Passwort ändern
+						form.panel-body(action="/change/local", method="post")
+							input(type="hidden", name="_method", value="put")
+							.form-group.container-fluid
+								label(for="new_pass") neues Passwort
+								input#new_pass.form-control(type="password", name="password[0]", required)
+							.form-group.container-fluid
+								label(for="repeat") neues Passwort wiederholen
+								input#repeat.form-control(type="password", name="password[1]", required)
+							.text-center
+								button.btn.btn-danger(type="submit") Passwort ändern
+

@@ -359,4 +359,13 @@ module.exports = function (app) {
 			}
 		});
 	});
+	// modify local account data
+	app.get('/change/local', function(req, res, next) {
+		var nav        = menu.profil;
+		nav.currentURL = req.path;
+		res.render('users/local-data', {  
+			_User:    req.user,
+			_Menu:    nav
+		});
+	});
 };
