@@ -1,0 +1,19 @@
+{
+  "name": "DSA Character Manager",
+  "version": "0.0.6",
+  "homepage": "https://github.com/Dormilich/dcm",
+  "description": "A character manager for DSA character sheets",
+  "authors": [
+    "Bertold von Dormilich"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor",
+    "test",
+    "tests"
+  ]
+}

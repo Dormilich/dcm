@@ -31,4 +31,9 @@ logs
 results
 
 npm-debug.log
+
+# netbeans
 /nbproject/private/
+
+# bower installs
+public/vendor
