@@ -35,19 +35,3 @@ ul.options {
     border-bottom-right-radius: 0.3em;
     padding-bottom:             0.3em;
 }
-/*
-.wrapper {
-    display: inline-block;
-    border-right: 1px solid gray;
-    margin-right: 0.5em;
-    padding-right: 0.5em;
-}
-.wrapper button {
-    width:  1.5em;
-    height: 1.5em;
-    padding: 0;
-    text-align: center;
-}
-.wrapper input[type="text"] {
-}
-*/
