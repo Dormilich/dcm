@@ -346,6 +346,10 @@ $('#nahkampf-waffen').on("click", 'input[type="radio"]', function() {
 	kampfwerte.calculate();
 });
 
+$('.pws').on('click', kampfwerte.calculate);
+
+$('#pws_typ').on('change', kampfwerte.calculate);
+
 $('#pws_deselect').on("click", function() {
 	$("input[name='nebenhand']:checked").prop("checked", false);
 	kampfwerte.calculate();
