@@ -15,5 +15,11 @@
     "public/vendor",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "typeahead.js": "~0.10.4",
+    "fontawesome": "~4.1.0",
+    "bootstrap": "~3.2.0"
+  }
 }
