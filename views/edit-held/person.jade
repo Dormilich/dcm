@@ -30,7 +30,7 @@ html(lang="de")
 							.form-group
 								label.control-label.col-sm-2(for="char-gender") Geschlecht:
 								.col-sm-3
-									select#char-gender.form-control
+									select#char-gender.form-control(name="Person[Geschlecht]")
 										each __val in ["männlich", "weiblich"]
 											option(selected=(__val === _Held.Person.Geschlecht), value=__val)=__val
 							.form-group
