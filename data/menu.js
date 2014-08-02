@@ -372,7 +372,7 @@ module.exports = {
 				url:   "#pc_131",
 				title: "P – T"
 			}, {
-				url:   "#pc-158",
+				url:   "#pc_158",
 				title: "U – Z"
 			}, { // a divider
 			}, {
