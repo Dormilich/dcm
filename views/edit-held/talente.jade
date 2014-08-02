@@ -217,9 +217,9 @@ html(lang="de")
 									if __talent.standard
 										input(type="hidden", name="Talente[Fernkampf][#{__idx}][name]", value=__talent.name)
 									else
-										input.isactive(type="checkbox", name="Talente[Fernkampf][#{__idx}][name]", value=__talent.name, id=__name+__idx, checked=__isAvailable)
+										input.isactive(type="checkbox", name="Talente[Fernkampf][#{__idx}][name]", value=__talent.name, id="fk"+__idx, checked=__isAvailable)
 								.col-xs-5.col-sm-7.col-lg-9.text-left
-									label(for=__name+__idx)=__talent.name
+									label(for="fk"+__idx)=__talent.name
 									span.badge.pull-right=Array.isArray(__heldentalent.Spezialisierung) ? __heldentalent.Spezialisierung.length : 0
 									ul.options
 										li
